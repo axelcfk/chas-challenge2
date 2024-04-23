@@ -1,0 +1,16 @@
+{
+  "jokes": [
+    {
+      "query": "tell me a joke",
+      "response": "Why don't skeletons fight each other? They don't have the guts."
+    },
+    {
+      "query": "give me a joke about a dog",
+      "response": "What do you call a dog that can do magic? A labracadabrador."
+    },
+    {
+      "query": "give me a joke about a cat",
+      "response": "Why was the cat sitting on the computer? To keep an eye on the mouse!"
+    }
+  ]
+}
