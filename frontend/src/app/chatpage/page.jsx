@@ -78,22 +78,21 @@ export default function ChatPage() {
         <LoadingIndicator />
       ) : (
         <div className="h-full flex flex-col justify-center items-center">
-          <p>I recommend</p>
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center">
               <h2 className="text-5xl font-semibold mb-10">
                 {" "}
                 {movieDetails.title}
               </h2>
-              <div className="flex flex-col justify-center items-center">
+              <div className="flex flex-col md:flex-row justify-center items-center">
                 {" "}
                 <img
-                  className="h-60 mb-10"
+                  className="h-60 md:h-96 md:mr-20 mb-10 rounded-lg"
                   src={movieDetails.poster}
                   alt="Movie Poster"
                 />
-                <p className="mb-10">
-                  {movieDetails.overview.slice(0, 200)}...
+                <p className="mb-10 md:w-1/4">
+                  {movieDetails.overview.slice(0, 300)}...
                 </p>
               </div>
             </div>
