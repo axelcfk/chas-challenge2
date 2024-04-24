@@ -10,8 +10,8 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
   // const [chatGPTFetched, setChatGPTFetched] = useState(false);
-  //const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
-  const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
+  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+  // const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
   const resetState = () => {
     setInput("");
@@ -143,54 +143,48 @@ export default function ChatPage() {
 
   console.log(movieDetails);
   return (
-    <div
-      // style={{
-      //   backgroundImage:
-      //     "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url('/background.jpg')",
-      //   backgroundPosition: "bottom",
-      //   backgroundSize: "cover",
-      //   backgroundRepeat: "no-repeat",
-      // }}
-
-      className="flex flex-col justify-center items-center md:items-start pt-10 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100"
-    >
-      <img
-        className="absolute top-0 left-0 w-full  object-cover z-0 gradient"
-        src={movieDetails.backdrop}
-        alt="Movie Backdrop"
-      />
+    <div className="flex flex-col justify-center items-center md:items-start pt-10 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+      <div className=" ">
+        <img
+          id="img"
+          className="absolute top-0 left-0 w-full  object-cover z-0 "
+          src={movieDetails.backdrop}
+          alt="Movie Backdrop"
+        />
+        <div className="gradient"></div>
+      </div>
 
       {loading ? (
         <LoadingIndicator />
       ) : (
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
           {movieDetails.title ? (
-            <div className="flex flex-col justify-center items-center md:items-start">
-              <div className="flex flex-row md:flex-row justify-center items-center md:justify-start ">
+            <div className="flex flex-col justify-center items-center ">
+              <h2 className="text-4xl font-semibold mb-10 ">
                 {" "}
-                <div className="w-1/2">
-                  <h2 className="text-4xl font-semibold mb-10 ">
-                    {" "}
-                    {movieDetails.title}
-                  </h2>
-                  <p className="mb-10 md:w-1/5 font-base text-xl">
+                {movieDetails.title}
+              </h2>
+              <div className="flex flex-row  justify-center items-center ">
+                {" "}
+                <div className="flex flex-col justify-start md:justify-center items-start h-full w-1/2 md:w-1/2 ">
+                  <p className="mb-5 md:w-full font-base text-lg pr-3">
                     {movieDetails.overview.slice(0, 100)}
                   </p>
-                </div>
-                <div className="w-1/2 flex flex-col justify-center items-end">
-                  <img
-                    className="h-60 md:h-96 md:mr-20  rounded-lg"
-                    src={movieDetails.poster}
-                    alt="Movie Poster"
-                    style={{ border: "1px solid grey" }}
-                  />
-                  <p className="mb-10 mt-4 font-semibold text-3xl text-green-400">
+                  <p className="font-semibold text-3xl text-green-400">
                     <span className="text-lg mr-2 text-slate-50">Rating:</span>
                     {movieDetails.voteAverage.toFixed(1)}
                   </p>
                 </div>
+                <div className="w-1/2 flex flex-col justify-center items-center ">
+                  <img
+                    className=" h-full md:h-96 rounded-lg"
+                    src={movieDetails.poster}
+                    alt="Movie Poster"
+                    style={{ border: "1px solid grey" }}
+                  />
+                </div>
               </div>
-              <div className="flex justify-start items-center  w-full">
+              <div className="flex justify-start items-center  w-full mt-10">
                 <p className="text-sm mr-2">Watch it on:</p>
                 {movieDetails.SE && movieDetails.SE.length > 0
                   ? movieDetails.SE.map((providerName) => {
@@ -208,20 +202,22 @@ export default function ChatPage() {
           )}
         </div>
       )}
-
-      <input
-        className="h-20 bg-slate-50 w-full md:w-1/3 px-5 rounded-xl text-slate-900 text-lg text-center"
-        type="text"
-        value={input}
-        onChange={handleInputChange}
-        placeholder="Describe the movie you want..."
-      />
-      <button
-        className="h-20 bg-blue-700 text-slate-50 w-full md:w-1/3 rounded-full mt-5 mb-10 font-semibold text-xl"
-        onClick={handleQuerySubmit}
-      >
-        Find Movie
-      </button>
+      <div className="z-10 flex flex-col w-full">
+        <input
+          style={{ border: "1px solid grey" }}
+          className="h-14 bg-transparent w-full md:w-1/3 px-5 rounded-xl  text-lg text-center text-slate-50"
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          placeholder="Describe the movie you want..."
+        />
+        <button
+          className="h-14 bg-slate-100 hover:bg-slate-300 text-slate-900  w-full md:w-1/3 rounded-full mt-5 mb-10 font-semibold text-xl"
+          onClick={handleQuerySubmit}
+        >
+          Find Movie
+        </button>
+      </div>
     </div>
   );
 }
