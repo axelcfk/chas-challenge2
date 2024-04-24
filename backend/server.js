@@ -173,14 +173,14 @@ app.post("/sessions", async (req, res) => {
 });
 
 function parseTMDBId(response) {
-  // New regex to extract TMDB ID based on the observed pattern "TMDB ID: {number}"
+  //Regex för att få TMDB ID baserat på "TMDB ID: {number}"
   const match = response.match(/TMDB ID:\s*(\d+)/);
   return match ? match[1] : null;
 }
 
 app.post("/moviesuggest", async (req, res) => {
   const userQuery = req.body.query;
-  console.log("Received user query:", userQuery); // Log the user query
+  console.log("Received user query:", userQuery);
 
   try {
     const completion = await openai.chat.completions.create({
@@ -198,7 +198,8 @@ app.post("/moviesuggest", async (req, res) => {
       ],
     });
 
-    console.log("AI response:", JSON.stringify(completion, null, 2)); // Log the entire AI response
+    //hela AI-svaret
+    console.log("AI response:", JSON.stringify(completion, null, 2));
 
     const suggestion = completion.choices[0].message.content;
     const tmdbId = parseTMDBId(suggestion);

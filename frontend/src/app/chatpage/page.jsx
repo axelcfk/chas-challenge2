@@ -107,7 +107,7 @@ export default function ChatPage() {
                   {movieDetails.voteAverage.toFixed(1)}
                 </p>
                 <p className="mb-10 md:w-1/5 font-base text-xl text-center">
-                  {movieDetails.overview.slice(0, 200)}...
+                  {movieDetails.overview.slice(0, 100)}...
                 </p>
               </div>
             </div>
