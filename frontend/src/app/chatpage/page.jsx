@@ -182,16 +182,18 @@ export default function ChatPage() {
                   {movieDetails.voteAverage.toFixed(1)}
                 </p>
 
-                <p className="mb-10 mt-4 font-semibold">
+                <div className="mb-10 mt-4 font-semibold">
                   <p className="text-lg mr-2">Providers in Sweden:</p>
-                  {movieDetails.SE && movieDetails.SE.length > 0 ? (movieDetails.SE.map((providerName) => {
+                  <div className="flex flex-col justify-center items-center">
+                  {movieDetails.SE && movieDetails.SE.length > 0 ? (movieDetails.SE.map((providerName, index) => {
                     return (
-                      <div className="flex flex-col justify-center items-center">
-                        <p className="text-lg">{providerName}</p>
-                      </div>
+                      
+                        <p key={index} className="text-lg">{providerName}</p>
                     )
                   })) : "N/A"}
-                </p>
+                  </div>
+                    
+                </div>
 
                 <p className="mb-10 md:w-1/5 font-base text-xl text-center">
                   {movieDetails.overview.slice(0, 100)}...
