@@ -2,13 +2,28 @@
 
 import { useState, useEffect } from "react";
 
+// https://api.themoviedb.org/3/movie/550/watch/providers?api_key=a97f158a2149d8f803423ee01dec4d83
+
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const [movieDetails, setMovieDetails] = useState({});
   const [loading, setLoading] = useState(false);
-  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+  const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
+ // const [chatGPTFetched, setChatGPTFetched] = useState(false);
+  //const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+  const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
+
+  const resetState = () => {
+    setInput("");
+    setMovieDetails({});
+    setLoading(false);
+    setMovieDetailsFetched(false);
+   // setChatGPTFetched(false);
+  };
 
   useEffect(() => {
+    //setLoading(true);
+
     const fetchMovieDetails = async () => {
       if (movieDetails.id) {
         console.log("Fetching movie details for ID:", movieDetails.id);
@@ -22,11 +37,12 @@ export default function ChatPage() {
             // Check if data includes title
             setMovieDetails({
               ...movieDetails,
-              title: data.title,
+              title: data.title, // om vi inte redan gjort detta via ChatGpts response
               overview: data.overview,
               voteAverage: data.vote_average,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
             });
+            setMovieDetailsFetched(true); // Mark that movie details have been fetched
           } else {
             console.error("No movie found with the given ID");
           }
@@ -39,11 +55,50 @@ export default function ChatPage() {
     fetchMovieDetails();
   }, [movieDetails.id]);
 
+  useEffect(() => {
+    //setLoading(true);
+
+    const fetchWatchProviders = async () => {
+      if (movieDetails.id) {
+        console.log("Fetching movie providers for ID:", movieDetails.id);
+        try {
+          const url = `https://api.themoviedb.org/3/movie/${movieDetails.id}/watch/providers?api_key=${movieAPI_KEY}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          //console.log(data); // MYCKET DATA
+          console.log("Watch Providers API Response:", data); // Log the API response
+          if (data && data.results && data.results.SE && data.results.SE.flatrate) {
+            // Extract providers for 'SE' locale
+            const seProviders = data.results.SE.flatrate.map(provider => provider.provider_name);
+            // Update movieDetails state
+            console.log(seProviders);
+            setMovieDetails({
+              ...movieDetails,
+              SE: seProviders
+            });
+          } else {
+            console.error("No movie found with the given ID");
+          }
+        } catch (error) {
+          console.error("Error fetching movie details:", error);
+        } finally {
+          setLoading(false); // Set loading to false after fetching providers
+        }
+      }
+    };
+
+    fetchWatchProviders();
+    
+
+  }, [movieDetailsFetched]);
+
+
   const handleInputChange = (e) => {
     setInput(e.target.value);
   };
 
   const handleQuerySubmit = async () => {
+    resetState(); // reset state
     setLoading(true);
     console.log("Submitting query for movie:", input);
     try {
@@ -52,17 +107,18 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: input }),
       });
-      const data = await response.json();
+      const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
       if (data.tmdbId) {
         console.log("Received TMDB ID:", data.tmdbId);
-        setMovieDetails({ id: data.tmdbId });
+        setMovieDetails({ id: data.tmdbId }); 
+       // setChatGPTFetched(true);
       } else {
         console.error("No TMDB ID received or error in response");
       }
     } catch (error) {
       console.error("Failed to fetch AI suggestion:", error);
     }
-    setLoading(false);
+   // setLoading(false);
   };
 
   function LoadingIndicator() {
@@ -75,6 +131,12 @@ export default function ChatPage() {
     );
   }
 
+  /* if (movieDetails.SE == null) {
+    return <div>Loading...</div>
+  }
+ */
+
+  console.log(movieDetails);
   return (
     <div
       style={{
@@ -106,6 +168,18 @@ export default function ChatPage() {
                   <span className="text-lg mr-2">Rating:</span>
                   {movieDetails.voteAverage.toFixed(1)}
                 </p>
+
+                <p className="mb-10 mt-4 font-semibold">
+                  <p className="text-lg mr-2">Providers in Sweden:</p>
+                  {movieDetails.SE && movieDetails.SE.length > 0 ? (movieDetails.SE.map((providerName) => {
+                    return (
+                      <div className="flex flex-col justify-center items-center">
+                        <p className="text-lg">{providerName}</p>
+                      </div>
+                    )
+                  })) : "N/A"}
+                </p>
+
                 <p className="mb-10 md:w-1/5 font-base text-xl text-center">
                   {movieDetails.overview.slice(0, 100)}...
                 </p>

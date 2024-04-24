@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 const port = 3010;
 
-const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+//const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 // connect to DB
 const pool = mysql.createPool({
   //host: "mysql",
@@ -21,7 +21,7 @@ const pool = mysql.createPool({
   password: "root",
   database: "health-app",
   port: 3306,
-  port: 8889 || 3306,
+  //port: 8889 || 3306,
 });
 
 function generateOTP() {
@@ -203,6 +203,8 @@ app.post("/moviesuggest", async (req, res) => {
 
     const suggestion = completion.choices[0].message.content;
     const tmdbId = parseTMDBId(suggestion);
+
+    // TODO: spara film-namnet istället för ID?
 
     if (tmdbId) {
       res.json({ tmdbId });
