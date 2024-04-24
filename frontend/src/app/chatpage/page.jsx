@@ -95,12 +95,13 @@ export default function ChatPage() {
                 {" "}
                 {movieDetails.title}
               </h2>
-              <div className="flex flex-col md:flex-row justify-center items-center md:justify-start">
+              <div className="flex flex-col md:flex-row justify-center items-center md:justify-start ">
                 {" "}
                 <img
                   className="h-60 md:h-96 md:mr-20  rounded-lg"
                   src={movieDetails.poster}
                   alt="Movie Poster"
+                  style={{ border: "1px solid grey" }}
                 />
                 <p className="mb-10 mt-4 font-semibold text-3xl">
                   <span className="text-lg mr-2">Rating:</span>
