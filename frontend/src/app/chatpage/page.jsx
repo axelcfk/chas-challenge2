@@ -9,9 +9,14 @@ export default function ChatPage() {
   const [movieDetails, setMovieDetails] = useState({});
   const [loading, setLoading] = useState(false);
   const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
+  const [toggleExpanded, setToggleExpanded] = useState(false);
   // const [chatGPTFetched, setChatGPTFetched] = useState(false);
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   // const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
+
+  function handleToggle() {
+    setToggleExpanded(!toggleExpanded);
+  }
 
   const resetState = () => {
     setInput("");
@@ -40,6 +45,9 @@ export default function ChatPage() {
               title: data.title, // om vi inte redan gjort detta via ChatGpts response
               overview: data.overview,
               voteAverage: data.vote_average,
+              release: data.release_date,
+              tagline: data.tagline,
+              runtime: data.runtime,
               backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
             });
@@ -143,58 +151,95 @@ export default function ChatPage() {
 
   console.log(movieDetails);
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pt-10 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
-      <div className=" ">
-        <img
-          id="img"
-          className="absolute top-0 left-0 w-full  object-cover z-0 "
-          src={movieDetails.backdrop}
-          alt="Movie Backdrop"
-        />
-        <div className="gradient"></div>
-      </div>
+    <div className="flex flex-col justify-center items-center md:items-start pb-10 pt-24 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+      {movieDetails.backdrop && (
+        <div className=" ">
+          <img
+            id="img"
+            className="absolute top-0 left-0 w-full  object-cover z-0 "
+            src={movieDetails.backdrop}
+            alt="Movie Backdrop"
+          />
+          <div className="gradient"></div>
+        </div>
+      )}
 
       {loading ? (
         <LoadingIndicator />
       ) : (
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
           {movieDetails.title ? (
-            <div className="flex flex-col justify-center items-center ">
-              <h2 className="text-4xl font-semibold mb-10 ">
+            <div className="flex flex-col justify-center items-center text-slate-400">
+              <div className="flex flex-col  justify-center items-center ">
                 {" "}
-                {movieDetails.title}
-              </h2>
-              <div className="flex flex-row  justify-center items-center ">
-                {" "}
-                <div className="flex flex-col justify-start md:justify-center items-start h-full w-1/2 md:w-1/2 ">
-                  <p className="mb-5 md:w-full font-base text-lg pr-3">
-                    {movieDetails.overview.slice(0, 100)}
-                  </p>
-                  <p className="font-semibold text-3xl text-green-400">
-                    <span className="text-lg mr-2 text-slate-50">Rating:</span>
-                    {movieDetails.voteAverage.toFixed(1)}
-                  </p>
-                </div>
-                <div className="w-1/2 flex flex-col justify-center items-center ">
+                <div className="w-full flex flex-row justify-center items-center ">
+                  <div className="w-full ">
+                    <h2 className="text-2xl font-semibold mb-5 text-slate-50 mr-4">
+                      {" "}
+                      {movieDetails.title}
+                    </h2>
+                    <div className="flex text-sm">
+                      <p>
+                        {movieDetails.release.slice(0, 4)}
+                        <span className="text-sm mx-2">●</span>
+                      </p>
+                      <p>DIRECTED BY</p>
+                    </div>
+                    <p className="font-semibold text-lg">Christopher Nolan</p>
+                    <p>{movieDetails.runtime.toString()} mins</p>
+                  </div>
                   <img
-                    className=" h-full md:h-96 rounded-lg"
+                    className=" h-52 md:h-96 rounded-md"
                     src={movieDetails.poster}
                     alt="Movie Poster"
                     style={{ border: "1px solid grey" }}
                   />
                 </div>
-              </div>
-              <div className="flex justify-start items-center  w-full mt-10">
-                <p className="text-sm mr-2">Watch it on:</p>
-                {movieDetails.SE && movieDetails.SE.length > 0
-                  ? movieDetails.SE.map((providerName) => {
-                      return (
-                        <div className="flex justify-center ">
-                          <p className="text-lg flex mr-3">{providerName} </p>
-                        </div>
-                      );
-                    })
-                  : "N/A"}
+                <div className="h-60  lex flex-col justify-start md:justify-center items-start  w-full md:w-1/2 ">
+                  <div className=" " onClick={handleToggle}>
+                    {!toggleExpanded ? (
+                      <div>
+                        <p className="mt-10 mb-2 font-medium text-lg">
+                          {movieDetails.tagline}
+                        </p>
+                        <p className="mb-5  md:w-full  font-light">
+                          {movieDetails.overview.slice(0, 50)}...
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="mt-10 mb-2 font-medium text-lg">
+                          {movieDetails.tagline}
+                        </p>
+                        <p className="mb-5  md:w-full font-light text-base">
+                          {movieDetails.overview.slice(0, 300)}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full flex  justify-end mt-8">
+                  <div className="w-full ">
+                    <p className="text-sm mr-2">WATCH IT ON</p>
+                    {movieDetails.SE && movieDetails.SE.length > 0
+                      ? movieDetails.SE.map((providerName) => {
+                          return (
+                            <div className="flex">
+                              <p className="text-lg flex mr-3">
+                                {providerName}{" "}
+                              </p>
+                            </div>
+                          );
+                        })
+                      : "N/A"}
+                  </div>
+                  <p className="font-semibold text-3xl text-green-400">
+                    <span className="text-sm mr-2 text-slate-400 font-normal">
+                      RATING
+                    </span>
+                    {movieDetails.voteAverage.toFixed(1)}
+                  </p>
+                </div>
               </div>
             </div>
           ) : (
@@ -212,7 +257,7 @@ export default function ChatPage() {
           placeholder="Describe the movie you want..."
         />
         <button
-          className="h-14 bg-slate-100 hover:bg-slate-300 text-slate-900  w-full md:w-1/3 rounded-full mt-5 mb-10 font-semibold text-xl"
+          className="h-12 bg-slate-100 hover:bg-slate-300 text-slate-900  w-full md:w-1/3 rounded-full mt-5  font-semibold text-xl"
           onClick={handleQuerySubmit}
         >
           Find Movie
