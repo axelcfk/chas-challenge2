@@ -17,12 +17,14 @@ export default function ChatPage() {
           const response = await fetch(url);
           const data = await response.json();
           console.log(data);
+          console.log(data.vote_average);
           if (data.title) {
             // Check if data includes title
             setMovieDetails({
               ...movieDetails,
               title: data.title,
               overview: data.overview,
+              voteAverage: data.vote_average,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
             });
           } else {
@@ -89,19 +91,23 @@ export default function ChatPage() {
         <div className="h-full flex flex-col justify-center items-center  ">
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center md:items-start">
-              <h2 className="text-5xl font-semibold mb-10">
+              <h2 className="text-5xl font-semibold mb-10 text-center">
                 {" "}
                 {movieDetails.title}
               </h2>
               <div className="flex flex-col md:flex-row justify-center items-center md:justify-start">
                 {" "}
                 <img
-                  className="h-60 md:h-96 md:mr-20 mb-10 rounded-lg"
+                  className="h-60 md:h-96 md:mr-20  rounded-lg"
                   src={movieDetails.poster}
                   alt="Movie Poster"
                 />
+                <p className="mb-10 mt-4 font-semibold text-3xl">
+                  <span className="text-lg mr-2">Rating:</span>
+                  {movieDetails.voteAverage.toFixed(1)}
+                </p>
                 <p className="mb-10 md:w-1/5 font-base text-xl text-center">
-                  {movieDetails.overview.slice(0, 300)}...
+                  {movieDetails.overview.slice(0, 200)}...
                 </p>
               </div>
             </div>
@@ -112,7 +118,7 @@ export default function ChatPage() {
       )}
 
       <input
-        className="h-20 bg-slate-50 w-full md:w-1/3 px-5 rounded-xl text-slate-900 text-lg"
+        className="h-20 bg-slate-50 w-full md:w-1/3 px-5 rounded-xl text-slate-900 text-lg text-center"
         type="text"
         value={input}
         onChange={handleInputChange}
