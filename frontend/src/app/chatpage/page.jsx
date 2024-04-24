@@ -166,39 +166,41 @@ export default function ChatPage() {
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center md:items-start">
-              <h2 className="text-5xl font-semibold mb-10 text-center">
+              <div className="flex flex-row md:flex-row justify-center items-center md:justify-start ">
                 {" "}
-                {movieDetails.title}
-              </h2>
-              <div className="flex flex-col md:flex-row justify-center items-center md:justify-start ">
-                {" "}
-                <img
-                  className="h-60 md:h-96 md:mr-20  rounded-lg"
-                  src={movieDetails.poster}
-                  alt="Movie Poster"
-                  style={{ border: "1px solid grey" }}
-                />
-                <p className="mb-10 mt-4 font-semibold text-3xl">
-                  <span className="text-lg mr-2">Rating:</span>
-                  {movieDetails.voteAverage.toFixed(1)}
-                </p>
-                <div className="mb-10 mt-4 font-semibold">
-                  <p className="text-lg mr-2">Providers in Sweden:</p>
-                  <div className="flex flex-col justify-center items-center">
-                    {movieDetails.SE && movieDetails.SE.length > 0
-                      ? movieDetails.SE.map((providerName, index) => {
-                          return (
-                            <p key={index} className="text-lg">
-                              {providerName}
-                            </p>
-                          );
-                        })
-                      : "N/A"}
-                  </div>
+                <div className="w-1/2">
+                  <h2 className="text-4xl font-semibold mb-10 ">
+                    {" "}
+                    {movieDetails.title}
+                  </h2>
+                  <p className="mb-10 md:w-1/5 font-base text-xl">
+                    {movieDetails.overview.slice(0, 100)}
+                  </p>
                 </div>
-                <p className="mb-10 md:w-1/5 font-base text-xl text-center">
-                  {movieDetails.overview.slice(0, 100)}...
-                </p>
+                <div className="w-1/2 flex flex-col justify-center items-end">
+                  <img
+                    className="h-60 md:h-96 md:mr-20  rounded-lg"
+                    src={movieDetails.poster}
+                    alt="Movie Poster"
+                    style={{ border: "1px solid grey" }}
+                  />
+                  <p className="mb-10 mt-4 font-semibold text-3xl text-green-400">
+                    <span className="text-lg mr-2 text-slate-50">Rating:</span>
+                    {movieDetails.voteAverage.toFixed(1)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-start items-center  w-full">
+                <p className="text-sm mr-2">Watch it on:</p>
+                {movieDetails.SE && movieDetails.SE.length > 0
+                  ? movieDetails.SE.map((providerName) => {
+                      return (
+                        <div className="flex justify-center ">
+                          <p className="text-lg flex mr-3">{providerName} </p>
+                        </div>
+                      );
+                    })
+                  : "N/A"}
               </div>
             </div>
           ) : (
