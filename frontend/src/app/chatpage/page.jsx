@@ -9,7 +9,7 @@ export default function ChatPage() {
   const [movieDetails, setMovieDetails] = useState({});
   const [loading, setLoading] = useState(false);
   const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
- // const [chatGPTFetched, setChatGPTFetched] = useState(false);
+  // const [chatGPTFetched, setChatGPTFetched] = useState(false);
   //const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
@@ -18,11 +18,8 @@ export default function ChatPage() {
     setMovieDetails({});
     setLoading(false);
     setMovieDetailsFetched(false);
-   // setChatGPTFetched(false);
+    // setChatGPTFetched(false);
   };
-
-  const backdropBaseUrl = "https://image.tmdb.org/t/p/original";
-  const backdropUrl = backdropBaseUrl + movieDetails.backdrop_path;
 
   useEffect(() => {
     //setLoading(true);
@@ -71,14 +68,21 @@ export default function ChatPage() {
           const data = await response.json();
           //console.log(data); // MYCKET DATA
           console.log("Watch Providers API Response:", data); // Log the API response
-          if (data && data.results && data.results.SE && data.results.SE.flatrate) {
+          if (
+            data &&
+            data.results &&
+            data.results.SE &&
+            data.results.SE.flatrate
+          ) {
             // Extract providers for 'SE' locale
-            const seProviders = data.results.SE.flatrate.map(provider => provider.provider_name);
+            const seProviders = data.results.SE.flatrate.map(
+              (provider) => provider.provider_name
+            );
             // Update movieDetails state
             console.log(seProviders);
             setMovieDetails({
               ...movieDetails,
-              SE: seProviders
+              SE: seProviders,
             });
           } else {
             console.error("No movie found with the given ID");
@@ -92,10 +96,7 @@ export default function ChatPage() {
     };
 
     fetchWatchProviders();
-    
-
   }, [movieDetailsFetched]);
-
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -114,15 +115,15 @@ export default function ChatPage() {
       const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
       if (data.tmdbId) {
         console.log("Received TMDB ID:", data.tmdbId);
-        setMovieDetails({ id: data.tmdbId }); 
-       // setChatGPTFetched(true);
+        setMovieDetails({ id: data.tmdbId });
+        // setChatGPTFetched(true);
       } else {
         console.error("No TMDB ID received or error in response");
       }
     } catch (error) {
       console.error("Failed to fetch AI suggestion:", error);
     }
-   // setLoading(false);
+    // setLoading(false);
   };
 
   function LoadingIndicator() {
@@ -181,20 +182,20 @@ export default function ChatPage() {
                   <span className="text-lg mr-2">Rating:</span>
                   {movieDetails.voteAverage.toFixed(1)}
                 </p>
-
                 <div className="mb-10 mt-4 font-semibold">
                   <p className="text-lg mr-2">Providers in Sweden:</p>
                   <div className="flex flex-col justify-center items-center">
-                  {movieDetails.SE && movieDetails.SE.length > 0 ? (movieDetails.SE.map((providerName, index) => {
-                    return (
-                      
-                        <p key={index} className="text-lg">{providerName}</p>
-                    )
-                  })) : "N/A"}
+                    {movieDetails.SE && movieDetails.SE.length > 0
+                      ? movieDetails.SE.map((providerName, index) => {
+                          return (
+                            <p key={index} className="text-lg">
+                              {providerName}
+                            </p>
+                          );
+                        })
+                      : "N/A"}
                   </div>
-                    
                 </div>
-
                 <p className="mb-10 md:w-1/5 font-base text-xl text-center">
                   {movieDetails.overview.slice(0, 100)}...
                 </p>
