@@ -73,18 +73,18 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center pt-10 px-8 h-screen w-screen">
+    <div className="flex flex-col justify-center items-center md:items-start pt-10 px-8 h-screen w-screen bg-slate-950 text-slate-100">
       {loading ? (
         <LoadingIndicator />
       ) : (
-        <div className="h-full flex flex-col justify-center items-center">
+        <div className="h-full flex flex-col justify-center items-center  ">
           {movieDetails.title ? (
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center items-center md:items-start">
               <h2 className="text-5xl font-semibold mb-10">
                 {" "}
                 {movieDetails.title}
               </h2>
-              <div className="flex flex-col md:flex-row justify-center items-center">
+              <div className="flex flex-col md:flex-row justify-center items-center md:justify-start">
                 {" "}
                 <img
                   className="h-60 md:h-96 md:mr-20 mb-10 rounded-lg"
@@ -103,14 +103,14 @@ export default function ChatPage() {
       )}
 
       <input
-        className="h-20 bg-slate-200 w-full px-5 rounded-xl"
+        className="h-20 bg-slate-200 w-full md:w-1/3 px-5 rounded-xl text-slate-900"
         type="text"
         value={input}
         onChange={handleInputChange}
         placeholder="Describe the movie you want..."
       />
       <button
-        className="h-20 bg-blue-700 text-slate-50 w-full rounded-full mt-5 mb-10"
+        className="h-20 bg-blue-700 text-slate-50 w-full md:w-1/3 rounded-full mt-5 mb-10"
         onClick={handleQuerySubmit}
       >
         Find Movie
