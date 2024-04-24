@@ -8,6 +8,9 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
+  const backdropBaseUrl = "https://image.tmdb.org/t/p/original";
+  const backdropUrl = backdropBaseUrl + movieDetails.backdrop_path;
+
   useEffect(() => {
     const fetchMovieDetails = async () => {
       if (movieDetails.id) {
@@ -25,6 +28,7 @@ export default function ChatPage() {
               title: data.title,
               overview: data.overview,
               voteAverage: data.vote_average,
+              backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
             });
           } else {
@@ -77,19 +81,26 @@ export default function ChatPage() {
 
   return (
     <div
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url('/background.jpg')",
-        backgroundPosition: "bottom",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-      }}
+      // style={{
+      //   backgroundImage:
+      //     "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url('/background.jpg')",
+      //   backgroundPosition: "bottom",
+      //   backgroundSize: "cover",
+      //   backgroundRepeat: "no-repeat",
+      // }}
+
       className="flex flex-col justify-center items-center md:items-start pt-10 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100"
     >
+      <img
+        className="absolute top-0 left-0 w-full  object-cover z-0 gradient"
+        src={movieDetails.backdrop}
+        alt="Movie Backdrop"
+      />
+
       {loading ? (
         <LoadingIndicator />
       ) : (
-        <div className="h-full flex flex-col justify-center items-center  ">
+        <div className="h-full flex flex-col justify-center items-center  relative z-10">
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center md:items-start">
               <h2 className="text-5xl font-semibold mb-10 text-center">
