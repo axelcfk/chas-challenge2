@@ -189,7 +189,7 @@ app.post("/moviesuggest", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest movies based on user descriptions. It will also provide a TMDB id for that movie in the format of: TMDB ID: [number]",
+            "This assistant will suggest movies based on user descriptions. It will also provide a TMDB id for that movie in the format of: TMDB ID: [number]. It will not answer any other questions. It will only suggest movies.",
         },
         {
           role: "user",

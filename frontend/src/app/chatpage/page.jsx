@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const [movieDetails, setMovieDetails] = useState({});
+  const [loading, setLoading] = useState(false);
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function ChatPage() {
   };
 
   const handleQuerySubmit = async () => {
+    setLoading(true);
     console.log("Submitting query for movie:", input);
     try {
       const response = await fetch("http://localhost:3010/moviesuggest", {
@@ -57,23 +59,50 @@ export default function ChatPage() {
     } catch (error) {
       console.error("Failed to fetch AI suggestion:", error);
     }
+    setLoading(false);
   };
 
+  function LoadingIndicator() {
+    return (
+      <div className="loading-indicator ">
+        <h3 className="font-semibold text-3xl">Exciting stuff!</h3>
+        <div className="loader m-10"></div>
+        <p className="font-semibold text-xl">Finding a movie match ... </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col justify-center items-center pt-10 px-20">
-      {movieDetails.title ? (
-        <div className="flex flex-col justify-center items-center">
-          <h2 className="text-5xl font-semibold mb-10">{movieDetails.title}</h2>
-          <p className="mb-10">{movieDetails.overview}</p>
-          <img
-            className="h-60 mb-10"
-            src={movieDetails.poster}
-            alt="Movie Poster"
-          />
-        </div>
+    <div className="flex flex-col justify-center items-center pt-10 px-8 h-screen w-screen">
+      {loading ? (
+        <LoadingIndicator />
       ) : (
-        <p>No movie details to display</p>
+        <div className="h-full flex flex-col justify-center items-center">
+          <p>I recommend</p>
+          {movieDetails.title ? (
+            <div className="flex flex-col justify-center items-center">
+              <h2 className="text-5xl font-semibold mb-10">
+                {" "}
+                {movieDetails.title}
+              </h2>
+              <div className="flex flex-col justify-center items-center">
+                {" "}
+                <img
+                  className="h-60 mb-10"
+                  src={movieDetails.poster}
+                  alt="Movie Poster"
+                />
+                <p className="mb-10">
+                  {movieDetails.overview.slice(0, 200)}...
+                </p>
+              </div>
+            </div>
+          ) : (
+            <h2 className="h-full ">No movie details to display</h2>
+          )}
+        </div>
       )}
+
       <input
         className="h-20 bg-slate-200 w-full px-5 rounded-xl"
         type="text"
@@ -82,7 +111,7 @@ export default function ChatPage() {
         placeholder="Describe the movie you want..."
       />
       <button
-        className="h-20 bg-blue-700 text-slate-50 w-full rounded-full my-10"
+        className="h-20 bg-blue-700 text-slate-50 w-full rounded-full mt-5 mb-10"
         onClick={handleQuerySubmit}
       >
         Find Movie
