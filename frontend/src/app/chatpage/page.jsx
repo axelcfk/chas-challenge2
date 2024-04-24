@@ -16,6 +16,7 @@ export default function ChatPage() {
           const url = `https://api.themoviedb.org/3/movie/${movieDetails.id}?api_key=${movieAPI_KEY}`;
           const response = await fetch(url);
           const data = await response.json();
+          console.log(data);
           if (data.title) {
             // Check if data includes title
             setMovieDetails({
@@ -73,7 +74,15 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pt-10 px-8 h-screen w-screen bg-slate-950 text-slate-100">
+    <div
+      style={{
+        backgroundImage: "url('/background.jpg')",
+        backgroundPosition: "bottom",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
+      className="flex flex-col justify-center items-center md:items-start pt-10 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100"
+    >
       {loading ? (
         <LoadingIndicator />
       ) : (
@@ -91,7 +100,7 @@ export default function ChatPage() {
                   src={movieDetails.poster}
                   alt="Movie Poster"
                 />
-                <p className="mb-10 md:w-1/4">
+                <p className="mb-10 md:w-1/5 font-base text-xl text-center">
                   {movieDetails.overview.slice(0, 300)}...
                 </p>
               </div>
@@ -103,14 +112,14 @@ export default function ChatPage() {
       )}
 
       <input
-        className="h-20 bg-slate-200 w-full md:w-1/3 px-5 rounded-xl text-slate-900"
+        className="h-20 bg-slate-50 w-full md:w-1/3 px-5 rounded-xl text-slate-900 text-lg"
         type="text"
         value={input}
         onChange={handleInputChange}
         placeholder="Describe the movie you want..."
       />
       <button
-        className="h-20 bg-blue-700 text-slate-50 w-full md:w-1/3 rounded-full mt-5 mb-10"
+        className="h-20 bg-blue-700 text-slate-50 w-full md:w-1/3 rounded-full mt-5 mb-10 font-semibold text-xl"
         onClick={handleQuerySubmit}
       >
         Find Movie
