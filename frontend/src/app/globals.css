@@ -68,3 +68,31 @@
   width: 100%;
   height: 50%;
 }
+
+.streaming-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; /* Mellanrum mellan korten */
+}
+
+.streaming-card {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center; /* Centrerar texten */
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+}
+
+.streaming-btn {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center; /* Centrerar texten */
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+}
