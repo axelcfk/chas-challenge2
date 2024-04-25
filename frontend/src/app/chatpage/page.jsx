@@ -215,7 +215,7 @@ export default function ChatPage() {
                       </p>
                       <p>DIRECTED BY</p>
                     </div>
-                    <p className="font-semibold text-lg">Christopher Nolan</p>
+                    <p className="font-semibold text-lg">John Doe</p>
                     <p>{movieDetails.runtime.toString()} mins</p>
                   </div>
                   <img
@@ -233,7 +233,7 @@ export default function ChatPage() {
                           {movieDetails.tagline}
                         </p>
                         <p className="mb-5  md:w-full  font-light">
-                          {movieDetails.overview.slice(0, 50)}...
+                          {movieDetails.overview.slice(0, 200)}...
                         </p>
                       </div>
                     ) : (
@@ -273,7 +273,11 @@ export default function ChatPage() {
               </div>
             </div>
           ) : (
-            <h2 className="h-full ">No movie details to display</h2>
+            <div className=" flex justify-center items-center h-full">
+              <h2 className=" text-center text-3xl font-semibold">
+                What kind of film do you want to watch today?
+              </h2>
+            </div>
           )}
         </div>
       )}
@@ -287,8 +291,13 @@ export default function ChatPage() {
           placeholder="Describe the movie you want..."
         />
         <button
-          className="h-12 bg-slate-100 hover:bg-slate-300 text-slate-900  w-full md:w-1/3 rounded-full mt-5  font-semibold text-xl"
+          className={`h-12 ${
+            input
+              ? "bg-slate-100 hover:bg-slate-300 text-slate-900"
+              : "bg-slate-400  text-slate-900"
+          }  w-full md:w-1/3 rounded-full mt-5  font-semibold text-xl`}
           onClick={handleQuerySubmit}
+          disabled={!input}
         >
           Find Movie
         </button>
