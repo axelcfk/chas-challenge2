@@ -8,6 +8,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [movieDetails, setMovieDetails] = useState({});
   const [loading, setLoading] = useState(false);
+  const [noResult, setNoResult] = useState(false);
   const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
   const [toggleExpanded, setToggleExpanded] = useState(false);
   // const [chatGPTFetched, setChatGPTFetched] = useState(false);
@@ -25,6 +26,7 @@ export default function ChatPage() {
   }
 
   const resetState = () => {
+    setNoResult(false);
     setInput("");
     setMovieDetails({});
     setLoading(false);
@@ -33,13 +35,36 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
+  if (movieAPI_KEY != null && loading && movieDetails.titleFromGPT) {
+    console.log("title received from GPT: ", movieDetails.titleFromGPT); 
+    const encodedMovieTitle = encodeURIComponent(movieDetails.titleFromGPT);
+    console.log("encoded movie title: ", encodedMovieTitle);
+
+    fetch(
+      `https://api.themoviedb.org/3/search/movie?query=${encodedMovieTitle}&api_key=${movieAPI_KEY}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Extract movie ID from the response
+        console.log("id from API: ", data.results[0].id);
+
+        setMovieDetails({
+          ...movieDetails,
+          idFromAPI: data.results[0].id,
+        }); // Assuming we want the first result
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }
+}, [movieDetails.titleFromGPT]);
+
+  useEffect(() => {
     //setLoading(true);
 
     const fetchMovieDetails = async () => {
-      if (movieDetails.id) {
-        console.log("Fetching movie details for ID:", movieDetails.id);
+      if (movieDetails.idFromAPI) {
+        console.log("Fetching movie details for ID:", movieDetails.idFromAPI);
         try {
-          const url = `https://api.themoviedb.org/3/movie/${movieDetails.id}?api_key=${movieAPI_KEY}`;
+          const url = `https://api.themoviedb.org/3/movie/${movieDetails.idFromAPI}?api_key=${movieAPI_KEY}`;
           const response = await fetch(url);
           const data = await response.json();
           console.log(data);
@@ -48,7 +73,7 @@ export default function ChatPage() {
             // Check if data includes title
             setMovieDetails({
               ...movieDetails,
-              title: data.title, // om vi inte redan gjort detta via ChatGpts response
+              titleFromAPI: data.title, // om vi inte redan gjort detta via ChatGpts response
               overview: data.overview,
               voteAverage: data.vote_average,
               release: data.release_date,
@@ -68,16 +93,16 @@ export default function ChatPage() {
     };
 
     fetchMovieDetails();
-  }, [movieDetails.id]);
+  }, [movieDetails.idFromAPI]);
 
   useEffect(() => {
     //setLoading(true);
 
     const fetchWatchProviders = async () => {
-      if (movieDetails.id) {
-        console.log("Fetching movie providers for ID:", movieDetails.id);
+      if (movieDetails.idFromAPI) {
+        console.log("Fetching movie providers for ID:", movieDetails.idFromAPI);
         try {
-          const url = `https://api.themoviedb.org/3/movie/${movieDetails.id}/watch/providers?api_key=${movieAPI_KEY}`;
+          const url = `https://api.themoviedb.org/3/movie/${movieDetails.idFromAPI}/watch/providers?api_key=${movieAPI_KEY}`;
           const response = await fetch(url);
           const data = await response.json();
           //console.log(data); // MYCKET DATA
@@ -127,11 +152,14 @@ export default function ChatPage() {
         body: JSON.stringify({ query: input }),
       });
       const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
-      if (data.tmdbId) {
+      if (data.tmdbId && data.movieName) {
         console.log("Received TMDB ID:", data.tmdbId);
-        setMovieDetails({ id: data.tmdbId });
+        console.log("Received Movie Name:", data.movieName);
+        setMovieDetails({ idFromGPT: data.tmdbId, titleFromGPT: data.movieName });
         // setChatGPTFetched(true);
       } else {
+        setNoResult(true);
+        setLoading(false)
         console.error("No TMDB ID received or error in response");
       }
     } catch (error) {
@@ -171,10 +199,12 @@ export default function ChatPage() {
       )}
 
       {loading ? (
-        <LoadingIndicator />
+        <LoadingIndicator /> 
+      ) : noResult ? (
+        <h2 className="h-full ">No Movie or TV series was found</h2>
       ) : (
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
-          {movieDetails.title ? (
+          {movieDetails.titleFromAPI ? (
             <div className="flex flex-col justify-center items-center text-slate-400">
               <div className="flex flex-col  justify-center items-center ">
                 {" "}
@@ -182,7 +212,7 @@ export default function ChatPage() {
                   <div className="w-full ">
                     <h2 className="text-2xl font-semibold mb-5 text-slate-50 mr-4">
                       {" "}
-                      {movieDetails.title}
+                      {movieDetails.titleFromAPI}
                     </h2>
                     <div className="flex text-sm">
                       <p>
@@ -191,7 +221,7 @@ export default function ChatPage() {
                       </p>
                       <p>DIRECTED BY</p>
                     </div>
-                    <p className="font-semibold text-lg">Christopher Nolan</p>
+                    <p className="font-semibold text-lg">John Doe</p>
                     <p>{movieDetails.runtime.toString()} mins</p>
                   </div>
                   <img
@@ -209,7 +239,7 @@ export default function ChatPage() {
                           {movieDetails.tagline}
                         </p>
                         <p className="mb-5  md:w-full  font-light">
-                          {movieDetails.overview.slice(0, 50)}...
+                          {movieDetails.overview.slice(0, 200)}...
                         </p>
                       </div>
                     ) : (
@@ -249,7 +279,11 @@ export default function ChatPage() {
               </div>
             </div>
           ) : (
-            <h2 className="h-full ">No movie details to display</h2>
+            <div className=" flex justify-center items-center h-full">
+              <h2 className=" text-center text-3xl font-semibold">
+                What kind of film do you want to watch today?
+              </h2>
+            </div>
           )}
         </div>
       )}
@@ -263,8 +297,13 @@ export default function ChatPage() {
           placeholder="Describe the movie you want..."
         />
         <button
-          className="h-12 bg-slate-100 hover:bg-slate-300 text-slate-900  w-full md:w-1/3 rounded-full mt-5  font-semibold text-xl"
+          className={`h-12 ${
+            input
+              ? "bg-slate-100 hover:bg-slate-300 text-slate-900"
+              : "bg-slate-400  text-slate-900"
+          }  w-full md:w-1/3 rounded-full mt-5  font-semibold text-xl`}
           onClick={handleQuerySubmit}
+          disabled={!input}
         >
           Find Movie
         </button>
