@@ -130,6 +130,7 @@ export default function ChatPage() {
           console.error("Error fetching movie details:", error);
         } finally {
           setLoading(false); // Set loading to false after fetching providers
+          console.log(movieDetails)
         }
       }
     };
@@ -258,9 +259,9 @@ export default function ChatPage() {
                   <div className="w-full ">
                     <p className="text-sm mr-2">WATCH IT ON</p>
                     {movieDetails.SE && movieDetails.SE.length > 0
-                      ? movieDetails.SE.map((providerName) => {
+                      ? movieDetails.SE.map((providerName, index) => {
                           return (
-                            <div className="flex">
+                            <div key={index} className="flex">
                               <p className="text-lg flex mr-3">
                                 {providerName}{" "}
                               </p>
