@@ -12,16 +12,16 @@ dotenv.config();
 const app = express();
 const port = 3010;
 
-//const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+
 // connect to DB
 const pool = mysql.createPool({
-  //host: "mysql",
+  // host: "mysql",
   host: "localhost",
   user: "root",
   password: "root",
-  database: "health-app",
-  port: 3306,
-  //port: 8889 || 3306,
+  database: "movie-app",
+  port: 8889 || 3306,
 });
 
 function generateOTP() {
