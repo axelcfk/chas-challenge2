@@ -183,7 +183,7 @@ export default function ChatPage() {
   }
  */
 
-  console.log(movieDetails);
+  //console.log(movieDetails);
   return (
     <div className="flex flex-col justify-center items-center md:items-start pb-10 pt-24 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
       {movieDetails.backdrop && (
