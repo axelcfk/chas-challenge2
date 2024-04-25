@@ -178,6 +178,14 @@ function parseTMDBId(response) {
   return match ? match[1] : null;
 }
 
+function parseMovieName(response) {
+  //Regex to extract movie name based on "MOVIE NAME: {string}"
+  const match = response.match(/MOVIE NAME:\s*(.+)/);
+  return match ? match[1] : null;
+}
+
+
+
 app.post("/moviesuggest", async (req, res) => {
   const userQuery = req.body.query;
   console.log("Received user query:", userQuery);
@@ -189,7 +197,7 @@ app.post("/moviesuggest", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest movies based on user descriptions. It will also provide a TMDB id for that movie in the format of: TMDB ID: [number]. It will not answer any other questions. It will only suggest movies.",
+            "This assistant will suggest movies or tv series based on user descriptions. It will also provide a TMDB id for that movie/serie in the format of: TMDB ID: [number]. Additionally, it will provide a Movie/Series Name for that movie/series in the format of: MOVIE NAME: [string]. It will not answer any other questions. It will only suggest movies and tv series.",
         },
         {
           role: "user",
@@ -203,16 +211,21 @@ app.post("/moviesuggest", async (req, res) => {
 
     const suggestion = completion.choices[0].message.content;
     const tmdbId = parseTMDBId(suggestion);
+    console.log("tmdb id parse: ", tmdbId);
+
+    const movieName = parseMovieName(suggestion);
+    console.log("Movie name parse: ", movieName);
+
 
     // TODO: spara film-namnet istället för ID?
 
-    if (tmdbId) {
-      res.json({ tmdbId });
+    if (tmdbId && movieName) {
+      res.json({ tmdbId, movieName });
     } else {
-      console.error("Failed to extract TMDB ID from AI response:", suggestion);
+      console.error("Failed to extract TMDB ID or Movie Name from AI response:", suggestion);
       res
         .status(500)
-        .json({ error: "Failed to extract TMDB ID from AI response" });
+        .json({ error: "Failed to extract TMDB ID or Movie Name from AI response" });
     }
   } catch (error) {
     console.error("Error in /moviesuggest endpoint:", error);

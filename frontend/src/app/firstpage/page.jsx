@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 //const movieAPI_KEY = process.env.movieAPI_KEY;
 
 export default function FirstPage() {
-  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473"; // INSERT YOUR API KEY
+  /* const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473"; // INSERT YOUR API KEY
   const movieName = "Fight Club";
 
   const [movieId, setMovieId] = useState("");
@@ -41,7 +41,7 @@ export default function FirstPage() {
         })
         .catch((error) => console.error("Error fetching data:", error));
     }
-  }, [movieId]);
+  }, [movieId]); */
 
   return (
     <div
