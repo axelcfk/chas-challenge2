@@ -11,12 +11,13 @@ export default function ChatPage() {
   const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
   const [toggleExpanded, setToggleExpanded] = useState(false);
   // const [chatGPTFetched, setChatGPTFetched] = useState(false);
-  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
-  
+  const movieAPI_KEY = "b0aa22976a88a1f9ab9dbcd9828204b5";
+
   // Shanti api key:
   // b0aa22976a88a1f9ab9dbcd9828204b5
 
   // const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
+  // 4e3dec59ad00fa8b9d1f457e55f8d473
 
   
   function handleToggle() {
