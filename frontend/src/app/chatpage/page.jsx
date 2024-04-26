@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { host, postAddToLikeList } from "../utils";
-import { FaThumbsUp } from "react-icons/fa";
+import { host, postAddToLikeList, postAddToWatchList } from "../utils";
+import { FaPlus, FaThumbsUp } from "react-icons/fa";
 
 
 // https://api.themoviedb.org/3/movie/550/watch/providers?api_key=a97f158a2149d8f803423ee01dec4d83
@@ -289,11 +289,17 @@ export default function ChatPage() {
                       style={{ border: "1px solid grey" }}
                     />
 
-                    <div className="w-full flex justify-center">
+                    <div className="w-full flex justify-center gap-4">
                       <button onClick={() => {
                         postAddToLikeList(movieDetails.idFromAPI, "movie")
                       }}>
                       <FaThumbsUp></FaThumbsUp>
+                      </button>
+
+                      <button onClick={() => {
+                        postAddToWatchList(movieDetails.idFromAPI, "movie")
+                      }}>
+                        <FaPlus></FaPlus>
                       </button>
                     </div>
                     

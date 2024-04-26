@@ -173,11 +173,13 @@ app.post("/sessions", async (req, res) => {
 });
 
 
-const likedMoviesList = []; 
-const likedSeriesList = [];
+const likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+const likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+const movieWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+const seriesWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 
 // post the lists
-app.post("/me/lists", async (req, res) => {
+app.post("/me/likelists", async (req, res) => {
   //const
   // const { token } = req.body; // token from current session
     
@@ -207,11 +209,37 @@ app.post("/me/lists", async (req, res) => {
  */
 
 
-  res.status(200).json({message: "Post data for /me/lists received: ", likedMoviesList: likedMoviesList, likedSeriesList: likedSeriesList});
+  res.status(200).json({message: "Post data for /me/likelists received: ", likedMoviesList: likedMoviesList, likedSeriesList: likedSeriesList});
     
 });
 
-app.post("/me/lists/addtolikelist", async (req, res) => {
+app.post("/me/watchlists", async (req, res) => {
+
+  res.status(200).json({message: "Post data for /me/watchlist received: ", movieWatchList: movieWatchList, seriesWatchList: seriesWatchList});
+
+})
+
+// FOR US, if we want to see data here: http://localhost:3010/me/likelists
+app.get("/me/likelists", (req, res) => {
+  const data = {
+    likedMoviesList: likedMoviesList,
+    likedSeriesList: likedSeriesList,
+  };
+
+  res.json(data);
+});
+
+// FOR US, if we want to see data here: http://localhost:3010/me/watchlists
+app.get("/me/watchlists", (req, res) => {
+  const data = {
+    movieWatchList: movieWatchList,
+    seriesWatchList: seriesWatchList
+  };
+
+  res.json(data);
+});
+
+app.post("/me/likelists/addtolikelist", async (req, res) => {
   try {
     const { id, movieOrSeries } = req.body;
 
@@ -225,10 +253,10 @@ app.post("/me/lists/addtolikelist", async (req, res) => {
     const idExistsInSeries = likedSeriesList.some((likedSeries) => likedSeries.id === id);
 
     if (idExistsInMovies || idExistsInSeries) {
-      console.log("movie/series ID ", id, " is already saved.");
+      console.log("movie/series ID ", id, " is already liked.");
       return res
         .status(200)
-        .json({ message: "Liked movie OR Liked series is already saved." });
+        .json({ message: "Liked movie OR Liked series is already liked." });
     }
 
     if (movieOrSeries === "movie") { // maybe change to some sort of True/False variable instead...
@@ -251,14 +279,44 @@ app.post("/me/lists/addtolikelist", async (req, res) => {
   }
 });
 
-// FOR US, if we want to see data here: http://localhost:3010/me/lists
-app.get("/me/lists", (req, res) => {
-  const data = {
-    likedMoviesList: likedMoviesList,
-    likedSeriesList: likedSeriesList
-  };
+app.post("/me/watchlists/addtowatchlist", async (req, res) => {
+  try {
+    const { id, movieOrSeries } = req.body;
 
-  res.json(data);
+    if (!id || !movieOrSeries) {
+      return res
+        .status(400)
+        .json({ error: "Liked movie OR liked series is required." });
+    }
+
+    const idExistsInMovieWatchList = movieWatchList.some((movie) => movie.id === id);
+    const idExistsInSeriesWatchList = seriesWatchList.some((series) => series.id === id);
+
+    if (idExistsInMovieWatchList || idExistsInSeriesWatchList) {
+      console.log("movie/series ID ", id, " is already saved in watchlist.");
+      return res
+        .status(200)
+        .json({ message: "Liked movie OR Liked series is already in watchlist." });
+    }
+
+    if (movieOrSeries === "movie") { // maybe change to some sort of True/False variable instead...
+      movieWatchList.push({ id }); // UPDATE LATER TO SQL
+      console.log("Added movie ID ", id, " to movieWatchList");
+    }
+
+    if (movieOrSeries === "series") {
+      likedSeriesList.push({ id }); // UPDATE LATER TO SQL
+      console.log("Added series ID ", id, " to seriesWatchList");
+    }
+
+    
+    res.status(201).json({
+      message: "Movie/Series saved to watch list succesfully"
+    });
+  } catch (error) {
+    console.error("1:Error adding movie to watch list:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // function parseTMDBId(response) {
