@@ -89,8 +89,8 @@ export default function ChatPage2() {
   console.log("moviedetails :", movieDetails);
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start  px-10 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
-      <div className="flex justify-center items-center  h-full">
+    <div className="flex flex-col justify-center items-center md:items-start  px-10 md:px-20 h-screen w-screen bg-slate-950 text-slate-100 z-0">
+      <div className="flex justify-center items-center">
         <div
           className="flex flex-col
          justify-center items-center flex-wrap"
@@ -100,17 +100,17 @@ export default function ChatPage2() {
           ))}
         </div>
       </div>
-      <div className="fixed inset-x-0 bottom-0 pb-10 px-8 md:px-20 bg-slate-950">
+      <div className="sticky inset-x-0 bottom-0  z-10 w-full">
         <input
           style={{ border: "1px solid grey" }}
-          className="h-14 bg-transparent w-full md:w-1/3 px-5 rounded-xl text-lg text-center text-slate-50"
+          className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50"
           type="text"
           value={input}
           onChange={handleInputChange}
           placeholder="Describe the movie you want..."
         />
         <button
-          className={`h-12 ${
+          className={`h-12  ${
             input
               ? "bg-slate-100 hover:bg-slate-300 text-slate-900"
               : "bg-slate-400 text-slate-900"

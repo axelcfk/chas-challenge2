@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { host, postAddToLikeList } from "../utils";
+import { FaThumbsUp } from "react-icons/fa";
+
 
 // https://api.themoviedb.org/3/movie/550/watch/providers?api_key=a97f158a2149d8f803423ee01dec4d83
 
@@ -197,7 +200,7 @@ export default function ChatPage() {
     setLoading(true);
     console.log("Submitting query for movie:", input);
     try {
-      const response = await fetch("http://localhost:3010/moviesuggest", {
+      const response = await fetch(`${host}/moviesuggest`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: input }),
@@ -286,12 +289,25 @@ export default function ChatPage() {
                     </p>
                     <p>{movieDetails.runtime.toString()} mins</p>
                   </div>
-                  <img
-                    className=" h-52 md:h-96 rounded-md"
-                    src={movieDetails.poster}
-                    alt="Movie Poster"
-                    style={{ border: "1px solid grey" }}
-                  />
+                  <div className="flex flex-col w-full justify-center items-center gap-4">
+
+                    <img
+                      className=" h-52 md:h-96 rounded-md w-auto"
+                      src={movieDetails.poster}
+                      alt="Movie Poster"
+                      style={{ border: "1px solid grey" }}
+                    />
+
+                    <div className="w-full flex justify-center">
+                      <button onClick={() => {
+                        postAddToLikeList(movieDetails.idFromAPI, "movie")
+                      }}>
+                      <FaThumbsUp></FaThumbsUp>
+                      </button>
+                    </div>
+                    
+                  </div>
+
                 </div>
                 <div className="h-60 lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
                   <div className=" " onClick={handleToggle}>
