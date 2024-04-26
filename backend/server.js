@@ -172,6 +172,95 @@ app.post("/sessions", async (req, res) => {
   }
 });
 
+
+const likedMoviesList = []; 
+const likedSeriesList = [];
+
+// post the lists
+app.post("/me/lists", async (req, res) => {
+  //const
+  // const { token } = req.body; // token from current session
+    
+  /* if (!data.token ) {
+    return res.status(400).json({ error: 'Token not found.' });
+  }
+ */
+
+  /* const currentSession = sessions.find(session => {
+    return token === session.token;
+  }) */
+
+
+  // TODO: hitta likedMoviesList och likedSeriesList som är kopplade till inloggade Användaren!
+  /* let userAccount; // multiple?
+  let currentUser;
+  if (currentSession) { // something has been found, not undefined
+    userAccount = accounts.find(account => {
+      return account.userId === currentSession.userId;
+    })
+    currentUser = users.find(user => {
+      return user.userId === currentSession.userId;
+    })
+  } else {
+    console.log("user account not found");
+  }
+ */
+
+
+  res.status(200).json({message: "Post data for /me/lists received: ", likedMoviesList: likedMoviesList, likedSeriesList: likedSeriesList});
+    
+});
+
+app.post("/me/lists/addtolikelist", async (req, res) => {
+  try {
+    const { id, movieOrSeries } = req.body;
+
+    if (!id || !movieOrSeries) {
+      return res
+        .status(400)
+        .json({ error: "Liked movie OR liked series is required." });
+    }
+
+    const idExistsInMovies = likedMoviesList.some((likedMovie) => likedMovie.id === id);
+    const idExistsInSeries = likedSeriesList.some((likedSeries) => likedSeries.id === id);
+
+    if (idExistsInMovies || idExistsInSeries) {
+      console.log("movie/series ID ", id, " is already saved.");
+      return res
+        .status(200)
+        .json({ message: "Liked movie OR Liked series is already saved." });
+    }
+
+    if (movieOrSeries === "movie") { // maybe change to some sort of True/False variable instead...
+      likedMoviesList.push({ id }); // UPDATE LATER TO SQL
+      console.log("Added movie ID ", id, " to likedMoviesList");
+    }
+
+    if (movieOrSeries === "series") {
+      likedSeriesList.push({ id }); // UPDATE LATER TO SQL
+      console.log("Added series ID ", id, " to likedSeriesList");
+    }
+
+    
+    res.status(201).json({
+      message: "Movie/Series saved to like list succesfully"
+    });
+  } catch (error) {
+    console.error("1:Error adding like:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// FOR US, if we want to see data here: http://localhost:3010/me/lists
+app.get("/me/lists", (req, res) => {
+  const data = {
+    likedMoviesList: likedMoviesList,
+    likedSeriesList: likedSeriesList
+  };
+
+  res.json(data);
+});
+
 function parseTMDBId(response) {
   //Regex för att få TMDB ID baserat på "TMDB ID: {number}"
   const match = response.match(/TMDB ID:\s*(\d+)/);
@@ -183,8 +272,6 @@ function parseMovieName(response) {
   const match = response.match(/MOVIE NAME:\s*(.+)/);
   return match ? match[1] : null;
 }
-
-
 
 app.post("/moviesuggest", async (req, res) => {
   const userQuery = req.body.query;
@@ -216,16 +303,20 @@ app.post("/moviesuggest", async (req, res) => {
     const movieName = parseMovieName(suggestion);
     console.log("Movie name parse: ", movieName);
 
-
     // TODO: spara film-namnet istället för ID?
 
     if (tmdbId && movieName) {
       res.json({ tmdbId, movieName });
     } else {
-      console.error("Failed to extract TMDB ID or Movie Name from AI response:", suggestion);
+      console.error(
+        "Failed to extract TMDB ID or Movie Name from AI response:",
+        suggestion
+      );
       res
         .status(500)
-        .json({ error: "Failed to extract TMDB ID or Movie Name from AI response" });
+        .json({
+          error: "Failed to extract TMDB ID or Movie Name from AI response",
+        });
     }
   } catch (error) {
     console.error("Error in /moviesuggest endpoint:", error);

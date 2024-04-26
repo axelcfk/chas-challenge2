@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { host } from "../utils";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -13,7 +14,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:3010/sessions`, {
+      const response = await fetch(`${host}/sessions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { host } from "../utils";
 
 export default function CreateAccount() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -14,7 +15,7 @@ export default function CreateAccount() {
     setErrorMessage(""); // Clear previous error messages
 
     try {
-      const response = await fetch(`http://localhost:3010/users`, {
+      const response = await fetch(`${host}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
