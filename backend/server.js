@@ -261,6 +261,95 @@ app.get("/me/lists", (req, res) => {
   res.json(data);
 });
 
+// function parseTMDBId(response) {
+//   //Regex för att få TMDB ID baserat på "TMDB ID: {number}"
+//   const match = response.match(/TMDB ID:\s*(\d+)/);
+//   return match ? match[1] : null;
+// }
+
+// function parseMovieName1(response) {
+//   //Regex to extract movie name based on "MOVIE NAME: {string}"
+//   const match = response.match(/MOVIE NAME1:\s*(.+)/);
+//   return match ? match[1] : null;
+// }
+
+// function parseMovieName2(response) {
+//   //Regex to extract movie name based on "MOVIE NAME: {string}"
+//   const match = response.match(/MOVIE NAME2:\s*(.+)/);
+//   return match ? match[1] : null;
+// }
+
+// function parseMovieName3(response) {
+//   //Regex to extract movie name based on "MOVIE NAME: {string}"
+//   const match = response.match(/MOVIE NAME3:\s*(.+)/);
+//   return match ? match[1] : null;
+// }
+
+function parseMovieNames(response) {
+  // const regex = /MOVIE NAME\d+:\s*([^\n]+)\nTMDB ID:\s*\d+/g;
+
+  // const regex = /([^\n]+)/g;
+  const regex = /MOVIE NAME\d+:\s*([^,]+)/g;
+
+  let names = [];
+  let match;
+
+  while ((match = regex.exec(response))) {
+    names.push(match[1].trim()); // Ensuring to trim any extra spaces
+  }
+
+  return names;
+}
+
+app.post("/moviesuggest2", async (req, res) => {
+  const userQuery = req.body.query;
+  console.log("Received user query:", userQuery);
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies.",
+        },
+        {
+          role: "user",
+          content: userQuery,
+        },
+      ],
+    });
+
+    // Entire AI response
+    console.log("AI response:", JSON.stringify(completion, null, 2));
+
+    const suggestion = completion.choices[0].message.content;
+
+    const movieNames = parseMovieNames(suggestion);
+    console.log("Movie names parsed: ", movieNames);
+
+    // Since TMDB ID handling and additional logic are commented out, I will leave them out for clarity.
+    if (movieNames.length === 3) {
+      res.json({ movieNames });
+    } else {
+      console.error(
+        "Failed to extract Movie Names from AI response:",
+        suggestion
+      );
+      res.status(500).json({
+        error: "Failed to extract Movie Names from AI response",
+      });
+    }
+  } catch (error) {
+    console.error("Error in /moviesuggest endpoint:", error);
+    res.status(500).json({
+      error: "Unable to process the movie suggestion at this time.",
+      details: error.message,
+    });
+  }
+});
+
 function parseTMDBId(response) {
   //Regex för att få TMDB ID baserat på "TMDB ID: {number}"
   const match = response.match(/TMDB ID:\s*(\d+)/);
@@ -330,3 +419,5 @@ app.post("/moviesuggest", async (req, res) => {
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+//It will also provide a TMDB id for each movie in the format of: TMDB ID: [number].

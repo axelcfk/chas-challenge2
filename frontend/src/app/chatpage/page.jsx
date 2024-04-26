@@ -10,9 +10,11 @@ import { FaThumbsUp } from "react-icons/fa";
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const [movieDetails, setMovieDetails] = useState({});
+  const [movieCredits, setMovieCredits] = useState({});
   const [loading, setLoading] = useState(false);
   const [noResult, setNoResult] = useState(false);
   const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
+  const [movieCreditsFetched, setMovieCreditsFetched] = useState(false);
   const [toggleExpanded, setToggleExpanded] = useState(false);
   // const [chatGPTFetched, setChatGPTFetched] = useState(false);
   const movieAPI_KEY = "b0aa22976a88a1f9ab9dbcd9828204b5";
@@ -23,7 +25,6 @@ export default function ChatPage() {
   // const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
   // 4e3dec59ad00fa8b9d1f457e55f8d473
 
-  
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
   }
@@ -38,27 +39,27 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-  if (movieAPI_KEY != null && loading && movieDetails.titleFromGPT) {
-    console.log("title received from GPT: ", movieDetails.titleFromGPT); 
-    const encodedMovieTitle = encodeURIComponent(movieDetails.titleFromGPT);
-    console.log("encoded movie title: ", encodedMovieTitle);
+    if (movieAPI_KEY != null && loading && movieDetails.titleFromGPT) {
+      console.log("title received from GPT: ", movieDetails.titleFromGPT);
+      const encodedMovieTitle = encodeURIComponent(movieDetails.titleFromGPT);
+      console.log("encoded movie title: ", encodedMovieTitle);
 
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?query=${encodedMovieTitle}&api_key=${movieAPI_KEY}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Extract movie ID from the response
-        console.log("id from API: ", data.results[0].id);
+      fetch(
+        `https://api.themoviedb.org/3/search/movie?query=${encodedMovieTitle}&api_key=${movieAPI_KEY}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // Extract movie ID from the response
+          console.log("id from API: ", data.results[0].id);
 
-        setMovieDetails({
-          ...movieDetails,
-          idFromAPI: data.results[0].id,
-        }); // Assuming we want the first result
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }
-}, [movieDetails.titleFromGPT]);
+          setMovieDetails({
+            ...movieDetails,
+            idFromAPI: data.results[0].id,
+          }); // Assuming we want the first result
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    }
+  }, [movieDetails.titleFromGPT]);
 
   useEffect(() => {
     //setLoading(true);
@@ -120,11 +121,19 @@ export default function ChatPage() {
             const seProviders = data.results.SE.flatrate.map(
               (provider) => provider.provider_name
             );
+            const seProviders2 = data.results.SE.rent.map(
+              (provider) => provider.provider_name
+            );
+            const seProviders3 = data.results.SE.buy.map(
+              (provider) => provider.provider_name
+            );
             // Update movieDetails state
             console.log(seProviders);
             setMovieDetails({
               ...movieDetails,
-              SE: seProviders,
+              SE_flaterate: seProviders,
+              SE_rent: seProviders2,
+              SE_buy: seProviders3,
             });
           } else {
             console.error("No movie found with the given ID");
@@ -133,13 +142,45 @@ export default function ChatPage() {
           console.error("Error fetching movie details:", error);
         } finally {
           setLoading(false); // Set loading to false after fetching providers
-          console.log(movieDetails)
+          console.log(movieDetails);
         }
       }
     };
 
     fetchWatchProviders();
   }, [movieDetailsFetched]);
+
+  useEffect(() => {
+    async function fetchCreditsDetails() {
+      if (movieDetails.idFromAPI) {
+        try {
+          const url = `https://api.themoviedb.org/3/movie/${movieDetails.idFromAPI}/credits?api_key=${movieAPI_KEY}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          console.log(data);
+          const director = data.crew.find(
+            (person) => person.job === "Director"
+          );
+
+          console.log(`The direector is: ${director.name}`);
+          if (director) {
+            setMovieCredits({
+              ...movieCredits,
+              director: director.name,
+            });
+            setMovieCreditsFetched(true); // Mark that movie credits have been fetched
+            console.log(movieCreditsFetched);
+          } else {
+            console.error("No movie found with the given ID");
+          }
+        } catch (error) {
+          console.error("Error fetching movie details:", error);
+        }
+      }
+    }
+
+    fetchCreditsDetails();
+  }, [movieDetails.idFromAPI]);
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -159,11 +200,15 @@ export default function ChatPage() {
       if (data.tmdbId && data.movieName) {
         console.log("Received TMDB ID:", data.tmdbId);
         console.log("Received Movie Name:", data.movieName);
-        setMovieDetails({ idFromGPT: data.tmdbId, titleFromGPT: data.movieName });
+
+        setMovieDetails({
+          idFromGPT: data.tmdbId,
+          titleFromGPT: data.movieName,
+        });
         // setChatGPTFetched(true);
       } else {
         setNoResult(true);
-        setLoading(false)
+        setLoading(false);
         console.error("No TMDB ID received or error in response");
       }
     } catch (error) {
@@ -187,9 +232,10 @@ export default function ChatPage() {
   }
  */
 
-  //console.log(movieDetails);
+  // console.log(movieDetails);
+  // console.log(movieCredits);
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pb-10 pt-24 px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+    <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
       {movieDetails.backdrop && (
         <div className=" ">
           <img
@@ -203,17 +249,21 @@ export default function ChatPage() {
       )}
 
       {loading ? (
-        <LoadingIndicator /> 
+        <LoadingIndicator />
       ) : noResult ? (
-        <h2 className="h-full ">No Movie or TV series was found</h2>
+        <div className=" flex justify-center items-center h-full">
+          <h2 className=" text-center text-3xl font-semibold">
+            No Movie or TV series was found. Try again!
+          </h2>
+        </div>
       ) : (
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
           {movieDetails.titleFromAPI ? (
             <div className="flex flex-col justify-center items-center text-slate-400">
               <div className="flex flex-col  justify-center items-center ">
                 {" "}
-                <div className="w-full flex flex-row justify-center items-center ">
-                  <div className="w-full ">
+                <div className="w-full flex flex-row justify-center items-center  ">
+                  <div className="w-full">
                     <h2 className="text-2xl font-semibold mb-5 text-slate-50 mr-4">
                       {" "}
                       {movieDetails.titleFromAPI}
@@ -225,7 +275,9 @@ export default function ChatPage() {
                       </p>
                       <p>DIRECTED BY</p>
                     </div>
-                    <p className="font-semibold text-lg">John Doe</p>
+                    <p className="font-semibold text-lg">
+                      {movieCredits.director}
+                    </p>
                     <p>{movieDetails.runtime.toString()} mins</p>
                   </div>
                   <div className="flex flex-col w-full justify-center items-center gap-4">
@@ -248,7 +300,7 @@ export default function ChatPage() {
                   </div>
 
                 </div>
-                <div className="h-60  lex flex-col justify-start md:justify-center items-start  w-full md:w-1/2 ">
+                <div className="h-60 lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
                   <div className=" " onClick={handleToggle}>
                     {!toggleExpanded ? (
                       <div>
@@ -265,7 +317,7 @@ export default function ChatPage() {
                           {movieDetails.tagline}
                         </p>
                         <p className="mb-5  md:w-full font-light text-base">
-                          {movieDetails.overview.slice(0, 300)}
+                          {movieDetails.overview.slice(0, 600)}
                         </p>
                       </div>
                     )}
@@ -273,25 +325,40 @@ export default function ChatPage() {
                 </div>
                 <div className="w-full flex  justify-end mt-8">
                   <div className="w-full ">
-                    <p className="text-sm mr-2">WATCH IT ON</p>
-                    {movieDetails.SE && movieDetails.SE.length > 0
-                      ? movieDetails.SE.map((providerName, index) => {
-                          return (
-                            <div key={index} className="flex">
-                              <p className="text-lg flex mr-3">
+                    {movieDetails.SE_flaterate &&
+                    movieDetails.SE_flaterate.length > 0 ? (
+                      <p className="text-sm mr-2">WATCH IT ON</p>
+                    ) : null}
+
+                    {movieDetails.SE_flaterate &&
+                    movieDetails.SE_flaterate.length > 0 ? (
+                      movieDetails.SE_flaterate.map((providerName, index) => {
+                        return (
+                          <div>
+                            <div className="flex">
+                              <p key={index} className="text-lg flex mr-3">
                                 {providerName}{" "}
                               </p>
                             </div>
-                          );
-                        })
-                      : "N/A"}
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className=" h-10 flex items-end">
+                        <p className="text-sm mr-2">
+                          Not available in your area
+                        </p>
+                      </div>
+                    )}
                   </div>
-                  <p className="font-semibold text-3xl text-green-400">
-                    <span className="text-sm mr-2 text-slate-400 font-normal">
-                      RATING
-                    </span>
-                    {movieDetails.voteAverage.toFixed(1)}
-                  </p>
+                  <div className=" h-10 flex items-end">
+                    <p className="font-semibold text-3xl text-green-400">
+                      <span className="text-sm mr-2 text-slate-400 font-normal">
+                        RATING
+                      </span>
+                      {movieDetails.voteAverage.toFixed(1)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -304,10 +371,10 @@ export default function ChatPage() {
           )}
         </div>
       )}
-      <div className="z-10 flex flex-col w-full">
+      <div className="md:flex md:justify-center md:items-center z-10 fixed inset-x-0 bottom-0 pb-2 px-8 md:px-20 bg-slate-950">
         <input
           style={{ border: "1px solid grey" }}
-          className="h-14 bg-transparent w-full md:w-1/3 px-5 rounded-xl  text-lg text-center text-slate-50"
+          className="h-14 bg-transparent w-full md:w-1/3 px-5 rounded-xl text-lg text-center text-slate-50"
           type="text"
           value={input}
           onChange={handleInputChange}
@@ -317,8 +384,8 @@ export default function ChatPage() {
           className={`h-12 ${
             input
               ? "bg-slate-100 hover:bg-slate-300 text-slate-900"
-              : "bg-slate-400  text-slate-900"
-          }  w-full md:w-1/3 rounded-full mt-5  font-semibold text-xl`}
+              : "bg-slate-400 text-slate-900"
+          } w-full md:w-1/3 rounded-full md:mt-0 mt-5 font-semibold text-xl`}
           onClick={handleQuerySubmit}
           disabled={!input}
         >
