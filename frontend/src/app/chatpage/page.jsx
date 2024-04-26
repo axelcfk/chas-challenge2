@@ -8,6 +8,7 @@ import { FaPlus, FaThumbsUp } from "react-icons/fa";
 // https://api.themoviedb.org/3/movie/550/watch/providers?api_key=a97f158a2149d8f803423ee01dec4d83
 
 export default function ChatPage() {
+  const [actorsToggle, setActorsToggle] = useState(false);
   const [input, setInput] = useState("");
   const [movieDetails, setMovieDetails] = useState({});
   const [movieCredits, setMovieCredits] = useState({});
@@ -27,6 +28,10 @@ export default function ChatPage() {
 
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
+  }
+
+  function handleActorsToggle() {
+    setActorsToggle(!actorsToggle);
   }
 
   const resetState = () => {
@@ -158,15 +163,19 @@ export default function ChatPage() {
           const response = await fetch(url);
           const data = await response.json();
           console.log(data);
+
+          const actors = data.cast.slice(0, 4).map((actor) => actor.name);
+          console.log("The actors are:", actors);
+
           const director = data.crew.find(
             (person) => person.job === "Director"
           );
-
-          console.log(`The direector is: ${director.name}`);
+          console.log(`The director is: ${director.name}`);
           if (director) {
             setMovieCredits({
               ...movieCredits,
               director: director.name,
+              actors: actors,
             });
             setMovieCreditsFetched(true); // Mark that movie credits have been fetched
             console.log(movieCreditsFetched);
@@ -328,6 +337,23 @@ export default function ChatPage() {
                       </div>
                     )}
                   </div>
+
+                  <p
+                    onClick={handleActorsToggle}
+                    className="mt-10 mb-2 font-medium text-lg"
+                  >
+                    Actors
+                  </p>
+                  {actorsToggle ? (
+                    <div className="mb-5  md:w-full font-light text-base flex flex-row">
+                      {movieCredits &&
+                        movieCredits.actors.map((actor, index) => (
+                          <div key={index} className="mr-2">
+                            {actor}
+                          </div>
+                        ))}
+                    </div>
+                  ) : null}
                 </div>
                 <div className="w-full flex  justify-end mt-8">
                   <div className="w-full ">
