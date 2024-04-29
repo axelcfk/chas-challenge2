@@ -1,17 +1,19 @@
-export default function MovieCard({ movie }) {
+export default function MovieCard({ movie, credits }) {
   const { title, poster, overview } = movie;
+  const { director } = credits;
 
   return (
     <div className="flex flex-col justify-center items-center h-full my-5">
-      <div className="flex  h-full">
+      <div className="flex w-full h-full justify-center ">
         <img
           style={{ border: "1px solid grey" }}
-          className="h-40 mr-3 rounded-md"
+          className="h-40 mr-3 rounded-md "
           src={poster}
           alt={title}
         />
         <div className=" flex flex-col ml-3">
           <h2 className="text-md mb-4 font-light">{title}</h2>
+          <p>{director}</p>
           <p className="font-light text-slate-400">
             {overview.slice(0, 100)}...
           </p>

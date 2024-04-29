@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { host, postAddToLikeList, postAddToWatchList } from "../utils";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
 
-
 // https://api.themoviedb.org/3/movie/550/watch/providers?api_key=a97f158a2149d8f803423ee01dec4d83
 
 export default function ChatPage() {
@@ -290,7 +289,6 @@ export default function ChatPage() {
                     <p>{movieDetails.runtime.toString()} mins</p>
                   </div>
                   <div className="flex flex-col w-full justify-center items-center gap-4">
-
                     <img
                       className=" h-52 md:h-96 rounded-md w-auto"
                       src={movieDetails.poster}
@@ -299,21 +297,23 @@ export default function ChatPage() {
                     />
 
                     <div className="w-full flex justify-center gap-4">
-                      <button onClick={() => {
-                        postAddToLikeList(movieDetails.idFromAPI, "movie")
-                      }}>
-                      <FaThumbsUp></FaThumbsUp>
+                      <button
+                        onClick={() => {
+                          postAddToLikeList(movieDetails.idFromAPI, "movie");
+                        }}
+                      >
+                        <FaThumbsUp></FaThumbsUp>
                       </button>
 
-                      <button onClick={() => {
-                        postAddToWatchList(movieDetails.idFromAPI, "movie")
-                      }}>
+                      <button
+                        onClick={() => {
+                          postAddToWatchList(movieDetails.idFromAPI, "movie");
+                        }}
+                      >
                         <FaPlus></FaPlus>
                       </button>
                     </div>
-                    
                   </div>
-
                 </div>
                 <div className="h-60 lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
                   <div className=" " onClick={handleToggle}>
