@@ -1,6 +1,6 @@
 export default function ChooseStreaming() {
   return (
-    <main className="py-10 px-5 h-screen w-screen flex flex-col">
+    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center">
       <div>
         <h1 className="text-3xl font-bold">Streaming services</h1>
         <p className="mt-6 text-sm">
@@ -8,18 +8,38 @@ export default function ChooseStreaming() {
           changed later in your profile
         </p>
       </div>
-      <div className="streaming-container grid grid-cols-3 gap-4 mt-6">
-        <p className="streaming-card">Netflix</p>
-        <p className="streaming-card">HBO max</p>
-        <p className="streaming-card">Viaplay</p>
-        <p className="streaming-card">Amazon Prime</p>
-        <p className="streaming-card">Disney+</p>
-        <p className="streaming-card">Hulu</p>
-        <p className="streaming-card">Apple TV+</p>
-        <p className="streaming-card">Paramount</p>
-        <p className="streaming-card">Mubi</p>
+      <div className="container mt-12 w-full max-w-4xl mx-auto">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="square">
+            <div className="square-content">Netflix</div>
+          </div>
+          <div className="square">
+            <div className="square-content">HBO max</div>
+          </div>
+          <div className="square">
+            <div className="square-content">Viaplay</div>
+          </div>
+          <div className="square">
+            <div className="square-content">Amazon Prime</div>
+          </div>
+          <div className="square">
+            <div className="square-content">Disney+</div>
+          </div>
+          <div className="square">
+            <div className="square-content">Hulu</div>
+          </div>
+          <div className="square">
+            <div className="square-content">Apple TV+</div>
+          </div>
+          <div className="square">
+            <div className="square-content">Paramount</div>
+          </div>
+          <div className="square">
+            <div className="square-content">Mubi</div>
+          </div>
+        </div>
       </div>
-      <button className="streaming-btn border-2 w-52 mt-8 rounded-2xl">
+      <button className="streaming-btn w-56 mt-8 rounded-3xl">
         Next
       </button>
     </main>
