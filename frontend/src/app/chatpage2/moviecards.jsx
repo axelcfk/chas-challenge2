@@ -3,10 +3,16 @@ import Link from "next/link";
 export default function MovieCard({ movie, credits }) {
   const { title, poster, overview } = movie;
   const { director } = credits;
-  const movieTitleEncoded = encodeURIComponent(title); // Make sure the title is URL-friendly
+  if (!title) {
+    // Handle the case where title is not provided
+    console.error("Movie title is undefined or empty");
+    return "Oh no I have no title"; // Or a placeholder component/message
+  }
+
+  const movieTitleEncoded = encodeURIComponent(title);
 
   return (
-    <Link href={`/movie/${movieTitleEncoded}`}>
+    <Link href="/movie/[movieName]" as={`/movie/${encodeURIComponent(title)}`}>
       <div className="flex flex-col justify-center items-center h-full my-5">
         <div className="flex w-full h-full justify-center ">
           <img
@@ -26,22 +32,4 @@ export default function MovieCard({ movie, credits }) {
       </div>
     </Link>
   );
-}
-
-{
-  /* <div className="w-full">
-  <h2 className="text-2xl font-semibold mb-5 text-slate-50 mr-4">
-    {" "}
-    {movieDetails.titleFromAPI}
-  </h2>
-  <div className="flex text-sm">
-    <p>
-      {movieDetails.release.slice(0, 4)}
-      <span className="text-sm mx-2">●</span>
-    </p>
-    <p>DIRECTED BY</p>
-  </div>
-  <p className="font-semibold text-lg">{movieCredits.director}</p>
-  <p>{movieDetails.runtime.toString()} mins</p>
-</div>; */
 }
