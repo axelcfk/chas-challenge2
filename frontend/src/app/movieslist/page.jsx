@@ -7,9 +7,10 @@ export default function MovieSelection() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [moreOptions, setMoreOptions] = useState(9);
 
+  const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
   useEffect(() => {
-    const url =
-      "https://api.themoviedb.org/3/movie/popular?api_key=71a2109e9f6fadaf14036ae6c29ac5b7";
+    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
+
     const fetchMovies = async () => {
       try {
         const response = await fetch(url);
@@ -18,7 +19,7 @@ export default function MovieSelection() {
         }
         const data = await response.json();
 
-        // Shuffle the first three movies
+        // Shuffles 20 movies
         const firstThreeMovies = data.results.slice(0, 20);
         for (let i = 0; i < 20; i++) {
           const randomIndex = Math.floor(Math.random() * 20);
@@ -28,7 +29,7 @@ export default function MovieSelection() {
           ];
         }
 
-        // Concatenate the shuffled first three movies with the remaining movies
+        // there are only 20 movies in the populer movies api, 9 of which are being shuffled
         const shuffledMovies = [...firstThreeMovies, ...data.results.slice(9)];
         setMovies(shuffledMovies);
       } catch (error) {
@@ -88,3 +89,5 @@ export default function MovieSelection() {
     </div>
   );
 }
+
+
