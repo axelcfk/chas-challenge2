@@ -13,8 +13,7 @@ export default function ChatPage2() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [noResult, setNoResult] = useState(false);
-  const [movieDetailsFetched, setMovieDetailsFetched] = useState(false);
-  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473"; // Use an appropriate API key
+  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -38,8 +37,6 @@ export default function ChatPage2() {
               ...movieCredits,
               director: director.name,
             });
-            setMovieCreditsFetched(true); // Mark that movie credits have been fetched
-            console.log(movieCreditsFetched);
           } else {
             console.error("No movie found with the given ID");
           }
@@ -78,7 +75,6 @@ export default function ChatPage2() {
     }
   };
 
-  // Example of setting multiple movie details (assuming you fetch each movie's details):
   useEffect(() => {
     async function fetchAllMovieDetails() {
       const allMovieDetails = await Promise.all(
