@@ -6,6 +6,7 @@
 import { useState, useEffect } from "react";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
@@ -90,6 +91,17 @@ export default function MovieSelection() {
               />
             ) : (
               <div className="overlay">
+                <FaCheckCircle
+                  className="text-green-500"
+                  style={{
+                    fontSize: "40px",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    zIndex: 10,
+                  }}
+                />
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
