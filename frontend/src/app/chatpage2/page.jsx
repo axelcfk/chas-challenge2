@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import MovieCard from "./moviecards";
+import { postMovieToDatabase } from "../utils";
 
 export default function ChatPage2() {
   const [input, setInput] = useState("");
@@ -68,12 +69,16 @@ export default function ChatPage2() {
                   `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
                 );
                 const detailsData = await detailsResponse.json();
+                await postMovieToDatabase(detailsData);
+
                 return {
                   title: detailsData.title,
                   id: movieId,
                   poster: `https://image.tmdb.org/t/p/w500${detailsData.poster_path}`,
                   overview: detailsData.overview,
                 };
+
+
               }
             } catch (error) {
               console.error(`Error fetching details for ${title}:`, error);

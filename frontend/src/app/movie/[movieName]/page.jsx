@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { postAddToLikeList, postAddToWatchList } from "@/app/utils";
 
 export default function moviePage() {
   const [movieDetails, setMovieDetails] = useState("");
@@ -53,6 +54,7 @@ export default function moviePage() {
       const data = await response.json();
       setMovieDetails({
         ...movieDetails,
+        idFromAPI: id,
         titleFromAPI: data.title, // om vi inte redan gjort detta via ChatGpts response
         overview: data.overview,
         voteAverage: data.vote_average,
@@ -85,6 +87,11 @@ export default function moviePage() {
         <p className="font-semibold text-xl">Finding a movie match ... </p>
       </div>
     );
+  }
+
+  if (movieDetails.titleFromAPI) {
+
+    console.log(movieDetails.titleFromAPI);
   }
 
   return (
@@ -145,6 +152,7 @@ export default function moviePage() {
                     <div className="w-full flex justify-center gap-4">
                       <button
                         onClick={() => {
+                          console.log("attempting to add movie to like list");
                           postAddToLikeList(movieDetails.idFromAPI, "movie", movieDetails.titleFromAPI);
                         }}
                       >
