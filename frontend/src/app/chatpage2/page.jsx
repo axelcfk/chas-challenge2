@@ -24,6 +24,7 @@ export default function ChatPage2() {
 
   const handleQuerySubmit = async () => {
     setLoading(true);
+    setInput("");
     setShowVideo(true);
     changeSpeed(5); // Speed up the video when the search begins
 
@@ -40,9 +41,9 @@ export default function ChatPage2() {
         // Delay setting movies and hiding video
         setTimeout(() => {
           setMovies(data.movieNames); // Now set movies here to trigger details fetching after the delay
-          setShowVideo(false); // Hide video after 10 seconds
           setLoading(false); // Also set loading false here to ensure it happens after the video hides
-        }, 3000);
+          setShowVideo(false); // Hide video after 10 seconds
+        }, 2000);
       } else {
         setNoResult(true);
         setLoading(false);
@@ -95,45 +96,93 @@ export default function ChatPage2() {
   }, [movies]);
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">
-      {showVideo && (
-        <div className="md:w-full flex justify-center items-center ">
-          <video className="md:w-1/2 w-full" ref={videoRef} autoPlay loop muted>
+    <div className="flex  flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">
+      {showVideo && movieDetails.length < 3 && (
+        <div className=" md:w-full flex flex-col justify-center items-center h-full ">
+          <video
+            className="md:w-1/2 w-full "
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+          >
             <source src="/ai-gif.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
+          <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
+            {" "}
+            <span className="mb-4">Hi there!</span>{" "}
+            <span>I'm your personal </span> <span>AI movie matcher</span>
+          </p>
         </div>
       )}
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center ">
         {movieDetails.length > 0 && (
-          <div className="flex flex-col justify-center items-center flex-wrap">
-            {movieDetails.map((movie, index) => (
-              <MovieCard key={movie.id} movie={movie} credits={movieCredits} />
-            ))}
+          <div>
+            <div className="flex flex-col justify-center items-center flex-wrap">
+              {movieDetails.map((movie, index) => (
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  credits={movieCredits}
+                />
+              ))}
+            </div>
+            <div className=" sticky inset-x-0 bottom-10 z-10 w-full flex flex-wrap justify-center items-center ">
+              <div
+                className="flex justify-center items-center  rounded-xl h-14 px-10 z-10"
+                style={{ border: "1px solid grey" }}
+              >
+                <input
+                  className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
+                  type="text"
+                  value={input}
+                  onChange={handleInputChange}
+                  placeholder="Want anything else?"
+                />
+                <div
+                  className="hover:cursor-pointer"
+                  onClick={handleQuerySubmit}
+                >
+                  <video
+                    className="w-full h-14"
+                    ref={videoRef}
+                    autoPlay
+                    loop
+                    muted
+                  >
+                    <source src="/ai-gif.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
-      <div className="sticky inset-x-0 bottom-0 z-10 w-full flex flex-wrap justify-center items-center">
-        <input
-          style={{ border: "1px solid grey" }}
-          className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Write anything..."
-        />
-        <button
-          className={`h-14 ${
-            input
-              ? "bg-slate-100 hover:bg-slate-300 text-slate-900"
-              : "bg-slate-400 text-slate-900"
-          } w-full md:w-1/3 rounded-full  font-semibold text-xl md:ml-3 md:mt-0 mt-5`}
-          onClick={handleQuerySubmit}
-          disabled={!input}
-        >
-          Find Movie
-        </button>
-      </div>
+      {!movieDetails.length > 0 && (
+        <div className=" sticky inset-x-0 bottom-10 z-10 w-full flex flex-wrap justify-center items-center ">
+          <input
+            style={{ border: "1px solid grey" }}
+            className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            placeholder="What's your movie vibe today?"
+          />
+          <button
+            className={`h-14 ${
+              input
+                ? "bg-slate-100 hover:bg-slate-300 text-slate-900"
+                : "bg-slate-400 text-slate-900"
+            } w-full md:w-1/3 rounded-full  font-semibold text-xl md:ml-3 md:mt-0 mt-5`}
+            onClick={handleQuerySubmit}
+            disabled={!input}
+          >
+            Find Movie
+          </button>
+        </div>
+      )}
     </div>
   );
 }
