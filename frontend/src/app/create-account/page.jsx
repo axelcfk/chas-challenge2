@@ -46,7 +46,7 @@ export default function CreateAccount() {
 
   return (
     <div
-      className="py-10 px-5 h-screen w-screen flex flex-col justify-between"
+      className="py-10 px-5 h-screen w-screen flex flex-col justify-between bg-slate-950"
       style={{
         backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",

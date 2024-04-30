@@ -87,10 +87,7 @@ export default function ChatPage2() {
               `https://api.themoviedb.org/3/search/movie?query=${encodedTitle}&api_key=${movieAPI_KEY}`
             );
             const data = await response.json();
-
-            
-
-            console.log(data.results);
+            console.log("results:", data.results);
             if (data.results.length > 0) {
               const movieId = data.results[0].id;
               const detailsResponse = await fetch(

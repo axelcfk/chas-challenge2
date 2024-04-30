@@ -31,7 +31,7 @@ export default function Login() {
         // Kolla så  att både token och userId finns
         localStorage.setItem("token", data.token); // Lägg till token i local storage
         localStorage.setItem("userId", data.userId); // Lägg till userId i local storage
-        router.push("/chatpage"); // Gå till startsida
+        router.push("/new-user"); // Gå till new user page
       } else {
         throw new Error("Authentication failed, no token or userId received.");
       }
@@ -43,7 +43,7 @@ export default function Login() {
 
   return (
     <div
-      className="py-10 px-5 h-screen w-screen flex flex-col justify-between"
+      className="py-10 px-5 h-screen w-screen flex flex-col justify-between bg-slate-950"
       style={{
         backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",

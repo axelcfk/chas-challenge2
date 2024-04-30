@@ -5,11 +5,9 @@ import { useEffect, useState } from "react";
 //const movieAPI_KEY = process.env.movieAPI_KEY;
 
 export default function FirstPage() {
-
-
   return (
     <div
-      className="py-10 px-5 h-screen w-screen"
+      className="py-10 px-5 h-screen w-screen bg-slate-950"
       style={{
         backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",
