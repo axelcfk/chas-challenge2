@@ -147,7 +147,7 @@ export default function MovieSelection() {
 
         <button
           className="flex justify-center items-center text-slate-50 rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
-          onClick={() => router.push("/chatpage2")}
+          onClick={() => router.push("/choose-streaming")}
         >
           <span className="px-2 text-xl">Continue</span> <FaArrowRight />
         </button>
