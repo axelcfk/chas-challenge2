@@ -175,26 +175,26 @@ app.post("/sessions", async (req, res) => {
 const fetchedMovies = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 const fetchedSeries = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 
-
 // BARA FÖR ATT SE VAD SOM HAR SPARATS, VI SKA INTE ANVÄNDA DENNA
 app.get("/allfetchedmoviesorseries", async (req, res) => {
-
-  res.status(200).json({message: "GET data for /allfetchedmoviesorseries: ", fetchedMovies: fetchedMovies, fetchedSeries: fetchedSeries});
-
-
-})
+  res.status(200).json({
+    message: "GET data for /allfetchedmoviesorseries: ",
+    fetchedMovies: fetchedMovies,
+    fetchedSeries: fetchedSeries,
+  });
+});
 
 // GET
-app.post("/movieobject", async (req, res)  => {
-
+app.post("/movieobject", async (req, res) => {
   try {
     console.log("/movieobject req.body: ", req.body);
     const { movieID, movieOrSeries } = req.body;
 
     if (!movieID || !movieOrSeries) {
-      return res
-        .status(400)
-        .json({ error: "movieID not received, and/or need to define if movie or series." }); // exit code
+      return res.status(400).json({
+        error:
+          "movieID not received, and/or need to define if movie or series.",
+      }); // exit code
     }
 
     //console.log("Current fetchedMovies: ", fetchedMovies);
@@ -203,13 +203,12 @@ app.post("/movieobject", async (req, res)  => {
       if (movieOrSeries === "movie") {
         searchResult = fetchedMovies.find((movie) => {
           return movieID === movie.id;
-        })
+        });
         //console.log("Movie-Search result: ", searchResult);
-
       } else if (movieOrSeries === "series") {
         searchResult = fetchedSeries.find((series) => {
           return movieID === series.id;
-        })
+        });
         console.log("Series-Search result: ", searchResult);
       } else {
         console.log("Find function in fetchedMovies or fetchedSeries failed?");
@@ -218,18 +217,15 @@ app.post("/movieobject", async (req, res)  => {
       console.error("2:Error finding movie/series", error);
       return res.status(500).send("2:Error finding movie/series"); // exit code
     }
-  
 
-
-  res.status(200).json({message: "GET data for movie/series: ", searchResult});
-
-} catch (error) {
-  console.error("1:Error attempting to GET movie/series object", error);
-  res.status(500).json({ error: "Internal server error" });
-}
-
-
-})
+    res
+      .status(200)
+      .json({ message: "GET data for movie/series: ", searchResult });
+  } catch (error) {
+    console.error("1:Error attempting to GET movie/series object", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.post("/addmovietodatabase", async (req, res) => {
   try {
@@ -237,24 +233,30 @@ app.post("/addmovietodatabase", async (req, res) => {
     const { movie, movieOrSeries } = req.body;
 
     if (!movie.id || !movieOrSeries) {
-      return res
-        .status(400)
-        .json({ error: "Received movie does not contain an id, and/or need to define if movie or series." });
+      return res.status(400).json({
+        error:
+          "Received movie does not contain an id, and/or need to define if movie or series.",
+      });
     }
 
-    const idExistsInMovies = fetchedMovies.some((fetchedMovie) => fetchedMovie.id === movie.id);
-    const idExistsInSeries = fetchedSeries.some((fetchedSerie) => fetchedSerie.id === movie.id);
+    const idExistsInMovies = fetchedMovies.some(
+      (fetchedMovie) => fetchedMovie.id === movie.id
+    );
+    const idExistsInSeries = fetchedSeries.some(
+      (fetchedSerie) => fetchedSerie.id === movie.id
+    );
 
     if (idExistsInMovies || idExistsInSeries) {
-      console.log("movie/series ID ", movie.id, " has already been fetched."); 
-      return res
-        .status(200)
-        .json({ message: "Liked movie OR Liked series has already been fetched." });
+      console.log("movie/series ID ", movie.id, " has already been fetched.");
+      return res.status(200).json({
+        message: "Liked movie OR Liked series has already been fetched.",
+      });
     } else {
       // om redan finns?
     }
 
-    if (movieOrSeries === "movie") { // maybe change to some sort of True/False variable instead...
+    if (movieOrSeries === "movie") {
+      // maybe change to some sort of True/False variable instead...
       fetchedMovies.push(movie); // UPDATE LATER TO SQL
       console.log("Added movie ID ", movie.id, " to fetchedMovies");
     } else if (movieOrSeries === "series") {
@@ -264,12 +266,14 @@ app.post("/addmovietodatabase", async (req, res) => {
       console.log("Could not determine if movie or series");
     }
 
-    
     res.status(201).json({
-      message: "Movie/Series saved to fetchedMovies/fetchedSeries"
+      message: "Movie/Series saved to fetchedMovies/fetchedSeries",
     });
   } catch (error) {
-    console.error("1:Error adding movie/series to fetchedMovie/fetchedSeries:", error);
+    console.error(
+      "1:Error adding movie/series to fetchedMovie/fetchedSeries:",
+      error
+    );
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -349,7 +353,10 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     if (!id || !movieOrSeries || !title) {
       return res
         .status(400)
-        .json({ error: "ID is required, and need to define if movie or series, and need movie title" });
+        .json({
+          error:
+            "ID is required, and need to define if movie or series, and need movie title",
+        });
     }
 
     const idExistsInMovies = likedMoviesList.some(
@@ -513,7 +520,6 @@ function parseMovieNames(response) {
   return names;
 }
 
-
 app.post("/moviesuggest2", async (req, res) => {
   const userQuery = req.body.query;
   console.log("Received user query:", userQuery);
@@ -525,7 +531,7 @@ app.post("/moviesuggest2", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies.",
+            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. The suggested movie names should go inside [string]. Never add any additional numbers.",
         },
         {
           role: "user",
@@ -538,7 +544,7 @@ app.post("/moviesuggest2", async (req, res) => {
     console.log("AI response:", JSON.stringify(completion, null, 2));
 
     const suggestion = completion.choices[0].message.content;
-
+    console.log("Suggestion structure:", suggestion);
     const movieNames = parseMovieNames(suggestion);
     console.log("Movie names parsed: ", movieNames);
 
@@ -586,7 +592,7 @@ app.post("/moviesuggest", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest movies or tv series based on user descriptions. It will also provide a TMDB id for that movie/serie in the format of: TMDB ID: [number]. Additionally, it will provide a Movie/Series Name for that movie/series in the format of: MOVIE NAME: [string]. It will not answer any other questions. It will only suggest movies and tv series.",
+            "This assistant will suggest movies or tv series based on user descriptions. It will also provide a TMDB id for that movie/serie in the format of: TMDB ID: [number]. Additionally, it will provide a Movie/Series Name for that movie/series in the format of: MOVIE NAME: [string]. It will not answer any other questions. It will only suggest movies and tv series. Always use this structure. Never add list numbers",
         },
         {
           role: "user",
@@ -628,66 +634,57 @@ app.post("/moviesuggest", async (req, res) => {
 });
 
 app.get("/dailymix", async (req, res) => {
-
-  
   // no user query needed, will be based on existing like list
-    /* const userQuery = req.body.query;
+  /* const userQuery = req.body.query;
     console.log("Received user query:", userQuery); */
 
-    const likedMovieTitles = likedMoviesList.map ( movie => { 
-      return movie.title;
-     })
+  const likedMovieTitles = likedMoviesList.map((movie) => {
+    return movie.title;
+  });
 
-    console.log("likedMovieTitles: ", likedMovieTitles);
+  console.log("likedMovieTitles: ", likedMovieTitles);
 
-    const likedMovieTitlesString = likedMovieTitles.join(", ");
-    console.log("likedMovieTitlesString: ", likedMovieTitlesString);
+  const likedMovieTitlesString = likedMovieTitles.join(", ");
+  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
 
-  
-    try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content:
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
             "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
-          },
-          {
-            role: "user",
-            content: likedMovieTitlesString,
-          },
-        ],
-      });
+        },
+        {
+          role: "user",
+          content: likedMovieTitlesString,
+        },
+      ],
+    });
 
-     // Entire AI response
-      console.log("AI response:", JSON.stringify(completion, null, 2));
+    // Entire AI response
+    console.log("AI response:", JSON.stringify(completion, null, 2));
 
-      const suggestion = completion.choices[0].message.content;
-      console.log("suggestion: ", suggestion);
+    const suggestion = completion.choices[0].message.content;
+    console.log("suggestion: ", suggestion);
 
-
-      if (suggestion) {
-        res.json({ suggestion });
-      } else {
-        console.error(
-          "Failed to generate daily mix suggestion: ",
-          suggestion
-        );
-        res.status(500).json({
-          error: "Failed to extract daily mix suggestion from AI response",
-        });
-      }
-
-    } catch (error) {
-      console.error("Error in /dailymix endpoint:", error);
+    if (suggestion) {
+      res.json({ suggestion });
+    } else {
+      console.error("Failed to generate daily mix suggestion: ", suggestion);
       res.status(500).json({
-        error: "Unable to process the daily mix at this time.",
-        details: error.message,
+        error: "Failed to extract daily mix suggestion from AI response",
       });
     }
-    
-})
+  } catch (error) {
+    console.error("Error in /dailymix endpoint:", error);
+    res.status(500).json({
+      error: "Unable to process the daily mix at this time.",
+      details: error.message,
+    });
+  }
+});
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
