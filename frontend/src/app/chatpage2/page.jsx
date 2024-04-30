@@ -37,57 +37,62 @@ export default function ChatPage2() {
 
       if (data.movieNames && data.movieNames.length > 0) {
         console.log("Received Movie Names:", data.movieNames);
-        setMovies(data.movieNames);
-        setShowVideo(false); // Hide video if movies are found
+        // Delay setting movies and hiding video
+        setTimeout(() => {
+          setMovies(data.movieNames); // Now set movies here to trigger details fetching after the delay
+          setShowVideo(false); // Hide video after 10 seconds
+          setLoading(false); // Also set loading false here to ensure it happens after the video hides
+        }, 3000);
       } else {
         setNoResult(true);
+        setLoading(false);
+        setShowVideo(false);
       }
     } catch (error) {
       console.error("Failed to fetch AI suggestion:", error);
       setNoResult(true);
-    } finally {
       setLoading(false);
-      setShowVideo(false); // Hide the video after fetch is complete
+      setShowVideo(false);
     }
   };
 
   useEffect(() => {
-    if (movies.length > 0) {
-      async function fetchAllMovieDetails() {
-        const allMovieDetails = await Promise.all(
-          movies.map(async (title) => {
-            try {
-              const encodedTitle = encodeURIComponent(title);
-              const response = await fetch(
-                `https://api.themoviedb.org/3/search/movie?query=${encodedTitle}&api_key=${movieAPI_KEY}`
+    async function fetchAllMovieDetails() {
+      const allMovieDetails = await Promise.all(
+        movies.map(async (title) => {
+          try {
+            const encodedTitle = encodeURIComponent(title);
+            const response = await fetch(
+              `https://api.themoviedb.org/3/search/movie?query=${encodedTitle}&api_key=${movieAPI_KEY}`
+            );
+            const data = await response.json();
+            if (data.results.length > 0) {
+              const movieId = data.results[0].id;
+              const detailsResponse = await fetch(
+                `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
               );
-              const data = await response.json();
-              if (data.results.length > 0) {
-                const movieId = data.results[0].id;
-                const detailsResponse = await fetch(
-                  `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
-                );
-                const detailsData = await detailsResponse.json();
-                return {
-                  title: detailsData.title,
-                  id: movieId,
-                  poster: `https://image.tmdb.org/t/p/w500${detailsData.poster_path}`,
-                  overview: detailsData.overview,
-                };
-              }
-            } catch (error) {
-              console.error(`Error fetching details for ${title}:`, error);
+              const detailsData = await detailsResponse.json();
+              const posterPath = detailsData.poster_path;
+              const posterUrl = posterPath
+                ? `https://image.tmdb.org/t/p/w500${posterPath}`
+                : null;
+              return {
+                title: detailsData.title,
+                id: movieId,
+                poster: posterUrl,
+                overview: detailsData.overview,
+              };
             }
-          })
-        );
-        setMovieDetails(
-          allMovieDetails.filter((detail) => detail !== undefined)
-        );
-      }
-
-      fetchAllMovieDetails();
+          } catch (error) {
+            console.error(`Error fetching details for ${title}:`, error);
+          }
+        })
+      );
+      setMovieDetails(allMovieDetails.filter((detail) => detail !== undefined));
     }
-  }, [movies, movieAPI_KEY]);
+
+    if (movies.length > 0) fetchAllMovieDetails();
+  }, [movies]);
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">
