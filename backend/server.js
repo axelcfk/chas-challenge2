@@ -172,6 +172,107 @@ app.post("/sessions", async (req, res) => {
   }
 });
 
+const fetchedMovies = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+const fetchedSeries = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+
+
+// BARA FÖR ATT SE VAD SOM HAR SPARATS, VI SKA INTE ANVÄNDA DENNA
+app.get("/allfetchedmoviesorseries", async (req, res) => {
+
+  res.status(200).json({message: "GET data for /allfetchedmoviesorseries: ", fetchedMovies: fetchedMovies, fetchedSeries: fetchedSeries});
+
+
+})
+
+// GET
+app.post("/movieobject", async (req, res)  => {
+
+  try {
+    console.log("/movieobject req.body: ", req.body);
+    const { movieID, movieOrSeries } = req.body;
+
+    if (!movieID || !movieOrSeries) {
+      return res
+        .status(400)
+        .json({ error: "movieID not received, and/or need to define if movie or series." }); // exit code
+    }
+
+    console.log("Current fetchedMovies: ", fetchedMovies);
+    let searchResult;
+    try {
+      if (movieOrSeries === "movie") {
+        searchResult = fetchedMovies.find((movie) => {
+          return movieID === movie.id;
+        })
+        console.log("Movie-Search result: ", searchResult);
+
+      } else if (movieOrSeries === "series") {
+        searchResult = fetchedSeries.find((series) => {
+          return movieID === series.id;
+        })
+        console.log("Series-Search result: ", searchResult);
+      } else {
+        console.log("Find function in fetchedMovies or fetchedSeries failed?");
+      }
+    } catch (error) {
+      console.error("2:Error finding movie/series", error);
+      return res.status(500).send("2:Error finding movie/series"); // exit code
+    }
+  
+
+
+  res.status(200).json({message: "GET data for movie/series: ", searchResult});
+
+} catch (error) {
+  console.error("1:Error attempting to GET movie/series object", error);
+  res.status(500).json({ error: "Internal server error" });
+}
+
+
+})
+
+app.post("/addmovietodatabase", async (req, res) => {
+  try {
+    console.log("/addmovietodatabase req.body: ", req.body);
+    const { movie, movieOrSeries } = req.body;
+
+    if (!movie.id || !movieOrSeries) {
+      return res
+        .status(400)
+        .json({ error: "Received movie does not contain an id, and/or need to define if movie or series." });
+    }
+
+    const idExistsInMovies = fetchedMovies.some((fetchedMovie) => fetchedMovie.id === movie.id);
+    const idExistsInSeries = fetchedSeries.some((fetchedSerie) => fetchedSerie.id === movie.id);
+
+    if (idExistsInMovies || idExistsInSeries) {
+      console.log("movie/series ID ", movie.id, " has already been fetched."); 
+      return res
+        .status(200)
+        .json({ message: "Liked movie OR Liked series has already been fetched." });
+    } else {
+      // om redan finns?
+    }
+
+    if (movieOrSeries === "movie") { // maybe change to some sort of True/False variable instead...
+      fetchedMovies.push(movie); // UPDATE LATER TO SQL
+      console.log("Added movie ID ", movie.id, " to fetchedMovies");
+    } else if (movieOrSeries === "series") {
+      fetchedSeries.push(movie); // UPDATE LATER TO SQL
+      console.log("Added series ID ", movie.id, " to fetchedSeries");
+    } else {
+      console.log("Could not determine if movie or series");
+    }
+
+    
+    res.status(201).json({
+      message: "Movie/Series saved to fetchedMovies/fetchedSeries"
+    });
+  } catch (error) {
+    console.error("1:Error adding movie/series to fetchedMovie/fetchedSeries:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 const likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 const likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL

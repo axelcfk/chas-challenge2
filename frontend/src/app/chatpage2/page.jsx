@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import MovieCard from "./moviecards";
+import { host } from "../utils";
+import { postMovieToDatabase } from "../utils";
 
 // https://api.themoviedb.org/3/movie/550/watch/providers?api_key=a97f158a2149d8f803423ee01dec4d83
 
@@ -85,6 +87,9 @@ export default function ChatPage2() {
               `https://api.themoviedb.org/3/search/movie?query=${encodedTitle}&api_key=${movieAPI_KEY}`
             );
             const data = await response.json();
+
+            
+
             console.log(data.results);
             if (data.results.length > 0) {
               const movieId = data.results[0].id;
@@ -92,6 +97,12 @@ export default function ChatPage2() {
                 `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
               );
               const detailsData = await detailsResponse.json();
+
+              console.log("data.results[0]: " , detailsData);
+
+             // STORE MOVIE OBJECT IN BACKEND
+              await postMovieToDatabase(detailsData);
+
               const posterPath = detailsData.poster_path;
               const posterUrl = posterPath
                 ? `https://image.tmdb.org/t/p/w500${posterPath}`

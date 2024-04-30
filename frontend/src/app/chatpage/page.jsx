@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { host, postAddToLikeList, postAddToWatchList } from "../utils";
+import { host, postAddToLikeList, postAddToWatchList, postMovieToDatabase } from "../utils";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
+
 
 // https://api.themoviedb.org/3/movie/550/watch/providers?api_key=a97f158a2149d8f803423ee01dec4d83
 
@@ -71,12 +72,22 @@ export default function ChatPage() {
     const fetchMovieDetails = async () => {
       if (movieDetails.idFromAPI) {
         console.log("Fetching movie details for ID:", movieDetails.idFromAPI);
-        try {
+        try { 
+         // TODO: kolla först om filmen redan finns i våran databas, annars fetcha ifrån APIt OCH spara film till våran databas
+
           const url = `https://api.themoviedb.org/3/movie/${movieDetails.idFromAPI}?api_key=${movieAPI_KEY}`;
           const response = await fetch(url);
           const data = await response.json();
-          console.log(data);
+          console.log("fetched movie details data: ", data);
           console.log(data.vote_average);
+
+          await postMovieToDatabase(data);
+           
+            /* if (!responseBackend.ok) {
+              throw new Error("Failed to fetch 'addmovietodatabase' POST");
+            } */
+
+
           if (data.title) {
             // Check if data includes title
             setMovieDetails({
@@ -89,7 +100,11 @@ export default function ChatPage() {
               runtime: data.runtime,
               backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+
             });
+
+            
+
             setMovieDetailsFetched(true); // Mark that movie details have been fetched
           } else {
             console.error("No movie found with the given ID");
@@ -99,6 +114,7 @@ export default function ChatPage() {
         }
       }
     };
+
 
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
