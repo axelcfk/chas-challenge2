@@ -1,7 +1,7 @@
 "use client";
 
-// Almost same code as the populer movies, enhanced to fetch top-rated and populer genre 
-// and mix them randomly 
+// Almost same code as the populer movies, enhanced to fetch top-rated and populer genre
+// and mix them randomly
 
 import { useState, useEffect } from "react";
 
@@ -10,7 +10,7 @@ export default function MovieSelection() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [moreOptions, setMoreOptions] = useState(9);
 
-  const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7"; 
+  const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
 
   useEffect(() => {
     const fetchMovies = async () => {
