@@ -6,15 +6,17 @@
 import { useState, useEffect } from "react";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaArrowRight } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState(new Set());
   const [moreOptions, setMoreOptions] = useState(9);
-  const [movieClicked, setMovieClicked] = useState(false);
+  const [currentStartIndex, setCurrentStartIndex] = useState(0);
 
   const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -69,25 +71,34 @@ export default function MovieSelection() {
   };
 
   const handleLoadMore = () => {
-    setMoreOptions((prevCount) => prevCount + 9);
+    const nextStartIndex = currentStartIndex + 9;
+    if (nextStartIndex >= movies.length) {
+      setCurrentStartIndex(0); // Optionally loop back to start or disable button
+    } else {
+      setCurrentStartIndex(nextStartIndex);
+    }
   };
 
   return (
-    <div className="bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold text-center mb-4">
-        Popular and Top Rated Movies
+    <div className="flex flex-col justify-evenly p-4 bg-slate-950 text-slate-50 h-min-screen w-min-screen">
+      <h1 className="text-2xl font-bold text-center my-5 flex flex-col">
+        <span className="mb-4">Help us help you!</span>
+        <span className="text-base font-light">
+          Select the movies you like from the list for a better experience!
+        </span>
       </h1>
       <div className="grid grid-cols-3 gap-4">
-        {movies.slice(0, moreOptions).map((movie) => (
+        {movies.slice(currentStartIndex, currentStartIndex + 9).map((movie) => (
           <div key={movie.id} className="rounded-lg shadow-lg overflow-hidden">
             {!selectedMovies.has(movie.id) ? (
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
                 className="w-full h-auto cursor-pointer"
-                onClick={() => (
-                  handleMovieClick(movie), postAddToLikeList(movie.id, "movie")
-                )}
+                onClick={() => {
+                  handleMovieClick(movie);
+                  postAddToLikeList(movie.id, "movie");
+                }}
               />
             ) : (
               <div className="overlay">
@@ -113,32 +124,27 @@ export default function MovieSelection() {
                 />
               </div>
             )}
-            {/* {selectedMovie === movie.id && (
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">{movie.title}</h3>
-                <p className="text-sm">{movie.overview}</p>
-                <p className="text-gray-600">
-                  Release Date: {movie.release_date}
-                </p>
-                <p className="text-gray-600">Rating: {movie.vote_average}/10</p>
-              </div>
-            )} */}
           </div>
         ))}
       </div>
+      <div className="w-full flex justify-center items-center pt-5 ">
+        {movies.length > currentStartIndex + 9 && (
+          <button
+            className="text-xl py-2 px-4 rounded-full  hover:text-slate-300 "
+            onClick={handleLoadMore}
+            style={{ border: "1px solid grey" }}
+          >
+            More options
+          </button>
+        )}
 
-      {moreOptions < movies.length && (
         <button
-          className="text-sm py-2 px-4 bg-gray-200 rounded-full my-4 hover:bg-gray-300 transition-colors mx-auto"
-          onClick={handleLoadMore}
+          className="flex justify-center items-center text-slate-50 rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
+          onClick={() => router.push("/chatpage2")}
         >
-          More options
+          <span className="px-2 text-xl">Continue</span> <FaArrowRight />
         </button>
-      )}
-
-      <button className="bg-black text-white rounded-full py-3 px-6 my-2 hover:bg-gray-800 transition-colors mx-auto">
-        Go Further
-      </button>
+      </div>
     </div>
   );
 }
