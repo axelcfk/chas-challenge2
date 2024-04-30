@@ -8,6 +8,7 @@ import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
 import { FaCheckCircle, FaArrowRight } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { postMovieToDatabase } from "../utils";
 
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
@@ -37,6 +38,12 @@ export default function MovieSelection() {
 
         // Combination for the blended result
         const allMovies = [...popularData.results, ...topRatedData.results];
+
+        // store all fetched movies in database (unless they have been fetched before)
+        allMovies.forEach(async (movieObject) => {
+          await postMovieToDatabase(movieObject)
+        });
+
 
         const shuffledMovies = shuffleArray(allMovies);
 

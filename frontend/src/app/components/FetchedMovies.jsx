@@ -103,7 +103,7 @@ export default function FetchedMovies() {
 
   return (
     <>
-      <h2>FETCHED MOVIES</h2>
+      <h2>Liked Movies (backend fetch)</h2>
       <button
         className="p-8 bg-slate-500"
         onClick={() => {

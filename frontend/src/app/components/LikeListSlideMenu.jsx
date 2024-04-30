@@ -153,7 +153,7 @@ export default function LikeListSlideMenu() {
         "No movies liked yet"
       )} */}
 
-      <h2>Liked Detailed</h2>
+      <h2>Liked Movies (api fetch)</h2>
       <button
         className="p-8 bg-slate-500"
         onClick={() => {

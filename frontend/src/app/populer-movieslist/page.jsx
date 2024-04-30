@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { postMovieToDatabase } from "../utils";
 
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
@@ -18,6 +19,11 @@ export default function MovieSelection() {
           throw new Error("Failed to fetch movies");
         }
         const data = await response.json();
+
+        // store all fetched movies in database (unless they have been fetched before)
+        data.results.forEach(async (movieObject) => {
+          await postMovieToDatabase(movieObject)
+        });
 
         // Shuffles 20 movies
         const firstThreeMovies = data.results.slice(0, 20);
