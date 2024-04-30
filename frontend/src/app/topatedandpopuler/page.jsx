@@ -1,16 +1,19 @@
 "use client";
 
-// Almost same code as the populer movies, enhanced to fetch top-rated and populer genre 
-// and mix them randomly 
+// Almost same code as the populer movies, enhanced to fetch top-rated and populer genre
+// and mix them randomly
 
 import { useState, useEffect } from "react";
+import { postAddToLikeList } from "../utils";
+import { postRemoveFromLikeList } from "../utils";
 
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedMovies, setSelectedMovies] = useState(new Set());
   const [moreOptions, setMoreOptions] = useState(9);
+  const [movieClicked, setMovieClicked] = useState(false);
 
-  const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7"; 
+  const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -53,7 +56,15 @@ export default function MovieSelection() {
   };
 
   const handleMovieClick = (movie) => {
-    setSelectedMovie(selectedMovie === movie.id ? null : movie.id);
+    setSelectedMovies((prev) => {
+      const newSelectedMovies = new Set(prev);
+      if (newSelectedMovies.has(movie.id)) {
+        newSelectedMovies.delete(movie.id);
+      } else {
+        newSelectedMovies.add(movie.id);
+      }
+      return newSelectedMovies;
+    });
   };
 
   const handleLoadMore = () => {
@@ -68,13 +79,29 @@ export default function MovieSelection() {
       <div className="grid grid-cols-3 gap-4">
         {movies.slice(0, moreOptions).map((movie) => (
           <div key={movie.id} className="rounded-lg shadow-lg overflow-hidden">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={movie.title}
-              className="w-full h-auto cursor-pointer"
-              onClick={() => handleMovieClick(movie)}
-            />
-            {selectedMovie === movie.id && (
+            {!selectedMovies.has(movie.id) ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+                className="w-full h-auto cursor-pointer"
+                onClick={() => (
+                  handleMovieClick(movie), postAddToLikeList(movie.id, "movie")
+                )}
+              />
+            ) : (
+              <div className="overlay">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="w-full h-auto cursor-pointer"
+                  onClick={() => {
+                    handleMovieClick(movie);
+                    postRemoveFromLikeList(movie.id, "movie");
+                  }}
+                />
+              </div>
+            )}
+            {/* {selectedMovie === movie.id && (
               <div className="p-4">
                 <h3 className="text-lg font-semibold">{movie.title}</h3>
                 <p className="text-sm">{movie.overview}</p>
@@ -83,7 +110,7 @@ export default function MovieSelection() {
                 </p>
                 <p className="text-gray-600">Rating: {movie.vote_average}/10</p>
               </div>
-            )}
+            )} */}
           </div>
         ))}
       </div>

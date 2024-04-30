@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
-
 import { useEffect, useState } from "react";
 
 export default function moviePage() {
@@ -25,16 +24,7 @@ export default function moviePage() {
     setActorsToggle(!actorsToggle);
   }
 
-  const resetState = () => {
-    setNoResult(false);
-    setInput("");
-    setMovieDetails({});
-    setLoading(false);
-    setMovieDetailsFetched(false);
-    // setChatGPTFetched(false);
-  };
-
-  const fetchData = async (name) => {
+  async function fetchData(name) {
     console.log("Fetching data for:", name);
     try {
       const response = await fetch(
@@ -52,9 +42,9 @@ export default function moviePage() {
     } catch (error) {
       console.error("Error fetching movies:", error);
     }
-  };
+  }
 
-  const fetchMovieDetails = async (id) => {
+  async function fetchMovieDetails(id) {
     setLoading(false);
     try {
       const response = await fetch(
@@ -75,7 +65,7 @@ export default function moviePage() {
     } catch (error) {
       console.error("Error fetching movie details:", error);
     }
-  };
+  }
 
   useEffect(() => {
     if (!movieName) {

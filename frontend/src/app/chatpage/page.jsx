@@ -161,7 +161,7 @@ export default function ChatPage() {
           const url = `https://api.themoviedb.org/3/movie/${movieDetails.idFromAPI}/credits?api_key=${movieAPI_KEY}`;
           const response = await fetch(url);
           const data = await response.json();
-          console.log(data);
+          console.log("received:", data);
 
           const actors = data.cast.slice(0, 4).map((actor) => actor.name);
           console.log("The actors are:", actors);
