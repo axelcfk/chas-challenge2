@@ -197,14 +197,14 @@ app.post("/movieobject", async (req, res)  => {
         .json({ error: "movieID not received, and/or need to define if movie or series." }); // exit code
     }
 
-    console.log("Current fetchedMovies: ", fetchedMovies);
+    //console.log("Current fetchedMovies: ", fetchedMovies);
     let searchResult;
     try {
       if (movieOrSeries === "movie") {
         searchResult = fetchedMovies.find((movie) => {
           return movieID === movie.id;
         })
-        console.log("Movie-Search result: ", searchResult);
+        //console.log("Movie-Search result: ", searchResult);
 
       } else if (movieOrSeries === "series") {
         searchResult = fetchedSeries.find((series) => {
@@ -344,12 +344,12 @@ app.get("/me/watchlists", (req, res) => {
 
 app.post("/me/likelists/addtolikelist", async (req, res) => {
   try {
-    const { id, movieOrSeries } = req.body;
+    const { id, movieOrSeries, title } = req.body;
 
-    if (!id || !movieOrSeries) {
+    if (!id || !movieOrSeries || !title) {
       return res
         .status(400)
-        .json({ error: "Liked movie OR liked series is required." });
+        .json({ error: "ID is required, and need to define if movie or series, and need movie title" });
     }
 
     const idExistsInMovies = likedMoviesList.some(
@@ -368,12 +368,12 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
 
     if (movieOrSeries === "movie") {
       // maybe change to some sort of True/False variable instead...
-      likedMoviesList.push({ id }); // UPDATE LATER TO SQL
+      likedMoviesList.push({ id, title }); // UPDATE LATER TO SQL
       console.log("Added movie ID ", id, " to likedMoviesList");
     }
 
     if (movieOrSeries === "series") {
-      likedSeriesList.push({ id }); // UPDATE LATER TO SQL
+      likedSeriesList.push({ id, title }); // UPDATE LATER TO SQL
       console.log("Added series ID ", id, " to likedSeriesList");
     }
 
@@ -513,6 +513,7 @@ function parseMovieNames(response) {
   return names;
 }
 
+
 app.post("/moviesuggest2", async (req, res) => {
   const userQuery = req.body.query;
   console.log("Received user query:", userQuery);
@@ -625,6 +626,68 @@ app.post("/moviesuggest", async (req, res) => {
     });
   }
 });
+
+app.get("/dailymix", async (req, res) => {
+
+  
+  // no user query needed, will be based on existing like list
+    /* const userQuery = req.body.query;
+    console.log("Received user query:", userQuery); */
+
+    const likedMovieTitles = likedMoviesList.map ( movie => { 
+      return movie.title;
+     })
+
+    console.log("likedMovieTitles: ", likedMovieTitles);
+
+    const likedMovieTitlesString = likedMovieTitles.join(", ");
+    console.log("likedMovieTitlesString: ", likedMovieTitlesString);
+
+  
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content:
+            "This assistant will suggest 6 movies based on user's liked movies provided by content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
+          },
+          {
+            role: "user",
+            content: likedMovieTitlesString,
+          },
+        ],
+      });
+
+     // Entire AI response
+      console.log("AI response:", JSON.stringify(completion, null, 2));
+
+      const suggestion = completion.choices[0].message.content;
+      console.log("suggestion: ", suggestion);
+
+
+      if (suggestion) {
+        res.json({ suggestion });
+      } else {
+        console.error(
+          "Failed to generate daily mix suggestion: ",
+          suggestion
+        );
+        res.status(500).json({
+          error: "Failed to extract daily mix suggestion from AI response",
+        });
+      }
+
+    } catch (error) {
+      console.error("Error in /dailymix endpoint:", error);
+      res.status(500).json({
+        error: "Unable to process the daily mix at this time.",
+        details: error.message,
+      });
+    }
+    
+})
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);

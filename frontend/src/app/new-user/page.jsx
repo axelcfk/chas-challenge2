@@ -104,7 +104,7 @@ export default function MovieSelection() {
                 className="w-full h-auto cursor-pointer"
                 onClick={() => {
                   handleMovieClick(movie);
-                  postAddToLikeList(movie.id, "movie");
+                  postAddToLikeList(movie.id, "movie", movie.title); 
                 }}
               />
             ) : (

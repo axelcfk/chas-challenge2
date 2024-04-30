@@ -315,7 +315,7 @@ export default function ChatPage() {
                     <div className="w-full flex justify-center gap-4">
                       <button
                         onClick={() => {
-                          postAddToLikeList(movieDetails.idFromAPI, "movie");
+                          postAddToLikeList(movieDetails.idFromAPI, "movie", movieDetails.titleFromAPI);
                         }}
                       >
                         <FaThumbsUp></FaThumbsUp>
@@ -323,7 +323,7 @@ export default function ChatPage() {
 
                       <button
                         onClick={() => {
-                          postAddToWatchList(movieDetails.idFromAPI, "movie");
+                          postAddToWatchList(movieDetails.idFromAPI, "movie"); // TODO: movieDetails.titleFromAPI
                         }}
                       >
                         <FaPlus></FaPlus>

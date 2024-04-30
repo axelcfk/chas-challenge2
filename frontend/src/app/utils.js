@@ -1,6 +1,6 @@
 export const host = "http://localhost:3010";
 
-export async function postAddToLikeList(id, movieOrSeries) {
+export async function postAddToLikeList(id, movieOrSeries, title) {
   try {
     //const response = await fetch("http://localhost:4000/sessions", {
     const response = await fetch(`${host}/me/likelists/addtolikelist`, {
@@ -11,6 +11,7 @@ export async function postAddToLikeList(id, movieOrSeries) {
       },
       body: JSON.stringify({
         id: id,
+        title: title,
         movieOrSeries: movieOrSeries,
       }),
     });
