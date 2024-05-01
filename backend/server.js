@@ -1,3 +1,10 @@
+// TODO:
+//? FIXME:
+//? Question:
+//* IMPORTANT INFORMATION:
+//! This is an alert
+// Regular
+
 import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
@@ -351,12 +358,10 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     const { id, movieOrSeries, title } = req.body;
 
     if (!id || !movieOrSeries || !title) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "ID is required, and need to define if movie or series, and need movie title",
-        });
+      return res.status(400).json({
+        error:
+          "ID is required, and need to define if movie or series, and need movie title",
+      });
     }
 
     const idExistsInMovies = likedMoviesList.some(
@@ -681,6 +686,23 @@ app.get("/dailymix", async (req, res) => {
     console.error("Error in /dailymix endpoint:", error);
     res.status(500).json({
       error: "Unable to process the daily mix at this time.",
+      details: error.message,
+    });
+  }
+});
+
+
+// Spara streaming tjänsterna 
+//* IMPORTANT INFORMATION: detta ska sparas i databasen
+app.post("/streaming-services", (req, res) => {
+  try {
+    const { services } = req.body;
+    console.log("Selected Streaming Services:", services);
+    res.json({ message: "Streaming services updated successfully" });
+  } catch (error) {
+    console.error("Error in /streaming-services endpoint:", error);
+    res.status(500).json({
+      error: "Unable to update streaming services at this time.",
       details: error.message,
     });
   }

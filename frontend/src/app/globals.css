@@ -85,6 +85,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: pink;
+
+}
+
+.square-content:hover {
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.5s ease;
+}
+
+.selected {
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.5s ease;
+  background-color: antiquewhite;
 }
 
 .streaming-btn {
