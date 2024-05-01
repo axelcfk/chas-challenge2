@@ -5,7 +5,7 @@ export default function ChooseStreaming() {
         <h1 className="text-3xl font-bold">Streaming services</h1>
         <p className="mt-6 text-sm">
           Choose which streaming services you are going to use. This can be
-          changed later in your profile
+          changed later in your profile.
         </p>
       </div>
       <div className="container mt-12 w-full max-w-4xl mx-auto">
