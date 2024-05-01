@@ -41,9 +41,8 @@ export default function MovieSelection() {
 
         // store all fetched movies in database (unless they have been fetched before)
         allMovies.forEach(async (movieObject) => {
-          await postMovieToDatabase(movieObject)
+          await postMovieToDatabase(movieObject);
         });
-
 
         const shuffledMovies = shuffleArray(allMovies);
 
@@ -87,7 +86,7 @@ export default function MovieSelection() {
   };
 
   return (
-    <div className="flex flex-col justify-evenly p-4 bg-slate-950 text-slate-50 h-min-screen w-min-screen">
+    <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50 h-min-screen w-min-screen">
       <h1 className="text-2xl font-bold text-center my-5 flex flex-col">
         <span className="mb-4">Help us help you!</span>
         <span className="text-base font-light">
@@ -96,7 +95,11 @@ export default function MovieSelection() {
       </h1>
       <div className="grid grid-cols-3 gap-4">
         {movies.slice(currentStartIndex, currentStartIndex + 9).map((movie) => (
-          <div key={movie.id} className="rounded-lg shadow-lg overflow-hidden">
+          <div
+            key={movie.id}
+            className="rounded-lg  shadow-lg overflow-hidden"
+            style={{ border: "1px solid grey" }}
+          >
             {!selectedMovies.has(movie.id) ? (
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -104,7 +107,7 @@ export default function MovieSelection() {
                 className="w-full h-auto cursor-pointer"
                 onClick={() => {
                   handleMovieClick(movie);
-                  postAddToLikeList(movie.id, "movie", movie.title); 
+                  postAddToLikeList(movie.id, "movie", movie.title);
                 }}
               />
             ) : (

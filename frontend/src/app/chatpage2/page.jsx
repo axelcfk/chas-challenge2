@@ -101,7 +101,11 @@ export default function ChatPage2() {
   return (
     <div className="flex  flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">
       {showVideo && movieDetails.length < 2 && (
-        <div className=" md:w-full flex flex-col justify-center items-center h-full ">
+        <div
+          className={` md:w-full flex flex-col justify-center items-center h-full ${
+            loading ? "-mt-48" : ""
+          } `}
+        >
           <video
             className="md:w-1/2 w-full "
             ref={videoRef}
@@ -125,7 +129,7 @@ export default function ChatPage2() {
             <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
               {" "}
               <span className="mb-4 font-light">
-                Finding a movie match for you...
+                Finding the best match for you...
               </span>
             </p>
           )}
@@ -143,9 +147,9 @@ export default function ChatPage2() {
                 />
               ))}
             </div>
-            <div className=" sticky inset-x-0 bottom-10 z-10 w-full flex flex-wrap justify-center items-center ">
+            <div className=" sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
               <div
-                className="flex justify-center items-center rounded-xl h-14 px-5 z-10"
+                className="flex justify-center items-center w-full rounded-xl h-14 px-5 z-10"
                 style={{ border: "1px solid grey" }}
               >
                 <input
@@ -176,7 +180,7 @@ export default function ChatPage2() {
         )}
       </div>
       {!loading && movieDetails < 2 ? (
-        <div className="h-40  sticky inset-x-0 bottom-10 z-10 w-full flex flex-wrap justify-center items-center ">
+        <div className="h-40  sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
           <input
             style={{ border: "1px solid grey" }}
             className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
