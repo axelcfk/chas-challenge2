@@ -27,7 +27,7 @@ export default function ChatPage2() {
     setLoading(true);
     setInput("");
     setShowVideo(true);
-    changeSpeed(5); // Speed up the video when the search begins
+    changeSpeed(5);
 
     try {
       const response = await fetch("http://localhost:3010/moviesuggest2", {
@@ -55,6 +55,7 @@ export default function ChatPage2() {
       setNoResult(true);
       setLoading(false);
       setShowVideo(false);
+      changeSpeed(1);
     }
   };
 
@@ -99,7 +100,7 @@ export default function ChatPage2() {
 
   return (
     <div className="flex  flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">
-      {showVideo && movieDetails.length < 3 && (
+      {showVideo && movieDetails.length < 2 && (
         <div className=" md:w-full flex flex-col justify-center items-center h-full ">
           <video
             className="md:w-1/2 w-full "
@@ -111,11 +112,23 @@ export default function ChatPage2() {
             <source src="/ai-gif.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
-            {" "}
-            <span className="mb-4">Hi there!</span>{" "}
-            <span>I'm your personal </span> <span>AI movie matcher</span>
-          </p>
+          {!loading ? (
+            <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
+              {" "}
+              <span className="mb-4 text-2xl font-semibold">
+                Hi there!
+              </span>{" "}
+              <span className="font-light">I'm your personal </span>{" "}
+              <span className="font-light">AI movie matcher</span>
+            </p>
+          ) : (
+            <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
+              {" "}
+              <span className="mb-4 font-light">
+                Finding a movie match for you...
+              </span>
+            </p>
+          )}
         </div>
       )}
       <div className="flex justify-center items-center ">
@@ -132,11 +145,11 @@ export default function ChatPage2() {
             </div>
             <div className=" sticky inset-x-0 bottom-10 z-10 w-full flex flex-wrap justify-center items-center ">
               <div
-                className="flex justify-center items-center  rounded-xl h-14 px-10 z-10"
+                className="flex justify-center items-center rounded-xl h-14 px-5 z-10"
                 style={{ border: "1px solid grey" }}
               >
                 <input
-                  className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
+                  className="h-14 bg-transparent w-full  rounded-xl text-lg text-center text-slate-50 md:mr-3"
                   type="text"
                   value={input}
                   onChange={handleInputChange}
@@ -162,15 +175,15 @@ export default function ChatPage2() {
           </div>
         )}
       </div>
-      {!movieDetails.length > 0 && (
-        <div className=" sticky inset-x-0 bottom-10 z-10 w-full flex flex-wrap justify-center items-center ">
+      {!loading && movieDetails < 2 ? (
+        <div className="h-40  sticky inset-x-0 bottom-10 z-10 w-full flex flex-wrap justify-center items-center ">
           <input
             style={{ border: "1px solid grey" }}
             className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="What's your movie vibe today?"
+            placeholder="What's your vibe today?"
           />
           <button
             className={`h-14 ${
@@ -181,10 +194,10 @@ export default function ChatPage2() {
             onClick={handleQuerySubmit}
             disabled={!input}
           >
-            Find Movie
+            Find a movie
           </button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
