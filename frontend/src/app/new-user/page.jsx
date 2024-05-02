@@ -13,7 +13,7 @@ import { postMovieToDatabase } from "../utils";
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState(new Set());
-  const [moreOptions, setMoreOptions] = useState(9);
+  // const [moreOptions, setMoreOptions] = useState(9);
   const [currentStartIndex, setCurrentStartIndex] = useState(0);
 
   const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
