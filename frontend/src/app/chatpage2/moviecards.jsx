@@ -1,8 +1,9 @@
 import Link from "next/link";
 
 export default function MovieCard({ movie, credits }) {
-  const { title, poster, overview } = movie;
+  const { title, poster, overview, streaming } = movie;
   const { director } = credits;
+
   if (!title) {
     // Handle the case where title is not provided
     console.error("Movie title is undefined or empty");
@@ -27,6 +28,19 @@ export default function MovieCard({ movie, credits }) {
             <p className="font-light text-slate-400">
               {overview.slice(0, 100)}...
             </p>
+            <div>
+              {streaming && streaming.flatrate ? (
+                streaming.flatrate.map((provider) => (
+                  <img
+                    key={provider.provider_id}
+                    src={`https://image.tmdb.org/t/p/w100${provider.logo_path}`}
+                    alt={provider.provider_name}
+                  />
+                ))
+              ) : (
+                <p>Not available on streaming</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
