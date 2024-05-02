@@ -75,7 +75,7 @@ export default function ChatPage2() {
                 `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
               );
               const detailsData = await detailsResponse.json();
-              const streamingServices = await fetchStreamingServices(movieId);
+              const streamingData = await fetchStreamingServices(movieId);
               await postMovieToDatabase(detailsData);
               const posterPath = detailsData.poster_path;
               const posterUrl = posterPath
@@ -86,7 +86,7 @@ export default function ChatPage2() {
                 id: movieId,
                 poster: posterUrl,
                 overview: detailsData.overview,
-                streaming: streamingServices.US, // om vi vill ha utifrån US (går att ändra annars)
+                streaming: streamingData.US, // om vi vill ha utifrån US (går att ändra annars)
               };
             }
           } catch (error) {
@@ -100,6 +100,7 @@ export default function ChatPage2() {
     if (movies.length > 0) fetchAllMovieDetails();
   }, [movies]);
 
+
   async function fetchStreamingServices(movieId) {
     try {
       const response = await fetch(
@@ -112,8 +113,6 @@ export default function ChatPage2() {
       return {};
     }
   }
-
-
 
   return (
     <div className="flex  flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">

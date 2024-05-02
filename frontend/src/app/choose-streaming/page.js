@@ -78,6 +78,7 @@ export default function ChooseStreaming() {
           Next
         </button>
       </Link>
+      <button></button>
     </main>
   );
 }
