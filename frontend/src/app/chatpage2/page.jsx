@@ -25,7 +25,7 @@ export default function ChatPage2() {
 
   const handleQuerySubmit = async () => {
     setLoading(true);
-    setInput("");
+    // setInput("");
     setShowVideo(true);
     changeSpeed(5);
 

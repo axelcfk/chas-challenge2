@@ -20,6 +20,7 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
   }
 }
 
+
 export async function postRemoveFromLikeList(id, movieOrSeries) {
   try {
     //const response = await fetch("http://localhost:4000/sessions", {
@@ -58,7 +59,6 @@ export async function postAddToWatchList(id, movieOrSeries) {
   }
 }
 
-
 export async function fetchMovieObject(id) {
   console.log("Fetching movie details from backend for ID:", id);
 
@@ -83,9 +83,6 @@ export async function fetchMovieObject(id) {
 
   return data.searchResult; // RETURNERAR MOVIE-OBJEKTET
 }
-
-
-
 
 // api.js
 export async function postMovieToDatabase(movieObject) {

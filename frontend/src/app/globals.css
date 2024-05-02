@@ -85,23 +85,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: pink;
-
+  background-color: white;
 }
 
 .square-content:hover {
-  color: white;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.5s ease;
+  background-color: pink;
 }
 
 .selected {
-  color: white;
+  border: solid 3px rgb(180, 114, 255) 4px;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.5s ease;
-  background-color: antiquewhite;
+  background-color: pink;
 }
 
 .streaming-btn {

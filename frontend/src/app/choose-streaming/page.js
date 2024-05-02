@@ -46,7 +46,7 @@ export default function ChooseStreaming() {
   ];
 
   return (
-    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center">
+    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-black">
       <div>
         <h1 className="text-3xl font-bold">Streaming services</h1>
         <p className="mt-6 text-sm">
