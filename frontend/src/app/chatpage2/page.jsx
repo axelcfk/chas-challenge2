@@ -44,7 +44,7 @@ export default function ChatPage2() {
           setMovies(data.movieNames); // Now set movies here to trigger details fetching after the delay
           setLoading(false); // Also set loading false here to ensure it happens after the video hides
           setShowVideo(false); // Hide video after 10 seconds
-        }, 2000);
+        }, 3000);
       } else {
         setNoResult(true);
         setLoading(false);
