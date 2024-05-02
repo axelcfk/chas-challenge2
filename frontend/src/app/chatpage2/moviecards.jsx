@@ -31,11 +31,7 @@ export default function MovieCard({ movie, credits }) {
             <div>
               {streaming && streaming.flatrate ? (
                 streaming.flatrate.map((provider) => (
-                  <img
-                    key={provider.provider_id}
-                    src={`https://image.tmdb.org/t/p/w100${provider.logo_path}`}
-                    alt={provider.provider_name}
-                  />
+                  <p key={provider.provider_id}>{provider.provider_name}</p>
                 ))
               ) : (
                 <p>Not available on streaming</p>
