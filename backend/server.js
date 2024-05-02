@@ -381,7 +381,13 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     if (movieOrSeries === "movie") {
       // maybe change to some sort of True/False variable instead...
       likedMoviesList.push({ id, title }); // UPDATE LATER TO SQL
-      console.log("Added movie ID ", id, " to likedMoviesList");
+      console.log(
+        "Added movie ID ",
+        id,
+        "with name:",
+        title,
+        "to likedMoviesList"
+      );
     }
 
     if (movieOrSeries === "series") {
@@ -526,6 +532,14 @@ function parseMovieNames(response) {
 }
 
 app.post("/moviesuggest2", async (req, res) => {
+  const likedMovieTitles = likedMoviesList.map((movie) => {
+    return movie.title;
+  });
+
+  console.log("likedMovieTitles: ", likedMovieTitles);
+
+  const likedMovieTitlesString = likedMovieTitles.join(", ");
+  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
   const userQuery = req.body.query;
   console.log("Received user query:", userQuery);
 
@@ -536,7 +550,9 @@ app.post("/moviesuggest2", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. The suggested movie names should go inside [string]. Never add any additional numbers.",
+            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
+            likedMovieTitlesString +
+            "it will not be suggested.",
         },
         {
           role: "user",
@@ -660,6 +676,7 @@ app.get("/dailymix", async (req, res) => {
           role: "system",
           content:
             "This assistant will suggest 6 movies based on user's liked movies provided by content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
+          likedMovieTitlesString,
         },
         {
           role: "user",
@@ -691,8 +708,7 @@ app.get("/dailymix", async (req, res) => {
   }
 });
 
-
-// Spara streaming tjänsterna 
+// Spara streaming tjänsterna
 //* IMPORTANT INFORMATION: detta ska sparas i databasen
 app.post("/streaming-services", (req, res) => {
   try {
