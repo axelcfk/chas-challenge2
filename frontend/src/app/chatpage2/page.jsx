@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
+import AutoQuery from "./autoQuery";
 
 export default function ChatPage2() {
   const [input, setInput] = useState("");
@@ -12,6 +13,8 @@ export default function ChatPage2() {
   const [loading, setLoading] = useState(false);
   const [noResult, setNoResult] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const videoRef = useRef(null);
 
@@ -46,6 +49,8 @@ export default function ChatPage2() {
           setShowVideo(false); // Hide video after 10 seconds
         }, 3000);
       } else {
+        setErrorMessage(data.suggestion);
+        console.log("Error Message Set:", data.suggestion);
         setNoResult(true);
         setLoading(false);
         setShowVideo(false);
@@ -149,8 +154,10 @@ export default function ChatPage2() {
               </span>
             </p>
           )}
+          {!loading ? <AutoQuery setInput={setInput} /> : null}
         </div>
       )}
+
       <div className="flex justify-center items-center ">
         {movieDetails.length > 0 && (
           <div>
@@ -195,7 +202,8 @@ export default function ChatPage2() {
           </div>
         )}
       </div>
-      {!loading && movieDetails < 2 ? (
+
+      {!loading && movieDetails != 3 ? (
         <div className="h-40  sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
           <input
             style={{ border: "1px solid grey" }}
