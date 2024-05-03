@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
+import Link from "next/link";
 
 export default function ChatPage2() {
   const [input, setInput] = useState("");
@@ -210,14 +211,19 @@ export default function ChatPage2() {
       <div className="flex justify-center items-center h-full ">
         {movieDetails.length > 0 && (
           <div className=" h-full w-full ">
-            {movieDetails.map((movie, index) => (
-              <div className="grid grid-cols-2 w-full ">
-                <div className="flex h-full flex-col justify-center items-start w-full">
-                  <img src={movie.poster} alt="poster" />
-                  <p className="h-10">{movie.title}</p>
-                </div>
-              </div>
-            ))}
+            <div className="grid grid-cols-2 w-full ">
+              {movieDetails.map((movie, index) => (
+                <Link
+                  href="/movie/[movieName]"
+                  as={`/movie/${encodeURIComponent(movie.title)}`}
+                >
+                  <div className="flex flex-col justify-center items-center w-full">
+                    <img src={movie.poster} alt="poster" />
+                    <p className="h-10">{movie.title}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
             <div className=" sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
               <div
                 className="flex justify-center items-center w-full rounded-xl h-14 px-5 z-10"

@@ -37,7 +37,7 @@ export default function moviePage() {
     };
 
     fetchLikeList();
-  }, []); // The empty array means this effect runs only on mount and unmount
+  }, []);
 
   const isMovieLiked = likedMovies.find(
     (movie) => movie.id === movieDetails.idFromAPI
