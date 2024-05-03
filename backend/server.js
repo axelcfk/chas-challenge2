@@ -1,3 +1,10 @@
+// TODO:
+//? FIXME:
+//? Question:
+//* IMPORTANT INFORMATION:
+//! This is an alert
+// Regular
+
 import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
@@ -353,12 +360,10 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     const { id, movieOrSeries, title } = req.body;
 
     if (!id || !movieOrSeries || !title) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "ID is required, and need to define if movie or series, and need movie title",
-        });
+      return res.status(400).json({
+        error:
+          "ID is required, and need to define if movie or series, and need movie title",
+      });
     }
 
     const idExistsInMovies = likedMoviesList.some(
@@ -378,7 +383,13 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     if (movieOrSeries === "movie") {
       // maybe change to some sort of True/False variable instead...
       likedMoviesList.push({ id, title }); // UPDATE LATER TO SQL
-      console.log("Added movie ID ", id, " to likedMoviesList");
+      console.log(
+        "Added movie ID ",
+        id,
+        "with name:",
+        title,
+        "to likedMoviesList"
+      );
     }
 
     if (movieOrSeries === "series") {
@@ -523,6 +534,14 @@ function parseMovieNames(response) {
 }
 
 app.post("/moviesuggest2", async (req, res) => {
+  const likedMovieTitles = likedMoviesList.map((movie) => {
+    return movie.title;
+  });
+
+  console.log("likedMovieTitles: ", likedMovieTitles);
+
+  const likedMovieTitlesString = likedMovieTitles.join(", ");
+  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
   const userQuery = req.body.query;
   console.log("Received user query:", userQuery);
 
@@ -535,7 +554,9 @@ app.post("/moviesuggest2", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. The suggested movie names should go inside [string]. Never add any additional numbers.",
+            "This assistant will suggest 6 movies based on user descriptions. Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
+            likedMovieTitlesString +
+            "it will not be suggested. If you have no suggestions explain in your response.",
         },
         {
           role: "user",
@@ -556,16 +577,18 @@ app.post("/moviesuggest2", async (req, res) => {
     console.log("Movie names parsed: ", movieNames);
 
     // Since TMDB ID handling and additional logic are commented out, I will leave them out for clarity.
-    if (movieNames.length === 3) {
+    if (movieNames.length === 6) {
       res.json({ movieNames });
     } else {
+      res.json({ suggestion });
       console.error(
         "Failed to extract Movie Names from AI response:",
         suggestion
       );
-      res.status(500).json({
-        error: "Failed to extract Movie Names from AI response",
-      });
+
+      // res.status(500).json({
+      //   error: "Failed to extract Movie Names from AI response",
+      // });
     }
   } catch (error) {
     console.error("Error in /moviesuggest endpoint:", error);
@@ -717,10 +740,10 @@ app.get("/generatedailymix", async (req, res) => {
     return movie.title;
   });
 
-  console.log("likedMovieTitles: ", likedMovieTitles);
+  //console.log("likedMovieTitles: ", likedMovieTitles);
 
   const likedMovieTitlesString = likedMovieTitles.join(", ");
-  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
+ // console.log("likedMovieTitlesString: ", likedMovieTitlesString);
 
   //   "This assistant will suggest 6 movies based on user's liked movies provided by content, and after that it will also provide a short reasoning why it suggested these specific movies. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string], and then fill in reasoning in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string], REASONING: [string]. It will not answer any other queries. It will only suggest movies.",
 
@@ -732,7 +755,7 @@ app.get("/generatedailymix", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
+            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies."
         },
         {
           role: "user",
@@ -774,8 +797,85 @@ app.get("/generatedailymix", async (req, res) => {
   }
 });
 
+// Spara streaming tjänsterna
+//* IMPORTANT INFORMATION: detta ska sparas i databasen
+app.post("/streaming-services", (req, res) => {
+  try {
+    const { services } = req.body;
+    console.log("Selected Streaming Services:", services);
+    res.json({ message: "Streaming services updated successfully" });
+  } catch (error) {
+    console.error("Error in /streaming-services endpoint:", error);
+    res.status(500).json({
+      error: "Unable to update streaming services at this time.",
+      details: error.message,
+    });
+  }
+});
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
 //It will also provide a TMDB id for each movie in the format of: TMDB ID: [number].
+
+app.post("/moviesuggest3", async (req, res) => {
+  const likedMovieTitles = likedMoviesList.map((movie) => {
+    return movie.title;
+  });
+
+  console.log("likedMovieTitles: ", likedMovieTitles);
+
+  const likedMovieTitlesString = likedMovieTitles.join(", ");
+  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
+  const userQuery = req.body.query;
+  console.log("Received user query:", userQuery);
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
+            likedMovieTitlesString +
+            "it will not be suggested. If you have no suggestions explain in your response.",
+        },
+        {
+          role: "user",
+          content: userQuery,
+        },
+      ],
+    });
+
+    // Entire AI response
+    console.log("AI response:", JSON.stringify(completion, null, 2));
+
+    const suggestion = completion.choices[0].message.content;
+    console.log("Suggestion structure:", suggestion);
+    const movieNames = parseMovieNames(suggestion);
+    console.log("Movie names parsed: ", movieNames);
+
+    // Since TMDB ID handling and additional logic are commented out, I will leave them out for clarity.
+    if (movieNames.length === 3) {
+      res.json({ movieNames });
+    } else {
+      res.json({ suggestion });
+      console.error(
+        "Failed to extract Movie Names from AI response:",
+        suggestion
+      );
+
+      // res.status(500).json({
+      //   error: "Failed to extract Movie Names from AI response",
+      // });
+    }
+  } catch (error) {
+    console.error("Error in /moviesuggest endpoint:", error);
+    res.status(500).json({
+      error: "Unable to process the movie suggestion at this time.",
+      details: error.message,
+    });
+  }
+});

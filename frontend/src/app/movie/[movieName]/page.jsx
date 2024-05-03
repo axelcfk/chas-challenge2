@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { postAddToLikeList, postAddToWatchList, postMovieToDatabase } from "@/app/utils";
+import BackButton from "@/app/components/BackButton";
+import { checkLikeList } from "@/app/utils";
 
 export default function moviePage() {
   const [movieDetails, setMovieDetails] = useState("");
@@ -11,11 +13,36 @@ export default function moviePage() {
   const [noResult, setNoResult] = useState(false);
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
+  const [likedMovies, setLikedMovies] = useState([]);
+  const [credits, setCredits] = useState({
+    director: "",
+    actors: [],
+    otherCrew: [],
+  });
 
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
   const params = useParams();
   const movieName = params.movieName;
+
+  useEffect(() => {
+    const fetchLikeList = async () => {
+      const movies = await checkLikeList();
+      console.log("movies", movies);
+      if (movies) {
+        setLikedMovies(movies);
+        console.log(likedMovies);
+      } else {
+        console.error("Failed to fetch liked movies list");
+      }
+    };
+
+    fetchLikeList();
+  }, []);
+
+  const isMovieLiked = likedMovies.find(
+    (movie) => movie.id === movieDetails.idFromAPI
+  );
 
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
@@ -73,6 +100,43 @@ export default function moviePage() {
     }
   }
 
+  async function fetchCredits(movieId) {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+      );
+      const data = await response.json();
+      const director = data.crew.find(
+        (person) => person.job === "Director"
+      )?.name;
+      const actors = data.cast.slice(0, 4).map((actor) => ({
+        name: actor.name,
+        character: actor.character,
+      }));
+      const otherCrew = data.crew
+        .filter((person) =>
+          ["Producer", "Screenplay", "Music"].includes(person.job)
+        )
+        .map((crew) => ({
+          name: crew.name,
+          job: crew.job,
+        }));
+
+      setCredits({ director, actors, otherCrew });
+      console.log("The Director is:", credits.director);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch credits:", error);
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (movieDetails.idFromAPI) {
+      fetchCredits(movieDetails.idFromAPI);
+    }
+  }, [movieDetails.idFromAPI]);
   useEffect(() => {
     if (!movieName) {
       console.log("Movie name is not available");
@@ -94,7 +158,6 @@ export default function moviePage() {
   }
 
   if (movieDetails.titleFromAPI) {
-
     console.log(movieDetails.titleFromAPI);
   }
 
@@ -122,6 +185,7 @@ export default function moviePage() {
         </div>
       ) : (
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
+          <BackButton />
           {movieDetails.titleFromAPI ? (
             <div className="flex flex-col justify-center items-center text-slate-400">
               <div className="flex flex-col  justify-center items-center ">
@@ -139,10 +203,7 @@ export default function moviePage() {
                       </p>
                       <p>DIRECTED BY</p>
                     </div>
-                    <p className="font-semibold text-lg">
-                      {/* {movieCredits.director} */}
-                      John Doe
-                    </p>
+                    <p className="font-semibold text-lg">{credits.director}</p>
                     <p>{movieDetails.runtime.toString()} mins</p>
                   </div>
                   <div className="flex flex-col w-full justify-center items-center gap-4">
@@ -157,10 +218,16 @@ export default function moviePage() {
                       <button
                         onClick={() => {
                           console.log("attempting to add movie to like list");
-                          postAddToLikeList(movieDetails.idFromAPI, "movie", movieDetails.titleFromAPI);
+                          postAddToLikeList(
+                            movieDetails.idFromAPI,
+                            "movie",
+                            movieDetails.titleFromAPI
+                          );
                         }}
                       >
-                        <FaThumbsUp></FaThumbsUp>
+                        <FaThumbsUp
+                          color={isMovieLiked ? "green" : "grey"}
+                        ></FaThumbsUp>
                       </button>
 
                       <button
@@ -182,6 +249,11 @@ export default function moviePage() {
                         </p>
                         <p className="mb-5  md:w-full  font-light">
                           {movieDetails.overview.slice(0, 200)}...
+                        </p>
+                        <p>
+                          {isMovieLiked
+                            ? "this movie is in the like list"
+                            : "this movie is not in the like list"}
                         </p>
                       </div>
                     ) : (

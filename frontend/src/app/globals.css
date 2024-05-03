@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  background-color: #261839;
+}
+
 .loading-indicator {
   height: 100%;
   /* background-color: rgb(187, 0, 0); */
@@ -85,6 +89,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
+}
+
+.square-content:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.5s ease;
+  background-color: pink;
+}
+
+.selected {
+  border: solid 3px rgb(180, 114, 255) 4px;
+  cursor: pointer;
+  transition: box-shadow 0.5s ease;
+  background-color: pink;
 }
 
 .streaming-btn {

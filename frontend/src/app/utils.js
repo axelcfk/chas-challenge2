@@ -85,9 +85,6 @@ export async function fetchMovieObject(id) {
   return data.searchResult; // RETURNERAR MOVIE-OBJEKTET
 }
 
-
-
-
 // api.js
 export async function postMovieToDatabase(movieObject) {
   try {
@@ -109,6 +106,24 @@ export async function postMovieToDatabase(movieObject) {
     return true; // Indicate success if the request was successful
   } catch (error) {
     console.error("Error posting movie to database:", error);
+    return false; // Indicate failure if an error occurred
+  }
+}
+
+export async function checkLikeList() {
+  try {
+    const data = await fetch(`${host}/me/likelists`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await data.json();
+    console.log("likedMovieList", result.likedMoviesList);
+    return result.likedMoviesList;
+  } catch (error) {
+    console.error("Error fetching likelist:", error);
     return false; // Indicate failure if an error occurred
   }
 }
