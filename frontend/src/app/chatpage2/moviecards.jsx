@@ -1,5 +1,23 @@
 import Link from "next/link";
 
+// Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
+// (annars ersätter "not available" t.ex. Hoopla, Cinemax, Showtime Apple TV, FXNow, fuboTV, som vi
+// inte känner till)
+const isAvailableOnSupportedServices = (streaming) => {
+  const supportedServices = [
+    "Netflix",
+    "HBO Max",
+    "Viaplay",
+    "Amazon Prime",
+    "Disney+",
+    "Hulu",
+    "Apple TV+",
+    "Paramount",
+    "Mubi",
+  ];
+  return streaming?.flatrate?.some(provider => supportedServices.includes(provider.provider_name));
+};
+
 export default function MovieCard({ movie, credits }) {
   const { title, poster, overview, streaming } = movie;
   const { director } = credits;
@@ -18,7 +36,7 @@ export default function MovieCard({ movie, credits }) {
         <div className="flex w-full h-full justify-center ">
           <img
             style={{ border: "1px solid grey" }}
-            className="h-40 mr-3 rounded-md "
+            className="h-40 mr-3 rounded-md"
             src={poster}
             alt={title}
           />
@@ -29,12 +47,12 @@ export default function MovieCard({ movie, credits }) {
               {overview.slice(0, 100)}...
             </p>
             <div>
-              {streaming && streaming.flatrate ? (
+            {isAvailableOnSupportedServices(streaming) ? (
                 streaming.flatrate.map((provider) => (
                   <p key={provider.provider_id}>{provider.provider_name}</p>
                 ))
               ) : (
-                <p>Not available on streaming</p>
+                <p>Not available on your streaming-services or your area</p>
               )}
             </div>
           </div>

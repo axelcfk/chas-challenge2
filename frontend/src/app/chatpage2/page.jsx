@@ -91,7 +91,7 @@ export default function ChatPage2() {
                 id: movieId,
                 poster: posterUrl,
                 overview: detailsData.overview,
-                streaming: streamingData.US, // om vi vill ha utifrån US (går att ändra annars)
+                streaming: streamingData.SE, // Hämtar providers utifrån SE region
               };
             }
           } catch (error) {
@@ -104,7 +104,6 @@ export default function ChatPage2() {
 
     if (movies.length > 0) fetchAllMovieDetails();
   }, [movies]);
-
 
   async function fetchStreamingServices(movieId) {
     try {
@@ -203,7 +202,7 @@ export default function ChatPage2() {
         )}
       </div>
 
-      {!loading && movieDetails != 3 ? (
+      {!loading && movieDetails < 2 ? (
         <div className="h-40  sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
           <input
             style={{ border: "1px solid grey" }}
