@@ -1,8 +1,12 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 
 function MovieSearch() {
   const [inputValue, setInputValue] = useState("");
   const [movies, setMovies] = useState([]);
+  const [movieDetails, setMovieDetails] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
@@ -47,6 +51,7 @@ function MovieSearch() {
 
   return (
     <div>
+      <p>hejhej</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
