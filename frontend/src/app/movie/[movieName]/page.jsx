@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { postAddToLikeList, postAddToWatchList } from "@/app/utils";
+import BackButton from "@/app/components/BackButton";
 import { checkLikeList } from "@/app/utils";
 
 export default function moviePage() {
@@ -180,6 +181,7 @@ export default function moviePage() {
         </div>
       ) : (
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
+          <BackButton />
           {movieDetails.titleFromAPI ? (
             <div className="flex flex-col justify-center items-center text-slate-400">
               <div className="flex flex-col  justify-center items-center ">
