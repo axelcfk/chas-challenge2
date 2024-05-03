@@ -550,7 +550,7 @@ app.post("/moviesuggest2", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
+            "This assistant will suggest 6 movies based on user descriptions. Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
             likedMovieTitlesString +
             "it will not be suggested. If you have no suggestions explain in your response.",
         },
@@ -570,7 +570,7 @@ app.post("/moviesuggest2", async (req, res) => {
     console.log("Movie names parsed: ", movieNames);
 
     // Since TMDB ID handling and additional logic are commented out, I will leave them out for clarity.
-    if (movieNames.length === 3) {
+    if (movieNames.length === 6) {
       res.json({ movieNames });
     } else {
       res.json({ suggestion });
