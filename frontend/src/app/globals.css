@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  background-color: #261839;
+}
+
 .loading-indicator {
   height: 100%;
   /* background-color: rgb(187, 0, 0); */

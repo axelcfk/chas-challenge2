@@ -6,6 +6,20 @@ import { postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
 import Link from "next/link";
 
+const streamingServiceLinks = {
+  Netflix: "https://www.netflix.com/se", //funkar
+  HBOMax: "https://www.hbo.com/se",
+  Viaplay: "https://www.viaplay.com/se", //funkar
+  "Amazon Prime Video": "https://www.primevideo.com/", //funkar
+  "Disney+": "https://www.disneyplus.com/se",
+  Hulu: "https://www.hulu.com/se/watch/",
+  "Apple TV+": "https://www.apple.com/se/tv/",
+  Paramount: "https://www.paramount.com/se",
+  Mubi: "https://www.mubi.com/se/movie/",
+};
+
+//TODO: Byt ut Mubi till Tele2 play istället
+
 // Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
 // (annars ersätter "not available" t.ex. Hoopla, Cinemax, Showtime Apple TV, FXNow, fuboTV, som vi
 // inte känner till)
@@ -249,9 +263,14 @@ export default function ChatPage2() {
                   <div>
                     {isAvailableOnSupportedServices(movie.streaming) ? (
                       movie.streaming.flatrate.map((provider) => (
-                        <p key={provider.provider_id}>
-                          {provider.provider_name}
-                        </p>
+                        <a
+                          key={provider.provider_id}
+                          href={streamingServiceLinks[provider.provider_name]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <p>{provider.provider_name}</p>
+                        </a>
                       ))
                     ) : (
                       <p>

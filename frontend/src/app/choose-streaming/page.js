@@ -46,12 +46,14 @@ export default function ChooseStreaming() {
   ];
 
   return (
-    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-black">
+    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center">
       <div>
         <h1 className="text-3xl font-bold text-white">Streaming services</h1>
         <p className="mt-6 text-sm text-white">
-          Choose which streaming services you are going to use. This can be
-          changed later in your profile.
+          Choose which streaming services you are going to use. This means you
+          will only be get recommendations based on your choice of
+          streaming-services. This can be changed later in your profile. Choose
+          skip to see all movies.
         </p>
       </div>
       <div className="container mt-12 w-full max-w-4xl mx-auto">
@@ -59,7 +61,7 @@ export default function ChooseStreaming() {
           {services.map((service) => (
             <div
               key={service}
-              // Om tjänsten är markerad, (kolla om den finns med i arrayen) ge den en klassen "selected" som markerar elementet. 
+              // Om tjänsten är markerad, (kolla om den finns med i arrayen) ge den en klassen "selected" som markerar elementet.
               className={`square ${
                 selectedServices.includes(service) ? "selected" : ""
               }`}
@@ -70,15 +72,20 @@ export default function ChooseStreaming() {
           ))}
         </div>
       </div>
-      <Link href={"/chatpage2"}>
-        <button
-          onClick={handleSumbit}
-          className="streaming-btn w-56 mt-8 rounded-3xl"
-        >
-          Next
-        </button>
-      </Link>
-      <button></button>
+      <div className="flex space-x-4">
+        {" "}
+        <Link href={"/chatpage2"}>
+          <button className="streaming-btn w-56 mt-8 rounded-3xl">Skip</button>
+        </Link>
+        <Link href={"/chatpage2"}>
+          <button
+            onClick={handleSumbit}
+            className="streaming-btn w-56 mt-8 rounded-3xl"
+          >
+            Next
+          </button>
+        </Link>
+      </div>
     </main>
   );
 }

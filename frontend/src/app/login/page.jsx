@@ -43,7 +43,7 @@ export default function Login() {
 
   return (
     <div
-      className="py-10 px-5 h-screen w-screen flex flex-col justify-between bg-slate-950"
+      className="py-10 px-5 h-screen w-screen flex flex-col justify-between"
       style={{
         backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",

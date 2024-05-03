@@ -236,7 +236,7 @@ app.post("/movieobject", async (req, res) => {
 
 app.post("/addmovietodatabase", async (req, res) => {
   try {
-    console.log("/addmovietodatabase req.body: ", req.body);
+    // console.log("/addmovietodatabase req.body: ", req.body);
     const { movie, movieOrSeries } = req.body;
 
     if (!movie.id || !movieOrSeries) {
