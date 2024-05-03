@@ -1,0 +1,422 @@
+"use client";
+import { useEffect, useState } from "react";
+import { fetchMovieObject, host } from "../utils";
+import SlideMenu from "./SlideMenu";
+import { SlideMenuMovieCard } from "./SlideMenu";
+import { postMovieToDatabase } from "../utils";
+
+export default function DailyMixBasedOnLikesSlideMenu() {
+  const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
+  const [reasoningFromGPT, setReasoningFromGPT] = useState("");
+  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+
+  const [suggestionFetchedFromGPT, setSuggestionFetchedFromGPT] = useState(false);
+
+  const [fetchedAndSavedDetailsFromAPI, setFetchedAndSavedDetailsFromAPI] = useState(false);
+
+  const [movieIdsFromAPI, setMovieIdsFromAPI] = useState([])
+  const [idsReceivedFromAPI, setIdsReceivedFromAPI] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [movieNamesFromGPT, setMovieNamesFromGPT] = useState([]);
+
+
+  const [mixDetails, setMixDetails] = useState([]);
+
+  const [showDetails, setShowDetails] = useState(false);
+
+  const [fetchedMixWithIDsFromDatabase, setFetchedMixWithIDsFromDatabase] = useState(false);
+
+
+
+ 
+
+ /*  useEffect(() => {
+    getMix(); // name and id from our backend (dailyMixBasedOnLikes)
+  }, []);
+ */
+  /* useEffect(() => {
+
+    if (
+      (movieNamesFromGPT && movieNamesFromGPT.length > 0)
+      // ||
+      //(likedSeriesList && likedSeriesList.length > 0)
+    ) {
+      movieNamesFromGPT.forEach((movieName) => {
+        //fetchLikedMovieDetails(movie.id);
+        fetchMovieIdFromTMDB(movieName)
+      });
+
+      setIdsReceivedFromAPI(true);
+    }
+
+    //}, [likedMoviesFetched || likedSeriesFetched])
+  }, [showDetails]);
+
+ */
+
+  const resetState = () => {
+    setIdsReceivedFromAPI(false);
+    setSuggestionFetchedFromGPT(false);
+    setFetchedMixWithIDsFromDatabase(false);
+    setFetchedAndSavedDetailsFromAPI(false);
+    setFetchedMixWithIDsFromDatabase(false);
+    setShowDetails(false);
+    // setChatGPTFetched(false);
+  };
+
+  useEffect(() => {
+      fetchMovieIds();
+  }, [suggestionFetchedFromGPT])
+
+   
+
+  useEffect(() => {
+
+    //if (movieIdsFromAPI.length > 0) {
+      
+    
+      movieIdsFromAPI.forEach( async (movieId) => {
+        //fetchLikedMovieDetails(movie.id);
+        await fetchMovieDetails(movieId);
+      });
+    //}
+
+    //}, [likedMoviesFetched || likedSeriesFetched])
+  }, [idsReceivedFromAPI]);
+  
+    useEffect(() => {
+      getMixFromOurDatabaseOnlyIDs();
+    }, [fetchedAndSavedDetailsFromAPI])
+  
+    useEffect(() => {
+    /* if (
+      (mixFromDatabaseOnlyIDs && mixFromDatabaseOnlyIDs.length > 0)
+    ) { */
+    try {
+
+
+      mixFromDatabaseOnlyIDs.forEach( async (movie) => {
+        const movieObject = await fetchMovieObject(movie.id)
+       // console.log("movieObject: ", movieObject);
+      setLoading(false);
+
+
+        if (movieObject.title) {
+          setMixDetails((prevDetails) => [
+            ...prevDetails,
+            {
+              id: movieObject.id,
+              title: movieObject.title,
+              overview: movieObject.overview,
+              voteAverage: movieObject.vote_average,
+              release: movieObject.release_date,
+              tagline: movieObject.tagline,
+              runtime: movieObject.runtime,
+              backdrop: `https://image.tmdb.org/t/p/w500${movieObject.backdrop_path}`,
+              poster: `https://image.tmdb.org/t/p/w500${movieObject.poster_path}`,
+            },
+          ]);
+        } else {
+          console.log("data.title does not exist?");
+        }
+
+        
+      });
+
+    } catch (error){
+      console.log("error fetching movie objects from backend database", error);
+    } finally {
+      setLoading(false);
+      
+    }
+    
+      //setShowDetails(true);
+   // }
+  }, [fetchedMixWithIDsFromDatabase]);
+  
+  
+
+  
+
+  //const [buttonClicked, setButtonClicked] = useState(false);
+
+/* 
+  useEffect(() => {
+
+    handleQuerySubmit();
+
+  }, [buttonClicked])
+ */
+
+  const getGenerateDailyMixFromGPT = async () => {
+    setLoading(true);
+
+   try {
+      const response = await fetch(`${host}/generatedailymix`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify({ }),
+      });
+      const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
+      if (data.movieNames) {
+        setMovieNamesFromGPT(
+          data.movieNames
+        );
+        
+        //setReasoningFromGPT(data.reasoning)
+      } else {
+        setLoading(false);
+        console.error("No suggestion in response");
+      }
+    } catch (error) {
+      console.error("Failed to fetch AI suggestion:", error);
+    } finally {
+      //setLoading(false)
+
+      setSuggestionFetchedFromGPT(!suggestionFetchedFromGPT);
+    }
+    // setLoading(false);
+    //setLoading(false);
+  
+
+  };
+
+
+
+ 
+
+  async function fetchMovieIdFromTMDB(movieNameFromGPT) { 
+    if ( movieAPI_KEY != null && movieNameFromGPT) {
+      console.log("title received from GPT: ", movieNameFromGPT);
+      const encodedMovieTitle = encodeURIComponent(movieNameFromGPT);
+      console.log("encoded movie title: ", encodedMovieTitle);
+
+      fetch(
+        `https://api.themoviedb.org/3/search/movie?query=${encodedMovieTitle}&api_key=${movieAPI_KEY}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // Extract movie ID from the response
+          console.log("id from API: ", data.results[0].id);
+
+          /* setMovieIdsFromAPI((prevDetails) => [ 
+            ...prevDetails, {
+              id: data.results[0].id,
+            }
+          ]);  */// Assuming we want the first result
+          setMovieIdsFromAPI((prevIds) => [ 
+            ...prevIds,
+            data.results[0].id
+          ]);
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    }
+  }
+
+  const fetchMovieIds = async () => {
+    //setLoading(true);
+    if (movieNamesFromGPT && movieNamesFromGPT.length > 0) {
+      // Create an array to store all the promises
+      const fetchPromises = movieNamesFromGPT.map(async (movieName) => {
+        // Await each fetch inside the map function
+        await fetchMovieIdFromTMDB(movieName);
+      });
+
+      // Wait for all the fetches to complete
+      await Promise.all(fetchPromises);
+
+      // Once all fetches are complete, set idsReceivedFromAPI to true
+      setIdsReceivedFromAPI(!idsReceivedFromAPI); // just to trigger the useEffect below
+    } else {
+      setLoading(false);
+      console.log("No movie names suggested by ChatGPT");
+    }
+  };
+
+  // TODO: delete mix on backend before starting to add new movies to the mix?
+
+  
+
+
+  // TODO: if-statement so we only fetchMovieDetails if the movie doesnt already exist in our database
+  // fetch movie details from API
+  async function fetchMovieDetails(id) {
+   // console.log("Fetching movie details for ID:", id);
+    try {
+      const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${movieAPI_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data);
+      console.log(data.vote_average);
+
+      // TODO: if statement?
+      await postMovieToDatabase(data); 
+      await postAddToMixOnBackend(data.id, data.title) // TODO: if we want to access this mix on some other page?
+
+        // Vi hämtar ifrån backend först istället så det blir lättare att importera på andra sidor, och om vi laddar om sidan...
+
+      /* if (data.title) {
+        // Check if data includes title
+        // If not, update the state with the movie details
+        setMixDetails((prevDetails) => [
+          ...prevDetails,
+          {
+            id: id,
+            title: data.title,
+            overview: data.overview,
+            voteAverage: data.vote_average,
+            release: data.release_date,
+            tagline: data.tagline,
+            runtime: data.runtime,
+            backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
+            poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+          },
+        ]);
+
+        //  setMovieDetailsFetched(true); // Mark that movie details have been fetched
+      } else {
+        console.error("No movie found with the given ID");
+      } */
+
+    } catch (error) {
+      console.error("Error fetching movie details:", error);
+    } finally {
+      //setLoading(false);
+      setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
+    }
+  }
+
+  // fetch mix from our database:
+
+ 
+  async function getMixFromOurDatabaseOnlyIDs() {
+    try {
+      
+      const response = await fetch(`${host}/dailymixbasedonlikes`, {
+        // users sidan på backend! dvs inte riktiga sidan!
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+       /*  body: JSON.stringify({
+         
+        }), */
+      });
+
+      const data = await response.json();
+      if (data.mix && data.mix) {
+        console.log(
+          "fetched data.mix from backend: ",
+          data.mix,
+          setMixFromDatabaseOnlyIDs(data.mix)
+        );
+      
+
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      
+      setFetchedMixWithIDsFromDatabase(!fetchedMixWithIDsFromDatabase);
+    }
+  }
+  // fetch movies from our database and populate mixDetails that will be shown on site:
+  
+  
+
+  async function postAddToMixOnBackend(id, title) {
+    try {
+      //const response = await fetch("http://localhost:4000/sessions", {
+      const response = await fetch(`${host}/addtodailymixbasedonlikes`, {
+        // users sidan på backend! dvs inte riktiga sidan!
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+          title: title,
+          //movieOrSeries: movieOrSeries,
+        }),
+      });
+    } catch (error) {
+      console.error("Error posting like to backend:", error);
+    }
+  }
+/* 
+  if (mixList == null) {
+    return (
+      <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+        Loading weekly mix based on your likes...
+      </div>
+    );
+  }
+ */
+  if (movieNamesFromGPT.length !== 0) {
+
+    console.log("movie names from GPT (mix suggestion): ", movieNamesFromGPT);
+  }
+
+  if (idsReceivedFromAPI === true) {
+
+    console.log("idsReceivedFromAPI", idsReceivedFromAPI);
+  }
+
+  if (movieIdsFromAPI.length !== 0) {
+
+    console.log("movieIdsFromAPI: ", movieIdsFromAPI);
+  }
+
+  if (mixDetails.length !== 0) {
+
+    console.log("mixDetails: ", mixDetails);
+  }
+
+  console.log("loading: ", loading);
+
+
+  return (
+    <>
+      <h2>Weekly mix based on your likes (backend fetch)</h2>
+
+      <button
+        className={`h-12 bg-slate-400 text-slate-900 w-full md:w-1/3 rounded-full md:mt-0 mt-5 font-semibold text-xl`}
+        onClick={() => {
+         // setButtonClicked(true)
+         getGenerateDailyMixFromGPT();
+        }}
+        //disabled={!input}
+        
+      >
+        Generate Weekly mix
+      </button>
+
+
+       {loading === true ? (<div>Loading...</div>) :  (<><button  
+        className="p-8 bg-slate-500"
+        onClick={() => {
+          //fetchMovieIds();
+          setShowDetails(!showDetails);
+        }}
+      >
+        Show Details
+      </button>
+
+       {showDetails && mixDetails && mixDetails.length > 0 ? (
+          <SlideMenu>
+            {mixDetails.map((movie, index) => (
+              <SlideMenuMovieCard
+                key={index}
+                title={movie.title}
+                poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
+                overview={movie.overview}
+              />
+            ))}
+          </SlideMenu>
+        ) : (
+          ""
+        )}</>)}
+    </>
+  );
+}

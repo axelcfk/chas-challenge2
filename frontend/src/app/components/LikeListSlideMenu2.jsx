@@ -4,7 +4,7 @@ import { fetchMovieObject, host } from "../utils";
 import SlideMenu from "./SlideMenu";
 import { SlideMenuMovieCard } from "./SlideMenu";
 
-export default function FetchedMovies() {
+export default function LikeListSlideMenu2() {
   const [likedMoviesList, setLikedMoviesList] = useState(null);
   const [likedMoviesFetched, setLikedMoviesFetched] = useState(false);
   const [likedSeriesList, setLikedSeriesList] = useState(null);
@@ -58,12 +58,13 @@ export default function FetchedMovies() {
   }
 
   useEffect(() => {
+    
     if (
       (likedMoviesList && likedMoviesList.length > 0) ||
       (likedSeriesList && likedSeriesList.length > 0)
     ) {
       likedMoviesList.forEach( async (movie) => {
-        const movieObject = await fetchMovieObject(movie.id)
+        const movieObject = await fetchMovieObject(movie.id) // from our database
         console.log("movieObject: ", movieObject);
 
         if (movieObject.title) {
@@ -89,9 +90,6 @@ export default function FetchedMovies() {
   }, [showLikedDetails]);
 
  
-
-  
-
   //if (likedMoviesList == null || likedSeriesList == null) {
   if (likedMoviesList == null) {
     return (

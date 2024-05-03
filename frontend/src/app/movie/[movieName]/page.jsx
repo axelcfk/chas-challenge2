@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { postAddToLikeList, postAddToWatchList } from "@/app/utils";
+import { postAddToLikeList, postAddToWatchList, postMovieToDatabase } from "@/app/utils";
 
 export default function moviePage() {
   const [movieDetails, setMovieDetails] = useState("");
@@ -52,6 +52,10 @@ export default function moviePage() {
         `https://api.themoviedb.org/3/movie/${id}?api_key=${movieAPI_KEY}`
       );
       const data = await response.json();
+
+      // STORE ENTIRE MOVIE OBJECT TO OUR DATABASE
+      await postMovieToDatabase(data);
+
       setMovieDetails({
         ...movieDetails,
         idFromAPI: id,
