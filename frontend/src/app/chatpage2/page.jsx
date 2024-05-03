@@ -6,6 +6,26 @@ import { postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
 import Link from "next/link";
 
+// Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
+// (annars ersätter "not available" t.ex. Hoopla, Cinemax, Showtime Apple TV, FXNow, fuboTV, som vi
+// inte känner till)
+const isAvailableOnSupportedServices = (streaming) => {
+  const supportedServices = [
+    "Netflix",
+    "HBO Max",
+    "Viaplay",
+    "Amazon Prime",
+    "Disney+",
+    "Hulu",
+    "Apple TV+",
+    "Paramount",
+    "Mubi",
+  ];
+  return streaming?.flatrate?.some((provider) =>
+    supportedServices.includes(provider.provider_name)
+  );
+};
+
 export default function ChatPage2() {
   const [input, setInput] = useState("");
   const [movieDetails, setMovieDetails] = useState([]);
@@ -213,15 +233,33 @@ export default function ChatPage2() {
           <div className=" h-full w-full ">
             <div className="grid grid-cols-2 w-full ">
               {movieDetails.map((movie, index) => (
-                <Link
-                  href="/movie/[movieName]"
-                  as={`/movie/${encodeURIComponent(movie.title)}`}
+                <div
+                  key={movie.id}
+                  className="flex flex-col justify-center items-center w-full"
                 >
-                  <div className="flex flex-col justify-center items-center w-full">
-                    <img src={movie.poster} alt="poster" />
-                    <p className="h-10">{movie.title}</p>
+                  <Link
+                    href="/movie/[movieName]"
+                    as={`/movie/${encodeURIComponent(movie.title)}`}
+                  >
+                    <div>
+                      <img src={movie.poster} alt="poster" />
+                      <p className="h-10">{movie.title}</p>
+                    </div>
+                  </Link>
+                  <div>
+                    {isAvailableOnSupportedServices(movie.streaming) ? (
+                      movie.streaming.flatrate.map((provider) => (
+                        <p key={provider.provider_id}>
+                          {provider.provider_name}
+                        </p>
+                      ))
+                    ) : (
+                      <p>
+                        Not available on your streaming-services or your area
+                      </p>
+                    )}
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
             <div className=" sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
