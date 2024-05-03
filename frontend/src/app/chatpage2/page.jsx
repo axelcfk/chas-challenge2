@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
+import BackButton from "../components/BackButton";
 
 export default function ChatPage2() {
   const [input, setInput] = useState("");
@@ -113,10 +114,9 @@ export default function ChatPage2() {
     }
   }
 
-
-
   return (
     <div className="flex  flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">
+      <BackButton />
       {showVideo && movieDetails.length < 2 && (
         <div
           className={` md:w-full flex flex-col justify-center items-center h-full ${
@@ -155,6 +155,7 @@ export default function ChatPage2() {
       <div className="flex justify-center items-center ">
         {movieDetails.length > 0 && (
           <div>
+            
             <div className="flex flex-col justify-center items-center flex-wrap">
               {movieDetails.map((movie, index) => (
                 <MovieCard
@@ -162,6 +163,7 @@ export default function ChatPage2() {
                   movie={movie}
                   credits={movieCredits}
                 />
+
               ))}
             </div>
             <div className=" sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
