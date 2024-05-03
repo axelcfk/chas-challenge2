@@ -5,6 +5,7 @@ import { FaPlus, FaThumbsUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { postAddToLikeList, postAddToWatchList } from "@/app/utils";
 import BackButton from "@/app/components/BackButton";
+import { checkLikeList } from "@/app/utils";
 
 export default function moviePage() {
   const [movieDetails, setMovieDetails] = useState("");
@@ -12,6 +13,7 @@ export default function moviePage() {
   const [noResult, setNoResult] = useState(false);
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
+  const [likedMovies, setLikedMovies] = useState([]);
   const [credits, setCredits] = useState({
     director: "",
     actors: [],
@@ -22,6 +24,25 @@ export default function moviePage() {
 
   const params = useParams();
   const movieName = params.movieName;
+
+  useEffect(() => {
+    const fetchLikeList = async () => {
+      const movies = await checkLikeList();
+      console.log("movies", movies);
+      if (movies) {
+        setLikedMovies(movies);
+        console.log(likedMovies);
+      } else {
+        console.error("Failed to fetch liked movies list");
+      }
+    };
+
+    fetchLikeList();
+  }, []);
+
+  const isMovieLiked = likedMovies.find(
+    (movie) => movie.id === movieDetails.idFromAPI
+  );
 
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
@@ -200,7 +221,9 @@ export default function moviePage() {
                           );
                         }}
                       >
-                        <FaThumbsUp></FaThumbsUp>
+                        <FaThumbsUp
+                          color={isMovieLiked ? "green" : "grey"}
+                        ></FaThumbsUp>
                       </button>
 
                       <button
@@ -222,6 +245,11 @@ export default function moviePage() {
                         </p>
                         <p className="mb-5  md:w-full  font-light">
                           {movieDetails.overview.slice(0, 200)}...
+                        </p>
+                        <p>
+                          {isMovieLiked
+                            ? "this movie is in the like list"
+                            : "this movie is not in the like list"}
                         </p>
                       </div>
                     ) : (
