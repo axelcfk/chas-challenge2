@@ -3,6 +3,28 @@
 import { useState, useEffect, useRef } from "react";
 import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
+import AutoQuery from "./autoQuery";
+import Link from "next/link";
+
+// Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
+// (annars ersätter "not available" t.ex. Hoopla, Cinemax, Showtime Apple TV, FXNow, fuboTV, som vi
+// inte känner till)
+const isAvailableOnSupportedServices = (streaming) => {
+  const supportedServices = [
+    "Netflix",
+    "HBO Max",
+    "Viaplay",
+    "Amazon Prime",
+    "Disney+",
+    "Hulu",
+    "Apple TV+",
+    "Paramount",
+    "Mubi",
+  ];
+  return streaming?.flatrate?.some((provider) =>
+    supportedServices.includes(provider.provider_name)
+  );
+};
 
 export default function ChatPage2() {
   const [input, setInput] = useState("");
@@ -90,7 +112,7 @@ export default function ChatPage2() {
                 id: movieId,
                 poster: posterUrl,
                 overview: detailsData.overview,
-                streaming: streamingData.US, // om vi vill ha utifrån US (går att ändra annars)
+                streaming: streamingData.SE, // Hämtar providers utifrån SE region
               };
             }
           } catch (error) {
@@ -103,7 +125,6 @@ export default function ChatPage2() {
 
     if (movies.length > 0) fetchAllMovieDetails();
   }, [movies]);
-
 
   async function fetchStreamingServices(movieId) {
     try {
@@ -118,9 +139,56 @@ export default function ChatPage2() {
     }
   }
 
+  useEffect(() => {
+    //setLoading(true);
+
+    const fetchMovieDetails = async () => {
+      if (movieDetails.idFromAPI) {
+        console.log("Fetching movie details for ID:", movieDetails.idFromAPI);
+        try {
+          // TODO: kolla först om filmen redan finns i våran databas, annars fetcha ifrån APIt OCH spara film till våran databas
+
+          const url = `https://api.themoviedb.org/3/movie/${movieDetails.idFromAPI}?api_key=${movieAPI_KEY}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          console.log("fetched movie details data: ", data);
+          console.log(data.vote_average);
+
+          await postMovieToDatabase(data);
+
+          /* if (!responseBackend.ok) {
+              throw new Error("Failed to fetch 'addmovietodatabase' POST");
+            } */
+
+          if (data.title) {
+            // Check if data includes title
+            setMovieDetails({
+              ...movieDetails,
+              titleFromAPI: data.title, // om vi inte redan gjort detta via ChatGpts response
+              overview: data.overview,
+              voteAverage: data.vote_average,
+              release: data.release_date,
+              tagline: data.tagline,
+              runtime: data.runtime,
+              backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
+              poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+            });
+
+            // setMovieDetailsFetched(true); // Mark that movie details have been fetched
+          } else {
+            console.error("No movie found with the given ID");
+          }
+        } catch (error) {
+          console.error("Error fetching movie details:", error);
+        }
+      }
+    };
+
+    fetchMovieDetails();
+  }, [movieDetails.idFromAPI]);
+
   return (
-    <div className="flex  flex-col justify-center items-center md:items-start px-10 md:px-20 h-screen w-screen bg-black text-slate-100 z-0">
-      <BackButton />
+    <div className="flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen w-screen bg-black text-slate-100 z-0 py-12">
       {showVideo && movieDetails.length < 2 && (
         <div
           className={` md:w-full flex flex-col justify-center items-center h-full ${
@@ -138,13 +206,15 @@ export default function ChatPage2() {
             Your browser does not support the video tag.
           </video>
           {!loading ? (
-            <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
+            <p className="px-5 text-xl flex flex-col items-center md:-mt-14 -mt-8 ">
               {" "}
-              <span className="mb-4 text-2xl font-semibold">
-                Hi there!
+              <span className="mb-4 text-2xl font-semibold text-center">
+                I'm your AI movie matcher
               </span>{" "}
-              <span className="font-light">I'm your personal </span>{" "}
-              <span className="font-light">AI movie matcher</span>
+              <span className="font-light text-center">
+                I give you the best movie suggestions based on your mood, vibe
+                or{" "}
+              </span>{" "}
             </p>
           ) : (
             <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
@@ -154,22 +224,42 @@ export default function ChatPage2() {
               </span>
             </p>
           )}
-          {!loading ? <AutoQuery setInput={setInput} /> : null}
+          {!loading ? <AutoQuery input={input} setInput={setInput} /> : null}
         </div>
       )}
 
-      <div className="flex justify-center items-center ">
+      <div className="flex justify-center items-center h-full ">
         {movieDetails.length > 0 && (
-          <div>
-            
-            <div className="flex flex-col justify-center items-center flex-wrap">
+          <div className=" h-full w-full ">
+            <div className="grid grid-cols-2 w-full ">
               {movieDetails.map((movie, index) => (
-                <MovieCard
+                <div
                   key={movie.id}
-                  movie={movie}
-                  credits={movieCredits}
-                />
-
+                  className="flex flex-col justify-center items-center w-full"
+                >
+                  <Link
+                    href="/movie/[movieName]"
+                    as={`/movie/${encodeURIComponent(movie.title)}`}
+                  >
+                    <div>
+                      <img src={movie.poster} alt="poster" />
+                      <p className="h-10">{movie.title}</p>
+                    </div>
+                  </Link>
+                  <div>
+                    {isAvailableOnSupportedServices(movie.streaming) ? (
+                      movie.streaming.flatrate.map((provider) => (
+                        <p key={provider.provider_id}>
+                          {provider.provider_name}
+                        </p>
+                      ))
+                    ) : (
+                      <p>
+                        Not available on your streaming-services or your area
+                      </p>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
             <div className=" sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
@@ -205,7 +295,7 @@ export default function ChatPage2() {
         )}
       </div>
 
-      {!loading && movieDetails != 3 ? (
+      {!loading && movieDetails < 2 ? (
         <div className="h-40  sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
           <input
             style={{ border: "1px solid grey" }}
@@ -230,4 +320,13 @@ export default function ChatPage2() {
       ) : null}
     </div>
   );
+}
+
+{
+  /* <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    credits={movieCredits}
+                    movieDetails={movieDetails}
+                  /> */
 }
