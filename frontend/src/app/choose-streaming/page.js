@@ -48,8 +48,8 @@ export default function ChooseStreaming() {
   return (
     <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-black">
       <div>
-        <h1 className="text-3xl font-bold">Streaming services</h1>
-        <p className="mt-6 text-sm">
+        <h1 className="text-3xl font-bold text-white">Streaming services</h1>
+        <p className="mt-6 text-sm text-white">
           Choose which streaming services you are going to use. This can be
           changed later in your profile.
         </p>
@@ -78,6 +78,7 @@ export default function ChooseStreaming() {
           Next
         </button>
       </Link>
+      <button></button>
     </main>
   );
 }
