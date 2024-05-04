@@ -55,6 +55,8 @@ export default function DailyMixBasedOnLikesSlideMenu() {
 
  */
 
+  // TODO: just nu om du klickar på generate daily mix igen så kommer movienamesfromgpt.length och movieIdsFromAPI.length vara annorlunda och därmed inte trigga andra useEffecten! Måste kanske deleta dailymixen på backend innan man klickar generate igen? 
+
   const resetState = () => {
     setIdsReceivedFromAPI(false);
     setSuggestionFetchedFromGPT(false);
@@ -66,40 +68,62 @@ export default function DailyMixBasedOnLikesSlideMenu() {
   };
 
   useEffect(() => {
-      fetchMovieIds();
-  }, [suggestionFetchedFromGPT])
+    if (suggestionFetchedFromGPT === true && movieNamesFromGPT.length > 0){
+      //fetchMovieIds();
+      fetchAllMovieIdsFromTMDB();
+
+      
+      
+      
+    }
+
+  }, [movieNamesFromGPT])
 
    
 
   useEffect(() => {
 
     //if (movieIdsFromAPI.length > 0) {
+      if (movieIdsFromAPI.length > 0 && movieIdsFromAPI.length === movieNamesFromGPT.length) {
+        setIdsReceivedFromAPI(true);
+      }
       
+    
+    //}
+
+    //}, [likedMoviesFetched || likedSeriesFetched])
+  }, [movieIdsFromAPI]);
+
+  useEffect( () => {
+
+    if (idsReceivedFromAPI === true && movieIdsFromAPI.length > 0){
+      console.log("all movie ids received from api: ", movieIdsFromAPI);
     
       movieIdsFromAPI.forEach( async (movieId) => {
         //fetchLikedMovieDetails(movie.id);
         await fetchMovieDetails(movieId);
-      });
-    //}
+      });}
 
-    //}, [likedMoviesFetched || likedSeriesFetched])
-  }, [idsReceivedFromAPI]);
+  }, [idsReceivedFromAPI])
   
     useEffect(() => {
-      getMixFromOurDatabaseOnlyIDs();
+      if (fetchedAndSavedDetailsFromAPI === true) {
+        getMixFromOurDatabaseOnlyIDs();
+      }
     }, [fetchedAndSavedDetailsFromAPI])
   
     useEffect(() => {
     /* if (
       (mixFromDatabaseOnlyIDs && mixFromDatabaseOnlyIDs.length > 0)
     ) { */
+    if (fetchedMixWithIDsFromDatabase === true && mixFromDatabaseOnlyIDs.length > 0) {
     try {
 
 
       mixFromDatabaseOnlyIDs.forEach( async (movie) => {
         const movieObject = await fetchMovieObject(movie.id)
        // console.log("movieObject: ", movieObject);
-      setLoading(false);
+      //setLoading(false);
 
 
         if (movieObject.title) {
@@ -130,7 +154,7 @@ export default function DailyMixBasedOnLikesSlideMenu() {
       setLoading(false);
       
     }
-    
+    }
       //setShowDetails(true);
    // }
   }, [fetchedMixWithIDsFromDatabase]);
@@ -150,6 +174,7 @@ export default function DailyMixBasedOnLikesSlideMenu() {
  */
 
   const getGenerateDailyMixFromGPT = async () => {
+    resetState();
     setLoading(true);
 
    try {
@@ -174,7 +199,7 @@ export default function DailyMixBasedOnLikesSlideMenu() {
     } finally {
       //setLoading(false)
 
-      setSuggestionFetchedFromGPT(!suggestionFetchedFromGPT);
+      setSuggestionFetchedFromGPT(true);
     }
     // setLoading(false);
     //setLoading(false);
@@ -182,13 +207,33 @@ export default function DailyMixBasedOnLikesSlideMenu() {
 
   };
 
+  const fetchAllMovieIdsFromTMDB = async () => {
+    //setLoading(true);
+    if (movieNamesFromGPT && movieNamesFromGPT.length > 0) {
+      // Create an array to store all the promises
+      console.log("all movienames suggested by GPT: ", movieNamesFromGPT);
 
+      const fetchPromises = movieNamesFromGPT.map(async (movieName) => {
+        // Await each fetch inside the map function
+        await fetchMovieIdFromTMDB(movieName);
+      });
+
+      // Wait for all the fetches to complete
+      await Promise.all(fetchPromises);
+
+      // Once all fetches are complete, set idsReceivedFromAPI to true
+      //setIdsReceivedFromAPI(true); // just to trigger the useEffect below
+      
+    } else {
+      setLoading(false);
+      console.log("No movie names suggested by ChatGPT");
+    }
+  };
 
  
 
   async function fetchMovieIdFromTMDB(movieNameFromGPT) { 
     if ( movieAPI_KEY != null && movieNameFromGPT) {
-      console.log("title received from GPT: ", movieNameFromGPT);
       const encodedMovieTitle = encodeURIComponent(movieNameFromGPT);
       console.log("encoded movie title: ", encodedMovieTitle);
 
@@ -209,30 +254,14 @@ export default function DailyMixBasedOnLikesSlideMenu() {
             ...prevIds,
             data.results[0].id
           ]);
+
+          
         })
         .catch((error) => console.error("Error fetching data:", error));
     }
   }
 
-  const fetchMovieIds = async () => {
-    //setLoading(true);
-    if (movieNamesFromGPT && movieNamesFromGPT.length > 0) {
-      // Create an array to store all the promises
-      const fetchPromises = movieNamesFromGPT.map(async (movieName) => {
-        // Await each fetch inside the map function
-        await fetchMovieIdFromTMDB(movieName);
-      });
-
-      // Wait for all the fetches to complete
-      await Promise.all(fetchPromises);
-
-      // Once all fetches are complete, set idsReceivedFromAPI to true
-      setIdsReceivedFromAPI(!idsReceivedFromAPI); // just to trigger the useEffect below
-    } else {
-      setLoading(false);
-      console.log("No movie names suggested by ChatGPT");
-    }
-  };
+  
 
   // TODO: delete mix on backend before starting to add new movies to the mix?
 
@@ -254,11 +283,12 @@ export default function DailyMixBasedOnLikesSlideMenu() {
       await postMovieToDatabase(data); 
       await postAddToMixOnBackend(data.id, data.title) // TODO: if we want to access this mix on some other page?
 
+
+
         // Vi hämtar ifrån backend först istället så det blir lättare att importera på andra sidor, och om vi laddar om sidan...
 
       /* if (data.title) {
         // Check if data includes title
-        // If not, update the state with the movie details
         setMixDetails((prevDetails) => [
           ...prevDetails,
           {
@@ -283,7 +313,9 @@ export default function DailyMixBasedOnLikesSlideMenu() {
       console.error("Error fetching movie details:", error);
     } finally {
       //setLoading(false);
-      setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
+      //setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
+      setFetchedAndSavedDetailsFromAPI(true);
+
     }
   }
 
@@ -318,7 +350,7 @@ export default function DailyMixBasedOnLikesSlideMenu() {
       console.error("Error:", error);
     } finally {
       
-      setFetchedMixWithIDsFromDatabase(!fetchedMixWithIDsFromDatabase);
+      setFetchedMixWithIDsFromDatabase(true);
     }
   }
   // fetch movies from our database and populate mixDetails that will be shown on site:
@@ -352,7 +384,7 @@ export default function DailyMixBasedOnLikesSlideMenu() {
       </div>
     );
   }
- */
+ *//* 
   if (movieNamesFromGPT.length !== 0) {
 
     console.log("movie names from GPT (mix suggestion): ", movieNamesFromGPT);
@@ -374,7 +406,8 @@ export default function DailyMixBasedOnLikesSlideMenu() {
   }
 
   console.log("loading: ", loading);
-
+ */
+  console.log("idsReceivedFromAPI: ", idsReceivedFromAPI);
 
   return (
     <>
