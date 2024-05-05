@@ -1,6 +1,7 @@
 "use client"
-import FetchedMovies from "../components/FetchedMovies";
+import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
 import LikeListSlideMenu from "../components/LikeListSlideMenu";
+import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 import WatchListSlideMenu from "../components/WatchListSlideMenu";
 
 export default function TestMyList() {
@@ -12,7 +13,9 @@ export default function TestMyList() {
       
       <WatchListSlideMenu></WatchListSlideMenu>
 
-      <FetchedMovies></FetchedMovies>
+      <LikeListSlideMenu2></LikeListSlideMenu2>
+
+      <DailyMixBasedOnLikesSlideMenu></DailyMixBasedOnLikesSlideMenu>
     </div>
   )
 }

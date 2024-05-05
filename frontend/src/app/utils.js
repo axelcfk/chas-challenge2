@@ -58,8 +58,10 @@ export async function postAddToWatchList(id, movieOrSeries) {
   }
 }
 
+ 
+// from our database!!!!!!!!!!! (not api)
 export async function fetchMovieObject(id) {
-  console.log("Fetching movie details from backend for ID:", id);
+  //console.log("Fetching movie details from backend for ID:", id);
 
   const response = await fetch(`${host}/movieobject`, {
     // users sidan på backend! dvs inte riktiga sidan!
@@ -78,7 +80,7 @@ export async function fetchMovieObject(id) {
   } */
 
   const data = await response.json();
-  console.log("data.searchResult: ", data.searchResult);
+  //console.log("data.searchResult: ", data.searchResult);
 
   return data.searchResult; // RETURNERAR MOVIE-OBJEKTET
 }
