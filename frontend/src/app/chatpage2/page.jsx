@@ -269,7 +269,9 @@ export default function ChatPage2() {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <p>{provider.provider_name}</p>
+                          <p className=" hover:underline">
+                            {provider.provider_name}
+                          </p>
                         </a>
                       ))
                     ) : (

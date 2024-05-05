@@ -1,14 +1,34 @@
 import Navbar from "../components/Navbar";
+import Link from "next/link";
 
 export default function Startpage() {
   return (
-    <main>
+    <>
       <Navbar />
-      <div className="text-white">Start page</div>
-      <div>hero section</div>
-      <div>Search history</div>
-      <div>Popular today</div>
-      <div>Movie mixes</div>
-    </main>
+      <main className="startpage-main text-white flex justify-center">
+        <div className="flex align-items-center justify-center pt-28 px-4 container">
+          <div className="hero-container">
+            <div className="flex flex-col">
+              <p className="hero-p">
+                Don't know <br />
+                what to watch?
+              </p>
+              <p className="hero-p">
+                Let CinemAI <br />
+                help you!
+              </p>
+              <Link href={"/chatpage2"}>
+                <button className="hero-btn">FIND A MOVIE</button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div className="flex justify-center flex-col text-white">
+        <div>Search history slide</div>
+        <div>Popular today slide</div>
+        <div>Movie mixes slide</div>
+      </div>
+    </>
   );
 }

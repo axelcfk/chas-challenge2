@@ -168,3 +168,52 @@ html {
   width: 100%;
   height: auto;
 }
+
+.hero-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  border: 2px solid #ff506c;
+  border-radius: 10px;
+  width: 100%;
+  height: 279px;
+}
+
+.hero-btn {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: #ff506c;
+  color: white;
+  border: 1px solid white;
+  border-radius: 16px;
+  width: 310px;
+  height: 55px;
+  font-weight: 700;
+}
+
+.hero-p {
+  font-size: 24px;
+}
+
+.startpage-main {
+  background: linear-gradient(
+      to bottom,
+      rgba(38, 24, 57, 0.4) 0%, /* gradient från ovan*/
+      rgba(38, 24, 57, 1.0) 85%, /* över hela bilden*/
+      rgba(38, 24, 57, 1.2) 100% /* gradient nere*/
+    ),
+    url("/oppenheimerIMDB.jpg");
+  background-size: cover;
+  background-position: center -105px; /* flyttar ner bilden*/
+  background-repeat: no-repeat;
+  display: flex;
+
+  height: 100vh; /* om man tar bort denna rad så ser det inte bra ut, måste nog justeras för
+  / desktop-view, denna stör också så att elementen nedanför hamnar för långt ner på sidan. */
+}
