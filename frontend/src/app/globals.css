@@ -16,6 +16,7 @@
   align-items: center;
   z-index: 50;
 }
+
 .loader {
   width: 48px;
   height: 48px;
@@ -204,17 +205,16 @@
 .startpage-main {
   background: linear-gradient(
       to bottom,
-      rgba(38, 24, 57, 0.4) 0%,
-      /* gradient från ovan*/ rgba(38, 24, 57, 1) 85%,
-      /* över hela bilden*/ rgba(38, 24, 57, 1.2) 100% /* gradient nere*/
+      rgba(38, 24, 57, 0.6) 0%, /* gradient från ovan*/ 
+      rgba(64, 41, 94, 1.0) 80% /* gradient nere*/
     ),
     url("/oppenheimerIMDB.jpg");
   background-size: cover;
-  background-position: center -105px; /* flyttar ner bilden*/
+  background-position: center -100px; /* flyttar upp bilden*/
   background-repeat: no-repeat;
   display: flex;
-
-  height: 100vh; /* om man tar bort denna rad så ser det inte bra ut, måste nog justeras för
+  height: auto;
+  min-height: 100vh; /* om man tar bort denna rad så ser det inte bra ut, måste nog justeras för
   / desktop-view, denna stör också så att elementen nedanför hamnar för långt ner på sidan. */
 }
 
