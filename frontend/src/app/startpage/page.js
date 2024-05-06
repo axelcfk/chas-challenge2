@@ -29,7 +29,7 @@ export default function Startpage() {
         </div>
       </main>
       </div>
-      <div className="list-container flex justify-center flex-col text-white">
+      <div className="list-container flex justify-center flex-col text-white mt-[-200px]">
         <div>Search history slide</div>
         <div>Popular today slide</div>
         <div>
