@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
+
 import AutoQuery from "./autoQuery";
-import Link from "next/link";
-import { FaArrowCircleUp } from "react-icons/fa";
 import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
 // import BackButton from "../components/BackButton";
@@ -132,6 +130,7 @@ export default function ChatPage2() {
                 id: movieId,
                 poster: posterUrl,
                 overview: detailsData.overview,
+                voteAverage: detailsData.vote_average,
                 streaming: streamingData.SE, // Hämtar providers utifrån SE region
               };
             }
@@ -206,7 +205,6 @@ export default function ChatPage2() {
 
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
-
   return (
     <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
       {/* <BackButton /> */}
