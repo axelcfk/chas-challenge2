@@ -6,6 +6,7 @@ import SlideMenu, {
 } from "../components/SlideMenu";
 
 //TODO: texten i rutan ska var lite större
+//TODO: fetcha populära filmer och rendera under popular today
 
 export default function Startpage() {
   return (

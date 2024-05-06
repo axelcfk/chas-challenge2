@@ -34,15 +34,15 @@ export default function ChooseStreaming() {
   };
 
   const services = [
-    "Netflix",
-    "HBO Max",
-    "Viaplay",
-    "Amazon Prime",
-    "Disney+",
-    "Hulu",
-    "Apple TV+",
-    "Paramount",
-    "Mubi",
+    { name: "Netflix", logo: "/Netflix_icon.svg.png" },
+    { name: "HBO Max", logo: "/hbo-max.png" },
+    { name: "Viaplay", logo: "/viaplay-logo.jpeg" },
+    { name: "Amazon Prime", logo: "/amazon-prime-video-logo.jpeg" },
+    { name: "Disney+", logo: "/disney-plus-logo.png" },
+    { name: "Hulu", logo: "/" },
+    { name: "Apple TV+", logo: "/apple-tv-logo.png" },
+    { name: "Paramount", logo: "/paramount-plus-logo.jpeg" },
+    { name: "Tele2Play", logo: "/tele2play-logo.png" },
   ];
 
   return (
@@ -56,30 +56,36 @@ export default function ChooseStreaming() {
           skip to see all movies.
         </p>
       </div>
-      <div className="container mt-12 w-full max-w-4xl mx-auto">
+      <div className="container mt-12 w-full max-w-4xl mx-auto mb-12">
         <div className="grid grid-cols-3 gap-4">
           {services.map((service) => (
             <div
-              key={service}
+              key={service.name}
               // Om tjänsten är markerad, (kolla om den finns med i arrayen) ge den en klassen "selected" som markerar elementet.
               className={`square ${
                 selectedServices.includes(service) ? "selected" : ""
               }`}
-              onClick={() => handleSelectService(service)}
+              onClick={() => handleSelectService(service.name)}
             >
-              <div className="square-content">{service}</div>
+              <div className="square-content">
+                <img
+                  src={service.logo}
+                  alt={service.name}
+                  className="mx-auto"
+                />
+              </div>
             </div>
           ))}
         </div>
       </div>
       <div className="flex space-x-4">
         <Link href={"/startpage"}>
-          <button className="streaming-btn w-56 mt-8 rounded-3xl">Skip</button>
+          <button className="streaming-btn w-56 rounded-3xl">Skip</button>
         </Link>
         <Link href={"/startpage"}>
           <button
             onClick={handleSumbit}
-            className="streaming-btn w-56 mt-8 rounded-3xl"
+            className="streaming-btn w-56 rounded-3xl"
           >
             Next
           </button>
