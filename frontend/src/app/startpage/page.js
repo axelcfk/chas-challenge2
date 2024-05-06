@@ -6,7 +6,7 @@ import SlideMenu, { SlideMenuMixCard } from "../components/SlideMenu";
 
 export default function Startpage() {
   return (
-    <>
+    <div className="bg-[#3F295E]">
       <Navbar />
       <div className="wrapper">
       <main className="startpage-main text-white flex justify-center">
@@ -45,6 +45,6 @@ export default function Startpage() {
           </SlideMenu>
         </div>
       </div>
-    </>
+    </div>
   );
 }

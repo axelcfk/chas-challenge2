@@ -206,7 +206,7 @@
   background: linear-gradient(
       to bottom,
       rgba(38, 24, 57, 0.6) 0%, /* gradient från ovan*/ 
-      rgba(38, 24, 57, 1.0) 80% /* gradient nere*/
+      rgba(64, 41, 94, 1.0) 80% /* gradient nere*/
     ),
     url("/oppenheimerIMDB.jpg");
   background-size: cover;
