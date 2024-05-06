@@ -8,7 +8,7 @@ import Link from "next/link";
 import { FaArrowCircleUp } from "react-icons/fa";
 import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
-import BackButton from "../components/BackButton";
+// import BackButton from "../components/BackButton";
 
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se", //funkar
@@ -209,7 +209,7 @@ export default function ChatPage2() {
 
   return (
     <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
-      <BackButton />
+      {/* <BackButton /> */}
       {errorMessage && !loading && (
         <div className=" bg-yellow-500 h-full flex justify-center items-center ">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
