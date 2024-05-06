@@ -9,15 +9,14 @@ export default function SlideMenu({ children }) {
   );
 }
 
-export function SlideMenuMovieCard({title, poster, overview, imgSrc}) {
+export function SlideMenuMovieCard({title, poster, overview}) {
 
   return (
     <div className="mx-2 inline-block h-36 w-24">
       <img
           style={{ border: "1px solid grey" }}
           className="inline-block w-24 h-full mr-3 rounded-md"
-          // src={poster}
-          src={imgSrc}
+          src={poster}
           alt={title}
         />
         {/* <div className=" flex flex-col ml-3">

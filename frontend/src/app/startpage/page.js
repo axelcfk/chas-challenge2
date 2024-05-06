@@ -46,14 +46,14 @@ export default function Startpage() {
         </SlideMenu>
         <div className="ml-4 text-xl">Popular today</div>
         <SlideMenu>
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard imgSrc={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
         </SlideMenu>
         <h2 className="ml-4 text-xl">Movie mixes</h2>
         <div>
