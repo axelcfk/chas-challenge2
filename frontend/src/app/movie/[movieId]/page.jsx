@@ -3,8 +3,13 @@
 import { useParams } from "next/navigation";
 import { FaPlus, FaThumbsUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { postAddToLikeList, postAddToWatchList } from "@/app/utils";
+import {
+  postAddToLikeList,
+  postAddToWatchList,
+  postRemoveFromLikeList,
+} from "@/app/utils";
 import { checkLikeList } from "@/app/utils";
+import BackButton from "@/app/components/BackButton";
 
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -13,6 +18,11 @@ export default function MoviePage() {
   const [noResult, setNoResult] = useState(false);
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
+  const [likeButtonClicked, setLikeButtonClicked] = useState(false);
+
+  function handleLikeButtonClick() {
+    setLikeButtonClicked(!likeButtonClicked);
+  }
 
   const [credits, setCredits] = useState({
     director: "",
