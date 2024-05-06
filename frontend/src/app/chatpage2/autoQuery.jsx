@@ -8,7 +8,7 @@ export default function AutoQuery({ setInput, input }) {
   ]);
 
   return (
-    <div className="grid md:grid-cols-2 grid-cols-1 gap-4 py-20 w-full ">
+    <div className="grid md:grid-cols-2 grid-cols-1 gap-4 py-5 w-full mb-8 ">
       <p
         className={`rounded-xl h-12 flex justify-center items-center hover:cursor-pointer ${
           input === autoQuery[0] ? "bg-slate-100 text-slate-950" : ""

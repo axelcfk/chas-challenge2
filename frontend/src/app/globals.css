@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  background-color: #261839;
-}
+/* html {
+  background-color: black;
+} */
 
 .loading-indicator {
   height: 100%;
@@ -204,9 +204,9 @@ html {
 .startpage-main {
   background: linear-gradient(
       to bottom,
-      rgba(38, 24, 57, 0.4) 0%, /* gradient från ovan*/
-      rgba(38, 24, 57, 1.0) 85%, /* över hela bilden*/
-      rgba(38, 24, 57, 1.2) 100% /* gradient nere*/
+      rgba(38, 24, 57, 0.4) 0%,
+      /* gradient från ovan*/ rgba(38, 24, 57, 1) 85%,
+      /* över hela bilden*/ rgba(38, 24, 57, 1.2) 100% /* gradient nere*/
     ),
     url("/oppenheimerIMDB.jpg");
   background-size: cover;
@@ -216,4 +216,8 @@ html {
 
   height: 100vh; /* om man tar bort denna rad så ser det inte bra ut, måste nog justeras för
   / desktop-view, denna stör också så att elementen nedanför hamnar för långt ner på sidan. */
+}
+
+input:focus {
+  outline: none; /* Removes the default outline */
 }
