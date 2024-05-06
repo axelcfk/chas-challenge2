@@ -370,6 +370,9 @@ export default function Mix() {
         </div>
 
         <div className="bg-[#3F295E] min-h-full py-8 pl-4">
+          <div className="flex w-full justify-end pr-8">
+            <button className="p-8 bg-[#251738]">Save List</button> {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
+          </div>
          
           {loading === true ? (
             <div>Loading...</div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import SlideMenu, {
   SlideMenuMixCard,
   SlideMenuMovieCard,
+  SlideMenuSearchHistoryCard,
 } from "../components/SlideMenu";
 
 //TODO: texten i rutan ska var lite större
@@ -35,14 +36,14 @@ export default function Startpage() {
       <div className="list-container flex justify-center flex-col text-white mt-[-240px] space-y-8">
         <h2 className="ml-4 text-xl">Search history</h2>
         <SlideMenu>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+          
+          <SlideMenuSearchHistoryCard searchName="Search 1" imgSrc={"/search-history-img.png"}></SlideMenuSearchHistoryCard>
+          <SlideMenuSearchHistoryCard searchName="Search 2" imgSrc={"/search-history-img.png"}></SlideMenuSearchHistoryCard>
+          <SlideMenuSearchHistoryCard searchName="Search 3" imgSrc={"/search-history-img.png"}></SlideMenuSearchHistoryCard>
+          <SlideMenuSearchHistoryCard imgSrc={"/search-history-img.png"}></SlideMenuSearchHistoryCard>
+          <SlideMenuSearchHistoryCard imgSrc={"/search-history-img.png"}></SlideMenuSearchHistoryCard>
+          <SlideMenuSearchHistoryCard imgSrc={"/search-history-img.png"}></SlideMenuSearchHistoryCard>
+          <SlideMenuSearchHistoryCard imgSrc={"/search-history-img.png"}></SlideMenuSearchHistoryCard>
         </SlideMenu>
         <div className="ml-4 text-xl">Popular today</div>
         <SlideMenu>
@@ -58,10 +59,9 @@ export default function Startpage() {
         <h2 className="ml-4 text-xl">Movie mixes</h2>
         <div>
           <SlideMenu>
-            <SlideMenuMixCard  imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard mixName={"Weekly"} imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard mixName={"Horror"} imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard mixName={"Sunday"} imgSrc={"/mix-img.png"}></SlideMenuMixCard>
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>

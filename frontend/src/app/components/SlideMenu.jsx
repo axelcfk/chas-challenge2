@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function SlideMenu({ children }) {
   return (
     
@@ -29,18 +31,43 @@ export function SlideMenuMovieCard({title, poster, overview}) {
   )
 }
 
-export function SlideMenuMixCard({imgSrc}) {
+export function SlideMenuMixCard({imgSrc, mixName = "MixName"}) {
 
   return (
     <div className="mx-2 inline-block relative">
+      <Link href={`/mymixes/${encodeURIComponent(mixName)}`}>
+              
     <img
+      
       className="inline-block w-32 h-36 rounded-md"
       src={imgSrc}
       alt="mix img"
     />
     <div className="absolute inset-0 flex items-center justify-center text-center flex-wrap w-full">
-      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100">Your Mix</p></div>
+      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100">{mixName}</p></div>
     </div>
+    </Link>
+  </div>
+  )
+}
+
+
+export function SlideMenuSearchHistoryCard({imgSrc, searchName = "Search #"}) {
+
+  return (
+    <div className="mx-2 inline-block relative">
+      {/* <Link href={`/mymixes/${encodeURIComponent(searchName)}`}> */}
+              
+    <img
+      
+      className="inline-block w-32 h-36 rounded-md"
+      src={imgSrc}
+      alt="mix img"
+    />
+    <div className="absolute inset-0 flex items-center justify-center text-center flex-wrap w-full">
+      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100">{searchName}</p></div>
+    </div>
+    {/* </Link> */}
   </div>
   )
 }
