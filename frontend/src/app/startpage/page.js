@@ -30,7 +30,7 @@ export default function Startpage() {
         <div>Popular today slide</div>
         <div>
           <SlideMenu>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard  imgSrc={"/mix-img.png"}></SlideMenuMixCard>
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>

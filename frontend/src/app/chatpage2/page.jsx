@@ -121,6 +121,7 @@ export default function ChatPage2() {
               const detailsData = await detailsResponse.json();
               const streamingData = await fetchStreamingServices(movieId);
               await postMovieToDatabase(detailsData);
+              // TODO: post streaming data into database as well?
               const posterPath = detailsData.poster_path;
               const posterUrl = posterPath
                 ? `https://image.tmdb.org/t/p/w500${posterPath}`
