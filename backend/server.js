@@ -236,7 +236,7 @@ app.post("/movieobject", async (req, res) => {
 
 app.post("/addmovietodatabase", async (req, res) => {
   try {
-    // console.log("/addmovietodatabase req.body: ", req.body);
+    //console.log("/addmovietodatabase req.body: ", req.body);
     const { movie, movieOrSeries } = req.body;
 
     if (!movie.id || !movieOrSeries) {
@@ -288,6 +288,8 @@ let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let movieWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let seriesWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+//let dailyMixBasedOnLikes = [];
+let dailyMixes = { dailyMixBasedOnLikes: [] };
 
 // post the lists
 app.post("/me/likelists", async (req, res) => {
@@ -545,12 +547,12 @@ app.post("/moviesuggest2", async (req, res) => {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4",
       messages: [
         {
           role: "system",
           content:
-            "This assistant will suggest 6 movies based on user descriptions. Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
+            "This assistant will suggest 6 movies based on user descriptions. Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. If the query is inapropriate (i.e foul language or anything else) respond in a funny way. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
             likedMovieTitlesString +
             "it will not be suggested. If you have no suggestions explain in your response.",
         },
@@ -565,6 +567,9 @@ app.post("/moviesuggest2", async (req, res) => {
     console.log("AI response:", JSON.stringify(completion, null, 2));
 
     const suggestion = completion.choices[0].message.content;
+
+    // TODO: spara ner userQuery och suggestion i backend?
+
     console.log("Suggestion structure:", suggestion);
     const movieNames = parseMovieNames(suggestion);
     console.log("Movie names parsed: ", movieNames);
@@ -601,6 +606,12 @@ function parseTMDBId(response) {
 function parseMovieName(response) {
   //Regex to extract movie name based on "MOVIE NAME: {string}"
   const match = response.match(/MOVIE NAME:\s*(.+)/);
+  return match ? match[1] : null;
+}
+
+function parseReasoning(response) {
+  //Regex to extract movie name based on "MOVIE NAME: {string}"
+  const match = response.match(/REASONING:\s*(.+)/);
   return match ? match[1] : null;
 }
 
@@ -656,7 +667,67 @@ app.post("/moviesuggest", async (req, res) => {
   }
 });
 
-app.get("/dailymix", async (req, res) => {
+app.get("/dailymixes", async (req, res) => {
+  const data = {
+    dailyMixes: dailyMixes,
+  };
+
+  res.json(data);
+});
+
+app.get("/dailymixbasedonlikes", async (req, res) => {
+  const data = {
+    mix: dailyMixes.dailyMixBasedOnLikes,
+  };
+
+  res.json(data);
+});
+
+app.post("/addtodailymixbasedonlikes", async (req, res) => {
+  try {
+    // KAN DEN TA IN ARRAY?
+    // array of movie objects, only containing name and id... id has been fetched in frontend from API
+    const { id, title } = req.body; // mixType också?
+
+    if (!id || !title) {
+      return res
+        .status(400)
+        .json({ error: "No movie id or title received to store in daily mix" });
+    }
+
+    dailyMixes.dailyMixBasedOnLikes.push({ id, title });
+
+    console.log(
+      "Added movie ID ",
+      id,
+      " with movie name: ",
+      title,
+      " to dailyMixBasedOnLikes"
+    );
+
+    // ändra till mixType?
+    /*  if (movieOrSeries === "movie") {
+      // maybe change to some sort of True/False variable instead...
+      movieWatchList.push({ id }); // UPDATE LATER TO SQL
+      console.log("Added movie ID ", id, " to movieWatchList");
+    }
+
+    if (movieOrSeries === "series") {
+      likedSeriesList.push({ id }); // UPDATE LATER TO SQL
+      console.log("Added series ID ", id, " to seriesWatchList");
+    }
+ */
+
+    res.status(201).json({
+      message: "movie added to dailyMixBasedOnLikes succesfully",
+    });
+  } catch (error) {
+    console.error("1:Error storing dailyMixBasedOnLikes: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/generatedailymix", async (req, res) => {
   // no user query needed, will be based on existing like list
   /* const userQuery = req.body.query;
     console.log("Received user query:", userQuery); */
@@ -665,11 +736,14 @@ app.get("/dailymix", async (req, res) => {
     return movie.title;
   });
 
-  console.log("likedMovieTitles: ", likedMovieTitles);
+  //console.log("likedMovieTitles: ", likedMovieTitles);
 
   const likedMovieTitlesString = likedMovieTitles.join(", ");
-  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
+  // console.log("likedMovieTitlesString: ", likedMovieTitlesString);
 
+  //   "This assistant will suggest 6 movies based on user's liked movies provided by content, and after that it will also provide a short reasoning why it suggested these specific movies. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string], and then fill in reasoning in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string], REASONING: [string]. It will not answer any other queries. It will only suggest movies.",
+
+  // TODO: lägg till REASONING igen så att det funkar...
   try {
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -677,8 +751,7 @@ app.get("/dailymix", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 6 movies based on user's liked movies provided by content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
-          likedMovieTitlesString,
+            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
         },
         {
           role: "user",
@@ -691,10 +764,17 @@ app.get("/dailymix", async (req, res) => {
     console.log("AI response:", JSON.stringify(completion, null, 2));
 
     const suggestion = completion.choices[0].message.content;
-    console.log("suggestion: ", suggestion);
+    console.log("Daily mix suggestion: ", suggestion);
 
-    if (suggestion) {
-      res.json({ suggestion });
+    const movieNames = parseMovieNames(suggestion);
+    console.log("parsed movie names: ", movieNames);
+    //const reasoning = parseReasoning(suggestion);
+    //console.log("parsed reasoning: ", reasoning);
+
+    //if (movieNames && reasoning) {
+    if (movieNames) {
+      // res.json({ movieNames, reasoning });
+      res.json({ movieNames });
     } else {
       console.error("Failed to generate daily mix suggestion: ", suggestion);
       res.status(500).json({

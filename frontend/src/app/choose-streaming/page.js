@@ -73,11 +73,10 @@ export default function ChooseStreaming() {
         </div>
       </div>
       <div className="flex space-x-4">
-        {" "}
-        <Link href={"/chatpage2"}>
+        <Link href={"/startpage"}>
           <button className="streaming-btn w-56 mt-8 rounded-3xl">Skip</button>
         </Link>
-        <Link href={"/chatpage2"}>
+        <Link href={"/startpage"}>
           <button
             onClick={handleSumbit}
             className="streaming-btn w-56 mt-8 rounded-3xl"
