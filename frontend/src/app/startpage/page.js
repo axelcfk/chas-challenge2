@@ -1,10 +1,13 @@
 import Navbar from "../components/Navbar";
 import Link from "next/link";
 
+//TODO: texten i rutan ska var lite större
+
 export default function Startpage() {
   return (
     <>
       <Navbar />
+      <div className="wrapper">
       <main className="startpage-main text-white flex justify-center">
         <div className="flex align-items-center justify-center pt-28 px-4 container">
           <div className="hero-container">
@@ -24,7 +27,8 @@ export default function Startpage() {
           </div>
         </div>
       </main>
-      <div className="flex justify-center flex-col text-white">
+      </div>
+      <div className="list-container flex justify-center flex-col text-white">
         <div>Search history slide</div>
         <div>Popular today slide</div>
         <div>Movie mixes slide</div>
