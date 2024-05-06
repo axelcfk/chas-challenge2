@@ -142,7 +142,6 @@ export default function ChatPage2() {
       );
       setMovieDetails(allMovieDetails.filter((detail) => detail !== undefined));
     }
-    console.log("streaming details:", movieDetails);
 
     if (movies.length > 0) fetchAllMovieDetails();
   }, [movies]);
@@ -210,6 +209,7 @@ export default function ChatPage2() {
 
   return (
     <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
+      <BackButton />
       {errorMessage && !loading && (
         <div className=" bg-yellow-500 h-full flex justify-center items-center ">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
@@ -267,9 +267,9 @@ export default function ChatPage2() {
             />
           </div>
           <FetchedMovies
-            isAvailableOnSupportedServices={isAvailableOnSupportedServices}
             credits={movieCredits}
             movieDetails={movieDetails}
+            isAvailableOnSupportedServices={isAvailableOnSupportedServices}
             streamingServiceLinks={streamingServiceLinks}
           />
         </div>
@@ -290,4 +290,13 @@ export default function ChatPage2() {
       ) : null}
     </div>
   );
+}
+
+{
+  /* <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    credits={movieCredits}
+                    movieDetails={movieDetails}
+                  /> */
 }

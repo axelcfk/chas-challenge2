@@ -42,7 +42,8 @@ export default function FetchedMovies({
                     </button>
                   </div>
                   <div>
-                    {isAvailableOnSupportedServices(movie.streaming) ? (
+                    {isAvailableOnSupportedServices &&
+                    isAvailableOnSupportedServices(movie.streaming) ? (
                       movie.streaming.flatrate.map((provider) => (
                         <a
                           key={provider.provider_id}
