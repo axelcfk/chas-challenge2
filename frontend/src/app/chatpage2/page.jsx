@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useState, useEffect, useRef } from "react";
 import { postMovieToDatabase } from "../utils";
 
@@ -63,6 +65,14 @@ export default function ChatPage2() {
     }
   };
 
+  const router = useRouter();
+
+  const handleNavigation = () => {
+    // Navigate back to the previous page
+    router.back();
+  };
+  
+
   const handleQuerySubmit = async () => {
     setLoading(true);
     setMovies([]);
@@ -121,6 +131,7 @@ export default function ChatPage2() {
               const detailsData = await detailsResponse.json();
               const streamingData = await fetchStreamingServices(movieId);
               await postMovieToDatabase(detailsData);
+              // TODO: post streaming data into database as well?
               const posterPath = detailsData.poster_path;
               const posterUrl = posterPath
                 ? `https://image.tmdb.org/t/p/w500${posterPath}`
@@ -207,6 +218,8 @@ export default function ChatPage2() {
   }, [movieDetails.idFromAPI]);
   return (
     <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
+      <button onClick={handleNavigation}>Go Back</button>
+
       {/* <BackButton /> */}
       {errorMessage && !loading && (
         <div className=" bg-yellow-500 h-full flex justify-center items-center ">
