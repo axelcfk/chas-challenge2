@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
+
 import AutoQuery from "./autoQuery";
-import Link from "next/link";
+import InputField from "./inputField";
+import FetchedMovies from "./FetchedMovies";
+// import BackButton from "../components/BackButton";
 
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se", //funkar
@@ -63,6 +65,7 @@ export default function ChatPage2() {
 
   const handleQuerySubmit = async () => {
     setLoading(true);
+    setMovies([]);
     // setInput("");
     setShowVideo(true);
     changeSpeed(5);
@@ -81,6 +84,7 @@ export default function ChatPage2() {
         setTimeout(() => {
           setMovies(data.movieNames); // Now set movies here to trigger details fetching after the delay
           setLoading(false); // Also set loading false here to ensure it happens after the video hides
+          setErrorMessage("");
           setShowVideo(false); // Hide video after 10 seconds
         }, 3000);
       } else {
@@ -126,6 +130,7 @@ export default function ChatPage2() {
                 id: movieId,
                 poster: posterUrl,
                 overview: detailsData.overview,
+                voteAverage: detailsData.vote_average,
                 streaming: streamingData.SE, // Hämtar providers utifrån SE region
               };
             }
@@ -200,144 +205,86 @@ export default function ChatPage2() {
 
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
-
   return (
-    <div className="flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen w-screen bg-black text-slate-100 z-0 py-12">
-      {showVideo && movieDetails.length < 2 && (
+    <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
+      {/* <BackButton /> */}
+      {errorMessage && !loading && (
+        <div className=" bg-yellow-500 h-full flex justify-center items-center ">
+          <p className="text-3xl font-semibold text-center">{errorMessage}</p>
+        </div>
+      )}
+
+      {showVideo && movies.length < 2 && (
         <div
           className={` md:w-full flex flex-col justify-center items-center h-full ${
             loading ? "-mt-48" : ""
           } `}
         >
-          <video
-            className="md:w-1/2 w-full "
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-          >
-            <source src="/ai-gif.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <div className=" h-96 flex justify-center items-center ">
+            <video
+              className="md:w-1/3 w-2/3 transform scale- "
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+            >
+              <source src="/ai-gif.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
           {!loading ? (
-            <p className="px-5 text-xl flex flex-col items-center md:-mt-14 -mt-8 ">
+            <p className="px-5 text-xl flex flex-col items-center  h-40 ">
               {" "}
               <span className="mb-4 text-2xl font-semibold text-center">
                 I'm your AI movie matcher
               </span>{" "}
               <span className="font-light text-center">
                 I give you the best movie suggestions based on your mood, vibe
-                or{" "}
+                or
               </span>{" "}
             </p>
           ) : (
-            <p className="text-xl flex flex-col items-center md:-mt-14 -mt-8">
+            <p className="px-5 text-xl flex flex-col items-center  h-40 ">
               {" "}
-              <span className="mb-4 font-light">
+              <span className="mb-4 text-2xl font-semibold text-center">
                 Finding the best match for you...
               </span>
             </p>
           )}
-          {!loading ? <AutoQuery input={input} setInput={setInput} /> : null}
         </div>
       )}
 
-      <div className="flex justify-center items-center h-full ">
-        {movieDetails.length > 0 && (
-          <div className=" h-full w-full ">
-            <div className="grid grid-cols-2 w-full ">
-              {movieDetails.map((movie, index) => (
-                <div
-                  key={movie.id}
-                  className="flex flex-col justify-center items-center w-full"
-                >
-                  <Link
-                    href="/movie/[movieName]"
-                    as={`/movie/${encodeURIComponent(movie.title)}`}
-                  >
-                    <div>
-                      <img src={movie.poster} alt="poster" />
-                      <p className="h-10">{movie.title}</p>
-                    </div>
-                  </Link>
-                  <div>
-                    {isAvailableOnSupportedServices(movie.streaming) ? (
-                      movie.streaming.flatrate.map((provider) => (
-                        <a
-                          key={provider.provider_id}
-                          href={streamingServiceLinks[provider.provider_name]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <p className=" hover:underline">
-                            {provider.provider_name}
-                          </p>
-                        </a>
-                      ))
-                    ) : (
-                      <p>
-                        Not available on your streaming-services or your area
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className=" sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
-              <div
-                className="flex justify-center items-center w-full rounded-xl h-14 px-5 z-10"
-                style={{ border: "1px solid grey" }}
-              >
-                <input
-                  className="h-14 bg-transparent w-full  rounded-xl text-lg text-center text-slate-50 md:mr-3"
-                  type="text"
-                  value={input}
-                  onChange={handleInputChange}
-                  placeholder="Want anything else?"
-                />
-                <div
-                  className="hover:cursor-pointer"
-                  onClick={handleQuerySubmit}
-                >
-                  <video
-                    className="w-full h-14"
-                    ref={videoRef}
-                    autoPlay
-                    loop
-                    muted
-                  >
-                    <source src="/ai-gif.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              </div>
-            </div>
+      {movies.length === 6 && (
+        <div className=" h-full w-full ">
+          <div className="sticky inset-x-0 top-4 w-full">
+            <InputField
+              input={input}
+              handleQuerySubmit={handleQuerySubmit}
+              handleInputChange={handleInputChange}
+              placeholder={"Try your luck again..."}
+            />
           </div>
-        )}
-      </div>
-
-      {!loading && movieDetails < 2 ? (
-        <div className="h-40  sticky inset-x-0 bottom-8 z-10 w-full flex flex-wrap justify-center items-center ">
-          <input
-            style={{ border: "1px solid grey" }}
-            className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
-            type="text"
-            value={input}
-            onChange={handleInputChange}
-            placeholder="What's your vibe today?"
+          <FetchedMovies
+            credits={movieCredits}
+            movieDetails={movieDetails}
+            isAvailableOnSupportedServices={isAvailableOnSupportedServices}
+            streamingServiceLinks={streamingServiceLinks}
           />
-          <button
-            className={`h-14 ${
-              input
-                ? "bg-slate-100 hover:bg-slate-300 text-slate-900"
-                : "bg-slate-400 text-slate-900"
-            } w-full md:w-1/3 rounded-full  font-semibold text-xl md:ml-3 md:mt-0 mt-5`}
-            onClick={handleQuerySubmit}
-            disabled={!input}
-          >
-            Find a movie
-          </button>
         </div>
+      )}
+
+      {!loading && movies < 2 ? (
+        <>
+          <AutoQuery input={input} setInput={setInput} />
+          <div className="sticky inset-x-0 bottom-8 w-full">
+            <InputField
+              input={input}
+              handleQuerySubmit={handleQuerySubmit}
+              handleInputChange={handleInputChange}
+              placeholder={"What's your vibe today?"}
+            />
+          </div>
+        </>
       ) : null}
     </div>
   );

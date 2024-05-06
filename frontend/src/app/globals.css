@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  background-color: #261839;
-}
+/* html {
+  background-color: black;
+} */
 
 .loading-indicator {
   height: 100%;
@@ -216,10 +216,8 @@ html {
   height: auto;
   min-height: 100vh; /* om man tar bort denna rad så ser det inte bra ut, måste nog justeras för
   / desktop-view, denna stör också så att elementen nedanför hamnar för långt ner på sidan. */
-  overflow: hidden;
 }
 
-.wrapper {
-  height: 500px; /* Eller vilken höjd som passar din design */
-  overflow: hidden;
+input:focus {
+  outline: none; /* Removes the default outline */
 }

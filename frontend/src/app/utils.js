@@ -121,9 +121,10 @@ export async function checkLikeList() {
 
     const result = await data.json();
     console.log("likedMovieList", result.likedMoviesList);
-    return result.likedMoviesList;
+
+    return Array.isArray(result.likedMoviesList) ? result.likedMoviesList : [];
   } catch (error) {
     console.error("Error fetching likelist:", error);
-    return false; // Indicate failure if an error occurred
+    return [];
   }
 }
