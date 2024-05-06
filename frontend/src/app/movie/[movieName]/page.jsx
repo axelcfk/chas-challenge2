@@ -159,6 +159,7 @@ export default function moviePage() {
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+      <BackButton />
       {movieDetails.backdrop && (
         <div className=" ">
           <img

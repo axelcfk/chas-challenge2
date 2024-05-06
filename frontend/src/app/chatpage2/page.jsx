@@ -5,6 +5,7 @@ import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
 import Link from "next/link";
+import BackButton from "../components/BackButton";
 
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se", //funkar
