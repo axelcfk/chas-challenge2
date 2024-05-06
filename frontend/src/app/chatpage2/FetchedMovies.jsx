@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { FaStar, FaHeart } from "react-icons/fa";
 
-export default function FetchedMovies({ movieDetails, movieCredits }) {
+export default function FetchedMovies({
+  movieDetails,
+  movieCredits,
+  isAvailableOnSupportedServices,
+  streamingServiceLinks,
+}) {
   console.log("fetched är", movieDetails);
   return (
     <>
@@ -35,6 +40,26 @@ export default function FetchedMovies({ movieDetails, movieCredits }) {
                       <FaHeart />{" "}
                       <span className="pl-2">Save to your list</span>
                     </button>
+                  </div>
+                  <div>
+                    {isAvailableOnSupportedServices(movie.streaming) ? (
+                      movie.streaming.flatrate.map((provider) => (
+                        <a
+                          key={provider.provider_id}
+                          href={streamingServiceLinks[provider.provider_name]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <p className="hover:underline">
+                            {provider.provider_name}
+                          </p>
+                        </a>
+                      ))
+                    ) : (
+                      <p>
+                        Not available on your streaming services or your area
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

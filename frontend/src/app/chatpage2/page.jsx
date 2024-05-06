@@ -142,6 +142,7 @@ export default function ChatPage2() {
       );
       setMovieDetails(allMovieDetails.filter((detail) => detail !== undefined));
     }
+    console.log("streaming details:", movieDetails);
 
     if (movies.length > 0) fetchAllMovieDetails();
   }, [movies]);
@@ -265,7 +266,12 @@ export default function ChatPage2() {
               placeholder={"Try your luck again..."}
             />
           </div>
-          <FetchedMovies credits={movieCredits} movieDetails={movieDetails} />
+          <FetchedMovies
+            isAvailableOnSupportedServices={isAvailableOnSupportedServices}
+            credits={movieCredits}
+            movieDetails={movieDetails}
+            streamingServiceLinks={streamingServiceLinks}
+          />
         </div>
       )}
 
@@ -284,13 +290,4 @@ export default function ChatPage2() {
       ) : null}
     </div>
   );
-}
-
-{
-  /* <MovieCard
-                    key={movie.id}
-                    movie={movie}
-                    credits={movieCredits}
-                    movieDetails={movieDetails}
-                  /> */
 }
