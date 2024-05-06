@@ -28,3 +28,19 @@ export function SlideMenuMovieCard({title, poster, overview}) {
     </div>
   )
 }
+
+export function SlideMenuMixCard({imgSrc}) {
+
+  return (
+    <div className="mx-2 inline-block relative">
+    <img
+      className="inline-block w-32 h-36 rounded-md"
+      src={imgSrc}
+      alt="mix img"
+    />
+    <div className="absolute inset-0 flex items-center justify-center text-center flex-wrap w-full">
+      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100">Your Mix</p></div>
+    </div>
+  </div>
+  )
+}

@@ -44,14 +44,13 @@ export default function DailyMixBasedOnLikesSlideMenu() {
   // First time entering page or Refreshing page, check if we already have a dailymixbasedonlikes on backend
 
   useEffect(() => {
-    if (fetchedAndSavedDetailsFromAPI === false) { // safety if-statement, shouldnt be needed...?
+    if (fetchedAndSavedDetailsFromAPI === false) {
+      // safety if-statement, shouldnt be needed...?
       getMixFromOurDatabaseOnlyIDs(); // this triggers the last useEffect which populates mixDetails
     }
-  }, []); 
+  }, []);
 
-
-
-  // ----------------------- onClick  getGenerateDailyMixFromGPT(); starts a sequence of useEffects -------------- 
+  // ----------------------- onClick  getGenerateDailyMixFromGPT(); starts a sequence of useEffects --------------
 
   // triggers after getGenerateDailyMixFromGPT(); is complete
   useEffect(() => {
@@ -226,8 +225,8 @@ export default function DailyMixBasedOnLikesSlideMenu() {
       console.log(data.vote_average);
 
       // TODO: if statement?
-      await postMovieToDatabase(data); // TODO: sometimes these two functions occur after all other code is complete, so the page does not have time to populate mixDetails? 
-      await postAddToMixOnBackend(data.id, data.title); 
+      await postMovieToDatabase(data); // TODO: sometimes these two functions occur after all other code is complete, so the page does not have time to populate mixDetails?
+      await postAddToMixOnBackend(data.id, data.title);
 
       // Vi hämtar ifrån backend först istället så det blir lättare att importera på andra sidor, och om vi laddar om sidan...
 
@@ -284,7 +283,9 @@ export default function DailyMixBasedOnLikesSlideMenu() {
           setMixFromDatabaseOnlyIDs(data.mix)
         );
       } else {
-        console.log("failed to fetch data.mix from backend, or does not exist yet");
+        console.log(
+          "failed to fetch data.mix from backend, or does not exist yet"
+        );
       }
     } catch (error) {
       console.error("Error:", error);
@@ -320,49 +321,53 @@ export default function DailyMixBasedOnLikesSlideMenu() {
 
   return (
     <>
-      <h2>Weekly mix based on your likes (backend fetch)</h2>
+        {/* <h2>Weekly mix based on your likes (backend fetch)</h2> */}
 
-      <button
-        className={`h-12 bg-slate-400 text-slate-900 w-full md:w-1/3 rounded-full md:mt-0 mt-5 font-semibold text-xl`}
-        onClick={() => {
-          // setButtonClicked(true)
-          getGenerateDailyMixFromGPT();
-        }}
-        //disabled={!input}
-      >
-        Generate Weekly mix
-      </button>
+        <button
+          className={`h-40 bg-slate-400 text-slate-900 w-48 rounded-full font-semibold text-xl`}
+          onClick={() => {
+            // setButtonClicked(true)
+            getGenerateDailyMixFromGPT();
+          }}
+          //disabled={!input}
+        >
+          <div className="flex justify-center items-center text-center w-full">
+            <p className="flex text-center w-[50%]">Generate Weekly mix</p>
+          </div>
+        </button>
 
-      {loading === true ? (
-        <div>Loading...</div>
-      ) : (
-        <>
-          <button
+       {/*  <div className="h-40"> */}
+          {loading === true ? (
+            <div>Loading...</div>
+          ) : (
+            <>
+              {/* <button
             className="p-8 bg-slate-500"
             onClick={() => {
               //fetchMovieIds();
               setShowDetails(!showDetails);
             }}
           >
-            Show Details
-          </button>
+            Show Mix
+          </button> */}
 
-          {showDetails && mixDetails && mixDetails.length > 0 ? (
-            <SlideMenu>
-              {mixDetails.map((movie, index) => (
-                <SlideMenuMovieCard
-                  key={index}
-                  title={movie.title}
-                  poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
-                  overview={movie.overview}
-                />
-              ))}
-            </SlideMenu>
-          ) : (
-            ""
+              {mixDetails && mixDetails.length > 0 ? (
+                <SlideMenu>
+                  {mixDetails.map((movie, index) => (
+                    <SlideMenuMovieCard
+                      key={index}
+                      title={movie.title}
+                      poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
+                      overview={movie.overview}
+                    />
+                  ))}
+                </SlideMenu>
+              ) : (
+                ""
+              )}
+            </>
           )}
-        </>
-      )}
+      {/* </div> */}
     </>
   );
 }
