@@ -5,6 +5,8 @@ import SlideMenu, {
   SlideMenuMovieCard,
   SlideMenuSearchHistoryCard,
 } from "../components/SlideMenu";
+import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
+import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 
 //TODO: texten i rutan ska var lite större
 //TODO: fetcha populära filmer och rendera under popular today
@@ -62,8 +64,9 @@ export default function Startpage() {
             imgSrc={"/search-history-img.png"}
           ></SlideMenuSearchHistoryCard>
         </SlideMenu>
-        <div className="ml-4 text-xl">Popular today</div>
-        <SlideMenu>
+        <div className="ml-4 text-xl">Popular today </div>
+        {/* TODO: LIKELIST JUST NU, byt ut mot popular today */}
+        {/* <SlideMenu>
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
@@ -72,7 +75,8 @@ export default function Startpage() {
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-        </SlideMenu>
+        </SlideMenu> */}
+        <LikeListSlideMenu2></LikeListSlideMenu2>
         <h2 className="ml-4 text-xl">Movie mixes</h2>
         <div>
           <SlideMenu>
