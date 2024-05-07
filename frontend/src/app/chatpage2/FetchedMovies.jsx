@@ -47,6 +47,7 @@ export default function FetchedMovies({
 }) {
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
+  const [showToast, setShowToast] = useState(false);
 
   function handleButtonClicked(id) {
     setWatches((prevWatches) => ({
@@ -54,19 +55,33 @@ export default function FetchedMovies({
       [id]: !prevWatches[id],
     }));
   }
+
   function handleLikeButtonClicked(id) {
+    const newLikes = !likes[id];
     setLikes((prevLikes) => ({
       ...prevLikes,
-      [id]: !prevLikes[id],
+      [id]: newLikes,
     }));
+    if (newLikes) {
+      postAddToLikeList(
+        id,
+        "movie",
+        movieDetails.find((movie) => movie.id === id)?.title
+      );
+      showToastMessage();
+    } else {
+      postRemoveFromLikeList(
+        id,
+        "movie",
+        movieDetails.find((movie) => movie.id === id)?.title
+      );
+    }
   }
 
-  // function handleToggleProvidersVisibility(movieId) {
-  //   setWatches((prevWatches) => ({
-  //     ...prevWatches,
-  //     [movieId]: !prevWatches[movieId],
-  //   }));
-  // }
+  function showToastMessage() {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 1750);
+  }
 
   console.log("fetched är", movieDetails);
   return (
@@ -93,20 +108,8 @@ export default function FetchedMovies({
                     />
                   </Link>
                   <div
-                    style={{
-                      // border: "1px solid grey",
-                      backdropFilter: "blur(4px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.9)",
-                    }}
-                    onClick={() => {
-                      handleLikeButtonClicked(movie.id);
-                      if (!likes[movie.id]) {
-                        postAddToLikeList(movie.id, "movie", movie.title);
-                      } else {
-                        postRemoveFromLikeList(movie.id, "movie", movie.title);
-                      }
-                    }}
-                    className="absolute top-0 right-0 m-2  rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
+                    onClick={() => handleLikeButtonClicked(movie.id)}
+                    className="absolute top-0 right-0 m-2 rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
                   >
                     {!likes[movie.id] ? (
                       <FaRegHeart className="h-5 w-5 text-red-600" />
@@ -116,7 +119,12 @@ export default function FetchedMovies({
                   </div>
                 </div>
               </div>
-              <div className=" w-full h-full py-5 px-2">
+              <div className="w-full h-full py-5 px-2">
+                {showToast && (
+                  <div className="fixed bottom-20 left-5 w-auto max-w-full whitespace-nowrap p-3 bg-gray-600 text-white rounded-lg animate-bounce-up">
+                    Thank you for enhancing the AI!
+                  </div>
+                )}
                 <p className="flex pb-4 justify-start items-center">
                   <span>
                     <FaStar color="yellow" />
@@ -128,14 +136,9 @@ export default function FetchedMovies({
                   {isAvailableOnSupportedServices(movie.streaming) && (
                     <p className="text-xs">Watch on:</p>
                   )}
-                  {movie.streaming?.flatrate?.some((provider) =>
-                    supportedServices.includes(provider.provider_name)
-                  ) ? (
-                    movie.streaming.flatrate
-                      .filter((provider) =>
-                        supportedServices.includes(provider.provider_name)
-                      )
-                      .map((provider) => (
+                  {isAvailableOnSupportedServices &&
+                  isAvailableOnSupportedServices(movie.streaming) ? (
+                    movie.streaming.flatrate.map((provider) => (
                         <>
                           <a
                             key={provider.provider_id}
@@ -155,19 +158,19 @@ export default function FetchedMovies({
                             </p> */}
                           </a>
                         </>
-                      ))
+                    ))
                   ) : (
-                    <p className="h-10">Not available in your area</p>
+                    <p className="h-10"></p>
                   )}
                 </div>
                 <div className="w-full flex justify-center items-center pt-5 px-2">
                   <button
                     onClick={() => {
-                      handleButtonClicked(movie.id); // Toggles like state
+                      handleButtonClicked(movie.id);
                       if (!watches[movie.id]) {
-                        postAddToWatchList(movie.id, "movie", movie.title); // Adds to like list if not liked
+                        postAddToWatchList(movie.id, "movie", movie.title);
                       } else {
-                        postRemoveFromWatchList(movie.id, "movie", movie.title); // Removes from like list if liked
+                        postRemoveFromWatchList(movie.id, "movie", movie.title);
                       }
                     }}
                     className="w-full h-10 bg-slate-900 flex justify-center items-center rounded-xl px-3"
