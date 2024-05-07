@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { FaPlus, FaThumbsUp } from "react-icons/fa";
+import { FaPlus, FaThumbsUp, FaRegHeart, FaHeart } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import {
   postAddToLikeList,
@@ -19,6 +19,7 @@ export default function MoviePage() {
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
+  const [movieCredits, setMovieCredits] = useState({});
 
   function handleLikeButtonClick() {
     setLikeButtonClicked(!likeButtonClicked);
@@ -47,6 +48,9 @@ export default function MoviePage() {
       try {
         const movies = await checkLikeList();
         setLikedMovies(movies);
+        if (movies.some((movie) => movie.id === movieId)) {
+          setLikeButtonClicked(true);
+        }
       } catch (error) {
         console.error("Failed to fetch liked movies list");
       }
@@ -126,6 +130,7 @@ export default function MoviePage() {
   if (!movieDetails) {
     return <div>No movie found. Try a different search!</div>;
   }
+  console.log(likeButtonClicked);
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
@@ -183,17 +188,27 @@ export default function MoviePage() {
                     <div className="w-full flex justify-center gap-4">
                       <button
                         onClick={() => {
-                          console.log("attempting to add movie to like list");
-                          postAddToLikeList(
-                            movieDetails.id,
-                            "movie",
-                            movieDetails.title
-                          );
+                          handleLikeButtonClick();
+                          if (!likeButtonClicked) {
+                            postAddToLikeList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            );
+                          } else {
+                            postRemoveFromLikeList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            );
+                          }
                         }}
                       >
-                        <FaThumbsUp
-                          color={isMovieLiked ? "green" : "grey"}
-                        ></FaThumbsUp>
+                        <FaHeart
+                          className={`${
+                            isMovieLiked ? "text-green-500" : "text-slate-300"
+                          }`}
+                        ></FaHeart>
                       </button>
 
                       <button
@@ -201,7 +216,7 @@ export default function MoviePage() {
                           postAddToWatchList(movieDetails.id, "movie"); // TODO: movieDetails.titleFromAPI
                         }}
                       >
-                        <FaPlus></FaPlus>
+                        <FaPlus className="text-slate-300"></FaPlus>
                       </button>
                     </div>
                   </div>
@@ -216,11 +231,11 @@ export default function MoviePage() {
                         <p className="mb-5  md:w-full  font-light">
                           {movieDetails.overview.slice(0, 200)}...
                         </p>
-                        <p className="text-green-500 text-2xl">
+                        {/* <p className="text-green-500 text-2xl">
                           {isMovieLiked
                             ? "this movie is in the like list"
                             : "this movie is not in the like list"}
-                        </p>
+                        </p> */}
                       </div>
                     ) : (
                       <div>
@@ -234,7 +249,7 @@ export default function MoviePage() {
                     )}
                   </div>
 
-                  <p
+                  {/* <p
                     onClick={handleActorsToggle}
                     className="mt-10 mb-2 font-medium text-lg"
                   >
@@ -249,7 +264,7 @@ export default function MoviePage() {
                           </div>
                         ))}
                     </div>
-                  ) : null}
+                  ) : null} */}
                 </div>
                 <div className="w-full flex  justify-end mt-8">
                   <div className="w-full ">

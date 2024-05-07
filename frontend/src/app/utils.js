@@ -20,7 +20,7 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
   }
 }
 
-export async function postRemoveFromLikeList(id, movieOrSeries) {
+export async function postRemoveFromLikeList(id, movieOrSeries, title) {
   try {
     //const response = await fetch("http://localhost:4000/sessions", {
     const response = await fetch(`${host}/me/likelists/removefromlikelist`, {
@@ -32,6 +32,7 @@ export async function postRemoveFromLikeList(id, movieOrSeries) {
       body: JSON.stringify({
         id: id,
         movieOrSeries: movieOrSeries,
+        title: title,
       }),
     });
   } catch (error) {
@@ -39,7 +40,7 @@ export async function postRemoveFromLikeList(id, movieOrSeries) {
   }
 }
 
-export async function postAddToWatchList(id, movieOrSeries) {
+export async function postAddToWatchList(id, movieOrSeries, title) {
   try {
     //const response = await fetch("http://localhost:4000/sessions", {
     const response = await fetch(`${host}/me/watchlists/addtowatchlist`, {
@@ -51,6 +52,7 @@ export async function postAddToWatchList(id, movieOrSeries) {
       body: JSON.stringify({
         id: id,
         movieOrSeries: movieOrSeries,
+        title: title,
       }),
     });
   } catch (error) {
@@ -58,7 +60,28 @@ export async function postAddToWatchList(id, movieOrSeries) {
   }
 }
 
- 
+//Remove from watchlist
+
+export async function postRemoveFromWatchList(id, movieOrSeries, title) {
+  try {
+    //const response = await fetch("http://localhost:4000/sessions", {
+    const response = await fetch(`${host}/me/watchlists/removefromwatchlist`, {
+      // users sidan på backend! dvs inte riktiga sidan!
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        movieOrSeries: movieOrSeries,
+        title: title,
+      }),
+    });
+  } catch (error) {
+    console.error("Error posting like to backend:", error);
+  }
+}
+
 // from our database!!!!!!!!!!! (not api)
 export async function fetchMovieObject(id) {
   //console.log("Fetching movie details from backend for ID:", id);

@@ -97,11 +97,10 @@
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.5s ease;
-  background-color: pink;
 }
 
 .selected {
-  border: solid 3px rgb(180, 114, 255) 4px;
+  border: solid 4px rgb(180, 114, 255);
   cursor: pointer;
   transition: box-shadow 0.5s ease;
   background-color: pink;
@@ -205,8 +204,8 @@
 .startpage-main {
   background: linear-gradient(
       to bottom,
-      rgba(38, 24, 57, 0.6) 0%, /* gradient från ovan*/ 
-      rgba(64, 41, 94, 1.0) 80% /* gradient nere*/
+      rgba(38, 24, 57, 0.6) 0%,
+      /* gradient från ovan*/ rgba(64, 41, 94, 1) 80% /* gradient nere*/
     ),
     url("/oppenheimerIMDB.jpg");
   background-size: cover;
@@ -220,4 +219,23 @@
 
 input:focus {
   outline: none; /* Removes the default outline */
+}
+
+.selected-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(180, 114, 255, 0.7); /* Semi-transparent overlay */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  visibility: hidden;
+}
+
+.square.selected .selected-overlay {
+  visibility: visible; /* Always show overlay when selected */
 }

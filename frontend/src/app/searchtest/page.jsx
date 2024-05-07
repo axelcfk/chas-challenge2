@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 function MovieSearch() {
   const [inputValue, setInputValue] = useState("");
   const [movies, setMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieDetails, setMovieDetails] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,6 +38,12 @@ function MovieSearch() {
     setInputValue(event.target.value);
   };
 
+  const handleSelectChange = (event) => {
+    const selectedId = event.target.value;
+    const selected = movies.find((movie) => movie.id.toString() === selectedId);
+    setSelectedMovie(selected);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -51,19 +59,26 @@ function MovieSearch() {
 
   return (
     <div>
-      <p>hejhej</p>
       <form onSubmit={handleSubmit}>
         <input
+          className="text-black"
           type="text"
           value={inputValue}
           onChange={handleChange}
           placeholder="Search for a movie..."
+          autoComplete=""
         />
-        <button type="submit">Search</button>
+        <button className="px-5" type="submit">
+          Search
+        </button>
       </form>
-      <ul>
+      <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 border-solid rounded-md ">
         {movies.map((movie) => (
-          <li key={movie.id}>{movie.title}</li>
+          <li key={movie.id}>
+            <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+              {movie.title}{" "}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>
