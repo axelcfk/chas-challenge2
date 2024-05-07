@@ -56,7 +56,9 @@ function MovieSearch() {
     if (ratingFilter === "All") {
       return true;
     } else {
-      return movie.vote_average >= parseFloat(ratingFilter);
+      const selectedRating = parseFloat(ratingFilter);
+      const movieRating = parseFloat(movie.vote_average);
+      return movieRating >= selectedRating && movieRating < selectedRating + 1;
     }
   });
 
