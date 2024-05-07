@@ -87,11 +87,12 @@ export default function LikeListSlideMenu2() {
         }
       });
     }
-  }, [showLikedDetails]);
+  //}, [showLikedDetails]);
+  }, [likedMoviesFetched]);
 
  
   //if (likedMoviesList == null || likedSeriesList == null) {
-  if (likedMoviesList == null) {
+  if (likedMoviesList == null ) {
     return (
       <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
         Loading like-lists...
@@ -101,7 +102,7 @@ export default function LikeListSlideMenu2() {
 
   return (
     <>
-      <h2>Liked Movies (backend fetch)</h2>
+      {/* <h2>Liked Movies (backend fetch)</h2>
       <button
         className="p-8 bg-slate-500"
         onClick={() => {
@@ -111,9 +112,9 @@ export default function LikeListSlideMenu2() {
       >
         Show Details
       </button>
-
-      {showLikedDetails ? (
-        likedMoviesListDetails && likedMoviesListDetails.length > 0 ? (
+ */}
+     
+        {likedMoviesListDetails && likedMoviesListDetails.length > 0 ? (
           <SlideMenu>
             {likedMoviesListDetails.map((movie, index) => (
               <SlideMenuMovieCard
@@ -126,10 +127,8 @@ export default function LikeListSlideMenu2() {
           </SlideMenu>
         ) : (
           "No movies liked yet"
-        )
-      ) : (
-        ""
-      )}
+        )}
+      
     </>
   );
 }

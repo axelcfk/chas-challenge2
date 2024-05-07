@@ -449,6 +449,49 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
   }
 });
 
+app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
+  try {
+    const { id, movieOrSeries } = req.body;
+
+    if (!id || !movieOrSeries) {
+      return res
+        .status(400)
+        .json({ error: "Watched movie OR watched series is required." });
+    }
+
+    // const idExistsInMovies = likedMoviesList.some(
+    //   (likedMovie) => likedMovie.id === id
+    // );
+    // const idExistsInSeries = likedSeriesList.some(
+    //   (likedSeries) => likedSeries.id === id
+    // );
+
+    // if (idExistsInMovies || idExistsInSeries) {
+    //   console.log("movie/series ID ", id, " is already liked.");
+    //   return res
+    //     .status(200)
+    //     .json({ message: "Liked movie OR Liked series is already liked." });
+    // }
+
+    if (movieOrSeries === "movie") {
+      likedMoviesList = likedMoviesList.filter((movie) => movie.id !== id);
+      console.log("Removed movie ID ", id, " from WatchMoviesList");
+    }
+
+    if (movieOrSeries === "series") {
+      likedSeriesList = likedSeriesList.filter((serie) => serie.id !== id);
+      console.log("Removed series ID ", id, " from WatchSeriesList");
+    }
+
+    res.status(201).json({
+      message: "Movie/Series removed from like list succesfully",
+    });
+  } catch (error) {
+    console.error("1:Error removing like:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.post("/me/watchlists/addtowatchlist", async (req, res) => {
   try {
     const { id, movieOrSeries } = req.body;

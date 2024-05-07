@@ -60,7 +60,8 @@ export default function DailyMixBasedOnLikesSlideMenu() {
     }
   }, [movieNamesFromGPT]);
 
-  // triggers after fetchAllMovieIdsFromTMDB(); is complete
+  // triggers after fetchAllMovieIdsFromTMDB(); is complete.
+  // this useEffect only sets idsReceivedFromAPI to true after movieIdsFromAPI have been populated and then checks the if-statement
   useEffect(() => {
     if (
       movieIdsFromAPI.length > 0 &&

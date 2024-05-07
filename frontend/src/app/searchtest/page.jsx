@@ -1,12 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import RatingFilter from "../filter-components/FilterMenu";
 
 function MovieSearch() {
   const [inputValue, setInputValue] = useState("");
   const [movies, setMovies] = useState([]);
   const [movieDetails, setMovieDetails] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ratingFilter, setRatingFilter] = useState("All");
 
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
@@ -49,21 +52,42 @@ function MovieSearch() {
     }
   };
 
+  const filteredMovies = movies.filter((movie) => {
+    if (ratingFilter === "All") {
+      return true;
+    } else {
+      const selectedRating = parseFloat(ratingFilter);
+      const movieRating = parseFloat(movie.vote_average);
+      return movieRating >= selectedRating && movieRating < selectedRating + 1;
+    }
+  });
+
   return (
     <div>
-      <p>hejhej</p>
       <form onSubmit={handleSubmit}>
         <input
+          className="text-black"
           type="text"
           value={inputValue}
           onChange={handleChange}
           placeholder="Search for a movie..."
+          autoComplete=""
         />
-        <button type="submit">Search</button>
+        <button className="px-5" type="submit">
+          Search
+        </button>
       </form>
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.id}>{movie.title}</li>
+      <RatingFilter
+        ratingFilter={ratingFilter}
+        setRatingFilter={setRatingFilter}
+      />
+      <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 border-solid rounded-md ">
+        {filteredMovies.map((movie) => (
+          <li key={movie.id}>
+            <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+              {movie.title}{" "}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>

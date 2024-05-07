@@ -1,12 +1,22 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { FaPlus, FaThumbsUp } from "react-icons/fa";
+import {
+  FaPlus,
+  FaThumbsUp,
+  FaRegHeart,
+  FaHeart,
+  FaCheck,
+  FaStar,
+  FaImage,
+} from "react-icons/fa";
 import { useEffect, useState } from "react";
 import {
   postAddToLikeList,
   postAddToWatchList,
+  postMovieToDatabase,
   postRemoveFromLikeList,
+  postRemoveFromWatchList,
 } from "@/app/utils";
 import { checkLikeList } from "@/app/utils";
 import BackButton from "@/app/components/BackButton";
@@ -19,9 +29,21 @@ export default function MoviePage() {
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
+  const [seen, setSeen] = useState(false);
+  const [watches, setWatches] = useState({});
+  const [likes, setLikes] = useState({});
 
-  function handleLikeButtonClick() {
-    setLikeButtonClicked(!likeButtonClicked);
+  function handleButtonClicked(id) {
+    setWatches((prevWatches) => ({
+      ...prevWatches,
+      [id]: !prevWatches[id],
+    }));
+  }
+  function handleLikeButtonClicked(id) {
+    setLikes((prevLikes) => ({
+      ...prevLikes,
+      [id]: !prevLikes[id],
+    }));
   }
 
   const [credits, setCredits] = useState({
@@ -47,6 +69,9 @@ export default function MoviePage() {
       try {
         const movies = await checkLikeList();
         setLikedMovies(movies);
+        if (movies.some((movie) => movie.id === movieId)) {
+          setLikeButtonClicked(true);
+        }
       } catch (error) {
         console.error("Failed to fetch liked movies list");
       }
@@ -65,6 +90,9 @@ export default function MoviePage() {
           `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
         );
         const data = await response.json();
+
+        await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
+
         setMovieDetails({
           id: data.id,
           title: data.title,
@@ -126,18 +154,21 @@ export default function MoviePage() {
   if (!movieDetails) {
     return <div>No movie found. Try a different search!</div>;
   }
+  console.log(likeButtonClicked);
+  console.log("Credits are:", credits.actors);
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
-      <BackButton />
+      {/* <BackButton /> */}
       {movieDetails.backdrop && (
-        <div className=" ">
+        <div className="">
           <img
             id="img"
             className="absolute top-0 left-0 w-full  object-cover z-0 "
             src={movieDetails.backdrop}
             alt="Movie Backdrop"
           />
+
           <div className="gradient"></div>
         </div>
       )}
@@ -167,41 +198,94 @@ export default function MoviePage() {
                         {movieDetails.release.slice(0, 4)}
                         <span className="text-sm mx-2">●</span>
                       </p>
-                      <p>DIRECTED BY</p>
+                      <p>{movieDetails.runtime.toString()} mins</p>
                     </div>
                     <p className="font-semibold text-lg">{credits.director}</p>
-                    <p>{movieDetails.runtime.toString()} mins</p>
+                    <div className=" h-10 flex items-end">
+                      <p className="font-semibold  flex justify-center items-center">
+                        <span className=" mr-2  font-normal text-xl text-yellow-400">
+                          <FaStar />
+                        </span>
+                        <span className=" text-xl text-zinc-100">
+                          {movieDetails.voteAverage.toFixed(1)}
+                        </span>
+                      </p>
+                    </div>
+                    {/* <p>{movieDetails.runtime.toString()} mins</p> */}
                   </div>
-                  <div className="flex flex-col w-full justify-center items-center gap-4">
-                    <img
-                      className=" h-52 md:h-96 rounded-md w-auto"
-                      src={movieDetails.poster}
-                      alt="Movie Poster"
-                      style={{ border: "1px solid grey" }}
-                    />
-
+                  <div className="flex flex-col w-full justify-center items-center gap-4 ">
+                    <div className="relative ">
+                      <img
+                        className=" h-52 md:h-96 rounded-md w-auto"
+                        src={movieDetails.poster}
+                        alt="Movie Poster"
+                        style={{ border: "1px solid grey" }}
+                      />
+                      <div
+                        style={{
+                          // border: "1px solid grey",
+                          backdropFilter: "blur(4px)",
+                          backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        }}
+                        onClick={() => {
+                          handleLikeButtonClicked(movieDetails.id);
+                          if (!likes[movieDetails.id]) {
+                            postAddToLikeList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            );
+                          } else {
+                            postRemoveFromLikeList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            );
+                          }
+                        }}
+                        className="absolute top-0 right-5 -m-4  rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
+                      >
+                        {!likes[movieDetails.id] ? (
+                          <FaRegHeart className="h-5 w-5 text-red-600" />
+                        ) : (
+                          <FaHeart className="h-5 w-5 text-red-600" />
+                        )}
+                      </div>
+                    </div>
                     <div className="w-full flex justify-center gap-4">
                       <button
                         onClick={() => {
-                          console.log("attempting to add movie to like list");
-                          postAddToLikeList(
-                            movieDetails.id,
-                            "movie",
-                            movieDetails.title
-                          );
+                          handleButtonClicked(movieDetails.id); // Toggles like state
+                          if (!watches[movieDetails.id]) {
+                            postAddToWatchList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            ); // Adds to like list if not liked
+                          } else {
+                            postRemoveFromWatchList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            ); // Removes from like list if liked
+                          }
                         }}
+                        className="w-3/4 h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3"
                       >
-                        <FaThumbsUp
-                          color={isMovieLiked ? "green" : "grey"}
-                        ></FaThumbsUp>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          postAddToWatchList(movieDetails.id, "movie"); // TODO: movieDetails.titleFromAPI
-                        }}
-                      >
-                        <FaPlus></FaPlus>
+                        {!watches[movieDetails.id] ? (
+                          <FaPlus className="text-2xl text-gray-200" />
+                        ) : (
+                          <FaCheck className="text-2xl text-gray-200" />
+                        )}
+                        {!watches[movieDetails.id] ? (
+                          <span className="pl-2 w-full text-sm font-light text-gray-200">
+                            ADD TO LIST
+                          </span>
+                        ) : (
+                          <span className="pl-2 w-full text-sm font-light text-gray-200">
+                            ADDED
+                          </span>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -216,11 +300,11 @@ export default function MoviePage() {
                         <p className="mb-5  md:w-full  font-light">
                           {movieDetails.overview.slice(0, 200)}...
                         </p>
-                        <p className="text-green-500 text-2xl">
+                        {/* <p className="text-green-500 text-2xl">
                           {isMovieLiked
                             ? "this movie is in the like list"
                             : "this movie is not in the like list"}
-                        </p>
+                        </p> */}
                       </div>
                     ) : (
                       <div>
@@ -233,8 +317,9 @@ export default function MoviePage() {
                       </div>
                     )}
                   </div>
+                  {/* <p>{credits.actors}</p> */}
 
-                  <p
+                  {/* <p
                     onClick={handleActorsToggle}
                     className="mt-10 mb-2 font-medium text-lg"
                   >
@@ -249,9 +334,11 @@ export default function MoviePage() {
                           </div>
                         ))}
                     </div>
-                  ) : null}
+                  ) : null} */}
                 </div>
                 <div className="w-full flex  justify-end mt-8">
+                  {/* <p>{credits.actors}</p> */}
+
                   <div className="w-full ">
                     {movieDetails.SE_flaterate &&
                     movieDetails.SE_flaterate.length > 0 ? (
@@ -279,14 +366,16 @@ export default function MoviePage() {
                       </div>
                     )}
                   </div>
-                  <div className=" h-10 flex items-end">
-                    <p className="font-semibold text-3xl text-green-400">
-                      <span className="text-sm mr-2 text-slate-400 font-normal">
-                        RATING
+                  {/* <div className=" h-10 flex items-end">
+                    <p className="font-semibold  flex justify-center items-center">
+                      <span className=" mr-2  font-normal text-xl text-yellow-400">
+                        <FaStar />
                       </span>
-                      {movieDetails.voteAverage.toFixed(1)}
+                      <span className=" text-xl text-zinc-100">
+                        {movieDetails.voteAverage.toFixed(1)}
+                      </span>
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -299,6 +388,25 @@ export default function MoviePage() {
           )}
         </div>
       )}
+      <div className="w-full mb-5 text-xl">
+        <p>Actors</p>
+      </div>
+      <div className="mb-5 font-light text-base flex  w-full justify-center items-center">
+        {credits &&
+          credits.actors.map((actor, index) => (
+            <div className="flex flex-col justify-center items-center w-full">
+              <div className="rounded-full bg-slate-100 h-20 w-20 flex justify-center items-center">
+                <FaImage className="text-slate-900 text-2xl" />
+              </div>
+              <p
+                key={index}
+                className="h-10 flex justify-evenly items-centers  w-full "
+              >
+                {actor.name}
+              </p>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }

@@ -68,7 +68,6 @@ export default function ChatPage2() {
     // Navigate back to the previous page
     router.back();
   };
-  
 
   const handleQuerySubmit = async () => {
     setLoading(true);
@@ -93,7 +92,7 @@ export default function ChatPage2() {
           setLoading(false); // Also set loading false here to ensure it happens after the video hides
           setErrorMessage("");
           setShowVideo(false); // Hide video after 10 seconds
-        }, 3000);
+        }, 10);
       } else {
         setErrorMessage(data.suggestion);
         console.log("Error Message Set:", data.suggestion);
@@ -215,11 +214,10 @@ export default function ChatPage2() {
   }, [movieDetails.idFromAPI]);
   return (
     <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
-      <button onClick={handleNavigation}>Go Back</button>
-
+      {/* <button onClick={handleNavigation}>Go Back</button> */}
       {/* <BackButton /> */}
       {errorMessage && !loading && (
-        <div className=" bg-yellow-500 h-full flex justify-center items-center ">
+        <div className="  h-full flex justify-center items-center ">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
@@ -266,7 +264,7 @@ export default function ChatPage2() {
 
       {movies.length === 6 && (
         <div className=" h-full w-full ">
-          <div className="sticky inset-x-0 top-4 w-full">
+          <div className="sticky inset-x-0 top-4 w-full z-10">
             <InputField
               input={input}
               handleQuerySubmit={handleQuerySubmit}
@@ -274,12 +272,14 @@ export default function ChatPage2() {
               placeholder={"Try your luck again..."}
             />
           </div>
-          <FetchedMovies
-            credits={movieCredits}
-            movieDetails={movieDetails}
-            isAvailableOnSupportedServices={isAvailableOnSupportedServices}
-            streamingServiceLinks={streamingServiceLinks}
-          />
+          <div className="z-0">
+            <FetchedMovies
+              credits={movieCredits}
+              movieDetails={movieDetails}
+              isAvailableOnSupportedServices={isAvailableOnSupportedServices}
+              streamingServiceLinks={streamingServiceLinks}
+            />
+          </div>
         </div>
       )}
 
@@ -298,13 +298,4 @@ export default function ChatPage2() {
       ) : null}
     </div>
   );
-}
-
-{
-  /* <MovieCard
-                    key={movie.id}
-                    movie={movie}
-                    credits={movieCredits}
-                    movieDetails={movieDetails}
-                  /> */
 }

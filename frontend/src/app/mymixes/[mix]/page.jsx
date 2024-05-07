@@ -348,30 +348,32 @@ export default function Mix() {
 
   return (
     
-    <div className="bg-[#251738] h-screen ">
+    <div className="bg-[#251738] h-screen">
       {/* <Navbar></Navbar> */}
       <div className="border border-white">Navbar</div>
       <div className="h-full">
-        {/* <h2>Weekly mix based on your likes (backend fetch)</h2> */}
-
-        <div className="flex h-52 justify-center items-center">
+        <div className="flex flex-col gap-8 my-8 h-52 justify-center items-center">
+          <div className="flex w-full justify-center items-center text-center">
+            <h1 className="text-3xl font-semibold">{mixTitle} mix</h1>
+          </div>
+          
           <button
-            className={`h-20 bg-[#3F295E] text-white w-48 rounded-full font-semibold text-lg`}
+            className={`bg-[#3F295E] text-white rounded-full font-semibold w-52 border border-[#3F295E] hover:border-white`}
             onClick={() => {
               // setButtonClicked(true)
               getGenerateDailyMixFromGPT();
             }}
             //disabled={!input}
           >
-            <div className="flex justify-center items-center text-center w-full p-4">
-              <p>Generate {mixTitle} Mix</p>
+            <div className=" flex justify-center items-center text-center w-full p-4">
+              <p className="">Generate</p>
             </div>
           </button>
         </div>
 
-        <div className="bg-[#3F295E] min-h-full py-8 pl-4">
-          <div className="flex w-full justify-end pr-8">
-            <button className="p-8 bg-[#251738]">Save List</button> {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
+        <div className="bg-[#3F295E] min-h-full pb-8 pl-4">
+          <div className="flex w-full justify-end pr-8 pt-4 items-center">
+            <button className="flex justify-center items-center text-center p-6 py-2 bg-[#FF506C] rounded-lg">Save List</button> {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
           </div>
          
           {loading === true ? (
@@ -381,7 +383,7 @@ export default function Mix() {
               {mixDetails && mixDetails.length > 0 ? (
             <div className="flex w-full flex-col gap-8 bg-[#3F295E]">
               {mixDetails.map((movie, index) => (
-                <MovieCardMix
+                <MovieCardMix // TODO: ändra komponentnamnet till MovieMixCard...?
                   key={index}
                   title={movie.title}
                   poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
