@@ -1,10 +1,14 @@
 import Link from "next/link";
+import MovieSearch from "../searchtest/page";
 
 export default function Navbar() {
   return (
     <main className="text-white bg-gray-800 flex justify-between py-4 px-5">
-      <div className="logo">
+      <div className="logo flex items-center">
         <Link href="/">Logo</Link>
+      </div>
+      <div className="flex items-center ">
+        <MovieSearch />
       </div>
       <div>
         <ul>
