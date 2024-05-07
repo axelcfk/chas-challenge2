@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import MovieFilter from "../components/FilterMenu";
+import RatingFilter from "../filter-components/FilterMenu";
 
 function MovieSearch() {
   const [inputValue, setInputValue] = useState("");
   const [movies, setMovies] = useState([]);
   const [movieDetails, setMovieDetails] = useState("");
   const [loading, setLoading] = useState(false);
-  const [movieFilter, setMovieFilter] = useState("All");
+  const [ratingFilter, setRatingFilter] = useState("All");
 
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
@@ -53,10 +53,10 @@ function MovieSearch() {
   };
 
   const filteredMovies = movies.filter((movie) => {
-    if (movieFilter === "All") {
+    if (ratingFilter === "All") {
       return true;
     } else {
-      return movie.vote_average >= parseFloat(movieFilter);
+      return movie.vote_average >= parseFloat(ratingFilter);
     }
   });
 
@@ -75,7 +75,10 @@ function MovieSearch() {
           Search
         </button>
       </form>
-      <MovieFilter movieFilter={MovieFilter} setMovieFilter={setMovieFilter} />
+      <RatingFilter
+        ratingFilter={RatingFilter}
+        setRatingFilter={setRatingFilter}
+      />
       <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 border-solid rounded-md ">
         {filteredMovies.map((movie) => (
           <li key={movie.id}>
