@@ -53,7 +53,7 @@ export default function Navbar() {
             <div
               className={`${
                 isOpen ? "flex" : "hidden"
-              } flex-col sm:flex-row sm:flex sm:items-center sm:space-x-4 absolute sm:relative bg-deep-purple w-full sm:w-auto sm:bg-transparent left-0 sm:left-auto right-0 top-16 sm:top-auto`}
+              } flex-col z-10 sm:flex-row sm:flex sm:items-center sm:space-x-4 absolute sm:relative bg-deep-purple w-full sm:w-auto sm:bg-transparent left-0 sm:left-auto right-0 top-16 sm:top-auto`}
             >
               <Link href="/login">
                 <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">

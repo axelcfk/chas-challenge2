@@ -19,6 +19,7 @@ export default function MoviePage() {
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
+  const [movieCredits, setMovieCredits] = useState({});
 
   function handleLikeButtonClick() {
     setLikeButtonClicked(!likeButtonClicked);
@@ -248,7 +249,7 @@ export default function MoviePage() {
                     )}
                   </div>
 
-                  <p
+                  {/* <p
                     onClick={handleActorsToggle}
                     className="mt-10 mb-2 font-medium text-lg"
                   >
@@ -263,7 +264,7 @@ export default function MoviePage() {
                           </div>
                         ))}
                     </div>
-                  ) : null}
+                  ) : null} */}
                 </div>
                 <div className="w-full flex  justify-end mt-8">
                   <div className="w-full ">

@@ -204,8 +204,8 @@
 .startpage-main {
   background: linear-gradient(
       to bottom,
-      rgba(38, 24, 57, 0.6) 0%, /* gradient från ovan*/ 
-      rgba(64, 41, 94, 1.0) 80% /* gradient nere*/
+      rgba(38, 24, 57, 0.6) 0%,
+      /* gradient från ovan*/ rgba(64, 41, 94, 1) 80% /* gradient nere*/
     ),
     url("/oppenheimerIMDB.jpg");
   background-size: cover;
@@ -220,7 +220,6 @@
 input:focus {
   outline: none; /* Removes the default outline */
 }
-
 
 .selected-overlay {
   position: absolute;
@@ -240,4 +239,3 @@ input:focus {
 .square.selected .selected-overlay {
   visibility: visible; /* Always show overlay when selected */
 }
-
