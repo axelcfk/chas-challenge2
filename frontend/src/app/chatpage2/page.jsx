@@ -96,7 +96,7 @@ export default function ChatPage2() {
           setLoading(false); // Also set loading false here to ensure it happens after the video hides
           setErrorMessage("");
           setShowVideo(false); // Hide video after 10 seconds
-        }, 3000);
+        }, 10);
       } else {
         setErrorMessage(data.suggestion);
         console.log("Error Message Set:", data.suggestion);
@@ -222,7 +222,7 @@ export default function ChatPage2() {
 
       {/* <BackButton /> */}
       {errorMessage && !loading && (
-        <div className=" bg-yellow-500 h-full flex justify-center items-center ">
+        <div className="  h-full flex justify-center items-center ">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
@@ -269,7 +269,7 @@ export default function ChatPage2() {
 
       {movies.length === 6 && (
         <div className=" h-full w-full ">
-          <div className="sticky inset-x-0 top-4 w-full">
+          <div className="sticky inset-x-0 top-4 w-full ">
             <InputField
               input={input}
               handleQuerySubmit={handleQuerySubmit}

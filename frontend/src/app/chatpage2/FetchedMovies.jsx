@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaStar, FaHeart, FaRegHeart, FaPlus, FaCheck } from "react-icons/fa";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
 
@@ -12,12 +12,19 @@ export default function FetchedMovies({
   isAvailableOnSupportedServices,
   streamingServiceLinks,
 }) {
-  const [likes, setLikes] = useState({});
+  const [watches, setWatches] = useState({});
 
   function handleButtonClicked(id) {
-    setLikes((prevLikes) => ({
-      ...prevLikes,
-      [id]: !prevLikes[id],
+    setWatches((prevWatches) => ({
+      ...prevWatches,
+      [id]: !prevWatches[id],
+    }));
+  }
+
+  function handleToggleProvidersVisibility(movieId) {
+    setWatches((prevWatches) => ({
+      ...prevWatches,
+      [movieId]: !prevWatches[movieId],
     }));
   }
 
@@ -38,36 +45,41 @@ export default function FetchedMovies({
             <div className="flex flex-col justify-center items-center w-full ">
               <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
                 <img
-                  className="w-full  rounded-t-lg"
+                  className="w-full rounded-t-lg"
                   src={movie.poster}
                   alt="poster"
                 />
               </Link>
 
               <div className=" w-full h-full py-5 px-2">
-                <p className="flex pb-4">
+                <p className="flex pb-4 justify-start items-center">
                   <span>
                     <FaStar color="yellow" />
                   </span>
                   <span className="pl-1"> {movie.voteAverage.toFixed(1)}</span>
                 </p>
-                <p className="h-14">{movie.title}</p>
+                <p className="h-14 font-semibold">{movie.title}</p>
                 <div className="">
+                  {isAvailableOnSupportedServices(movie.streaming) && (
+                    <p className="text-xs">Watch on:</p>
+                  )}
                   {isAvailableOnSupportedServices &&
                   isAvailableOnSupportedServices(movie.streaming) ? (
                     movie.streaming.flatrate.map((provider) => (
-                      <a
-                        key={provider.provider_id}
-                        href={streamingServiceLinks[provider.provider_name]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <p className="hover:underline h-10">
-                          <span className="text-sm">
-                            {provider.provider_name}
-                          </span>
-                        </p>
-                      </a>
+                      <>
+                        <a
+                          key={provider.provider_id}
+                          href={streamingServiceLinks[provider.provider_name]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <p className="hover:underline">
+                            <span className="text-base">
+                              {provider.provider_name}
+                            </span>
+                          </p>
+                        </a>
+                      </>
                     ))
                   ) : (
                     <p className="h-10"></p>
@@ -77,19 +89,23 @@ export default function FetchedMovies({
                   <button
                     onClick={() => {
                       handleButtonClicked(movie.id); // Toggles like state
-                      if (!likes[movie.id]) {
+                      if (!watches[movie.id]) {
                         postAddToLikeList(movie.id, "movie", movie.title); // Adds to like list if not liked
                       } else {
                         postRemoveFromLikeList(movie.id, "movie", movie.title); // Removes from like list if liked
                       }
                     }}
-                    className="w-full h-10 bg-purple-950 flex justify-center items-center rounded-xl"
+                    className="w-full h-10 bg-slate-900 flex justify-center items-center rounded-xl px-3"
                   >
-                    {!likes[movie.id] ? <FaRegHeart /> : <FaHeart />}
-                    {!likes[movie.id] ? (
-                      <span className="pl-2 w-1/2">Like</span>
+                    {!watches[movie.id] ? (
+                      <FaPlus className="text-2xl" />
                     ) : (
-                      <span className="pl-2 w-1/2">Unlike</span>
+                      <FaCheck className="text-2xl" />
+                    )}
+                    {!watches[movie.id] ? (
+                      <span className="pl-2 w-full text-sm">ADD TO LIST</span>
+                    ) : (
+                      <span className="pl-2 w-full text-sm">ADDED</span>
                     )}
                   </button>
                 </div>

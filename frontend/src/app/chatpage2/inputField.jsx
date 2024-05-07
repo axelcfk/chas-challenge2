@@ -22,9 +22,9 @@ export default function InputField({
       style={{
         border: "1px solid grey",
         backdropFilter: "blur(20px)",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
       }}
-      className="h-14 flex justify-center items-center rounded-xl "
+      className="h-14 flex justify-center items-center rounded-xl z-10"
     >
       <input
         className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
