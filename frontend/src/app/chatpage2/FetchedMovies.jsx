@@ -3,12 +3,31 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FaStar, FaHeart, FaRegHeart, FaPlus, FaCheck } from "react-icons/fa";
-import {
-  postAddToLikeList,
-  postRemoveFromLikeList,
-  postAddToWatchList,
-  postRemoveFromWatchList,
-} from "../utils";
+import { postAddToLikeList } from "../utils";
+import { postRemoveFromLikeList } from "../utils";
+import { postAddToWatchList, postRemoveFromWatchList } from "../utils";
+
+//? Lägga till TV4 Play?
+
+//! Dessa måste stavas exakt som dom gör på TMDB från api:et
+// Annars blir det "unavailable"
+const supportedServices = [
+  "Netflix",
+  "HBO Max",
+  "Viaplay",
+  "Amazon Prime Video",
+  "Disney Plus",
+  "Tele2 Play",
+];
+
+const streamingServiceLinks = {
+  Netflix: "https://www.netflix.com/se", //visas //funkar
+  "HBO Max": "https://play.hbomax.com/", //visas //?länk funkar ej
+  Viaplay: "https://www.viaplay.com/se", //visas //funkar
+  "Amazon Prime Video": "https://www.primevideo.com/", //visas //funkar
+  "Disney Plus": "https://www.disneyplus.com/se", //visas //?länk funkar ej
+  "Tele2 Play": "https://www.tele2play.se", //visas //?länk funkar ej
+};
 
 export default function FetchedMovies({
   movieDetails,
@@ -110,7 +129,7 @@ export default function FetchedMovies({
                   {isAvailableOnSupportedServices &&
                   isAvailableOnSupportedServices(movie.streaming) ? (
                     movie.streaming.flatrate.map((provider) => (
-                      <>
+                        <>
                         <a
                           key={provider.provider_id}
                           href={streamingServiceLinks[provider.provider_name]}
@@ -123,7 +142,7 @@ export default function FetchedMovies({
                             </span>
                           </p>
                         </a>
-                      </>
+                        </>
                     ))
                   ) : (
                     <p className="h-10"></p>

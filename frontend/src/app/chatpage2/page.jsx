@@ -15,7 +15,7 @@ const streamingServiceLinks = {
   HBOMax: "https://www.hbo.com/se",
   Viaplay: "https://www.viaplay.com/se", //funkar
   "Amazon Prime Video": "https://www.primevideo.com/", //funkar
-  "Disney+": "https://www.disneyplus.com/se", 
+  "Disney+": "https://www.disneyplus.com/se",
   // Hulu: "https://www.hulu.com/se/watch/",
   // Paramount: "https://www.paramount.com/se",
   // Mubi: "https://www.mubi.com/se/movie/",
@@ -33,7 +33,7 @@ const isAvailableOnSupportedServices = (streaming) => {
     "Disney+",
     "Tele2Play",
     // "Paramount",
-    // "Mubi", 
+    // "Mubi",
     // "Hulu",
   ];
   return streaming?.flatrate?.some((provider) =>
