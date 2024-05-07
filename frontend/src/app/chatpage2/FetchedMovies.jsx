@@ -8,7 +8,7 @@ import { postRemoveFromLikeList } from "../utils";
 import { postAddToWatchList, postRemoveFromWatchList } from "../utils";
 
 //? Lägga till TV4 Play?
-
+//TODO: ändra loggan för tele2play
 //! Dessa måste stavas exakt som dom gör på TMDB från api:et
 // Annars blir det "unavailable"
 const supportedServices = [
@@ -37,7 +37,7 @@ const serviceLogos = {
   "Amazon Prime Video": "prime.svg",
   "Disney Plus": "/disney.png",
   "Tele2 Play": "/tele2play.png",
-}
+};
 
 export default function FetchedMovies({
   movieDetails,
@@ -132,37 +132,33 @@ export default function FetchedMovies({
                   <span className="pl-1"> {movie.voteAverage.toFixed(1)}</span>
                 </p>
                 <p className="h-14 font-semibold">{movie.title}</p>
-                <div className="flex">
-                  {isAvailableOnSupportedServices(movie.streaming) && (
-                    <p className="text-xs">Watch on:</p>
-                  )}
-                  {isAvailableOnSupportedServices &&
-                  isAvailableOnSupportedServices(movie.streaming) ? (
-                    movie.streaming.flatrate.map((provider) => (
-                        <>
-                          <a
-                            key={provider.provider_id}
-                            href={streamingServiceLinks[provider.provider_name]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <img 
+                {movie.streaming?.flatrate?.some((provider) =>
+                  supportedServices.includes(provider.provider_name)
+                ) ? (
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {movie.streaming.flatrate
+                      .filter((provider) =>
+                        supportedServices.includes(provider.provider_name)
+                      )
+                      .map((provider) => (
+                        <a
+                          key={provider.provider_id}
+                          href={streamingServiceLinks[provider.provider_name]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex flex-col items-center"
+                        >
+                          <img
                             src={serviceLogos[provider.provider_name]}
                             alt={provider.provider_name}
-                            className="h-3"
-                            />
-                            {/* <p className="hover:underline">
-                              <span className="text-base">
-                                {provider.provider_name}
-                              </span>
-                            </p> */}
-                          </a>
-                        </>
-                    ))
-                  ) : (
-                    <p className="h-10"></p>
-                  )}
-                </div>
+                            className="h-4"
+                          />
+                        </a>
+                      ))}
+                  </div>
+                ) : (
+                  <p className="h-10 text-xs">Not available in your area</p>
+                )}
                 <div className="w-full flex justify-center items-center pt-5 px-2">
                   <button
                     onClick={() => {
