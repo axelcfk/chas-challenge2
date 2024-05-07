@@ -15,14 +15,11 @@ const streamingServiceLinks = {
   HBOMax: "https://www.hbo.com/se",
   Viaplay: "https://www.viaplay.com/se", //funkar
   "Amazon Prime Video": "https://www.primevideo.com/", //funkar
-  "Disney+": "https://www.disneyplus.com/se",
-  Hulu: "https://www.hulu.com/se/watch/",
-  "Apple TV+": "https://www.apple.com/se/tv/",
-  Paramount: "https://www.paramount.com/se",
-  Mubi: "https://www.mubi.com/se/movie/",
+  "Disney+": "https://www.disneyplus.com/se", 
+  // Hulu: "https://www.hulu.com/se/watch/",
+  // Paramount: "https://www.paramount.com/se",
+  // Mubi: "https://www.mubi.com/se/movie/",
 };
-
-//TODO: Byt ut Mubi till Tele2 play istället
 
 // Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
 // (annars ersätter "not available" t.ex. Hoopla, Cinemax, Showtime Apple TV, FXNow, fuboTV, som vi
@@ -34,10 +31,10 @@ const isAvailableOnSupportedServices = (streaming) => {
     "Viaplay",
     "Amazon Prime",
     "Disney+",
-    "Hulu",
-    "Apple TV+",
-    "Paramount",
-    "Mubi",
+    "Tele2Play",
+    // "Paramount",
+    // "Mubi", 
+    // "Hulu",
   ];
   return streaming?.flatrate?.some((provider) =>
     supportedServices.includes(provider.provider_name)

@@ -7,6 +7,7 @@ import { useState } from "react";
 //? Like list and watchlist on this page?
 
 export default function ChooseStreaming() {
+  // här sparas dom valda streamingtjänsterna
   const [selectedServices, setSelectedServices] = useState([]);
 
   const handleSelectService = (service) => {
