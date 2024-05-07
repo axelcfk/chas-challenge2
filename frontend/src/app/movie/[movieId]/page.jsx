@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   postAddToLikeList,
   postAddToWatchList,
+  postMovieToDatabase,
   postRemoveFromLikeList,
 } from "@/app/utils";
 import { checkLikeList } from "@/app/utils";
@@ -69,6 +70,9 @@ export default function MoviePage() {
           `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
         );
         const data = await response.json();
+
+        await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
+
         setMovieDetails({
           id: data.id,
           title: data.title,
