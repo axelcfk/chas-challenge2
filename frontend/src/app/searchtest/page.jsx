@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import MovieFilter from "../components/FilterMenu";
 
 function MovieSearch() {
   const [inputValue, setInputValue] = useState("");
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieDetails, setMovieDetails] = useState("");
   const [loading, setLoading] = useState(false);
+  const [movieFilter, setMovieFilter] = useState("All");
 
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
@@ -38,12 +39,6 @@ function MovieSearch() {
     setInputValue(event.target.value);
   };
 
-  const handleSelectChange = (event) => {
-    const selectedId = event.target.value;
-    const selected = movies.find((movie) => movie.id.toString() === selectedId);
-    setSelectedMovie(selected);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -56,6 +51,14 @@ function MovieSearch() {
       console.error("Error fetching data:", error);
     }
   };
+
+  const filteredMovies = movies.filter((movie) => {
+    if (movieFilter === "All") {
+      return true;
+    } else {
+      return movie.vote_average >= parseFloat(movieFilter);
+    }
+  });
 
   return (
     <div>
@@ -72,8 +75,9 @@ function MovieSearch() {
           Search
         </button>
       </form>
+      <MovieFilter movieFilter={MovieFilter} setMovieFilter={setMovieFilter} />
       <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 border-solid rounded-md ">
-        {movies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <li key={movie.id}>
             <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
               {movie.title}{" "}
