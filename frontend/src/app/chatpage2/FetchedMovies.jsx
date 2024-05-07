@@ -22,11 +22,11 @@ const supportedServices = [
 
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se", //visas //funkar
-  "HBO Max": "https://play.hbomax.com/", //visas //länk funkar ej
+  "HBO Max": "https://play.hbomax.com/", //visas //?länk funkar ej
   Viaplay: "https://www.viaplay.com/se", //visas //funkar
   "Amazon Prime Video": "https://www.primevideo.com/", //visas //funkar
-  "Disney Plus": "https://www.disneyplus.com/se", //visas //funkar ej
-  "Tele2 Play": "https://www.tele2play.se", //visas //länk funkar ej
+  "Disney Plus": "https://www.disneyplus.com/se", //visas //?länk funkar ej
+  "Tele2 Play": "https://www.tele2play.se", //visas //?länk funkar ej
 };
 
 export default function FetchedMovies({
