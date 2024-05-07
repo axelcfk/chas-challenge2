@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import MovieSearch from "../searchtest/page";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,9 @@ export default function Navbar() {
               <Link href="/">
                 <span className="font-bold cursor-pointer">Logo</span>
               </Link>
+            </div>
+            <div>
+              <MovieSearch />
             </div>
             <div className="flex items-center sm:hidden">
               {/* Burger icon */}
