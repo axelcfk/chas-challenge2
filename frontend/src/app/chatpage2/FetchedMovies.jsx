@@ -20,6 +20,7 @@ const supportedServices = [
   "Tele2 Play",
 ];
 
+//? dessa används inte?
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se", //visas //funkar
   "HBO Max": "https://play.hbomax.com/", //visas //?länk funkar ej
@@ -28,6 +29,15 @@ const streamingServiceLinks = {
   "Disney Plus": "https://www.disneyplus.com/se", //visas //?länk funkar ej
   "Tele2 Play": "https://www.tele2play.se", //visas //?länk funkar ej
 };
+
+const serviceLogos = {
+  Netflix: "/netflix.svg",
+  "HBO Max": "/hbo.svg",
+  Viaplay: "/viaplay.svg",
+  "Amazon Prime Video": "prime.svg",
+  "Disney Plus": "/disney.png",
+  "Tele2 Play": "/tele2play.png",
+}
 
 export default function FetchedMovies({
   movieDetails,
@@ -114,7 +124,7 @@ export default function FetchedMovies({
                   <span className="pl-1"> {movie.voteAverage.toFixed(1)}</span>
                 </p>
                 <p className="h-14 font-semibold">{movie.title}</p>
-                <div>
+                <div className="flex">
                   {isAvailableOnSupportedServices(movie.streaming) && (
                     <p className="text-xs">Watch on:</p>
                   )}
@@ -133,11 +143,16 @@ export default function FetchedMovies({
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <p className="hover:underline">
+                            <img 
+                            src={serviceLogos[provider.provider_name]}
+                            alt={provider.provider_name}
+                            className="h-3"
+                            />
+                            {/* <p className="hover:underline">
                               <span className="text-base">
                                 {provider.provider_name}
                               </span>
-                            </p>
+                            </p> */}
                           </a>
                         </>
                       ))

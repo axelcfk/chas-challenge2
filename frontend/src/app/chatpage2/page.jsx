@@ -16,9 +16,6 @@ const streamingServiceLinks = {
   Viaplay: "https://www.viaplay.com/se", //funkar
   "Amazon Prime Video": "https://www.primevideo.com/", //funkar
   "Disney+": "https://www.disneyplus.com/se",
-  // Hulu: "https://www.hulu.com/se/watch/",
-  // Paramount: "https://www.paramount.com/se",
-  // Mubi: "https://www.mubi.com/se/movie/",
 };
 
 // Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
@@ -26,15 +23,12 @@ const streamingServiceLinks = {
 // inte känner till)
 const isAvailableOnSupportedServices = (streaming) => {
   const supportedServices = [
-    "Netflix",
-    "HBO Max",
-    "Viaplay",
-    "Amazon Prime",
-    "Disney+",
-    "Tele2Play",
-    // "Paramount",
-    // "Mubi",
-    // "Hulu",
+    { name: "Netflix", logo: "/netflix.svg" },
+    { name: "HBO Max", logo: "/logo.svg" },
+    { name: "Viaplay", logo: "/viaplay.svg" },
+    { name: "Amazon Prime", logo: "prime.svg" },
+    { name: "Disney+", logo: "/disney.png" },
+    { name: "Tele2Play", logo: "/tele2play.png" },
   ];
   return streaming?.flatrate?.some((provider) =>
     supportedServices.includes(provider.provider_name)

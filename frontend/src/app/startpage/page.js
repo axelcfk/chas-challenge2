@@ -10,10 +10,13 @@ import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 
 //TODO: texten i rutan ska var lite större
 //TODO: fetcha populära filmer och rendera under popular today
+//TODO: rend watchlist on this page
+//? see what Friends watched on this page?
+
 
 export default function Startpage() {
   return (
-    <div className="bg-[#3F295E] pb-8">
+    <div className="bg-[#110A1A] pb-8">
       <Navbar />
       <div className="wrapper">
         <main className="startpage-main text-white flex justify-center">
@@ -37,6 +40,17 @@ export default function Startpage() {
         </main>
       </div>
       <div className="list-container flex justify-center flex-col text-white mt-[-240px] space-y-8">
+        <h2 className="ml-4 text-xl">My Watchlist</h2>
+        <SlideMenu>
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+        </SlideMenu>
         <h2 className="ml-4 text-xl">Search history</h2>
         <SlideMenu>
           <SlideMenuSearchHistoryCard

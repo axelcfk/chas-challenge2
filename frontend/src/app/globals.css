@@ -64,7 +64,7 @@
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0) 0%,
-    #110a1a 65%
+    rgb(2 6 23) 45%
   );
   z-index: 1;
 }
@@ -204,8 +204,8 @@
 .startpage-main {
   background: linear-gradient(
       to bottom,
-      rgba(38, 24, 57, 0.6) 0%,
-      /* gradient från ovan*/ rgba(64, 41, 94, 1) 80% /* gradient nere*/
+      rgba(38, 24, 57, 0.6) 0%, /* gradient från ovan*/ 
+      rgba(17, 10, 26, 1) 80% /* gradient nere*/
     ),
     url("/oppenheimerIMDB.jpg");
   background-size: cover;
@@ -220,6 +220,7 @@
 input:focus {
   outline: none; /* Removes the default outline */
 }
+
 
 .selected-overlay {
   position: absolute;
@@ -236,6 +237,8 @@ input:focus {
   visibility: hidden;
 }
 
+
 .square.selected .selected-overlay {
   visibility: visible; /* Always show overlay when selected */
 }
+
