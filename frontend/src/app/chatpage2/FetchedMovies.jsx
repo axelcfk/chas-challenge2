@@ -126,7 +126,7 @@ export default function FetchedMovies({
                         supportedServices.includes(provider.provider_name)
                       )
                       .map((provider) => (
-                      <>
+                        <>
                           <a
                             key={provider.provider_id}
                             href={streamingServiceLinks[provider.provider_name]}
@@ -139,7 +139,7 @@ export default function FetchedMovies({
                               </span>
                             </p>
                           </a>
-                      </>
+                        </>
                       ))
                   ) : (
                     <p className="h-10">Not available in your area</p>
