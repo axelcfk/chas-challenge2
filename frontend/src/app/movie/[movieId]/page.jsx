@@ -158,7 +158,7 @@ export default function MoviePage() {
   console.log("Credits are:", credits.actors);
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+    <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen w-screen bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
       {movieDetails.backdrop && (
         <div className="">
@@ -270,7 +270,7 @@ export default function MoviePage() {
                             ); // Removes from like list if liked
                           }
                         }}
-                        className="w-3/4 h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3"
+                        className="w-full h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3"
                       >
                         {!watches[movieDetails.id] ? (
                           <FaPlus className="text-2xl text-gray-200" />
@@ -388,7 +388,7 @@ export default function MoviePage() {
           )}
         </div>
       )}
-      <div className="w-full mb-5 text-xl">
+      <div className="w-full pb-5 text-xl pt-20">
         <p>Actors</p>
       </div>
       <div className="mb-5 font-light text-base flex  w-full justify-center items-center">
@@ -398,12 +398,15 @@ export default function MoviePage() {
               <div className="rounded-full bg-slate-100 h-20 w-20 flex justify-center items-center">
                 <FaImage className="text-slate-900 text-2xl" />
               </div>
-              <p
-                key={index}
-                className="h-10 flex justify-evenly items-centers  w-full "
-              >
-                {actor.name}
-              </p>
+              <div className="h-40 flex flex-col justify-start items-center w-5">
+                <p
+                  key={index}
+                  className="text-sm flex justify-center items-centers  w-full  h-20 pt-10"
+                >
+                  {actor.name}
+                </p>
+                <p>{actor.character}</p>
+              </div>
             </div>
           ))}
       </div>
