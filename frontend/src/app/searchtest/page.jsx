@@ -76,7 +76,7 @@ function MovieSearch() {
         </button>
       </form>
       <RatingFilter
-        ratingFilter={RatingFilter}
+        ratingFilter={ratingFilter}
         setRatingFilter={setRatingFilter}
       />
       <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 border-solid rounded-md ">

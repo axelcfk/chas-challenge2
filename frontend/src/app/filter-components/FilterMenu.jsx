@@ -5,6 +5,7 @@ function RatingFilter({ ratingFilter, setRatingFilter }) {
     const ratings = ["All", "9", "8", "7", "6", "5", "4", "3", "2", "1"];
     return (
       <select
+        className="text-black"
         onChange={(e) => setRatingFilter(e.target.value)}
         value={ratingFilter}
       >
