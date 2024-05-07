@@ -1,11 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useState, useEffect, useRef } from "react";
-import MovieCard from "./moviecards";
 import { postMovieToDatabase } from "../utils";
+
 import AutoQuery from "./autoQuery";
-import Link from "next/link";
-import { FaArrowCircleUp } from "react-icons/fa";
 import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
 // import BackButton from "../components/BackButton";
@@ -65,6 +65,14 @@ export default function ChatPage2() {
     }
   };
 
+  const router = useRouter();
+
+  const handleNavigation = () => {
+    // Navigate back to the previous page
+    router.back();
+  };
+  
+
   const handleQuerySubmit = async () => {
     setLoading(true);
     setMovies([]);
@@ -88,7 +96,7 @@ export default function ChatPage2() {
           setLoading(false); // Also set loading false here to ensure it happens after the video hides
           setErrorMessage("");
           setShowVideo(false); // Hide video after 10 seconds
-        }, 3000);
+        }, 10);
       } else {
         setErrorMessage(data.suggestion);
         console.log("Error Message Set:", data.suggestion);
@@ -123,6 +131,7 @@ export default function ChatPage2() {
               const detailsData = await detailsResponse.json();
               const streamingData = await fetchStreamingServices(movieId);
               await postMovieToDatabase(detailsData);
+              // TODO: post streaming data into database as well?
               const posterPath = detailsData.poster_path;
               const posterUrl = posterPath
                 ? `https://image.tmdb.org/t/p/w500${posterPath}`
@@ -132,6 +141,7 @@ export default function ChatPage2() {
                 id: movieId,
                 poster: posterUrl,
                 overview: detailsData.overview,
+                voteAverage: detailsData.vote_average,
                 streaming: streamingData.SE, // Hämtar providers utifrån SE region
               };
             }
@@ -206,12 +216,13 @@ export default function ChatPage2() {
 
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
-
   return (
     <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
+      <button onClick={handleNavigation}>Go Back</button>
+
       {/* <BackButton /> */}
       {errorMessage && !loading && (
-        <div className=" bg-yellow-500 h-full flex justify-center items-center ">
+        <div className="  h-full flex justify-center items-center ">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
@@ -258,7 +269,7 @@ export default function ChatPage2() {
 
       {movies.length === 6 && (
         <div className=" h-full w-full ">
-          <div className="sticky inset-x-0 top-4 w-full">
+          <div className="sticky inset-x-0 top-4 w-full ">
             <InputField
               input={input}
               handleQuerySubmit={handleQuerySubmit}

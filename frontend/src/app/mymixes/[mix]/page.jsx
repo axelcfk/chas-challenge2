@@ -1,15 +1,28 @@
 "use client";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchMovieObject, host } from "../utils";
-import SlideMenu from "./SlideMenu";
-import { SlideMenuMovieCard } from "./SlideMenu";
-import { postMovieToDatabase } from "../utils";
+import { fetchMovieObject, host } from "@/app/utils";
+import SlideMenu from "@/app/components/SlideMenu";
+import { SlideMenuMovieCard } from "@/app/components/SlideMenu";
+import { postMovieToDatabase } from "@/app/utils";
+import { MovieCardMix } from "./MovieCardMix";
+import Navbar from "@/app/components/Navbar";
 
-export default function DailyMixBasedOnLikesSlideMenu() {
+export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
   const [reasoningFromGPT, setReasoningFromGPT] = useState("");
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
+  const params = useParams();
+  const mixTitle = params.mix; // Get movie ID from the URL parameter
+
+  // fetch mix
+
+  /*   if (!mixTitle) {
+    return;
+  }
+
+ */
   const [suggestionFetchedFromGPT, setSuggestionFetchedFromGPT] =
     useState(false);
 
@@ -317,57 +330,75 @@ export default function DailyMixBasedOnLikesSlideMenu() {
 
   //console.log("idsReceivedFromAPI: ", idsReceivedFromAPI);
 
+  // TODO: fetch streaming services...
+  async function fetchStreamingServices(movieId) {
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
+      );
+      const data = await response.json();
+      return data.results;
+    } catch (error) {
+      console.error("Error fetching streaming services:", error);
+      //return {};
+    }
+  }
+
   console.log("Daily mix based on likes: ", mixDetails);
 
   return (
-    <>
+    
+    <div className="bg-[#251738] h-screen ">
+      {/* <Navbar></Navbar> */}
+      <div className="border border-white">Navbar</div>
+      <div className="h-full">
         {/* <h2>Weekly mix based on your likes (backend fetch)</h2> */}
 
-        <button
-          className={`h-40 bg-slate-400 text-slate-900 w-48 rounded-full font-semibold text-xl`}
-          onClick={() => {
-            // setButtonClicked(true)
-            getGenerateDailyMixFromGPT();
-          }}
-          //disabled={!input}
-        >
-          <div className="flex justify-center items-center text-center w-full">
-            <p className="flex text-center w-[50%]">Generate Weekly mix</p>
-          </div>
-        </button>
+        <div className="flex h-52 justify-center items-center">
+          <button
+            className={`h-20 bg-[#3F295E] text-white w-48 rounded-full font-semibold text-lg`}
+            onClick={() => {
+              // setButtonClicked(true)
+              getGenerateDailyMixFromGPT();
+            }}
+            //disabled={!input}
+          >
+            <div className="flex justify-center items-center text-center w-full p-4">
+              <p>Generate {mixTitle} Mix</p>
+            </div>
+          </button>
+        </div>
 
-       {/*  <div className="h-40"> */}
+        <div className="bg-[#3F295E] min-h-full py-8 pl-4">
+          <div className="flex w-full justify-end pr-8">
+            <button className="p-8 bg-[#251738]">Save List</button> {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
+          </div>
+         
           {loading === true ? (
             <div>Loading...</div>
           ) : (
             <>
-              {/* <button
-            className="p-8 bg-slate-500"
-            onClick={() => {
-              //fetchMovieIds();
-              setShowDetails(!showDetails);
-            }}
-          >
-            Show Mix
-          </button> */}
-
               {mixDetails && mixDetails.length > 0 ? (
-                <SlideMenu>
-                  {mixDetails.map((movie, index) => (
-                    <SlideMenuMovieCard
-                      key={index}
-                      title={movie.title}
-                      poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
-                      overview={movie.overview}
-                    />
-                  ))}
-                </SlideMenu>
-              ) : (
-                ""
-              )}
+            <div className="flex w-full flex-col gap-8 bg-[#3F295E]">
+              {mixDetails.map((movie, index) => (
+                <MovieCardMix
+                  key={index}
+                  title={movie.title}
+                  poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
+                  overview={movie.overview}
+                  voteAverage={movie.voteAverage}
+                  streamingServices="Streaming Services"
+                />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
             </>
           )}
-      {/* </div> */}
-    </>
+        </div>
+        {/* </div> */}
+      </div>
+    </div>
   );
 }

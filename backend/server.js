@@ -732,6 +732,8 @@ app.get("/generatedailymix", async (req, res) => {
   /* const userQuery = req.body.query;
     console.log("Received user query:", userQuery); */
 
+  dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes
+
   const likedMovieTitles = likedMoviesList.map((movie) => {
     return movie.title;
   });

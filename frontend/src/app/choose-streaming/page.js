@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 
+//? "Friends" on this page?
+//? Like list and watchlist on this page?
+
 export default function ChooseStreaming() {
   const [selectedServices, setSelectedServices] = useState([]);
 
@@ -16,7 +19,7 @@ export default function ChooseStreaming() {
 
   const handleSumbit = async () => {
     try {
-      console.log("Selected Streaming Services:", selectedServices);
+      console.log("Selected Streaming Services:", selectedServices); // de valda streaming-tjänsterna sparas i selectedServices.
       const response = await fetch("http://localhost:3010/streaming-services", {
         method: "POST",
         headers: {
@@ -34,52 +37,59 @@ export default function ChooseStreaming() {
   };
 
   const services = [
-    "Netflix",
-    "HBO Max",
-    "Viaplay",
-    "Amazon Prime",
-    "Disney+",
-    "Hulu",
-    "Apple TV+",
-    "Paramount",
-    "Mubi",
+    { name: "Netflix", logo: "/Netflix_icon.svg.png" },
+    { name: "HBO Max", logo: "/hbo-max.png" },
+    { name: "Viaplay", logo: "/viaplay-logo.jpeg" },
+    { name: "Amazon Prime", logo: "/amazon-prime-video-logo.jpeg" },
+    { name: "Disney+", logo: "/disney-plus-logo.png" },
+    // { name: "Hulu", logo: "/" },
+    // { name: "Apple TV+", logo: "/apple-tv-logo.png" },
+    // { name: "Paramount", logo: "/paramount-plus-logo.jpeg" },
+    { name: "Tele2Play", logo: "/tele2play-logo.png" },
   ];
 
   return (
-    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center">
+    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-[#3F295E]">
       <div>
         <h1 className="text-3xl font-bold text-white">Streaming services</h1>
         <p className="mt-6 text-sm text-white">
           Choose which streaming services you are going to use. This means you
-          will only be get recommendations based on your choice of
+          will only be given recommendations based on your choice of
           streaming-services. This can be changed later in your profile. Choose
           skip to see all movies.
         </p>
       </div>
-      <div className="container mt-12 w-full max-w-4xl mx-auto">
+      <div className="container mt-12 w-full max-w-4xl mx-auto mb-12">
         <div className="grid grid-cols-3 gap-4">
           {services.map((service) => (
             <div
-              key={service}
-              // Om tjänsten är markerad, (kolla om den finns med i arrayen) ge den en klassen "selected" som markerar elementet.
+              key={service.name}
+              // Om tjänsten är markerad, =(så fort den hamnar i arrayen) ge den en klassen "selected" som markerar elementet.
               className={`square ${
-                selectedServices.includes(service) ? "selected" : ""
+                selectedServices.includes(service.name) ? "selected" : ""
               }`}
-              onClick={() => handleSelectService(service)}
+              onClick={() => handleSelectService(service.name)}
             >
-              <div className="square-content">{service}</div>
+              <div className="square-content">
+                <img
+                  src={service.logo}
+                  alt={service.name}
+                  className="mx-auto"
+                />
+                <div className="selected-overlay">✔</div>
+              </div>
             </div>
           ))}
         </div>
       </div>
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 mt-24">
         <Link href={"/startpage"}>
-          <button className="streaming-btn w-56 mt-8 rounded-3xl">Skip</button>
+          <button className="streaming-btn w-56 rounded-3xl text-black">Skip</button>
         </Link>
         <Link href={"/startpage"}>
           <button
             onClick={handleSumbit}
-            className="streaming-btn w-56 mt-8 rounded-3xl"
+            className="streaming-btn w-56 rounded-3xl text-black"
           >
             Next
           </button>
