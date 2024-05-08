@@ -32,6 +32,7 @@ export default function MoviePage() {
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
   const [actorImages, setActorImages] = useState({});
+  const [videos, setVideos] = useState({});
   const [credits, setCredits] = useState({
     director: "",
     actors: [],
@@ -145,21 +146,24 @@ export default function MoviePage() {
     fetchLikeList();
   }, []);
 
-  // useEffect(() => {
-  //   async function fetchActors() {
-  //     try {
-  //       const response = await fetch(
-  //         `https://api.themoviedb.org/3/person/${credits.actors.personId}/images?api_key=${movieAPI_KEY}`
-  //       );
-  //       const data = await response.json();
-  //       return data.results;
-  //     } catch (error) {
-  //       console.error("Error fetching streaming services:", error);
-  //       return {};
-  //     }
-  //   }
-  //   fetchActors();
-  // }, []);
+  useEffect(() => {
+    async function fetchVideo() {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
+        );
+
+        const data = await response.json();
+        console.log("videodata:", data.results[0].key);
+        setVideos(data.results[1].key);
+        return data.results;
+      } catch (error) {
+        console.error("Error fetching streaming services:", error);
+        return {};
+      }
+    }
+    fetchVideo();
+  }, []);
 
   async function fetchActorsImages(actors) {
     const imageFetchPromises = actors.map((actor) =>
@@ -441,6 +445,17 @@ export default function MoviePage() {
           )}
         </div>
       )}
+      <div className="w-full h-60">
+        <iframe
+          className="border-none"
+          src={`https://www.youtube-nocookie.com/embed/${videos}`}
+          width="100%" // Adjust the width as needed
+          height="100%"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          // allowfullscreen
+        ></iframe>
+      </div>
       <div className="w-full pb-5 text-xl pt-20">
         <p>Actors</p>
       </div>
