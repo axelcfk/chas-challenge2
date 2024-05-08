@@ -33,6 +33,7 @@ export default function MoviePage() {
   const [likes, setLikes] = useState({});
   const [actorImages, setActorImages] = useState({});
   const [videos, setVideos] = useState({});
+  const [similar, setSimilar] = useState({});
   const [credits, setCredits] = useState({
     director: "",
     actors: [],
@@ -165,6 +166,25 @@ export default function MoviePage() {
     fetchVideo();
   }, []);
 
+  useEffect(() => {
+    async function fetchSimilar() {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
+        );
+
+        const data = await response.json();
+        console.log("videodata:", data.results[0].key);
+        setVideos(data.results[1].key);
+        return data.results;
+      } catch (error) {
+        console.error("Error fetching streaming services:", error);
+        return {};
+      }
+    }
+    fetchSimilar();
+  }, []);
+
   async function fetchActorsImages(actors) {
     const imageFetchPromises = actors.map((actor) =>
       fetch(
@@ -213,6 +233,8 @@ export default function MoviePage() {
   // console.log(likeButtonClicked);
   // console.log("Credit are:", credits.actors);
   // console.log("Credit actors ids are:", credits.actors[0].name);
+
+  console.log("object");
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -300,12 +322,20 @@ export default function MoviePage() {
                             );
                           }
                         }}
-                        className="absolute top-0 right-5 -m-4  rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
+                        className="absolute top-3 right-5 -m-4 rounded-xl h-16 w-10 flex justify-center items-center hover:cursor-pointer"
                       >
                         {!likes[movieDetails.id] ? (
-                          <FaRegHeart className="h-5 w-5 text-red-600" />
+                          <div className="flex flex-col justify-center items-center">
+                            <FaRegHeart className="h-5 w-5 text-red-600 mb-1" />
+                            <p className="text-red-600 mb-1 ">Like</p>
+                          </div>
                         ) : (
-                          <FaHeart className="h-5 w-5 text-red-600" />
+                          <div className="flex flex-col justify-center items-center">
+                            <FaHeart className="h-5 w-5 text-red-600 mb-1" />
+                            <p className="text-red-600 mb-1 font-semibold">
+                              Like
+                            </p>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -354,7 +384,7 @@ export default function MoviePage() {
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className="mb-5  md:w-full  font-light">
+                        <p className="mb-5  md:w-full text-base font-light">
                           {movieDetails.overview.slice(0, 200)}...
                         </p>
                         {/* <p className="text-green-500 text-2xl">

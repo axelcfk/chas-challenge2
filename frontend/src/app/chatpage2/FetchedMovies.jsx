@@ -31,11 +31,11 @@ const streamingServiceLinks = {
 };
 
 const serviceLogos = {
-  Netflix: "/netflix.svg",
-  "HBO Max": "/hbo.svg",
-  Viaplay: "/viaplay.png",
-  "Amazon Prime Video": "prime.svg",
-  "Disney Plus": "/disney.png",
+  Netflix: "/Netflix1.svg",
+  "HBO Max": "/HBO1.svg",
+  Viaplay: "/Viaplay1.svg",
+  "Amazon Prime Video": "Prime1.svg",
+  "Disney Plus": "/Disney1.svg",
   "Tele2 Play": "/tele2play.png",
 };
 
@@ -110,7 +110,7 @@ export default function FetchedMovies({
                   <div
                     style={{
                       backdropFilter: "blur(20px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.4)",
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
                     }}
                     onClick={() => handleLikeButtonClicked(movie.id)}
                     className="absolute top-0 right-0 m-2 rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
@@ -123,45 +123,59 @@ export default function FetchedMovies({
                   </div>
                 </div>
               </div>
-              <div className="w-full h-full py-5 px-2 ">
+              <div className="w-full h-full py-5 ">
                 {showToast && (
                   <div className="fixed bottom-20 left-5 w-auto max-w-full whitespace-nowrap p-3 bg-gray-600 text-white rounded-lg animate-bounce-up">
                     Thank you for enhancing the AI!
                   </div>
                 )}
-                <p className="flex pb-4 justify-start items-center">
+                <p className="flex pb-4 justify-start items-center px-2">
                   <span>
                     <FaStar color="yellow" />
                   </span>
                   <span className="pl-1"> {movie.voteAverage.toFixed(1)}</span>
                 </p>
-                <p className="h-14 font-semibold">{movie.title}</p>
+                <h2 className="text-base h-14 font-semibold  px-2">
+                  {movie.title}
+                </h2>
                 {movie.streaming?.flatrate?.some((provider) =>
                   supportedServices.includes(provider.provider_name)
                 ) ? (
-                  <div className="flex flex-wrap gap-2 mt-4 bg-white px-2">
-                    {movie.streaming.flatrate
-                      .filter((provider) =>
-                        supportedServices.includes(provider.provider_name)
-                      )
-                      .map((provider) => (
-                        <a
-                          key={provider.provider_id}
-                          href={streamingServiceLinks[provider.provider_name]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex flex-col items-center"
-                        >
-                          <img
-                            src={serviceLogos[provider.provider_name]}
-                            alt={provider.provider_name}
-                            className="h-4"
-                          />
-                        </a>
-                      ))}
-                  </div>
+                  <>
+                    <p className="text-sm px-2 h-5 font-semibold">
+                      Watch it now on:
+                    </p>
+
+                    <div className="flex justify-start items-center gap-2 mt-4 bg-slate-100 px-2 h-10">
+                      {movie.streaming.flatrate
+                        .filter((provider) =>
+                          supportedServices.includes(provider.provider_name)
+                        )
+                        .map((provider) => (
+                          <a
+                            key={provider.provider_id}
+                            href={streamingServiceLinks[provider.provider_name]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex flex-col items-center"
+                          >
+                            <img
+                              src={serviceLogos[provider.provider_name]}
+                              alt={provider.provider_name}
+                              className="h-7"
+                            />
+                          </a>
+                        ))}
+                    </div>
+                  </>
                 ) : (
-                  <p className="h-10 text-xs">Not available in your area</p>
+                  <>
+                    <p className="text-sm px-2 h-5"></p>
+
+                    <div className="text-slate-950 font-semibold flex justify-start items-center gap-2 mt-4 bg-slate-100 px-2 h-10">
+                      Not available in your area
+                    </div>
+                  </>
                 )}
                 <div className="w-auto flex justify-center items-center pt-5 px-2 ">
                   <button
@@ -180,8 +194,8 @@ export default function FetchedMovies({
                     ) : (
                       <FaCheck className="text-2xl" />
                     )}
-                    <span className="pl-2 text-sm">
-                      {!watches[movie.id] ? "ADD TO LIST" : "ADDED"}
+                    <span className="pl-2 text-xs">
+                      {!watches[movie.id] ? "ADD TO WATCH LIST" : "ADDED"}
                     </span>
                   </button>
                 </div>

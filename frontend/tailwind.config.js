@@ -31,6 +31,9 @@ module.exports = {
       animation: {
         "bounce-up": "bounce 0.5s infinite",
       },
+      fontFamily: {
+        manrope: ["Manrope", "sans-serif"],
+      },
     },
   },
   plugins: [],
