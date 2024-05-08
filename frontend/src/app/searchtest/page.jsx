@@ -83,8 +83,11 @@ function MovieSearch() {
       />
       <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md ">
         {filteredMovies.map((movie) => (
-          <li className="list-none" key={movie.id}>
-            <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+          <li className="list-none " key={movie.id}>
+            <Link
+              className="text-black no-underline hover:underline"
+              href={`/movie/${encodeURIComponent(movie.id)}`}
+            >
               {movie.title}{" "}
             </Link>
           </li>

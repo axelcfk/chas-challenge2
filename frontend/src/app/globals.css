@@ -247,3 +247,20 @@ input:focus {
 .square.selected .selected-overlay {
   visibility: visible; /* Always show overlay when selected */
 }
+
+/* .parallax-container {
+  position: relative;
+  overflow: hidden;
+  height: 60vh; 
+}
+
+.parallax-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+} */

@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   FaPlus,
@@ -19,6 +19,7 @@ import {
 } from "@/app/utils";
 import { checkLikeList } from "@/app/utils";
 import BackButton from "@/app/components/BackButton";
+import SlideMenu from "@/app/components/SlideMenu";
 
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -33,7 +34,7 @@ export default function MoviePage() {
   const [likes, setLikes] = useState({});
   const [actorImages, setActorImages] = useState({});
   const [videos, setVideos] = useState({});
-  const [similar, setSimilar] = useState({});
+  const [similar, setSimilar] = useState([]);
   const [credits, setCredits] = useState({
     director: "",
     actors: [],
@@ -64,72 +65,125 @@ export default function MoviePage() {
       [id]: !prevLikes[id],
     }));
   }
+  //FETCHA ALLA MOVIE DETAILS FRÅN BACKEND
+  // useEffect(() => {
+  //   const fetchMovieDetails = async () => {
+  //     if (!movieId) return;
 
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch(
+  //         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+  //       );
+  //       const data = await response.json();
+
+  //       // await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
+
+  //       setMovieDetails({
+  //         id: data.id,
+  //         title: data.title,
+  //         overview: data.overview,
+  //         voteAverage: data.vote_average,
+  //         release: data.release_date,
+  //         tagline: data.tagline,
+  //         runtime: data.runtime,
+  //         backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
+  //         poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+  //       });
+
+  //       const creditsResponse = await fetch(
+  //         `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+  //       );
+  //       const creditsData = await creditsResponse.json();
+  //       setCredits({
+  //         director: creditsData.crew.find((person) => person.job === "Director")
+  //           ?.name,
+  //         actors: creditsData.cast.slice(0, 6).map((actor) => ({
+  //           // Only take the first six actors
+  //           name: actor.name,
+  //           personId: actor.id,
+  //           character: actor.character,
+  //           imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
+  //         })),
+  //         otherCrew: creditsData.crew
+  //           .filter((person) =>
+  //             ["Producer", "Screenplay", "Music"].includes(person.job)
+  //           )
+  //           .map((crew) => ({
+  //             name: crew.name,
+  //             job: crew.job,
+  //           })),
+  //       });
+
+  //       fetchActorsImages(creditsData.cast.slice(0, 6));
+  //     } catch (error) {
+  //       console.error("Error fetching movie details:", error);
+  //       setMovieDetails(null); // Handle errors by setting details to null
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   credits.actors.forEach((actor) => {
+  //     console.log(`Actor Name: ${actor.name}, Person ID: ${actor.personId}`);
+  //     // You can use `actor.personId` to fetch the actor's images or more details
+  //   });
+
+  //   fetchMovieDetails();
+  // }, [movieId]);
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      if (!movieId) return;
+    async function fetchMoviePageDetails(movieId) {
+      if (!movieId) {
+        console.error("Missing required parameter: movieId");
+        return;
+      }
 
-      setLoading(true);
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+          "http://localhost:3010/fetchingmoviepagedetails",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ movieId }),
+          }
         );
         const data = await response.json();
 
-        await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
+        console.log("fetched data:", data);
 
-        setMovieDetails({
-          id: data.id,
-          title: data.title,
-          overview: data.overview,
-          voteAverage: data.vote_average,
-          release: data.release_date,
-          tagline: data.tagline,
-          runtime: data.runtime,
-          backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
-          poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-        });
-
-        const creditsResponse = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-        );
-        const creditsData = await creditsResponse.json();
-        setCredits({
-          director: creditsData.crew.find((person) => person.job === "Director")
-            ?.name,
-          actors: creditsData.cast.slice(0, 6).map((actor) => ({
-            // Only take the first six actors
-            name: actor.name,
-            personId: actor.id,
-            character: actor.character,
-            imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
-          })),
-          otherCrew: creditsData.crew
-            .filter((person) =>
-              ["Producer", "Screenplay", "Music"].includes(person.job)
-            )
-            .map((crew) => ({
-              name: crew.name,
-              job: crew.job,
-            })),
-        });
-
-        fetchActorsImages(creditsData.cast.slice(0, 6));
+        if (data.error) {
+          console.error(data.error);
+        } else {
+          setMovieDetails(data.movieDetails);
+          setCredits(data.movieDetails.credits);
+          setVideos(data.movieDetails.videoKey);
+          console.log(
+            "data.movidetails.videokey is:",
+            data.movieDetails.videoKey
+          );
+          setSimilar(data.movieDetails.similarMovies);
+          console.log("similar movies are:", similar);
+          console.log("actorImages:", actorImages);
+          setActorImages(
+            data.movieDetails.credits.actors.reduce((acc, actor) => {
+              acc[actor.personId] = actor.imagePath;
+              return acc;
+            }, {})
+          );
+        }
       } catch (error) {
-        console.error("Error fetching movie details:", error);
-        setMovieDetails(null); // Handle errors by setting details to null
+        console.error("Error fetching movie page details:", error);
       } finally {
         setLoading(false);
       }
-    };
+    }
 
-    credits.actors.forEach((actor) => {
-      console.log(`Actor Name: ${actor.name}, Person ID: ${actor.personId}`);
-      // You can use `actor.personId` to fetch the actor's images or more details
-    });
-
-    fetchMovieDetails();
+    fetchMoviePageDetails(movieId);
   }, [movieId]);
+
+  //fetcha likelist
 
   useEffect(() => {
     const fetchLikeList = async () => {
@@ -145,77 +199,11 @@ export default function MoviePage() {
     };
 
     fetchLikeList();
-  }, []);
-
-  useEffect(() => {
-    async function fetchVideo() {
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
-        );
-
-        const data = await response.json();
-        console.log("videodata:", data.results[0].key);
-        setVideos(data.results[1].key);
-        return data.results;
-      } catch (error) {
-        console.error("Error fetching streaming services:", error);
-        return {};
-      }
-    }
-    fetchVideo();
-  }, []);
-
-  useEffect(() => {
-    async function fetchSimilar() {
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
-        );
-
-        const data = await response.json();
-        console.log("videodata:", data.results[0].key);
-        setVideos(data.results[1].key);
-        return data.results;
-      } catch (error) {
-        console.error("Error fetching streaming services:", error);
-        return {};
-      }
-    }
-    fetchSimilar();
-  }, []);
-
-  async function fetchActorsImages(actors) {
-    const imageFetchPromises = actors.map((actor) =>
-      fetch(
-        `https://api.themoviedb.org/3/person/${actor.id}/images?api_key=${movieAPI_KEY}`
-      )
-        .then((response) => response.json())
-        .then((data) => ({
-          id: actor.id,
-          image: data.profiles[0] ? data.profiles[0].file_path : null,
-        }))
-    );
-
-    try {
-      const imagesResults = await Promise.all(imageFetchPromises);
-      const newActorImages = imagesResults.reduce((acc, result) => {
-        acc[result.id] = result.image;
-        return acc;
-      }, {});
-      setActorImages(newActorImages);
-    } catch (error) {
-      console.error("Error fetching actor images:", error);
-    }
-  }
+  }, [movieId]);
 
   const isMovieLiked = likedMovies.some(
     (movie) => movie.id === movieDetails?.id
   );
-
-  // if (loading) {
-  //   return <div>Loading movie details...</div>;
-  // }
 
   function LoadingIndicator() {
     return (
@@ -230,11 +218,8 @@ export default function MoviePage() {
   if (!movieDetails) {
     return <div>No movie found. Try a different search!</div>;
   }
-  // console.log(likeButtonClicked);
-  // console.log("Credit are:", credits.actors);
-  // console.log("Credit actors ids are:", credits.actors[0].name);
 
-  console.log("object");
+  console.log("similar object", similar);
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -478,7 +463,7 @@ export default function MoviePage() {
       <div className="w-full h-60">
         <iframe
           className="border-none"
-          src={`https://www.youtube-nocookie.com/embed/${videos}`}
+          src={`https://www.youtube-nocookie.com/embed/${videos && videos}`}
           width="100%" // Adjust the width as needed
           height="100%"
           frameborder="0"
@@ -522,6 +507,30 @@ export default function MoviePage() {
             </div>
           </div>
         ))}
+      </div>
+      <div className=" w-full pt-16 pb-10">
+        <h2 className="text-left">Similar to {movieDetails.title}</h2>
+      </div>
+      <div className=" flex justify-center items-center w-full  ">
+        {similar && similar.length > 0 && similar.poster != "" && (
+          <SlideMenu>
+            {similar.map((movie, index) => (
+              <div
+                key={index}
+                className="inline-block justify-center items-center p-2 "
+              >
+                <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                  <img
+                    className="h-80 rounded-xl hover:cursor-pointer"
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
+                    alt="poster"
+                  />
+                </Link>
+                <p className="h-20">{movie.title}</p>
+              </div>
+            ))}
+          </SlideMenu>
+        )}
       </div>
     </div>
   );
