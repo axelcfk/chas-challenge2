@@ -9,7 +9,7 @@ import {
   FaStar,
   FaImage,
 } from "react-icons/fa";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   postAddToLikeList,
   postAddToWatchList,
@@ -44,7 +44,6 @@ export default function MoviePage() {
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const params = useParams();
   const movieId = params.movieId; // Get movie ID from the URL parameter
-  const parallaxRef = useRef(null); // Reference for the parallax image
 
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
@@ -66,7 +65,8 @@ export default function MoviePage() {
       [id]: !prevLikes[id],
     }));
   }
-
+  //FETCHA ALLA MOVIE DETAILS FRÅN BACKEND
+  // useEffect(() => {
   //   const fetchMovieDetails = async () => {
   //     if (!movieId) return;
 
@@ -150,6 +150,7 @@ export default function MoviePage() {
           }
         );
         const data = await response.json();
+
         console.log("fetched data:", data);
 
         if (data.error) {
@@ -157,13 +158,20 @@ export default function MoviePage() {
         } else {
           setMovieDetails(data.movieDetails);
           setCredits(data.movieDetails.credits);
+          setVideos(data.movieDetails.videoKey);
+          console.log(
+            "data.movidetails.videokey is:",
+            data.movieDetails.videoKey
+          );
+          setSimilar(data.movieDetails.similarMovies);
+          console.log("similar movies are:", similar);
+          console.log("actorImages:", actorImages);
           setActorImages(
             data.movieDetails.credits.actors.reduce((acc, actor) => {
               acc[actor.personId] = actor.imagePath;
               return acc;
             }, {})
           );
-          console.log("actorImages:", actorImages);
         }
       } catch (error) {
         console.error("Error fetching movie page details:", error);
@@ -175,41 +183,23 @@ export default function MoviePage() {
     fetchMoviePageDetails(movieId);
   }, [movieId]);
 
+  //fetcha likelist
+
   useEffect(() => {
-    async function fetchSimilar() {
+    const fetchLikeList = async () => {
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
-        );
-
-        const data = await response.json();
-        console.log("similar:", data.results);
-        setSimilar(data.results);
-        return data.results;
+        const movies = await checkLikeList();
+        setLikedMovies(movies);
+        if (movies.some((movie) => movie.id === movieId)) {
+          setLikeButtonClicked(true);
+        }
       } catch (error) {
-        console.error("Error fetching streaming services:", error);
-        return {};
-      }
-    }
-    fetchSimilar();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset;
-      const speed = 0.5; // Adjust this value to control the speed of the parallax effect
-      if (parallaxRef.current) {
-        parallaxRef.current.style.transform = `translateY(${
-          scrollTop * speed
-        }px)`;
+        console.error("Failed to fetch liked movies list");
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    fetchLikeList();
+  }, [movieId]);
 
   const isMovieLiked = likedMovies.some(
     (movie) => movie.id === movieDetails?.id
@@ -238,7 +228,7 @@ export default function MoviePage() {
         <div className="">
           <img
             id="img"
-            className="absolute top-0 left-0 w-full  object-cover z-0  "
+            className="absolute top-0 left-0 w-full  object-cover z-0 "
             src={movieDetails.backdrop}
             alt="Movie Backdrop"
           />
@@ -288,13 +278,12 @@ export default function MoviePage() {
                     {/* <p>{movieDetails.runtime.toString()} mins</p> */}
                   </div>
                   <div className="flex flex-col w-full justify-center items-center gap-4 ">
-                    <div className="relative  parallax-container">
+                    <div className="relative ">
                       <img
-                        className=" h-52 md:h-96 rounded-md w-auto parallax-image"
+                        className=" h-52 md:h-96 rounded-md w-auto"
                         src={movieDetails.poster}
                         alt="Movie Poster"
                         style={{ border: "1px solid grey" }}
-                        ref={parallaxRef}
                       />
                       <div
                         style={{
@@ -474,10 +463,10 @@ export default function MoviePage() {
       <div className="w-full h-60">
         <iframe
           className="border-none"
-          src={`https://www.youtube-nocookie.com/embed/${videos}`}
+          src={`https://www.youtube-nocookie.com/embed/${videos && videos}`}
           width="100%" // Adjust the width as needed
           height="100%"
-          frameBorder="0"
+          frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           // allowfullscreen
         ></iframe>
@@ -523,7 +512,7 @@ export default function MoviePage() {
         <h2 className="text-left">Similar to {movieDetails.title}</h2>
       </div>
       <div className=" flex justify-center items-center w-full  ">
-        {similar && similar.length > 0 && similar.poster_path != "" && (
+        {similar && similar.length > 0 && similar.poster != "" && (
           <SlideMenu>
             {similar.map((movie, index) => (
               <div
@@ -533,11 +522,11 @@ export default function MoviePage() {
                 <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
                   <img
                     className="h-80 rounded-xl hover:cursor-pointer"
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
                     alt="poster"
                   />
                 </Link>
-                <p className="h-20">{movie.original_title}</p>
+                <p className="h-20">{movie.title}</p>
               </div>
             ))}
           </SlideMenu>

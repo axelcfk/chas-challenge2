@@ -261,9 +261,6 @@ const fetchAllMovieIdsFromTMDB = async (movieNamesFromGPT) => {
     return await fetchMovieIdFromTMDB(movieName);
   });
 
-  
-
-
   // Wait for all the fetches to complete
   const fetchedMovieIds = await Promise.all(fetchPromises); // array within array
   console.log("fetchedMovieIds: ", fetchedMovieIds);
@@ -445,9 +442,7 @@ app.get("/allfetchedmoviesorseries", async (req, res) => {
   });
 });
 
-
 function getMovieObjectOurDatabase(id, movieOrSeries) {
-
   let searchResult;
   try {
     if (movieOrSeries === "movie") {
@@ -1067,7 +1062,6 @@ app.post("/addtodailymixbasedonlikes", async (req, res) => {
   }
 });
 
-
 let dailyMixes = { dailyMixBasedOnLikes: [] };
 
 app.get("/generatedailymix", async (req, res) => {
@@ -1135,7 +1129,6 @@ app.get("/generatedailymix", async (req, res) => {
   }
 });
 
-
 app.get("/generatedailymix2", async (req, res) => {
   // no user query needed, will be based on existing like list
   /* const userQuery = req.body.query;
@@ -1200,7 +1193,7 @@ app.get("/generatedailymix2", async (req, res) => {
 
     if (movieIds && movieIds.length === movieNames.length) {
       console.log("all movie ids received from api: ", movieIds);
-    
+
       try {
         for (const movieId of movieIds) {
           const movieObject = await fetchMovieObjectTMDB(movieId);
@@ -1216,7 +1209,6 @@ app.get("/generatedailymix2", async (req, res) => {
     } else {
       console.log("failed running fetchMovieDetails in /generatedailymix ");
     }
-    
 
     if (movieObjects.length === movieNames.length) {
       movieObjects.map((movie) => {
@@ -1237,29 +1229,25 @@ app.get("/generatedailymix2", async (req, res) => {
       console.log("Failed pushing to dailymixbasedonlikes ");
     }
 
-    
-     
     const mixMovieObjects = [];
 
     //dailyMixes.dailyMixBasedOnLikes.forEach( (movie) => {
     movieObjects.map((movie) => {
-      const movieObjectOurDatabase = getMovieObjectOurDatabase(movie.id, "movie");
+      const movieObjectOurDatabase = getMovieObjectOurDatabase(
+        movie.id,
+        "movie"
+      );
       // console.log("movieObject: ", movieObject);
       //setLoading(false);
 
       if (movieObjectOurDatabase) {
-
-      
-        mixMovieObjects.push(movieObjectOurDatabase)
+        mixMovieObjects.push(movieObjectOurDatabase);
       } else {
         console.log("data.title does not exist?");
       }
     });
-    
 
     //getMixFromOurDatabaseOnlyIDs()
-
-
 
     // populate mixDetails
 
@@ -1441,6 +1429,8 @@ const fetchCompleteMovieDetails = async (movieId) => {
         similarResponse.json(),
       ]
     );
+
+    addMovieToDatabase(movieData, "movie");
 
     const director = creditsData.crew.find(
       (person) => person.job === "Director"
