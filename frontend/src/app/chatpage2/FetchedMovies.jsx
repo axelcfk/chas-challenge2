@@ -33,7 +33,7 @@ const streamingServiceLinks = {
 const serviceLogos = {
   Netflix: "/netflix.svg",
   "HBO Max": "/hbo.svg",
-  Viaplay: "/viaplay.svg",
+  Viaplay: "/viaplay.png",
   "Amazon Prime Video": "prime.svg",
   "Disney Plus": "/disney.png",
   "Tele2 Play": "/tele2play.png",
@@ -135,7 +135,7 @@ export default function FetchedMovies({
                 {movie.streaming?.flatrate?.some((provider) =>
                   supportedServices.includes(provider.provider_name)
                 ) ? (
-                  <div className="flex flex-wrap gap-2 mt-4">
+                  <div className="flex flex-wrap gap-2 mt-4 bg-white px-2">
                     {movie.streaming.flatrate
                       .filter((provider) =>
                         supportedServices.includes(provider.provider_name)

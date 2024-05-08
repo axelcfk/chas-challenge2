@@ -25,7 +25,7 @@ const isAvailableOnSupportedServices = (streaming) => {
   const supportedServices = [
     { name: "Netflix", logo: "/netflix.svg" },
     { name: "HBO Max", logo: "/logo.svg" },
-    { name: "Viaplay", logo: "/viaplay.svg" },
+    { name: "Viaplay", logo: "/viaplay.png" },
     { name: "Amazon Prime", logo: "prime.svg" },
     { name: "Disney+", logo: "/disney.png" },
     { name: "Tele2Play", logo: "/tele2play.png" },
