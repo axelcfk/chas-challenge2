@@ -18,6 +18,7 @@ dotenv.config();
 
 const app = express();
 const port = 3010;
+const host = "http://localhost:3010";
 
 const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
@@ -179,6 +180,259 @@ app.post("/sessions", async (req, res) => {
   }
 });
 
+//let movieIds = [];
+
+async function fetchMovieIdFromTMDB(movieNameFromGPT) {
+  try {
+    // Extract movie name from the request body
+    // const { movieName } = req.body;
+
+    // Check if movieName is provided
+    if (!movieNameFromGPT) {
+      return res
+        .status(400)
+        .json({ error: "Movie name is required from ChatGPT" });
+    }
+
+    // Make API call to TMDB
+    const encodedMovieTitle = encodeURIComponent(movieNameFromGPT);
+    const response = await fetch(
+      `https://api.themoviedb.org/3/search/movie?query=${encodedMovieTitle}&api_key=${movieAPI_KEY}`
+    );
+    const data = await response.json();
+
+    // Check if there are results and extract movie ID
+    if (data.results && data.results.length > 0) {
+      const movieId = data.results[0].id;
+      // Push movie ID into the array
+      //setMovieIdsFromAPI((prevIds) => [...prevIds, data.results[0].id]);
+
+      //movieIds.push(movieId); // TODO: should this ID be deleted later on when we have fetched the whole movie object? to preserve storage?
+      return movieId;
+    } else {
+      console.error("Error fetching movie ID:", error);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching movie ID:", error);
+  }
+}
+
+// fetch movie id after chatgpt has provided a moviename
+/* app.post("/fetchmovieidTMDB", async (req, res) => {
+  try {
+    // Extract movie name from the request body
+    const { movieName } = req.body;
+
+    // Check if movieName is provided
+    if (!movieName) {
+      return res.status(400).json({ error: 'Movie name is required from ChatGPT' });
+    }
+
+    // Make API call to TMDB
+    const encodedMovieTitle = encodeURIComponent(movieName);
+    const response = await fetch(`https://api.themoviedb.org/3/search/movie?query=${encodedMovieTitle}&api_key=${movieAPI_KEY}`);
+    const data = await response.json();
+
+    // Check if there are results and extract movie ID
+    if (data.results && data.results.length > 0) {
+      const movieId = data.results[0].id;
+      // Push movie ID into the array
+      //setMovieIdsFromAPI((prevIds) => [...prevIds, data.results[0].id]); 
+      movieIds.push(movieId); // TODO: should this ID be deleted later on when we have fetched the whole movie object? to preserve storage?
+      return res.status(200).json({ message: 'Movie ID fetched successfully', movieId });
+    } else {
+      return res.status(404).json({ error: 'Movie not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching movie ID:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}) */
+
+const fetchAllMovieIdsFromTMDB = async (movieNamesFromGPT) => {
+  //setLoading(true);
+
+  // Create an array to store all the promises
+  console.log("all movienames suggested by GPT: ", movieNamesFromGPT);
+
+  const fetchPromises = movieNamesFromGPT.map(async (movieName) => {
+    // Await each fetch inside the map function
+    return await fetchMovieIdFromTMDB(movieName);
+  });
+
+  
+
+
+  // Wait for all the fetches to complete
+  const fetchedMovieIds = await Promise.all(fetchPromises); // array within array
+  console.log("fetchedMovieIds: ", fetchedMovieIds);
+  return fetchedMovieIds;
+
+  // Once all fetches are complete, set idsReceivedFromAPI to true
+  //setIdsReceivedFromAPI(true); // just to trigger the useEffect below
+};
+
+/* app.post("/fetchallmovieidsTMDB", async (req, res) => {
+  try {
+    const { movieNamesFromGPT } = req.body;
+
+    if (!movieNamesFromGPT || movieNamesFromGPT.length === 0) {
+      return res.status(400).json({ error: 'No movie names provided by ChatGPT' });
+    }
+
+    const fetchPromises = movieNamesFromGPT.map(async (movieName) => {
+      // Make a request to /fetchmovieidTMDB endpoint for each movie name
+      const response = await fetch(`${host}/fetchmovieidTMDB`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ movieName })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // If the response is successful, you can do something with the data
+        console.log('Movie ID fetched successfully:', data.movieId);
+      } else {
+        // Handle errors
+        console.error('Error fetching movie ID:', data.error);
+      }
+    });
+
+    // Wait for all the fetches to complete
+    await Promise.all(fetchPromises);
+
+    res.status(200).json({ message: 'All movie IDs fetched successfully' });
+  } catch (error) {
+    console.error('Error fetching all movie IDs:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}) */
+
+/* app.post("/fetchmoviedetailsTMDB", async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${movieAPI_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+   
+    await postMovieToDatabase(data); // TODO: sometimes these two functions occur after all other code is complete, so the page does not have time to populate mixDetails?
+    await postAddToMixOnBackend(data.id, data.title);
+
+
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+  } finally {
+    //setFetchedAndSavedDetailsFromAPI(true);
+
+  }
+
+})
+ */
+
+// also saves whole Movie object to fetchedmovies
+async function fetchMovieObjectTMDB(id) {
+  // console.log("Fetching movie details for ID:", id);
+
+  // TODO: check fetchedMovies first, else run the code below?
+
+  try {
+    const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${movieAPI_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    /* console.log(data);
+    console.log(data.vote_average); */
+
+    //await postMovieToDatabase(data);
+    // await postAddToMixOnBackend(data.id, data.title);
+    if (data.title) {
+      addMovieToDatabase(data, "movie"); // STORES FETCHED MOVIE OBJECT TO DATABASE
+      return data;
+    } else {
+      console.log("failed to fetch movie object from TMDB");
+    }
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+  } finally {
+    //setLoading(false);
+    //setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
+  }
+}
+
+function addMovieToDatabase(movieObject, movieOrSeries) {
+  if (!movieObject.id || !movieOrSeries) {
+    console.log(
+      "Received movie does not contain an id, and/or need to define if movie or series."
+    );
+  }
+
+  const idExistsInMovies = fetchedMovies.some(
+    (fetchedMovie) => fetchedMovie.id === movieObject.id
+  );
+  const idExistsInSeries = fetchedSeries.some(
+    (fetchedSerie) => fetchedSerie.id === movieObject.id
+  );
+
+  if (idExistsInMovies || idExistsInSeries) {
+    console.log(
+      "movie/series ID ",
+      movieObject.id,
+      " has already been fetched."
+    );
+    return; // TODO: return nothing?
+  } else {
+    // om redan finns?
+  }
+
+  if (movieOrSeries === "movie") {
+    // maybe change to some sort of True/False variable instead...
+    fetchedMovies.push(movieObject); // UPDATE LATER TO SQL
+    console.log("Added movie ID ", movieObject.id, " to fetchedMovies");
+  } else if (movieOrSeries === "series") {
+    fetchedSeries.push(movieObject); // UPDATE LATER TO SQL
+    console.log("Added series ID ", movieObject.id, " to fetchedSeries");
+  } else {
+    console.log("Could not determine if movie or series");
+  }
+}
+
+async function getMixFromOurDatabaseOnlyIDs() {
+  try {
+    const response = await fetch(`${host}/dailymixbasedonlikes`, {
+      // users sidan på backend! dvs inte riktiga sidan!
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      /*  body: JSON.stringify({
+       
+      }), */
+    });
+
+    const data = await response.json();
+    if (data.mix && data.mix) {
+      console.log(
+        "fetched data.mix from backend: ",
+        data.mix
+        // setMixFromDatabaseOnlyIDs(data.mix)
+      );
+
+      return data.mix;
+    } else {
+      console.log(
+        "failed to fetch data.mix from backend, or does not exist yet"
+      );
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    //setFetchedMixWithIDsFromDatabase(true);
+  }
+}
+
 const fetchedMovies = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 const fetchedSeries = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 
@@ -190,6 +444,32 @@ app.get("/allfetchedmoviesorseries", async (req, res) => {
     fetchedSeries: fetchedSeries,
   });
 });
+
+
+function getMovieObjectOurDatabase(id, movieOrSeries) {
+
+  let searchResult;
+  try {
+    if (movieOrSeries === "movie") {
+      searchResult = fetchedMovies.find((movie) => {
+        return id === movie.id;
+      });
+      //console.log("Movie-Search result: ", searchResult);
+    } else if (movieOrSeries === "series") {
+      searchResult = fetchedSeries.find((series) => {
+        return id === series.id;
+      });
+      console.log("Series-Search result: ", searchResult);
+    } else {
+      console.log("Find function in fetchedMovies or fetchedSeries failed?");
+    }
+  } catch (error) {
+    console.error("2:Error finding movie/series", error);
+    return res.status(500).send("2:Error finding movie/series"); // exit code
+  }
+
+  return searchResult;
+}
 
 // GET
 app.post("/movieobject", async (req, res) => {
@@ -289,7 +569,6 @@ let likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let movieWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let seriesWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 //let dailyMixBasedOnLikes = [];
-let dailyMixes = { dailyMixBasedOnLikes: [] };
 
 // post the lists
 app.post("/me/likelists", async (req, res) => {
@@ -726,6 +1005,24 @@ app.get("/dailymixbasedonlikes", async (req, res) => {
   res.json(data);
 });
 
+/* function addToDailyMixBasedOnLikes(id, title) {
+
+  if (!id || !title) { 
+    console.log("No movie id or title received to add in daily mix based on likes");
+  }
+
+  dailyMixes.dailyMixBasedOnLikes.push({ id, title });
+
+  console.log(
+    "Added movie ID ",
+    id,
+    " with movie name: ",
+    title,
+    " to dailyMixBasedOnLikes"
+  );
+
+} */
+
 app.post("/addtodailymixbasedonlikes", async (req, res) => {
   try {
     // KAN DEN TA IN ARRAY?
@@ -769,6 +1066,9 @@ app.post("/addtodailymixbasedonlikes", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+let dailyMixes = { dailyMixBasedOnLikes: [] };
 
 app.get("/generatedailymix", async (req, res) => {
   // no user query needed, will be based on existing like list
@@ -820,6 +1120,153 @@ app.get("/generatedailymix", async (req, res) => {
     if (movieNames) {
       // res.json({ movieNames, reasoning });
       res.json({ movieNames });
+    } else {
+      console.error("Failed to generate daily mix suggestion: ", suggestion);
+      res.status(500).json({
+        error: "Failed to extract daily mix suggestion from AI response",
+      });
+    }
+  } catch (error) {
+    console.error("Error in /dailymix endpoint:", error);
+    res.status(500).json({
+      error: "Unable to process the daily mix at this time.",
+      details: error.message,
+    });
+  }
+});
+
+
+app.get("/generatedailymix2", async (req, res) => {
+  // no user query needed, will be based on existing like list
+  /* const userQuery = req.body.query;
+    console.log("Received user query:", userQuery); */
+
+  dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes
+
+  const likedMovieTitles = likedMoviesList.map((movie) => {
+    return movie.title;
+  });
+
+  //console.log("likedMovieTitles: ", likedMovieTitles);
+
+  const likedMovieTitlesString = likedMovieTitles.join(", ");
+  // console.log("likedMovieTitlesString: ", likedMovieTitlesString);
+
+  //   "This assistant will suggest 6 movies based on user's liked movies provided by content, and after that it will also provide a short reasoning why it suggested these specific movies. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string], and then fill in reasoning in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string], REASONING: [string]. It will not answer any other queries. It will only suggest movies.",
+
+  // TODO: lägg till REASONING igen så att det funkar...
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
+        },
+        {
+          role: "user",
+          content: likedMovieTitlesString,
+        },
+      ],
+    });
+
+    // Entire AI response
+    console.log("AI response:", JSON.stringify(completion, null, 2));
+
+    const suggestion = completion.choices[0].message.content;
+    console.log("Daily mix suggestion: ", suggestion);
+
+    const movieNames = parseMovieNames(suggestion);
+    console.log("parsed movie names: ", movieNames);
+    //const reasoning = parseReasoning(suggestion);
+    //console.log("parsed reasoning: ", reasoning);
+
+    let movieIds = [];
+
+    // TODO: HÄR SKA VI LÄGGA IN ALLA END-POINTS SOM HANTERAR TMDB FETCHES OCH LAGRA I DATABASEN GREJER, därefter skickar vi det vi behöver till frontend?
+    if (movieNames && movieNames.length === 6) {
+      //fetchMovieIds();
+      const fetchedMovieIds = await fetchAllMovieIdsFromTMDB(movieNames);
+      movieIds = fetchedMovieIds; // TODO: kanske bättre att mappa igenom fetchedmovieids och sen pusha in i movieIds...?
+    } else {
+      console.log(
+        "failed running fetchAllMovieIdsFromTMDB in /generatedailymix"
+      );
+    }
+    console.log("movieIDs of suggested movies", movieIds);
+
+    const movieObjects = [];
+
+    if (movieIds && movieIds.length === movieNames.length) {
+      console.log("all movie ids received from api: ", movieIds);
+    
+      try {
+        for (const movieId of movieIds) {
+          const movieObject = await fetchMovieObjectTMDB(movieId);
+          if (movieObject) {
+            movieObjects.push(movieObject);
+          } else {
+            console.log("failed fetching movie object from tmdb");
+          }
+        }
+      } catch (error) {
+        console.log("Error fetching movie objects:", error);
+      }
+    } else {
+      console.log("failed running fetchMovieDetails in /generatedailymix ");
+    }
+    
+
+    if (movieObjects.length === movieNames.length) {
+      movieObjects.map((movie) => {
+        dailyMixes.dailyMixBasedOnLikes.push({
+          id: movie.id,
+          title: movie.title,
+        });
+
+        console.log(
+          "Added movie ID ",
+          movie.id,
+          " with movie name: ",
+          movie.title,
+          " to dailyMixBasedOnLikes"
+        );
+      });
+    } else {
+      console.log("Failed pushing to dailymixbasedonlikes ");
+    }
+
+    
+     
+    const mixMovieObjects = [];
+
+    //dailyMixes.dailyMixBasedOnLikes.forEach( (movie) => {
+    movieObjects.map((movie) => {
+      const movieObjectOurDatabase = getMovieObjectOurDatabase(movie.id, "movie");
+      // console.log("movieObject: ", movieObject);
+      //setLoading(false);
+
+      if (movieObjectOurDatabase) {
+
+      
+        mixMovieObjects.push(movieObjectOurDatabase)
+      } else {
+        console.log("data.title does not exist?");
+      }
+    });
+    
+
+    //getMixFromOurDatabaseOnlyIDs()
+
+
+
+    // populate mixDetails
+
+    //if (movieNames && reasoning) {
+    if (mixMovieObjects) {
+      // res.json({ movieNames, reasoning });
+      res.json({ mixMovieObjects });
     } else {
       console.error("Failed to generate daily mix suggestion: ", suggestion);
       res.status(500).json({

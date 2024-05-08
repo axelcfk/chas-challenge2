@@ -152,6 +152,8 @@ export default function WatchListSlideMenu() {
         Show Details
       </button>
 
+      
+
       {showWatchListDetails ? (
         movieWatchListDetails && movieWatchListDetails.length > 0 ? (
           <SlideMenu>
