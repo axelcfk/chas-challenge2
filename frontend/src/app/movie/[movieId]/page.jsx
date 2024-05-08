@@ -9,7 +9,7 @@ import {
   FaStar,
   FaImage,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   postAddToLikeList,
   postAddToWatchList,
@@ -44,6 +44,7 @@ export default function MoviePage() {
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const params = useParams();
   const movieId = params.movieId; // Get movie ID from the URL parameter
+  const parallaxRef = useRef(null); // Reference for the parallax image
 
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
@@ -193,6 +194,23 @@ export default function MoviePage() {
     fetchSimilar();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const speed = 0.5; // Adjust this value to control the speed of the parallax effect
+      if (parallaxRef.current) {
+        parallaxRef.current.style.transform = `translateY(${
+          scrollTop * speed
+        }px)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const isMovieLiked = likedMovies.some(
     (movie) => movie.id === movieDetails?.id
   );
@@ -220,7 +238,7 @@ export default function MoviePage() {
         <div className="">
           <img
             id="img"
-            className="absolute top-0 left-0 w-full  object-cover z-0 "
+            className="absolute top-0 left-0 w-full  object-cover z-0  "
             src={movieDetails.backdrop}
             alt="Movie Backdrop"
           />
@@ -270,12 +288,13 @@ export default function MoviePage() {
                     {/* <p>{movieDetails.runtime.toString()} mins</p> */}
                   </div>
                   <div className="flex flex-col w-full justify-center items-center gap-4 ">
-                    <div className="relative ">
+                    <div className="relative  parallax-container">
                       <img
-                        className=" h-52 md:h-96 rounded-md w-auto"
+                        className=" h-52 md:h-96 rounded-md w-auto parallax-image"
                         src={movieDetails.poster}
                         alt="Movie Poster"
                         style={{ border: "1px solid grey" }}
+                        ref={parallaxRef}
                       />
                       <div
                         style={{
@@ -458,7 +477,7 @@ export default function MoviePage() {
           src={`https://www.youtube-nocookie.com/embed/${videos}`}
           width="100%" // Adjust the width as needed
           height="100%"
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           // allowfullscreen
         ></iframe>
