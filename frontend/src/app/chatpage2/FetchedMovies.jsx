@@ -7,8 +7,6 @@ import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
 import { postAddToWatchList, postRemoveFromWatchList } from "../utils";
 
-//? Lägga till TV4 Play?
-//TODO: ändra loggan för tele2play
 //! Dessa måste stavas exakt som dom gör på TMDB från api:et
 // Annars blir det "unavailable"
 const supportedServices = [
@@ -18,9 +16,13 @@ const supportedServices = [
   "Amazon Prime Video",
   "Disney Plus",
   "Tele2 Play",
+  "Apple TV",
+  "SVT",
+  "TV4 Play",
+  "Discovery+"
 ];
 
-//? dessa används inte???
+//? dessa används inte??? var kommer länkarna ifrån då?
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se", //visas //funkar
   "HBO Max": "https://play.hbomax.com/", //visas //?länk funkar ej
@@ -28,6 +30,10 @@ const streamingServiceLinks = {
   "Amazon Prime Video": "https://www.primevideo.com/", //visas //funkar
   "Disney Plus": "https://www.disneyplus.com/se", //visas //?länk funkar ej
   "Tele2 Play": "https://www.tele2play.se", //visas //?länk funkar ej
+  "Apple TV": "https://www.apple.com/se/tv/",
+  SVT: "https://www.svt.se/",
+  "TV4 Play": "https://www.tv4play.se/",
+  "Discovery+": "https://www.discoveryplus.se/",
 };
 
 const serviceLogos = {
@@ -37,6 +43,10 @@ const serviceLogos = {
   "Amazon Prime Video": "Prime1.svg",
   "Disney Plus": "/Disney1.svg",
   "Tele2 Play": "/tele2play.png",
+  "Apple TV": "/AppleTV1.svg",
+  SVT: "/SVTPlay.svg",
+  TV4Play: "/TV4Play.svg",
+  "Discovery+": "/Discovery+.svg",
 };
 
 export default function FetchedMovies({
@@ -82,12 +92,6 @@ export default function FetchedMovies({
     setShowToast(true);
     setTimeout(() => setShowToast(false), 1750);
   }
-
-
-
-
-
-  
 
   console.log("fetched är", movieDetails);
   return (
