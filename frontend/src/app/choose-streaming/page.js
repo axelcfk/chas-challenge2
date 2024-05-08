@@ -41,8 +41,10 @@ export default function ChooseStreaming() {
     { name: "Amazon Prime", logo: "prime.svg" },
     { name: "Disney+", logo: "/disney.png" },    
     { name: "Tele2Play", logo: "/tele2play.png" },
-    // { name: "Apple TV+", logo: "/apple-tv-logo.png" },
-    // { name: "Paramount", logo: "/paramount-plus-logo.jpeg" },
+    { name: "Apple TV+", logo: "/apple-tv-logo.png" },
+    { name: "TV4 Play", logo: "" },
+    { name: "TV4 Play", logo: "" },
+    { name: "TV4 Play", logo: "" },
   ];
 
   return (

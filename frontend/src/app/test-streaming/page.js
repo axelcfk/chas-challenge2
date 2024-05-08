@@ -11,7 +11,7 @@ export default function TestStreaming() {
 
   async function fetchAllProviders(apiKey) {
     const response = await fetch(
-      `https://api.themoviedb.org/3/watch/providers/movie?api_key=${apiKey}`
+      `https://api.themoviedb.org/3/watch/providers/movie?api_key=${apiKey}&watch_region=SE`
     );
     const data = await response.json();
 
