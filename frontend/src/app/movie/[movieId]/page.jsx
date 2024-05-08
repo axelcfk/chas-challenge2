@@ -66,106 +66,113 @@ export default function MoviePage() {
     }));
   }
 
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      if (!movieId) return;
+  //   const fetchMovieDetails = async () => {
+  //     if (!movieId) return;
 
-      setLoading(true);
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch(
+  //         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+  //       );
+  //       const data = await response.json();
+
+  //       // await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
+
+  //       setMovieDetails({
+  //         id: data.id,
+  //         title: data.title,
+  //         overview: data.overview,
+  //         voteAverage: data.vote_average,
+  //         release: data.release_date,
+  //         tagline: data.tagline,
+  //         runtime: data.runtime,
+  //         backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
+  //         poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+  //       });
+
+  //       const creditsResponse = await fetch(
+  //         `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+  //       );
+  //       const creditsData = await creditsResponse.json();
+  //       setCredits({
+  //         director: creditsData.crew.find((person) => person.job === "Director")
+  //           ?.name,
+  //         actors: creditsData.cast.slice(0, 6).map((actor) => ({
+  //           // Only take the first six actors
+  //           name: actor.name,
+  //           personId: actor.id,
+  //           character: actor.character,
+  //           imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
+  //         })),
+  //         otherCrew: creditsData.crew
+  //           .filter((person) =>
+  //             ["Producer", "Screenplay", "Music"].includes(person.job)
+  //           )
+  //           .map((crew) => ({
+  //             name: crew.name,
+  //             job: crew.job,
+  //           })),
+  //       });
+
+  //       fetchActorsImages(creditsData.cast.slice(0, 6));
+  //     } catch (error) {
+  //       console.error("Error fetching movie details:", error);
+  //       setMovieDetails(null); // Handle errors by setting details to null
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   credits.actors.forEach((actor) => {
+  //     console.log(`Actor Name: ${actor.name}, Person ID: ${actor.personId}`);
+  //     // You can use `actor.personId` to fetch the actor's images or more details
+  //   });
+
+  //   fetchMovieDetails();
+  // }, [movieId]);
+  useEffect(() => {
+    async function fetchMoviePageDetails(movieId) {
+      if (!movieId) {
+        console.error("Missing required parameter: movieId");
+        return;
+      }
+
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+          "http://localhost:3010/fetchingmoviepagedetails",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ movieId }),
+          }
         );
         const data = await response.json();
+        console.log("fetched data:", data);
 
-        await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
-
-        setMovieDetails({
-          id: data.id,
-          title: data.title,
-          overview: data.overview,
-          voteAverage: data.vote_average,
-          release: data.release_date,
-          tagline: data.tagline,
-          runtime: data.runtime,
-          backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
-          poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-        });
-
-        const creditsResponse = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-        );
-        const creditsData = await creditsResponse.json();
-        setCredits({
-          director: creditsData.crew.find((person) => person.job === "Director")
-            ?.name,
-          actors: creditsData.cast.slice(0, 6).map((actor) => ({
-            // Only take the first six actors
-            name: actor.name,
-            personId: actor.id,
-            character: actor.character,
-            imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
-          })),
-          otherCrew: creditsData.crew
-            .filter((person) =>
-              ["Producer", "Screenplay", "Music"].includes(person.job)
-            )
-            .map((crew) => ({
-              name: crew.name,
-              job: crew.job,
-            })),
-        });
-
-        fetchActorsImages(creditsData.cast.slice(0, 6));
+        if (data.error) {
+          console.error(data.error);
+        } else {
+          setMovieDetails(data.movieDetails);
+          setCredits(data.movieDetails.credits);
+          setActorImages(
+            data.movieDetails.credits.actors.reduce((acc, actor) => {
+              acc[actor.personId] = actor.imagePath;
+              return acc;
+            }, {})
+          );
+          console.log("actorImages:", actorImages);
+        }
       } catch (error) {
-        console.error("Error fetching movie details:", error);
-        setMovieDetails(null); // Handle errors by setting details to null
+        console.error("Error fetching movie page details:", error);
       } finally {
         setLoading(false);
       }
-    };
-
-    credits.actors.forEach((actor) => {
-      console.log(`Actor Name: ${actor.name}, Person ID: ${actor.personId}`);
-      // You can use `actor.personId` to fetch the actor's images or more details
-    });
-
-    fetchMovieDetails();
-  }, [movieId]);
-
-  useEffect(() => {
-    const fetchLikeList = async () => {
-      try {
-        const movies = await checkLikeList();
-        setLikedMovies(movies);
-        if (movies.some((movie) => movie.id === movieId)) {
-          setLikeButtonClicked(true);
-        }
-      } catch (error) {
-        console.error("Failed to fetch liked movies list");
-      }
-    };
-
-    fetchLikeList();
-  }, []);
-
-  useEffect(() => {
-    async function fetchVideo() {
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
-        );
-
-        const data = await response.json();
-        console.log("videodata:", data.results[0].key);
-        setVideos(data.results[1].key);
-        return data.results;
-      } catch (error) {
-        console.error("Error fetching streaming services:", error);
-        return {};
-      }
     }
-    fetchVideo();
-  }, []);
+
+    fetchMoviePageDetails(movieId);
+  }, [movieId]);
 
   useEffect(() => {
     async function fetchSimilar() {
@@ -186,37 +193,9 @@ export default function MoviePage() {
     fetchSimilar();
   }, []);
 
-  async function fetchActorsImages(actors) {
-    const imageFetchPromises = actors.map((actor) =>
-      fetch(
-        `https://api.themoviedb.org/3/person/${actor.id}/images?api_key=${movieAPI_KEY}`
-      )
-        .then((response) => response.json())
-        .then((data) => ({
-          id: actor.id,
-          image: data.profiles[0] ? data.profiles[0].file_path : null,
-        }))
-    );
-
-    try {
-      const imagesResults = await Promise.all(imageFetchPromises);
-      const newActorImages = imagesResults.reduce((acc, result) => {
-        acc[result.id] = result.image;
-        return acc;
-      }, {});
-      setActorImages(newActorImages);
-    } catch (error) {
-      console.error("Error fetching actor images:", error);
-    }
-  }
-
   const isMovieLiked = likedMovies.some(
     (movie) => movie.id === movieDetails?.id
   );
-
-  // if (loading) {
-  //   return <div>Loading movie details...</div>;
-  // }
 
   function LoadingIndicator() {
     return (
@@ -231,9 +210,6 @@ export default function MoviePage() {
   if (!movieDetails) {
     return <div>No movie found. Try a different search!</div>;
   }
-  // console.log(likeButtonClicked);
-  // console.log("Credit are:", credits.actors);
-  // console.log("Credit actors ids are:", credits.actors[0].name);
 
   console.log("similar object", similar);
 
@@ -528,7 +504,7 @@ export default function MoviePage() {
         <h2 className="text-left">Similar to {movieDetails.title}</h2>
       </div>
       <div className=" flex justify-center items-center w-full  ">
-        {similar && similar.length > 0 && similar.poster_path != 0 && (
+        {similar && similar.length > 0 && similar.poster_path != "" && (
           <SlideMenu>
             {similar.map((movie, index) => (
               <div
