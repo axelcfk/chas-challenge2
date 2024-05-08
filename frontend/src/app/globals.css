@@ -1,10 +1,18 @@
-@tailwind base;
+/* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
 
 /* html {
   background-color: black;
 } */
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Manrope", sans-serif;
+}
 
 .loading-indicator {
   height: 100%;
@@ -64,7 +72,7 @@
   background: linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0) 0%,
-    #110a1a 65%
+    #110a1a 55%
   );
   z-index: 1;
 }
@@ -205,7 +213,7 @@
   background: linear-gradient(
       to bottom,
       rgba(38, 24, 57, 0.6) 0%,
-      /* gradient från ovan*/ rgba(64, 41, 94, 1) 80% /* gradient nere*/
+      /* gradient från ovan*/ rgba(17, 10, 26, 1) 80% /* gradient nere*/
     ),
     url("/oppenheimerIMDB.jpg");
   background-size: cover;

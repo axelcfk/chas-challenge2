@@ -3,9 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 
-//? "Friends" on this page?
-//? Like list and watchlist on this page?
-
 export default function ChooseStreaming() {
   // här sparas dom valda streamingtjänsterna
   const [selectedServices, setSelectedServices] = useState([]);
@@ -38,26 +35,27 @@ export default function ChooseStreaming() {
   };
 
   const services = [
-    { name: "Netflix", logo: "/Netflix_icon.svg.png" },
-    { name: "HBO Max", logo: "/hbo-max.png" },
-    { name: "Viaplay", logo: "/viaplay-logo.jpeg" },
-    { name: "Amazon Prime", logo: "/amazon-prime-video-logo.jpeg" },
-    { name: "Disney+", logo: "/disney-plus-logo.png" },
-    // { name: "Hulu", logo: "/" },
-    // { name: "Apple TV+", logo: "/apple-tv-logo.png" },
-    // { name: "Paramount", logo: "/paramount-plus-logo.jpeg" },
-    { name: "Tele2Play", logo: "/tele2play-logo.png" },
+    { name: "Netflix", logo: "/netflix.svg" },
+    { name: "HBO Max", logo: "/hbo.svg" },
+    { name: "Viaplay", logo: "/viaplay.svg" },
+    { name: "Amazon Prime", logo: "prime.svg" },
+    { name: "Disney+", logo: "/disney.png" },    
+    { name: "Tele2Play", logo: "/tele2play.png" },
+    { name: "Apple TV+", logo: "/apple-tv-logo.png" },
+    { name: "TV4 Play", logo: "" },
+    { name: "TV4 Play", logo: "" },
+    { name: "TV4 Play", logo: "" },
   ];
 
   return (
-    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-[#3F295E]">
+    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-[#110A1A]">
       <div>
         <h1 className="text-3xl font-bold text-white">Streaming services</h1>
         <p className="mt-6 text-sm text-white">
           Choose which streaming services you are going to use. This means you
           will only be given recommendations based on your choice of
           streaming-services. This can be changed later in your profile. Choose
-          skip to see all movies.
+          "skip" to see all movies.
         </p>
       </div>
       <div className="container mt-12 w-full max-w-4xl mx-auto mb-12">
@@ -71,7 +69,7 @@ export default function ChooseStreaming() {
               }`}
               onClick={() => handleSelectService(service.name)}
             >
-              <div className="square-content">
+              <div className="square-content p-4">
                 <img
                   src={service.logo}
                   alt={service.name}

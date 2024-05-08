@@ -27,7 +27,7 @@ export default function InputField({
       className="h-14 flex justify-center items-center rounded-xl z-10"
     >
       <input
-        className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3"
+        className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3 border-none"
         type="text"
         value={input}
         onChange={handleInputChange}
@@ -35,12 +35,12 @@ export default function InputField({
         onKeyDown={handleKeyDown}
       />
       <button
-        className="flex justify-center items-center"
+        className="flex justify-center items-center border-none bg-transparent"
         onClick={handleQuerySubmit}
         disabled={!input}
       >
         <FaArrowCircleRight
-          className={`h-8 w-8 mr-5 ${
+          className={`h-8 w-8 mr-5    ${
             input
               ? " hover:text-slate-300 text-slate-100 hover:cursor-pointer"
               : " text-slate-400"

@@ -1,9 +1,8 @@
 "use client";
-
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   FaPlus,
-  FaThumbsUp,
   FaRegHeart,
   FaHeart,
   FaCheck,
@@ -20,6 +19,7 @@ import {
 } from "@/app/utils";
 import { checkLikeList } from "@/app/utils";
 import BackButton from "@/app/components/BackButton";
+import SlideMenu from "@/app/components/SlideMenu";
 
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -32,20 +32,9 @@ export default function MoviePage() {
   const [seen, setSeen] = useState(false);
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
-
-  function handleButtonClicked(id) {
-    setWatches((prevWatches) => ({
-      ...prevWatches,
-      [id]: !prevWatches[id],
-    }));
-  }
-  function handleLikeButtonClicked(id) {
-    setLikes((prevLikes) => ({
-      ...prevLikes,
-      [id]: !prevLikes[id],
-    }));
-  }
-
+  const [actorImages, setActorImages] = useState({});
+  const [videos, setVideos] = useState({});
+  const [similar, setSimilar] = useState([]);
   const [credits, setCredits] = useState({
     director: "",
     actors: [],
@@ -64,82 +53,149 @@ export default function MoviePage() {
     setActorsToggle(!actorsToggle);
   }
 
+  function handleButtonClicked(id) {
+    setWatches((prevWatches) => ({
+      ...prevWatches,
+      [id]: !prevWatches[id],
+    }));
+  }
+  function handleLikeButtonClicked(id) {
+    setLikes((prevLikes) => ({
+      ...prevLikes,
+      [id]: !prevLikes[id],
+    }));
+  }
+
+  //   const fetchMovieDetails = async () => {
+  //     if (!movieId) return;
+
+  //     setLoading(true);
+  //     try {
+  //       const response = await fetch(
+  //         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+  //       );
+  //       const data = await response.json();
+
+  //       // await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
+
+  //       setMovieDetails({
+  //         id: data.id,
+  //         title: data.title,
+  //         overview: data.overview,
+  //         voteAverage: data.vote_average,
+  //         release: data.release_date,
+  //         tagline: data.tagline,
+  //         runtime: data.runtime,
+  //         backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
+  //         poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+  //       });
+
+  //       const creditsResponse = await fetch(
+  //         `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+  //       );
+  //       const creditsData = await creditsResponse.json();
+  //       setCredits({
+  //         director: creditsData.crew.find((person) => person.job === "Director")
+  //           ?.name,
+  //         actors: creditsData.cast.slice(0, 6).map((actor) => ({
+  //           // Only take the first six actors
+  //           name: actor.name,
+  //           personId: actor.id,
+  //           character: actor.character,
+  //           imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
+  //         })),
+  //         otherCrew: creditsData.crew
+  //           .filter((person) =>
+  //             ["Producer", "Screenplay", "Music"].includes(person.job)
+  //           )
+  //           .map((crew) => ({
+  //             name: crew.name,
+  //             job: crew.job,
+  //           })),
+  //       });
+
+  //       fetchActorsImages(creditsData.cast.slice(0, 6));
+  //     } catch (error) {
+  //       console.error("Error fetching movie details:", error);
+  //       setMovieDetails(null); // Handle errors by setting details to null
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   credits.actors.forEach((actor) => {
+  //     console.log(`Actor Name: ${actor.name}, Person ID: ${actor.personId}`);
+  //     // You can use `actor.personId` to fetch the actor's images or more details
+  //   });
+
+  //   fetchMovieDetails();
+  // }, [movieId]);
   useEffect(() => {
-    const fetchLikeList = async () => {
-      try {
-        const movies = await checkLikeList();
-        setLikedMovies(movies);
-        if (movies.some((movie) => movie.id === movieId)) {
-          setLikeButtonClicked(true);
-        }
-      } catch (error) {
-        console.error("Failed to fetch liked movies list");
+    async function fetchMoviePageDetails(movieId) {
+      if (!movieId) {
+        console.error("Missing required parameter: movieId");
+        return;
       }
-    };
 
-    fetchLikeList();
-  }, []);
-
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      if (!movieId) return;
-
-      setLoading(true);
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+          "http://localhost:3010/fetchingmoviepagedetails",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ movieId }),
+          }
         );
         const data = await response.json();
+        console.log("fetched data:", data);
 
-        await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
-
-        setMovieDetails({
-          id: data.id,
-          title: data.title,
-          overview: data.overview,
-          voteAverage: data.vote_average,
-          release: data.release_date,
-          tagline: data.tagline,
-          runtime: data.runtime,
-          backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
-          poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-        });
-
-        const creditsResponse = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-        );
-        const creditsData = await creditsResponse.json();
-        setCredits({
-          director: creditsData.crew.find((person) => person.job === "Director")
-            ?.name,
-          actors: creditsData.cast.slice(0, 4).map((actor) => ({
-            name: actor.name,
-            character: actor.character,
-          })),
-          otherCrew: creditsData.crew
-            .filter((person) =>
-              ["Producer", "Screenplay", "Music"].includes(person.job)
-            )
-            .map((crew) => ({ name: crew.name, job: crew.job })),
-        });
+        if (data.error) {
+          console.error(data.error);
+        } else {
+          setMovieDetails(data.movieDetails);
+          setCredits(data.movieDetails.credits);
+          setActorImages(
+            data.movieDetails.credits.actors.reduce((acc, actor) => {
+              acc[actor.personId] = actor.imagePath;
+              return acc;
+            }, {})
+          );
+          console.log("actorImages:", actorImages);
+        }
       } catch (error) {
-        console.error("Error fetching movie details:", error);
-        setMovieDetails(null); // Handle errors by setting details to null
+        console.error("Error fetching movie page details:", error);
       } finally {
         setLoading(false);
       }
-    };
+    }
 
-    fetchMovieDetails();
+    fetchMoviePageDetails(movieId);
   }, [movieId]);
+
+  useEffect(() => {
+    async function fetchSimilar() {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
+        );
+
+        const data = await response.json();
+        console.log("similar:", data.results);
+        setSimilar(data.results);
+        return data.results;
+      } catch (error) {
+        console.error("Error fetching streaming services:", error);
+        return {};
+      }
+    }
+    fetchSimilar();
+  }, []);
 
   const isMovieLiked = likedMovies.some(
     (movie) => movie.id === movieDetails?.id
   );
-
-  // if (loading) {
-  //   return <div>Loading movie details...</div>;
-  // }
 
   function LoadingIndicator() {
     return (
@@ -154,11 +210,11 @@ export default function MoviePage() {
   if (!movieDetails) {
     return <div>No movie found. Try a different search!</div>;
   }
-  console.log(likeButtonClicked);
-  console.log("Credits are:", credits.actors);
+
+  console.log("similar object", similar);
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen w-screen bg-[#110A1A] text-slate-100 overflow-y">
+    <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
       {movieDetails.backdrop && (
         <div className="">
@@ -189,7 +245,7 @@ export default function MoviePage() {
                 {" "}
                 <div className="w-full flex flex-row justify-center items-center  ">
                   <div className="w-full">
-                    <h2 className="text-2xl font-semibold mb-5 text-slate-50 mr-4">
+                    <h2 className="text-2xl font-semibold  text-slate-50 mr-4">
                       {" "}
                       {movieDetails.title}
                     </h2>
@@ -243,12 +299,20 @@ export default function MoviePage() {
                             );
                           }
                         }}
-                        className="absolute top-0 right-5 -m-4  rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
+                        className="absolute top-3 right-5 -m-4 rounded-xl h-16 w-10 flex justify-center items-center hover:cursor-pointer"
                       >
                         {!likes[movieDetails.id] ? (
-                          <FaRegHeart className="h-5 w-5 text-red-600" />
+                          <div className="flex flex-col justify-center items-center">
+                            <FaRegHeart className="h-5 w-5 text-red-600 mb-1" />
+                            <p className="text-red-600 mb-1 ">Like</p>
+                          </div>
                         ) : (
-                          <FaHeart className="h-5 w-5 text-red-600" />
+                          <div className="flex flex-col justify-center items-center">
+                            <FaHeart className="h-5 w-5 text-red-600 mb-1" />
+                            <p className="text-red-600 mb-1 font-semibold">
+                              Like
+                            </p>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -270,7 +334,7 @@ export default function MoviePage() {
                             ); // Removes from like list if liked
                           }
                         }}
-                        className="w-full h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3"
+                        className="w-full h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3 border-none"
                       >
                         {!watches[movieDetails.id] ? (
                           <FaPlus className="text-2xl text-gray-200" />
@@ -297,7 +361,7 @@ export default function MoviePage() {
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className="mb-5  md:w-full  font-light">
+                        <p className="mb-5  md:w-full text-base font-light">
                           {movieDetails.overview.slice(0, 200)}...
                         </p>
                         {/* <p className="text-green-500 text-2xl">
@@ -388,27 +452,77 @@ export default function MoviePage() {
           )}
         </div>
       )}
+      <div className="w-full h-60">
+        <iframe
+          className="border-none"
+          src={`https://www.youtube-nocookie.com/embed/${videos}`}
+          width="100%" // Adjust the width as needed
+          height="100%"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          // allowfullscreen
+        ></iframe>
+      </div>
       <div className="w-full pb-5 text-xl pt-20">
         <p>Actors</p>
       </div>
-      <div className="mb-5 font-light text-base flex  w-full justify-center items-center">
-        {credits &&
-          credits.actors.map((actor, index) => (
-            <div className="flex flex-col justify-center items-center w-full">
-              <div className="rounded-full bg-slate-100 h-20 w-20 flex justify-center items-center">
-                <FaImage className="text-slate-900 text-2xl" />
+      <div className="grid grid-cols-3 justify-center items-center w-full">
+        {credits.actors.map((actor, index) => (
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center p-2"
+          >
+            {actorImages[actor.personId] ? (
+              <div className="w-24 h-24 rounded-full  overflow-hidden bg-gray-300">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${
+                    actorImages[actor.personId]
+                  }`}
+                  alt={actor.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null; // Prevent looping
+                    e.target.src = "path_to_default_image.jpg"; // Fallback image
+                  }}
+                />
               </div>
-              <div className="h-40 flex flex-col justify-start items-center w-5">
-                <p
-                  key={index}
-                  className="text-sm flex justify-center items-centers  w-full  h-20 pt-10"
-                >
-                  {actor.name}
-                </p>
-                <p>{actor.character}</p>
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gray-300 flex justify-center items-center">
+                <span className="text-sm text-gray-500">Loading...</span>
               </div>
+            )}
+            <div className="  h-20">
+              <p className="text-sm text-center mt-1 mb-2 font-semibold ">
+                {actor.name}
+              </p>
+              <p className="text-xs text-center ">{actor.character}</p>
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+      <div className=" w-full pt-16 pb-10">
+        <h2 className="text-left">Similar to {movieDetails.title}</h2>
+      </div>
+      <div className=" flex justify-center items-center w-full  ">
+        {similar && similar.length > 0 && similar.poster_path != "" && (
+          <SlideMenu>
+            {similar.map((movie, index) => (
+              <div
+                key={index}
+                className="inline-block justify-center items-center p-2 "
+              >
+                <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                  <img
+                    className="h-80 rounded-xl hover:cursor-pointer"
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt="poster"
+                  />
+                </Link>
+                <p className="h-20">{movie.original_title}</p>
+              </div>
+            ))}
+          </SlideMenu>
+        )}
       </div>
     </div>
   );

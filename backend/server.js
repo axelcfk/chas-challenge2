@@ -1298,69 +1298,262 @@ app.post("/streaming-services", (req, res) => {
   }
 });
 
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
-
 //It will also provide a TMDB id for each movie in the format of: TMDB ID: [number].
 
-app.post("/moviesuggest3", async (req, res) => {
-  const likedMovieTitles = likedMoviesList.map((movie) => {
-    return movie.title;
-  });
+///////////////FUNKTIONER MovieId-page////////////////////////
 
-  console.log("likedMovieTitles: ", likedMovieTitles);
+const videos = [];
+const actorImages = [];
+const movieDetails = [];
+const credits = [];
 
-  const likedMovieTitlesString = likedMovieTitles.join(", ");
-  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
-  const userQuery = req.body.query;
-  console.log("Received user query:", userQuery);
+console.log("moviedetails on backend is:", movieDetails);
+
+// async function fetchVideo() {
+//   try {
+//     const response = await fetch(
+//       `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
+//     );
+
+//     const data = await response.json();
+//     console.log("videodata:", data.results[0].key);
+//     videos.push(data.results[1].key);
+//     return data.results;
+//   } catch (error) {
+//     console.error("Error fetching streaming services:", error);
+//     return {};
+//   }
+// }
+
+// const fetchActorsImages = async (actors) => {
+//   const imageFetchPromises = actors.map((actor) =>
+//     fetch(
+//       `https://api.themoviedb.org/3/person/${actor.id}/images?api_key=${movieAPI_KEY}`
+//     )
+//       .then((response) => response.json())
+//       .then((data) => ({
+//         id: actor.id,
+//         image:
+//           data.profiles && data.profiles[0] ? data.profiles[0].file_path : null,
+//       }))
+//       .catch((error) => {
+//         console.error(`Error fetching images for actor ID ${actor.id}:`, error);
+//         return { id: actor.id, image: null };
+//       })
+//   );
+
+//   try {
+//     const imagesResults = await Promise.all(imageFetchPromises);
+//     return imagesResults.reduce((acc, result) => {
+//       acc[result.id] = result.image;
+//       return acc;
+//     }, {});
+//   } catch (error) {
+//     console.error("Error fetching actor images:", error);
+//     return {};
+//   }
+// };
+
+// const fetchMovieDetails = async (movieId) => {
+//   if (!movieId) return null;
+
+//   try {
+//     const response = await fetch(
+//       `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+//     );
+//     const data = await response.json();
+
+//     const creditsResponse = await fetch(
+//       `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+//     );
+//     const creditsData = await creditsResponse.json();
+
+//     const actors = creditsData.cast.slice(0, 6).map((actor) => ({
+//       name: actor.name,
+//       personId: actor.id,
+//       character: actor.character,
+//       imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
+//     }));
+
+//     const actorImages = await fetchActorsImages(actors);
+
+//     const movieDetails = {
+//       id: data.id,
+//       title: data.title,
+//       overview: data.overview,
+//       voteAverage: data.vote_average,
+//       release: data.release_date,
+//       tagline: data.tagline,
+//       runtime: data.runtime,
+//       backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
+//       poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
+//       credits: {
+//         director: creditsData.crew.find((person) => person.job === "Director")
+//           ?.name,
+//         actors: actors.map((actor) => ({
+//           ...actor,
+//           imagePath: actorImages[actor.personId],
+//         })),
+//         otherCrew: creditsData.crew
+//           .filter((person) =>
+//             ["Producer", "Screenplay", "Music"].includes(person.job)
+//           )
+//           .map((crew) => ({ name: crew.name, job: crew.job })),
+//       },
+//     };
+
+//     return movieDetails;
+//   } catch (error) {
+//     console.error("Error fetching movie details:", error);
+//     return null;
+//   }
+// };
+
+// Define `fetchCompleteMovieDetails` function
+
+const baseImageUrl = "https://image.tmdb.org/t/p/w500";
+
+const fetchCompleteMovieDetails = async (movieId) => {
+  if (!movieId) return null;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content:
-            "This assistant will suggest 3 movies based on user descriptions.  Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
-            likedMovieTitlesString +
-            "it will not be suggested. If you have no suggestions explain in your response.",
-        },
-        {
-          role: "user",
-          content: userQuery,
-        },
-      ],
-    });
+    const [movieResponse, creditsResponse, videosResponse, similarResponse] =
+      await Promise.all([
+        fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+        ),
+        fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+        ),
+        fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
+        ),
+        fetch(
+          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
+        ),
+      ]);
 
-    // Entire AI response
-    console.log("AI response:", JSON.stringify(completion, null, 2));
+    const [movieData, creditsData, videosData, similarData] = await Promise.all(
+      [
+        movieResponse.json(),
+        creditsResponse.json(),
+        videosResponse.json(),
+        similarResponse.json(),
+      ]
+    );
 
-    const suggestion = completion.choices[0].message.content;
-    console.log("Suggestion structure:", suggestion);
-    const movieNames = parseMovieNames(suggestion);
-    console.log("Movie names parsed: ", movieNames);
+    const director = creditsData.crew.find(
+      (person) => person.job === "Director"
+    )?.name;
 
-    // Since TMDB ID handling and additional logic are commented out, I will leave them out for clarity.
-    if (movieNames.length === 3) {
-      res.json({ movieNames });
+    const primaryActors = creditsData.cast.slice(0, 6).map((actor) => ({
+      name: actor.name,
+      personId: actor.id,
+      character: actor.character,
+      imagePath: actor.profile_path
+        ? `${baseImageUrl}${actor.profile_path}`
+        : null,
+    }));
+
+    const actorImages = await Promise.all(
+      primaryActors.map((actor) =>
+        fetch(
+          `https://api.themoviedb.org/3/person/${actor.personId}/images?api_key=${movieAPI_KEY}`
+        )
+          .then((res) => res.json())
+          .then((data) => ({
+            id: actor.personId,
+            image:
+              data.profiles && data.profiles[0]
+                ? `${baseImageUrl}${data.profiles[0].file_path}`
+                : null,
+          }))
+          .catch((error) => {
+            console.error(
+              `Error fetching images for actor ID ${actor.personId}:`,
+              error
+            );
+            return { id: actor.personId, image: null };
+          })
+      )
+    );
+
+    const actorImagesMap = actorImages.reduce((acc, result) => {
+      acc[result.id] = result.image;
+      return acc;
+    }, {});
+
+    const updatedActors = primaryActors.map((actor) => ({
+      ...actor,
+      imagePath: actorImagesMap[actor.personId] || actor.imagePath,
+    }));
+
+    const videoKey = videosData.results[0]?.key || null;
+    const similarMovies = similarData.results.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      poster: movie.poster_path ? `${baseImageUrl}${movie.poster_path}` : null,
+    }));
+
+    const movieDetails = {
+      id: movieData.id,
+      title: movieData.title,
+      overview: movieData.overview,
+      voteAverage: movieData.vote_average,
+      release: movieData.release_date,
+      tagline: movieData.tagline,
+      runtime: movieData.runtime,
+      backdrop: movieData.backdrop_path
+        ? `${baseImageUrl}${movieData.backdrop_path}`
+        : null,
+      poster: movieData.poster_path
+        ? `${baseImageUrl}${movieData.poster_path}`
+        : null,
+      credits: {
+        director: director,
+        actors: updatedActors,
+        otherCrew: creditsData.crew
+          .filter((person) =>
+            ["Producer", "Screenplay", "Music"].includes(person.job)
+          )
+          .map((crew) => ({ name: crew.name, job: crew.job })),
+      },
+      videoKey: videoKey,
+      similarMovies: similarMovies,
+    };
+
+    return movieDetails;
+  } catch (error) {
+    console.error("Error fetching complete movie details:", error);
+    return null;
+  }
+};
+
+app.post("/fetchingmoviepagedetails", async (req, res) => {
+  try {
+    const { movieId } = req.body;
+
+    if (!movieId) {
+      return res
+        .status(400)
+        .json({ error: "Missing required parameter: movieId" });
+    }
+
+    const movieDetails = await fetchCompleteMovieDetails(movieId);
+
+    if (movieDetails) {
+      res.json({ movieDetails });
     } else {
-      res.json({ suggestion });
-      console.error(
-        "Failed to extract Movie Names from AI response:",
-        suggestion
-      );
-
-      // res.status(500).json({
-      //   error: "Failed to extract Movie Names from AI response",
-      // });
+      res.json({ error: "Error fetching movie details" });
     }
   } catch (error) {
-    console.error("Error in /moviesuggest endpoint:", error);
-    res.status(500).json({
-      error: "Unable to process the movie suggestion at this time.",
-      details: error.message,
-    });
+    console.error("1:Error adding movie to watch list:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
+});
+
+///////////////////////////////////////////////////
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on http://localhost:${port}`);
 });

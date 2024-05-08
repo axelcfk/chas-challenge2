@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import RatingFilter from "../filter-components/FilterMenu";
+import RatingFilter from "../filter-components/RatingFilter";
 
 function MovieSearch() {
   const [inputValue, setInputValue] = useState("");
@@ -81,10 +81,13 @@ function MovieSearch() {
         ratingFilter={ratingFilter}
         setRatingFilter={setRatingFilter}
       />
-      <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 border-solid rounded-md ">
+      <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md ">
         {filteredMovies.map((movie) => (
-          <li key={movie.id}>
-            <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+          <li className="list-none " key={movie.id}>
+            <Link
+              className="text-black no-underline hover:underline"
+              href={`/movie/${encodeURIComponent(movie.id)}`}
+            >
               {movie.title}{" "}
             </Link>
           </li>

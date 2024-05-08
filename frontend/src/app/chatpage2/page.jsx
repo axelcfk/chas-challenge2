@@ -15,10 +15,7 @@ const streamingServiceLinks = {
   HBOMax: "https://www.hbo.com/se",
   Viaplay: "https://www.viaplay.com/se", //funkar
   "Amazon Prime Video": "https://www.primevideo.com/", //funkar
-  "Disney+": "https://www.disneyplus.com/se", 
-  // Hulu: "https://www.hulu.com/se/watch/",
-  // Paramount: "https://www.paramount.com/se",
-  // Mubi: "https://www.mubi.com/se/movie/",
+  "Disney+": "https://www.disneyplus.com/se",
 };
 
 // Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
@@ -26,15 +23,12 @@ const streamingServiceLinks = {
 // inte känner till)
 const isAvailableOnSupportedServices = (streaming) => {
   const supportedServices = [
-    "Netflix",
-    "HBO Max",
-    "Viaplay",
-    "Amazon Prime",
-    "Disney+",
-    "Tele2Play",
-    // "Paramount",
-    // "Mubi", 
-    // "Hulu",
+    { name: "Netflix", logo: "/netflix.svg" },
+    { name: "HBO Max", logo: "/logo.svg" },
+    { name: "Viaplay", logo: "/viaplay.png" },
+    { name: "Amazon Prime", logo: "prime.svg" },
+    { name: "Disney+", logo: "/disney.png" },
+    { name: "Tele2Play", logo: "/tele2play.png" },
   ];
   return streaming?.flatrate?.some((provider) =>
     supportedServices.includes(provider.provider_name)
@@ -213,7 +207,7 @@ export default function ChatPage2() {
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
   return (
-    <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
+    <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-lvh  text-slate-100 z-0 pb-5">
       {/* <button onClick={handleNavigation}>Go Back</button> */}
       {/* <BackButton /> */}
       {errorMessage && !loading && (
@@ -241,7 +235,7 @@ export default function ChatPage2() {
             </video>
           </div>
           {!loading ? (
-            <p className="px-5 text-xl flex flex-col items-center  h-40 ">
+            <p className="px-5 text-xl flex flex-col items-center  h-24 ">
               {" "}
               <span className="mb-4 text-2xl font-semibold text-center">
                 I'm your AI movie matcher
@@ -252,7 +246,7 @@ export default function ChatPage2() {
               </span>{" "}
             </p>
           ) : (
-            <p className="px-5 text-xl flex flex-col items-center  h-40 ">
+            <p className="px-5 text-xl flex flex-col items-center  h-24 ">
               {" "}
               <span className="mb-4 text-2xl font-semibold text-center">
                 Finding the best match for you...

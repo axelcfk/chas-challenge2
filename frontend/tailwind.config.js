@@ -8,13 +8,31 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "deep-purple": "#241838", // Custom color
-        "lighter-purple": "#362B4E", // Custom color
+        "deep-purple": "#241838", // custom
+        "lighter-purple": "#362B4E", // custom
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      keyframes: {
+        bounce: {
+          "0%, 100%": {
+            transform: "translateY(-25%)",
+            animationTimingFunction: "cubic-bezier(0.8, 0, 1, 1)",
+          },
+          "50%": {
+            transform: "translateY(0)",
+            animationTimingFunction: "cubic-bezier(0, 0, 0.2, 1)",
+          },
+        },
+      },
+      animation: {
+        "bounce-up": "bounce 0.5s infinite",
+      },
+      fontFamily: {
+        manrope: ["Manrope", "sans-serif"],
       },
     },
   },
