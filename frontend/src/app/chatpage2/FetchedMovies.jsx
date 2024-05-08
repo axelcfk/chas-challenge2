@@ -20,7 +20,7 @@ const supportedServices = [
   "Tele2 Play",
 ];
 
-//? dessa används inte?
+//? dessa används inte???
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se", //visas //funkar
   "HBO Max": "https://play.hbomax.com/", //visas //?länk funkar ej
@@ -82,6 +82,12 @@ export default function FetchedMovies({
     setShowToast(true);
     setTimeout(() => setShowToast(false), 1750);
   }
+
+
+
+
+
+  
 
   console.log("fetched är", movieDetails);
   return (
