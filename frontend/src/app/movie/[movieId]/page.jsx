@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   FaPlus,
@@ -19,6 +19,7 @@ import {
 } from "@/app/utils";
 import { checkLikeList } from "@/app/utils";
 import BackButton from "@/app/components/BackButton";
+import SlideMenu from "@/app/components/SlideMenu";
 
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -33,7 +34,7 @@ export default function MoviePage() {
   const [likes, setLikes] = useState({});
   const [actorImages, setActorImages] = useState({});
   const [videos, setVideos] = useState({});
-  const [similar, setSimilar] = useState({});
+  const [similar, setSimilar] = useState([]);
   const [credits, setCredits] = useState({
     director: "",
     actors: [],
@@ -174,8 +175,8 @@ export default function MoviePage() {
         );
 
         const data = await response.json();
-        console.log("videodata:", data.results[0].key);
-        setVideos(data.results[1].key);
+        console.log("similar:", data.results);
+        setSimilar(data.results);
         return data.results;
       } catch (error) {
         console.error("Error fetching streaming services:", error);
@@ -234,7 +235,7 @@ export default function MoviePage() {
   // console.log("Credit are:", credits.actors);
   // console.log("Credit actors ids are:", credits.actors[0].name);
 
-  console.log("object");
+  console.log("similar object", similar);
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -522,6 +523,30 @@ export default function MoviePage() {
             </div>
           </div>
         ))}
+      </div>
+      <div className=" w-full pt-16 pb-10">
+        <h2 className="text-left">Similar to {movieDetails.title}</h2>
+      </div>
+      <div className=" flex justify-center items-center w-full  ">
+        {similar && similar.length > 0 && similar.poster_path != 0 && (
+          <SlideMenu>
+            {similar.map((movie, index) => (
+              <div
+                key={index}
+                className="inline-block justify-center items-center p-2 "
+              >
+                <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                  <img
+                    className="h-80 rounded-xl hover:cursor-pointer"
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt="poster"
+                  />
+                </Link>
+                <p className="h-20">{movie.original_title}</p>
+              </div>
+            ))}
+          </SlideMenu>
+        )}
       </div>
     </div>
   );
