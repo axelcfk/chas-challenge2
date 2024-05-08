@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
+//TODO: ta bort konstig margin/scroll på sidan? (efter tailwind base?)
+
 export default function ChooseStreaming() {
   // här sparas dom valda streamingtjänsterna
   const [selectedServices, setSelectedServices] = useState([]);
@@ -34,21 +36,24 @@ export default function ChooseStreaming() {
     }
   };
 
+
+  //? vissa stylas inte trots .svg
+  //? färg-loggor på denna sida?
   const services = [
     { name: "Netflix", logo: "/netflix.svg" },
     { name: "HBO Max", logo: "/hbo.svg" },
     { name: "Viaplay", logo: "/viaplay.svg" },
-    { name: "Amazon Prime", logo: "prime.svg" },
-    { name: "Disney+", logo: "/disney.png" },    
+    { name: "Amazon Prime", logo: "/prime.svg" },
+    { name: "Disney+", logo: "/disney.png" },
     { name: "Tele2Play", logo: "/tele2play.png" },
-    { name: "Apple TV+", logo: "/apple-tv-logo.png" },
-    { name: "TV4 Play", logo: "" },
-    { name: "TV4 Play", logo: "" },
-    { name: "TV4 Play", logo: "" },
+    { name: "Apple TV+", logo: "/appletv.svg" },
+    { name: "TV4 Play", logo: "/tv4play.svg" },
+    { name: "SVT Play", logo: "/svtplay.svg" },
+    { name: "Discovery+", logo: "/discovery+.svg" },
   ];
 
   return (
-    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-[#110A1A]">
+    <main className="py-10 px-5 h-screen w-screen flex flex-col items-center bg-[#110A19]">
       <div>
         <h1 className="text-3xl font-bold text-white">Streaming services</h1>
         <p className="mt-6 text-sm text-white">
@@ -69,11 +74,11 @@ export default function ChooseStreaming() {
               }`}
               onClick={() => handleSelectService(service.name)}
             >
-              <div className="square-content p-4">
+              <div className="square-content">
                 <img
                   src={service.logo}
                   alt={service.name}
-                  className="mx-auto"
+                  className="mx-auto w-full p-7"
                 />
                 <div className="selected-overlay">✔</div>
               </div>
@@ -83,7 +88,9 @@ export default function ChooseStreaming() {
       </div>
       <div className="flex space-x-4 mt-24">
         <Link href={"/startpage"}>
-          <button className="streaming-btn w-56 rounded-3xl text-black">Skip</button>
+          <button className="streaming-btn w-56 rounded-3xl text-black">
+            Skip
+          </button>
         </Link>
         <Link href={"/startpage"}>
           <button
