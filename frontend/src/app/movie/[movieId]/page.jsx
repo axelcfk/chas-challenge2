@@ -215,7 +215,7 @@ export default function MoviePage() {
   // console.log("Credit actors ids are:", credits.actors[0].name);
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen w-screen bg-[#110A1A] text-slate-100 overflow-y">
+    <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
       {movieDetails.backdrop && (
         <div className="">
@@ -246,7 +246,7 @@ export default function MoviePage() {
                 {" "}
                 <div className="w-full flex flex-row justify-center items-center  ">
                   <div className="w-full">
-                    <h2 className="text-2xl font-semibold mb-5 text-slate-50 mr-4">
+                    <h2 className="text-2xl font-semibold  text-slate-50 mr-4">
                       {" "}
                       {movieDetails.title}
                     </h2>
@@ -327,7 +327,7 @@ export default function MoviePage() {
                             ); // Removes from like list if liked
                           }
                         }}
-                        className="w-full h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3"
+                        className="w-full h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3 border-none"
                       >
                         {!watches[movieDetails.id] ? (
                           <FaPlus className="text-2xl text-gray-200" />

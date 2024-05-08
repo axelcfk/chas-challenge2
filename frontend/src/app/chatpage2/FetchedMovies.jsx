@@ -108,6 +108,10 @@ export default function FetchedMovies({
                     />
                   </Link>
                   <div
+                    style={{
+                      backdropFilter: "blur(20px)",
+                      backgroundColor: "rgba(255, 255, 255, 0.4)",
+                    }}
                     onClick={() => handleLikeButtonClicked(movie.id)}
                     className="absolute top-0 right-0 m-2 rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
                   >
@@ -119,7 +123,7 @@ export default function FetchedMovies({
                   </div>
                 </div>
               </div>
-              <div className="w-full h-full py-5 px-2">
+              <div className="w-full h-full py-5 px-2 ">
                 {showToast && (
                   <div className="fixed bottom-20 left-5 w-auto max-w-full whitespace-nowrap p-3 bg-gray-600 text-white rounded-lg animate-bounce-up">
                     Thank you for enhancing the AI!
@@ -159,7 +163,7 @@ export default function FetchedMovies({
                 ) : (
                   <p className="h-10 text-xs">Not available in your area</p>
                 )}
-                <div className="w-full flex justify-center items-center pt-5 px-2">
+                <div className="w-auto flex justify-center items-center pt-5 px-2 ">
                   <button
                     onClick={() => {
                       handleButtonClicked(movie.id);
@@ -169,18 +173,16 @@ export default function FetchedMovies({
                         postRemoveFromWatchList(movie.id, "movie", movie.title);
                       }
                     }}
-                    className="w-full h-10 bg-slate-900 flex justify-center items-center rounded-xl px-3"
+                    className="w-full hover:cursor-pointer h-10 text-slate-100 bg-slate-900 flex justify-center items-center rounded-xl px-3 border-none"
                   >
                     {!watches[movie.id] ? (
                       <FaPlus className="text-2xl" />
                     ) : (
                       <FaCheck className="text-2xl" />
                     )}
-                    {!watches[movie.id] ? (
-                      <span className="pl-2 w-full text-sm">ADD TO LIST</span>
-                    ) : (
-                      <span className="pl-2 w-full text-sm">ADDED</span>
-                    )}
+                    <span className="pl-2 text-sm">
+                      {!watches[movie.id] ? "ADD TO LIST" : "ADDED"}
+                    </span>
                   </button>
                 </div>
               </div>
