@@ -207,7 +207,7 @@ export default function ChatPage2() {
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
   return (
-    <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-screen  text-slate-100 z-0 py-12">
+    <div className=" flex  flex-col justify-center items-center md:items-start px-5 md:px-20 h-lvh  text-slate-100 z-0 pb-5">
       {/* <button onClick={handleNavigation}>Go Back</button> */}
       {/* <BackButton /> */}
       {errorMessage && !loading && (
@@ -235,7 +235,7 @@ export default function ChatPage2() {
             </video>
           </div>
           {!loading ? (
-            <p className="px-5 text-xl flex flex-col items-center  h-40 ">
+            <p className="px-5 text-xl flex flex-col items-center  h-24 ">
               {" "}
               <span className="mb-4 text-2xl font-semibold text-center">
                 I'm your AI movie matcher
@@ -246,7 +246,7 @@ export default function ChatPage2() {
               </span>{" "}
             </p>
           ) : (
-            <p className="px-5 text-xl flex flex-col items-center  h-40 ">
+            <p className="px-5 text-xl flex flex-col items-center  h-24 ">
               {" "}
               <span className="mb-4 text-2xl font-semibold text-center">
                 Finding the best match for you...
