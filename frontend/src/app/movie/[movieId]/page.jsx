@@ -287,7 +287,7 @@ export default function MoviePage() {
     : null;
 
   return (
-    <div className=" flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
+    <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
       {movieDetails.backdrop && (
         <div className="">
@@ -304,14 +304,8 @@ export default function MoviePage() {
 
       {loading ? (
         <LoadingIndicator />
-      ) : noResult ? (
-        <div className=" flex justify-center items-center h-full">
-          <h2 className=" text-center text-3xl font-semibold">
-            No Movie or TV series was found. Try again!
-          </h2>
-        </div>
       ) : (
-        <div className="h-full flex flex-col justify-center items-center  relative z-10">
+        <div className="h-full flex flex-col justify-center items-center  relative z-10 px-8">
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center text-slate-400 ">
               <div className="flex flex-col  justify-center items-center ">
@@ -325,7 +319,7 @@ export default function MoviePage() {
                   ref={parallaxRef}
                 >
                   <div className="w-full ">
-                    <h2 className="text-2xl font-semibold  text-slate-50 mr-4">
+                    <h2 className="text-2xl font-semibold  text-slate-50 ">
                       {" "}
                       {movieDetails.title}
                     </h2>
@@ -471,7 +465,7 @@ export default function MoviePage() {
                       </h3>
                     )}
                   </div>
-                  <div className="bg-slate-200 rounded-full  h-12 grid grid-cols-3 justify-center items-center my-2  ">
+                  <div className="bg-slate-200 rounded-full  h-12 grid grid-cols-3 justify-center items-center mt-2  mb-16">
                     {flatrateProviders ? (
                       <>{flatrateProviders}</>
                     ) : (
@@ -491,14 +485,14 @@ export default function MoviePage() {
         </div>
       )}
       {/* <div className=" w-screen  flex justify-center items-center"> */}
-      <div className="relative w-screen flex flex-col justify-center items-center h-60 bg-[#241023] p-10">
+      <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
         <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
         <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div>
         <iframe
           className="border-none z-10"
           src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
-          width="80%" // Adjust the width as needed
-          height="100%"
+          width="90%" // Adjust the width as needed
+          height="90%"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
@@ -506,14 +500,15 @@ export default function MoviePage() {
       </div>
 
       {/* </div> */}
-      <div className="w-full pb-5 text-xl pt-20">
-        <h2 className="text-xl">ACTORS</h2>
+
+      <div className="w-full pb-5 text-xl pt-16 ">
+        <h2 className="text-xl px-8">ACTORS</h2>
       </div>
-      <div className="grid grid-cols-3 justify-center items-center w-full">
+      <div className="grid grid-cols-3 pb-16  px-8">
         {credits.actors.map((actor, index) => (
           <div
             key={index}
-            className="flex flex-col justify-center items-center p-2"
+            className="w-full flex flex-col justify-between items-center "
           >
             {actorImages[actor.personId] ? (
               <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
@@ -543,19 +538,19 @@ export default function MoviePage() {
           </div>
         ))}
       </div>
-      <div className="bg-[#241023] w-screen p-10 mt-20">
-        <div className=" w-full pt-16 pb-10">
-          <h2 className="pl-8 text-xl uppercase">
+      <div className="bg-[#1B1725] w-full py-16 ">
+        <div className=" w-full ">
+          <h2 className="px-8 text-xl uppercase">
             SIMILAR TO {movieDetails.title}
           </h2>
         </div>
-        <div className=" flex justify-center items-center w-full  ">
+        <div className=" flex justify-center items-center ">
           {similar && similar.length > 0 && similar.poster != "" && (
             <SlideMenu>
               {similar.map((movie, index) => (
                 <div
                   key={index}
-                  className="inline-block justify-center items-center px-8 "
+                  className="inline-block justify-center items-center pl-8 pt-10 "
                 >
                   <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
                     <img
@@ -565,7 +560,7 @@ export default function MoviePage() {
                       alt="poster"
                     />
                   </Link>
-                  <p className="h-20">{movie.title}</p>
+                  <p className="">{movie.title}</p>
                 </div>
               ))}
             </SlideMenu>
