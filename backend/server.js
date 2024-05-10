@@ -851,6 +851,7 @@ function parseMovieNames(response) {
 }
 
 const latestSuggestions = [];
+const latestUserQuery = [];
 
 app.post("/moviesuggest2", async (req, res) => {
   const likedMovieTitles = likedMoviesList.map((movie) => {
@@ -862,6 +863,10 @@ app.post("/moviesuggest2", async (req, res) => {
   const likedMovieTitlesString = likedMovieTitles.join(", ");
   console.log("likedMovieTitlesString: ", likedMovieTitlesString);
   const userQuery = req.body.query;
+  latestUserQuery.push(userQuery);
+  if (latestUserQuery.length > 15) {
+    latestSuggestions.pop(); // tar bort den sista
+  }
   console.log("Received user query:", userQuery);
 
   try {
@@ -881,9 +886,9 @@ app.post("/moviesuggest2", async (req, res) => {
           MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
           Never add any additional numbers. If the movie name already exists in 
           ${likedMovieTitlesString}, it will not be suggested. If you have no suggestions, 
-          explain in your response. Also, do not suggest movies already in the list: ${latestSuggestions.join(
+          explain in your response. Also, look inside ${latestSuggestions.join(
             ", "
-          )}.`,
+          )} and ${latestUserQuery} and suggest movies based on the querys.`,
         },
         {
           role: "user",
