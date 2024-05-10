@@ -19,7 +19,7 @@ const supportedServices = [
   "Apple TV",
   "SVT",
   "TV4 Play",
-  "Discovery+"
+  "Discovery+",
 ];
 
 //? dessa används inte??? var kommer länkarna ifrån då?
@@ -197,7 +197,7 @@ export default function FetchedMovies({
                         postRemoveFromWatchList(movie.id, "movie", movie.title);
                       }
                     }}
-                    className="w-full hover:cursor-pointer h-10 text-slate-100 bg-slate-900 flex justify-center items-center rounded-xl px-3 border-none"
+                    className="w-full hover:cursor-pointer h-10 text-slate-100 bg-slate-900 flex justify-center items-center rounded-full px-3 border-none"
                   >
                     {!watches[movie.id] ? (
                       <FaPlus className="text-2xl" />

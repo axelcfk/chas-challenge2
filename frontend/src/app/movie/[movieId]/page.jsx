@@ -48,7 +48,7 @@ export default function MoviePage() {
   const parallaxRef = useRef(null);
 
   const serviceLogos = {
-    Netflix: "/Netflix1.svg",
+    Netflix: "/Netflix.svg",
     "HBO Max": "/HBO1.svg",
     Viaplay: "/Viaplay.svg",
     "Amazon Prime Video": "/PrimeVideo.svg",
@@ -287,7 +287,7 @@ export default function MoviePage() {
     : null;
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
+    <div className=" flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
       {movieDetails.backdrop && (
         <div className="">
@@ -336,7 +336,9 @@ export default function MoviePage() {
                       </p>
                       <p>{movieDetails.runtime.toString()} mins</p>
                     </div>
-                    <p className="font-semibold text-lg">{credits.director}</p>
+                    <p className="font-semibold uppercase text-sm">
+                      {credits.director}
+                    </p>
                     <div className=" h-10 flex items-end">
                       <p className="font-semibold  flex justify-center items-center">
                         <span className=" mr-2  font-normal text-xl text-yellow-400">
@@ -355,7 +357,7 @@ export default function MoviePage() {
                         className=" h-52 md:h-96 rounded-md w-auto"
                         src={movieDetails.poster}
                         alt="Movie Poster"
-                        style={{ border: "1px solid grey" }}
+                        style={{ border: "0.5px solid grey" }}
                       />
                       <div
                         style={{
@@ -414,7 +416,7 @@ export default function MoviePage() {
                             ); // Removes from like list if liked
                           }
                         }}
-                        className="w-full h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3 border-none"
+                        className="w-3/4 h-10 bg-[#623CEA] flex justify-center items-center rounded-full px-3 border-none"
                       >
                         {!watches[movieDetails.id] ? (
                           <FaPlus className="text-2xl text-gray-200" />
@@ -461,13 +463,15 @@ export default function MoviePage() {
                     )}
                   </div>
                 </div>
-                <div className="bg-slate-200 w-full mt-10 mb-10 ">
+                <div className=" w-full mt-10 mb-10 ">
                   <div className="w-full  ">
                     {flatrateProviders && (
-                      <h3 className="text-base text-slate-950">Watch it on:</h3>
+                      <h3 className="text-sm text-slate-100 uppercase">
+                        Watch it on:
+                      </h3>
                     )}
                   </div>
-                  <div className="w-full h-full grid grid-cols-3 justify-center items-center my-2  ">
+                  <div className="bg-slate-200 rounded-full  h-12 grid grid-cols-3 justify-center items-center my-2  ">
                     {flatrateProviders ? (
                       <>{flatrateProviders}</>
                     ) : (
@@ -486,19 +490,24 @@ export default function MoviePage() {
           )}
         </div>
       )}
-      <div className="w-full h-60">
+      {/* <div className=" w-screen  flex justify-center items-center"> */}
+      <div className="relative w-screen flex flex-col justify-center items-center h-60 bg-[#241023] p-10">
+        <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
+        <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div>
         <iframe
-          className="border-none"
+          className="border-none z-10"
           src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
-          width="100%" // Adjust the width as needed
+          width="80%" // Adjust the width as needed
           height="100%"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
       </div>
+
+      {/* </div> */}
       <div className="w-full pb-5 text-xl pt-20">
-        <h2>Actors</h2>
+        <h2 className="text-xl">ACTORS</h2>
       </div>
       <div className="grid grid-cols-3 justify-center items-center w-full">
         {credits.actors.map((actor, index) => (
@@ -507,13 +516,13 @@ export default function MoviePage() {
             className="flex flex-col justify-center items-center p-2"
           >
             {actorImages[actor.personId] ? (
-              <div className="w-24 h-24 rounded-full  overflow-hidden bg-gray-300">
+              <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${
                     actorImages[actor.personId]
                   }`}
                   alt={actor.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover "
                   onError={(e) => {
                     e.target.onerror = null; // Prevent looping
                     e.target.src = "path_to_default_image.jpg"; // Fallback image
@@ -534,29 +543,34 @@ export default function MoviePage() {
           </div>
         ))}
       </div>
-      <div className=" w-full pt-16 pb-10">
-        <h2 className="text-left">Similar to {movieDetails.title}</h2>
-      </div>
-      <div className=" flex justify-center items-center w-full  ">
-        {similar && similar.length > 0 && similar.poster != "" && (
-          <SlideMenu>
-            {similar.map((movie, index) => (
-              <div
-                key={index}
-                className="inline-block justify-center items-center p-2 "
-              >
-                <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
-                  <img
-                    className="h-80 rounded-xl hover:cursor-pointer"
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
-                    alt="poster"
-                  />
-                </Link>
-                <p className="h-20">{movie.title}</p>
-              </div>
-            ))}
-          </SlideMenu>
-        )}
+      <div className="bg-[#241023] w-screen p-10 mt-20">
+        <div className=" w-full pt-16 pb-10">
+          <h2 className="pl-8 text-xl uppercase">
+            SIMILAR TO {movieDetails.title}
+          </h2>
+        </div>
+        <div className=" flex justify-center items-center w-full  ">
+          {similar && similar.length > 0 && similar.poster != "" && (
+            <SlideMenu>
+              {similar.map((movie, index) => (
+                <div
+                  key={index}
+                  className="inline-block justify-center items-center px-8 "
+                >
+                  <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                    <img
+                      style={{ border: "0.5px solid grey" }}
+                      className="h-80 rounded-xl hover:cursor-pointer"
+                      src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
+                      alt="poster"
+                    />
+                  </Link>
+                  <p className="h-20">{movie.title}</p>
+                </div>
+              ))}
+            </SlideMenu>
+          )}
+        </div>
       </div>
     </div>
   );
