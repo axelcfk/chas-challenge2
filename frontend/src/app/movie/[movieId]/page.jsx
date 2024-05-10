@@ -220,6 +220,23 @@ export default function MoviePage() {
   }
 
   console.log("similar object", similar);
+  console.log(
+    "providers are??:",
+    movieDetails.providers.flatrate[0].provider_name
+  );
+
+  const providerName = movieDetails.providers.flatrate[0].provider_name;
+  const flatrateProviders = movieDetails.providers.flatrate.map((provider) => {
+    return (
+      <div
+        key={provider.provider_name}
+        className="flex flex-row justify-start items-center "
+      >
+        {/* <img src={provider.provider_logo} alt={provider.provider_name} /> */}
+        <p>{provider.provider_name}</p>
+      </div>
+    );
+  });
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -408,46 +425,15 @@ export default function MoviePage() {
                     </div>
                   ) : null} */}
                 </div>
-                <div className="w-full flex  justify-end mt-8">
-                  {/* <p>{credits.actors}</p> */}
-
-                  <div className="w-full ">
-                    {movieDetails.SE_flaterate &&
-                    movieDetails.SE_flaterate.length > 0 ? (
-                      <p className="text-sm mr-2">WATCH IT ON</p>
-                    ) : null}
-
-                    {movieDetails.SE_flaterate &&
-                    movieDetails.SE_flaterate.length > 0 ? (
-                      movieDetails.SE_flaterate.map((providerName, index) => {
-                        return (
-                          <div>
-                            <div className="flex">
-                              <p key={index} className="text-lg flex mr-3">
-                                {providerName}{" "}
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div className=" h-10 flex items-end">
-                        <p className="text-sm mr-2">
-                          Not available in your area
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  {/* <div className=" h-10 flex items-end">
-                    <p className="font-semibold  flex justify-center items-center">
-                      <span className=" mr-2  font-normal text-xl text-yellow-400">
-                        <FaStar />
-                      </span>
-                      <span className=" text-xl text-zinc-100">
-                        {movieDetails.voteAverage.toFixed(1)}
-                      </span>
-                    </p>
-                  </div> */}
+                <div className="w-full flex flex-col h-20 justify-start mt-8 bg-red-700">
+                  {flatrateProviders ? (
+                    <>
+                      <h3 className="text-base">Watch it on:</h3>
+                      {flatrateProviders}
+                    </>
+                  ) : (
+                    <p>No providers in your area</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -463,12 +449,12 @@ export default function MoviePage() {
       <div className="w-full h-60">
         <iframe
           className="border-none"
-          src={`https://www.youtube-nocookie.com/embed/${videos && videos}`}
+          src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
           width="100%" // Adjust the width as needed
           height="100%"
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          // allowfullscreen
+          allowFullScreen
         ></iframe>
       </div>
       <div className="w-full pb-5 text-xl pt-20">

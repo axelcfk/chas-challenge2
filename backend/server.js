@@ -1290,114 +1290,12 @@ app.post("/streaming-services", (req, res) => {
 
 ///////////////FUNKTIONER MovieId-page////////////////////////
 
-const videos = [];
-const actorImages = [];
-const movieDetails = [];
-const credits = [];
+// const videos = [];
+// const actorImages = [];
+// // const movieDetails = [];
+// const credits = [];
 
-console.log("moviedetails on backend is:", movieDetails);
-
-// async function fetchVideo() {
-//   try {
-//     const response = await fetch(
-//       `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
-//     );
-
-//     const data = await response.json();
-//     console.log("videodata:", data.results[0].key);
-//     videos.push(data.results[1].key);
-//     return data.results;
-//   } catch (error) {
-//     console.error("Error fetching streaming services:", error);
-//     return {};
-//   }
-// }
-
-// const fetchActorsImages = async (actors) => {
-//   const imageFetchPromises = actors.map((actor) =>
-//     fetch(
-//       `https://api.themoviedb.org/3/person/${actor.id}/images?api_key=${movieAPI_KEY}`
-//     )
-//       .then((response) => response.json())
-//       .then((data) => ({
-//         id: actor.id,
-//         image:
-//           data.profiles && data.profiles[0] ? data.profiles[0].file_path : null,
-//       }))
-//       .catch((error) => {
-//         console.error(`Error fetching images for actor ID ${actor.id}:`, error);
-//         return { id: actor.id, image: null };
-//       })
-//   );
-
-//   try {
-//     const imagesResults = await Promise.all(imageFetchPromises);
-//     return imagesResults.reduce((acc, result) => {
-//       acc[result.id] = result.image;
-//       return acc;
-//     }, {});
-//   } catch (error) {
-//     console.error("Error fetching actor images:", error);
-//     return {};
-//   }
-// };
-
-// const fetchMovieDetails = async (movieId) => {
-//   if (!movieId) return null;
-
-//   try {
-//     const response = await fetch(
-//       `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
-//     );
-//     const data = await response.json();
-
-//     const creditsResponse = await fetch(
-//       `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-//     );
-//     const creditsData = await creditsResponse.json();
-
-//     const actors = creditsData.cast.slice(0, 6).map((actor) => ({
-//       name: actor.name,
-//       personId: actor.id,
-//       character: actor.character,
-//       imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
-//     }));
-
-//     const actorImages = await fetchActorsImages(actors);
-
-//     const movieDetails = {
-//       id: data.id,
-//       title: data.title,
-//       overview: data.overview,
-//       voteAverage: data.vote_average,
-//       release: data.release_date,
-//       tagline: data.tagline,
-//       runtime: data.runtime,
-//       backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
-//       poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-//       credits: {
-//         director: creditsData.crew.find((person) => person.job === "Director")
-//           ?.name,
-//         actors: actors.map((actor) => ({
-//           ...actor,
-//           imagePath: actorImages[actor.personId],
-//         })),
-//         otherCrew: creditsData.crew
-//           .filter((person) =>
-//             ["Producer", "Screenplay", "Music"].includes(person.job)
-//           )
-//           .map((crew) => ({ name: crew.name, job: crew.job })),
-//       },
-//     };
-
-//     return movieDetails;
-//   } catch (error) {
-//     console.error("Error fetching movie details:", error);
-//     return null;
-//   }
-// };
-
-// Define `fetchCompleteMovieDetails` function
+// console.log("moviedetails on backend is:", movieDetails);
 
 const baseImageUrl = "https://image.tmdb.org/t/p/w500";
 
@@ -1405,30 +1303,38 @@ const fetchCompleteMovieDetails = async (movieId) => {
   if (!movieId) return null;
 
   try {
-    const [movieResponse, creditsResponse, videosResponse, similarResponse] =
-      await Promise.all([
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
-        ),
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-        ),
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
-        ),
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
-        ),
-      ]);
+    const [
+      movieResponse,
+      creditsResponse,
+      videosResponse,
+      similarResponse,
+      movieProviderResponse,
+    ] = await Promise.all([
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
+      ),
+    ]);
 
-    const [movieData, creditsData, videosData, similarData] = await Promise.all(
-      [
+    const [movieData, creditsData, videosData, similarData, movieProviderData] =
+      await Promise.all([
         movieResponse.json(),
         creditsResponse.json(),
         videosResponse.json(),
         similarResponse.json(),
-      ]
-    );
+        movieProviderResponse.json(),
+      ]);
 
     addMovieToDatabase(movieData, "movie");
 
@@ -1485,10 +1391,19 @@ const fetchCompleteMovieDetails = async (movieId) => {
       poster: movie.poster_path ? `${baseImageUrl}${movie.poster_path}` : null,
     }));
 
+    const providers = movieProviderData.results.SE;
+    // (provider) => ({
+    //   name: provider.provider_name,
+    // })
+    // );
+
+    console.log("providers are:", providers);
+
     const movieDetails = {
       id: movieData.id,
       title: movieData.title,
       overview: movieData.overview,
+      providers: providers,
       voteAverage: movieData.vote_average,
       release: movieData.release_date,
       tagline: movieData.tagline,
