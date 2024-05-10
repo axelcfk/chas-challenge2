@@ -1022,6 +1022,36 @@ app.get("/dailymixbasedonlikes", async (req, res) => {
   res.json(data);
 });
 
+// made this an endpoint so we can simply load in the daily mix based on likes if it has already been generated earlier
+app.get("/me/dailymixbasedonlikes", async (req, res) => {
+
+  const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
+  
+  const mixMovieObjects = [];
+
+  if (mixOnlyIdsAndTitles.length > 0) {
+
+  mixOnlyIdsAndTitles.map((movie) => {
+    const movieObjectOurDatabase = getMovieObjectOurDatabase(
+      movie.id,
+      "movie"
+    );
+    // console.log("movieObject: ", movieObject);
+    //setLoading(false);
+
+    if (movieObjectOurDatabase) {
+      mixMovieObjects.push(movieObjectOurDatabase);
+    } else {
+      console.log("data.title does not exist?");
+    }
+  });
+  } else {
+    return res.json({ message: "No mix generated yet." });
+  }
+
+  res.json({mixMovieObjects});
+})
+
 /* function addToDailyMixBasedOnLikes(id, title) {
 
   if (!id || !title) { 
@@ -1291,6 +1321,8 @@ app.get("/generatedailymix2", async (req, res) => {
     });
   }
 });
+
+
 
 // Spara streaming tjänsterna
 //* IMPORTANT INFORMATION: detta ska sparas i databasen
