@@ -84,7 +84,7 @@ export default function MoviePage() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
-      const speed = 10;
+      const speed = 0.2;
       if (parallaxRef.current) {
         parallaxRef.current.style.transform = `translateY(${
           scrollTop * speed
