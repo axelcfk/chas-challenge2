@@ -850,6 +850,8 @@ function parseMovieNames(response) {
   return names;
 }
 
+const latestSuggestions = [];
+
 app.post("/moviesuggest2", async (req, res) => {
   const likedMovieTitles = likedMoviesList.map((movie) => {
     return movie.title;
@@ -868,10 +870,20 @@ app.post("/moviesuggest2", async (req, res) => {
       messages: [
         {
           role: "system",
-          content:
-            "This assistant will suggest 6 movies based on user descriptions. Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. If the query is inapropriate (i.e foul language or anything else) respond in a funny way. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
-            likedMovieTitlesString +
-            "it will not be suggested. If you have no suggestions explain in your response.",
+          content: `This assistant will suggest 6 movies based on user descriptions. 
+          It will provide Movie Names for those movies in the format of: 
+          MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
+          MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
+          It will not answer any other queries. It will only suggest movies and TV series. 
+          If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
+          Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
+          MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
+          MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
+          Never add any additional numbers. If the movie name already exists in 
+          ${likedMovieTitlesString}, it will not be suggested. If you have no suggestions, 
+          explain in your response. Also, do not suggest movies already in the list: ${latestSuggestions.join(
+            ", "
+          )}.`,
         },
         {
           role: "user",
@@ -888,11 +900,16 @@ app.post("/moviesuggest2", async (req, res) => {
     // TODO: spara ner userQuery och suggestion i backend?
 
     console.log("Suggestion structure:", suggestion);
+    console.log("suggested movie list:", latestSuggestions);
+
     const movieNames = parseMovieNames(suggestion);
     console.log("Movie names parsed: ", movieNames);
 
-    // Since TMDB ID handling and additional logic are commented out, I will leave them out for clarity.
     if (movieNames.length === 6) {
+      latestSuggestions.unshift(movieNames);
+      if (latestSuggestions.length > 36) {
+        latestSuggestions.pop(); // tar bort den sista
+      }
       res.json({ movieNames });
     } else {
       res.json({ suggestion });
@@ -1309,6 +1326,7 @@ const fetchCompleteMovieDetails = async (movieId) => {
       videosResponse,
       similarResponse,
       movieProviderResponse,
+      movieImagesResponse,
     ] = await Promise.all([
       fetch(
         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
@@ -1325,16 +1343,26 @@ const fetchCompleteMovieDetails = async (movieId) => {
       fetch(
         `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
       ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${movieAPI_KEY}`
+      ),
     ]);
 
-    const [movieData, creditsData, videosData, similarData, movieProviderData] =
-      await Promise.all([
-        movieResponse.json(),
-        creditsResponse.json(),
-        videosResponse.json(),
-        similarResponse.json(),
-        movieProviderResponse.json(),
-      ]);
+    const [
+      movieData,
+      creditsData,
+      videosData,
+      similarData,
+      movieProviderData,
+      movieImagesData,
+    ] = await Promise.all([
+      movieResponse.json(),
+      creditsResponse.json(),
+      videosResponse.json(),
+      similarResponse.json(),
+      movieProviderResponse.json(),
+      movieImagesResponse.json(),
+    ]);
 
     addMovieToDatabase(movieData, "movie");
 
@@ -1396,6 +1424,8 @@ const fetchCompleteMovieDetails = async (movieId) => {
     //   name: provider.provider_name,
     // })
     // );
+
+    const movieImages = movieImagesData;
 
     console.log("providers are:", providers);
 

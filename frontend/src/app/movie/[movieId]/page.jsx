@@ -241,15 +241,19 @@ export default function MoviePage() {
   function LoadingIndicator() {
     return (
       <div className="loading-indicator ">
-        <h3 className="font-semibold text-3xl">Exciting stuff!</h3>
+        {/* <h3 className="font-semibold text-3xl">Exciting stuff!</h3> */}
         <div className="loader m-10"></div>
-        <p className="font-semibold text-xl">Finding a movie match ... </p>
+        {/* <p className="font-semibold text-xl">Finding a movie match ... </p> */}
       </div>
     );
   }
 
   if (!movieDetails) {
-    return <LoadingIndicator />;
+    return (
+      <div className="h-lvh flex justify-center items-center">
+        <LoadingIndicator />
+      </div>
+    );
   }
 
   console.log("similar object", similar);
