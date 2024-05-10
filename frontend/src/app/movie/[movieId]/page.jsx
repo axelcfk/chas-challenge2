@@ -210,7 +210,7 @@ export default function MoviePage() {
               //   backgroundColor: "rgba(255, 255, 255, 0.5)",
               // }}
               key={provider.provider_id} // Use provider_id as a more unique key
-              className="w-full h-full flex  justify-evenly  items-center "
+              className="bg-slate-200 rounded-full  h-12 w-full flex  justify-evenly  items-center "
             >
               <img
                 className="h-6"
@@ -346,7 +346,7 @@ export default function MoviePage() {
                         }}
                         className={`w-3/4 h-10 ${
                           !watches[movieDetails.id]
-                            ? "bg-[#623CEA]"
+                            ? "bg-[#3D3B8E]"
                             : "bg-green-600"
                         } flex justify-center items-center rounded-full px-3 border-none`}
                       >
@@ -403,7 +403,7 @@ export default function MoviePage() {
                       </h3>
                     )}
                   </div>
-                  <div className="bg-slate-200 rounded-full  h-12 grid grid-cols-3 justify-center items-center mt-2  mb-16">
+                  <div className=" grid grid-cols-3 justify-center items-center mt-2  mb-16">
                     {flatrateProviders ? (
                       <>{flatrateProviders}</>
                     ) : (
@@ -427,10 +427,8 @@ export default function MoviePage() {
         <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
         <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div>
         <iframe
-          className="border-none z-10 rounded-md"
+          className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
           src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
-          width="90%" // Adjust the width as needed
-          height="90%"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
@@ -440,7 +438,7 @@ export default function MoviePage() {
       {/* </div> */}
 
       <div className="w-full pb-5 text-xl pt-16 ">
-        <h2 className="text-xl px-8">ACTORS</h2>
+        <h2 className="text-xl px-8 font-normal">ACTORS</h2>
       </div>
       <div className="grid grid-cols-3 pb-16  px-8">
         {credits.actors.map((actor, index) => (
@@ -478,7 +476,7 @@ export default function MoviePage() {
       </div>
       <div className="bg-[#1B1725] w-full py-16 ">
         <div className=" w-full ">
-          <h2 className="px-8 text-xl uppercase">
+          <h2 className="px-8 text-xl uppercase font-normal">
             SIMILAR TO {movieDetails.title}
           </h2>
         </div>

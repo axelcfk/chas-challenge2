@@ -208,7 +208,7 @@ export default function FetchedMovies({
                       }
                     }}
                     className={`w-full h-10 ${
-                      !watches[movie.id] ? "bg-[#623CEA]" : "bg-green-600"
+                      !watches[movie.id] ? "bg-[#3D3B8E]" : "bg-green-600"
                     } flex justify-center items-center rounded-full px-3 border-none`}
                   >
                     {!watches[movie.id] ? (
