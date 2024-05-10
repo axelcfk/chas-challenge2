@@ -45,6 +45,19 @@ export default function MoviePage() {
   const params = useParams();
   const movieId = params.movieId; // Get movie ID from the URL parameter
 
+  const serviceLogos = {
+    Netflix: "/Netflix1.svg",
+    "HBO Max": "/HBO1.svg",
+    Viaplay: "/Viaplay1.svg",
+    "Amazon Prime Video": "Prime1.svg",
+    "Disney Plus": "/Disney1.svg",
+    "Tele2 Play": "/tele2play.png",
+    "Apple TV": "/AppleTV1.svg",
+    SVT: "/SVTPlay.svg",
+    TV4Play: "/TV4Play.svg",
+    "Discovery+": "/Discovery+.svg",
+  };
+
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
   }
@@ -232,8 +245,11 @@ export default function MoviePage() {
         key={provider.provider_name}
         className="flex flex-row justify-start items-center "
       >
-        {/* <img src={provider.provider_logo} alt={provider.provider_name} /> */}
-        <p>{provider.provider_name}</p>
+        <img
+          className="h-8 "
+          src={serviceLogos[provider.provider_name]}
+          alt={provider.provider_name}
+        />
       </div>
     );
   });
@@ -379,53 +395,30 @@ export default function MoviePage() {
                     </div>
                   </div>
                 </div>
-                <div className="h-60 lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
-                  <div className=" " onClick={handleToggle}>
+                <div className="h-full lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
+                  <div className="h-full pb-5 " onClick={handleToggle}>
                     {!toggleExpanded ? (
                       <div>
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className="mb-5  md:w-full text-base font-light">
+                        <p className=" md:w-full text-base font-light">
                           {movieDetails.overview.slice(0, 200)}...
                         </p>
-                        {/* <p className="text-green-500 text-2xl">
-                          {isMovieLiked
-                            ? "this movie is in the like list"
-                            : "this movie is not in the like list"}
-                        </p> */}
                       </div>
                     ) : (
                       <div>
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className="mb-5  md:w-full font-light text-base">
+                        <p className=" md:w-full font-light text-base">
                           {movieDetails.overview.slice(0, 600)}
                         </p>
                       </div>
                     )}
                   </div>
-                  {/* <p>{credits.actors}</p> */}
-
-                  {/* <p
-                    onClick={handleActorsToggle}
-                    className="mt-10 mb-2 font-medium text-lg"
-                  >
-                    Actors
-                  </p>
-                  {actorsToggle ? (
-                    <div className="mb-5  md:w-full font-light text-base flex flex-row">
-                      {movieCredits &&
-                        movieCredits.actors.map((actor, index) => (
-                          <div key={index} className="mr-2">
-                            {actor}
-                          </div>
-                        ))}
-                    </div>
-                  ) : null} */}
                 </div>
-                <div className="w-full flex flex-col h-20 justify-start mt-8 bg-red-700">
+                <div className="w-full flex h-20 justify-start mt-8 bg-slate-100  ">
                   {flatrateProviders ? (
                     <>
                       <h3 className="text-base">Watch it on:</h3>
