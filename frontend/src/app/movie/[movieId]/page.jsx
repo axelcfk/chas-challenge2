@@ -9,7 +9,7 @@ import {
   FaStar,
   FaImage,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   postAddToLikeList,
   postAddToWatchList,
@@ -43,7 +43,22 @@ export default function MoviePage() {
 
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const params = useParams();
-  const movieId = params.movieId; // Get movie ID from the URL parameter
+  const movieId = params.movieId;
+
+  const parallaxRef = useRef(null);
+
+  const serviceLogos = {
+    Netflix: "/Netflix.svg",
+    "HBO Max": "/HBO1.svg",
+    Viaplay: "/Viaplay.svg",
+    "Amazon Prime Video": "/PrimeVideo.svg",
+    "Disney Plus": "/Disney2.webp",
+    "Tele2 Play": "/tele2play.png",
+    "Apple TV": "/AppleTV1.svg",
+    SVT: "/SVTPlay.svg",
+    TV4Play: "/TV4Play.svg",
+    "Discovery+": "/Discovery+.svg",
+  };
 
   function handleToggle() {
     setToggleExpanded(!toggleExpanded);
@@ -65,72 +80,26 @@ export default function MoviePage() {
       [id]: !prevLikes[id],
     }));
   }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const speed = 0.2;
+      if (parallaxRef.current) {
+        parallaxRef.current.style.transform = `translateY(${
+          scrollTop * speed
+        }px)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   //FETCHA ALLA MOVIE DETAILS FRÅN BACKEND
-  // useEffect(() => {
-  //   const fetchMovieDetails = async () => {
-  //     if (!movieId) return;
 
-  //     setLoading(true);
-  //     try {
-  //       const response = await fetch(
-  //         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
-  //       );
-  //       const data = await response.json();
-
-  //       // await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
-
-  //       setMovieDetails({
-  //         id: data.id,
-  //         title: data.title,
-  //         overview: data.overview,
-  //         voteAverage: data.vote_average,
-  //         release: data.release_date,
-  //         tagline: data.tagline,
-  //         runtime: data.runtime,
-  //         backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
-  //         poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-  //       });
-
-  //       const creditsResponse = await fetch(
-  //         `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-  //       );
-  //       const creditsData = await creditsResponse.json();
-  //       setCredits({
-  //         director: creditsData.crew.find((person) => person.job === "Director")
-  //           ?.name,
-  //         actors: creditsData.cast.slice(0, 6).map((actor) => ({
-  //           // Only take the first six actors
-  //           name: actor.name,
-  //           personId: actor.id,
-  //           character: actor.character,
-  //           imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
-  //         })),
-  //         otherCrew: creditsData.crew
-  //           .filter((person) =>
-  //             ["Producer", "Screenplay", "Music"].includes(person.job)
-  //           )
-  //           .map((crew) => ({
-  //             name: crew.name,
-  //             job: crew.job,
-  //           })),
-  //       });
-
-  //       fetchActorsImages(creditsData.cast.slice(0, 6));
-  //     } catch (error) {
-  //       console.error("Error fetching movie details:", error);
-  //       setMovieDetails(null); // Handle errors by setting details to null
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   credits.actors.forEach((actor) => {
-  //     console.log(`Actor Name: ${actor.name}, Person ID: ${actor.personId}`);
-  //     // You can use `actor.personId` to fetch the actor's images or more details
-  //   });
-
-  //   fetchMovieDetails();
-  // }, [movieId]);
   useEffect(() => {
     async function fetchMoviePageDetails(movieId) {
       if (!movieId) {
@@ -208,21 +177,53 @@ export default function MoviePage() {
   function LoadingIndicator() {
     return (
       <div className="loading-indicator ">
-        <h3 className="font-semibold text-3xl">Exciting stuff!</h3>
+        {/* <h3 className="font-semibold text-3xl">Exciting stuff!</h3> */}
         <div className="loader m-10"></div>
-        <p className="font-semibold text-xl">Finding a movie match ... </p>
+        {/* <p className="font-semibold text-xl">Finding a movie match ... </p> */}
       </div>
     );
   }
 
   if (!movieDetails) {
-    return <div>No movie found. Try a different search!</div>;
+    return (
+      <div className="h-lvh flex justify-center items-center">
+        <LoadingIndicator />
+      </div>
+    );
   }
 
   console.log("similar object", similar);
+  // console.log(
+  //   "providers are??:",
+  //   movieDetails.providers.flatrate[0].provider_name
+  // );
+
+  // const providerName = movieDetails.providers.flatrate[0].provider_name;
+  const flatrateProviders = movieDetails.providers.flatrate
+    ? movieDetails.providers.flatrate
+        .filter((provider) => provider.provider_name) // Ensure provider_name is not empty
+        .map((provider) => {
+          return (
+            <div
+              // style={{
+              //   backdropFilter: "blur(20px)",
+              //   backgroundColor: "rgba(255, 255, 255, 0.5)",
+              // }}
+              key={provider.provider_id} // Use provider_id as a more unique key
+              className="bg-slate-200 rounded-full  h-12 w-full flex  justify-evenly  items-center "
+            >
+              <img
+                className="h-6"
+                src={serviceLogos[provider.provider_name]}
+                alt={provider.provider_name}
+              />
+            </div>
+          );
+        })
+    : null;
 
   return (
-    <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
+    <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
       {movieDetails.backdrop && (
         <div className="">
@@ -239,21 +240,22 @@ export default function MoviePage() {
 
       {loading ? (
         <LoadingIndicator />
-      ) : noResult ? (
-        <div className=" flex justify-center items-center h-full">
-          <h2 className=" text-center text-3xl font-semibold">
-            No Movie or TV series was found. Try again!
-          </h2>
-        </div>
       ) : (
-        <div className="h-full flex flex-col justify-center items-center  relative z-10">
+        <div className="h-full flex flex-col justify-center items-center  relative z-10 px-8">
           {movieDetails.title ? (
-            <div className="flex flex-col justify-center items-center text-slate-400">
+            <div className="flex flex-col justify-center items-center text-slate-400 ">
               <div className="flex flex-col  justify-center items-center ">
                 {" "}
-                <div className="w-full flex flex-row justify-center items-center  ">
-                  <div className="w-full">
-                    <h2 className="text-2xl font-semibold  text-slate-50 mr-4">
+                <div
+                  className="w-full flex flex-row justify-center items-center parallax-container rounded-lg p-5"
+                  // style={{
+                  //   backdropFilter: "blur(15px)",
+                  //   backgroundColor: "rgba(0, 0, 0, 0.1)",
+                  // }}
+                  ref={parallaxRef}
+                >
+                  <div className="w-full ">
+                    <h2 className="text-2xl font-semibold  text-slate-50 ">
                       {" "}
                       {movieDetails.title}
                     </h2>
@@ -264,7 +266,9 @@ export default function MoviePage() {
                       </p>
                       <p>{movieDetails.runtime.toString()} mins</p>
                     </div>
-                    <p className="font-semibold text-lg">{credits.director}</p>
+                    <p className="font-semibold uppercase text-sm">
+                      {credits.director}
+                    </p>
                     <div className=" h-10 flex items-end">
                       <p className="font-semibold  flex justify-center items-center">
                         <span className=" mr-2  font-normal text-xl text-yellow-400">
@@ -283,13 +287,13 @@ export default function MoviePage() {
                         className=" h-52 md:h-96 rounded-md w-auto"
                         src={movieDetails.poster}
                         alt="Movie Poster"
-                        style={{ border: "1px solid grey" }}
+                        style={{ border: "0.5px solid grey" }}
                       />
                       <div
                         style={{
-                          // border: "1px solid grey",
+                          border: "0.9px solid grey",
                           backdropFilter: "blur(4px)",
-                          backgroundColor: "rgba(255, 255, 255, 0.9)",
+                          backgroundColor: "rgba(0, 0, 0, 0.3)",
                         }}
                         onClick={() => {
                           handleLikeButtonClicked(movieDetails.id);
@@ -307,19 +311,17 @@ export default function MoviePage() {
                             );
                           }
                         }}
-                        className="absolute top-3 right-5 -m-4 rounded-xl h-16 w-10 flex justify-center items-center hover:cursor-pointer"
+                        className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                       >
                         {!likes[movieDetails.id] ? (
                           <div className="flex flex-col justify-center items-center">
-                            <FaRegHeart className="h-5 w-5 text-red-600 mb-1" />
-                            <p className="text-red-600 mb-1 ">Like</p>
+                            <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
+                            <p className="text-slate-100 mb-1 text-sm">Like</p>
                           </div>
                         ) : (
                           <div className="flex flex-col justify-center items-center">
                             <FaHeart className="h-5 w-5 text-red-600 mb-1" />
-                            <p className="text-red-600 mb-1 font-semibold">
-                              Like
-                            </p>
+                            <p className="text-red-600 mb-1 text-sm">Unlike</p>
                           </div>
                         )}
                       </div>
@@ -342,7 +344,11 @@ export default function MoviePage() {
                             ); // Removes from like list if liked
                           }
                         }}
-                        className="w-full h-10 bg-[#FF506C] flex justify-center items-center rounded-xl px-3 border-none"
+                        className={`w-3/4 h-10 ${
+                          !watches[movieDetails.id]
+                            ? "bg-[#3D3B8E]"
+                            : "bg-green-600"
+                        } flex justify-center items-center rounded-full px-3 border-none`}
                       >
                         {!watches[movieDetails.id] ? (
                           <FaPlus className="text-2xl text-gray-200" />
@@ -362,92 +368,48 @@ export default function MoviePage() {
                     </div>
                   </div>
                 </div>
-                <div className="h-60 lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
-                  <div className=" " onClick={handleToggle}>
+                <div className="h-full lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
+                  <div className="h-full pb-5" onClick={handleToggle}>
                     {!toggleExpanded ? (
                       <div>
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className="mb-5  md:w-full text-base font-light">
+                        <div
+                          className={`md:w-full text-base font-light ${
+                            !toggleExpanded ? "fade-out" : ""
+                          }`}
+                        >
                           {movieDetails.overview.slice(0, 200)}...
-                        </p>
-                        {/* <p className="text-green-500 text-2xl">
-                          {isMovieLiked
-                            ? "this movie is in the like list"
-                            : "this movie is not in the like list"}
-                        </p> */}
+                        </div>
                       </div>
                     ) : (
                       <div>
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className="mb-5  md:w-full font-light text-base">
+                        <div className="md:w-full font-light text-base">
                           {movieDetails.overview.slice(0, 600)}
-                        </p>
+                        </div>
                       </div>
                     )}
                   </div>
-                  {/* <p>{credits.actors}</p> */}
-
-                  {/* <p
-                    onClick={handleActorsToggle}
-                    className="mt-10 mb-2 font-medium text-lg"
-                  >
-                    Actors
-                  </p>
-                  {actorsToggle ? (
-                    <div className="mb-5  md:w-full font-light text-base flex flex-row">
-                      {movieCredits &&
-                        movieCredits.actors.map((actor, index) => (
-                          <div key={index} className="mr-2">
-                            {actor}
-                          </div>
-                        ))}
-                    </div>
-                  ) : null} */}
                 </div>
-                <div className="w-full flex  justify-end mt-8">
-                  {/* <p>{credits.actors}</p> */}
-
-                  <div className="w-full ">
-                    {movieDetails.SE_flaterate &&
-                    movieDetails.SE_flaterate.length > 0 ? (
-                      <p className="text-sm mr-2">WATCH IT ON</p>
-                    ) : null}
-
-                    {movieDetails.SE_flaterate &&
-                    movieDetails.SE_flaterate.length > 0 ? (
-                      movieDetails.SE_flaterate.map((providerName, index) => {
-                        return (
-                          <div>
-                            <div className="flex">
-                              <p key={index} className="text-lg flex mr-3">
-                                {providerName}{" "}
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <div className=" h-10 flex items-end">
-                        <p className="text-sm mr-2">
-                          Not available in your area
-                        </p>
-                      </div>
+                <div className=" w-full mt-10 mb-10 ">
+                  <div className="w-full  ">
+                    {flatrateProviders && (
+                      <h3 className="text-sm text-slate-100 uppercase">
+                        Watch it on:
+                      </h3>
                     )}
                   </div>
-                  {/* <div className=" h-10 flex items-end">
-                    <p className="font-semibold  flex justify-center items-center">
-                      <span className=" mr-2  font-normal text-xl text-yellow-400">
-                        <FaStar />
-                      </span>
-                      <span className=" text-xl text-zinc-100">
-                        {movieDetails.voteAverage.toFixed(1)}
-                      </span>
-                    </p>
-                  </div> */}
+                  <div className=" grid grid-cols-3 justify-center items-center mt-2  mb-16">
+                    {flatrateProviders ? (
+                      <>{flatrateProviders}</>
+                    ) : (
+                      <p>No providers in your area</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -460,34 +422,38 @@ export default function MoviePage() {
           )}
         </div>
       )}
-      <div className="w-full h-60">
+      {/* <div className=" w-screen  flex justify-center items-center"> */}
+      <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
+        <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
+        <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div>
         <iframe
-          className="border-none"
-          src={`https://www.youtube-nocookie.com/embed/${videos && videos}`}
-          width="100%" // Adjust the width as needed
-          height="100%"
-          frameborder="0"
+          className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
+          src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          // allowfullscreen
+          allowFullScreen
         ></iframe>
       </div>
-      <div className="w-full pb-5 text-xl pt-20">
-        <p>Actors</p>
+
+      {/* </div> */}
+
+      <div className="w-full pb-5 text-xl pt-16 ">
+        <h2 className="text-xl px-8 font-normal">ACTORS</h2>
       </div>
-      <div className="grid grid-cols-3 justify-center items-center w-full">
+      <div className="grid grid-cols-3 pb-16  px-8">
         {credits.actors.map((actor, index) => (
           <div
             key={index}
-            className="flex flex-col justify-center items-center p-2"
+            className="w-full flex flex-col justify-between items-center "
           >
             {actorImages[actor.personId] ? (
-              <div className="w-24 h-24 rounded-full  overflow-hidden bg-gray-300">
+              <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${
                     actorImages[actor.personId]
                   }`}
                   alt={actor.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover "
                   onError={(e) => {
                     e.target.onerror = null; // Prevent looping
                     e.target.src = "path_to_default_image.jpg"; // Fallback image
@@ -508,29 +474,34 @@ export default function MoviePage() {
           </div>
         ))}
       </div>
-      <div className=" w-full pt-16 pb-10">
-        <h2 className="text-left">Similar to {movieDetails.title}</h2>
-      </div>
-      <div className=" flex justify-center items-center w-full  ">
-        {similar && similar.length > 0 && similar.poster != "" && (
-          <SlideMenu>
-            {similar.map((movie, index) => (
-              <div
-                key={index}
-                className="inline-block justify-center items-center p-2 "
-              >
-                <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
-                  <img
-                    className="h-80 rounded-xl hover:cursor-pointer"
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
-                    alt="poster"
-                  />
-                </Link>
-                <p className="h-20">{movie.title}</p>
-              </div>
-            ))}
-          </SlideMenu>
-        )}
+      <div className="bg-[#1B1725] w-full py-16 ">
+        <div className=" w-full ">
+          <h2 className="px-8 text-xl uppercase font-normal">
+            SIMILAR TO {movieDetails.title}
+          </h2>
+        </div>
+        <div className=" flex justify-center items-center ">
+          {similar && similar.length > 0 && similar.poster != "" && (
+            <SlideMenu>
+              {similar.map((movie, index) => (
+                <div
+                  key={index}
+                  className="inline-block justify-center items-center pl-8 pt-10 "
+                >
+                  <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                    <img
+                      style={{ border: "0.5px solid grey" }}
+                      className="h-80 rounded-xl hover:cursor-pointer"
+                      src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
+                      alt="poster"
+                    />
+                  </Link>
+                  <p className="">{movie.title}</p>
+                </div>
+              ))}
+            </SlideMenu>
+          )}
+        </div>
       </div>
     </div>
   );

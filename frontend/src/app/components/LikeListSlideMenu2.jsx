@@ -14,6 +14,7 @@ export default function LikeListSlideMenu2() {
 
   const [showLikedDetails, setShowLikedDetails] = useState(false);
 
+  // TODO: flytta dessa useEffects till backend?
   useEffect(() => {
     postLikeLists();
   }, []);
@@ -119,6 +120,7 @@ export default function LikeListSlideMenu2() {
             {likedMoviesListDetails.map((movie, index) => (
               <SlideMenuMovieCard
                 key={index}
+                id={movie.id}
                 title={movie.title}
                 poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
                 overview={movie.overview}

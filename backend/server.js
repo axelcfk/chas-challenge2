@@ -850,6 +850,9 @@ function parseMovieNames(response) {
   return names;
 }
 
+const latestSuggestions = [];
+const latestUserQuery = [];
+
 app.post("/moviesuggest2", async (req, res) => {
   const likedMovieTitles = likedMoviesList.map((movie) => {
     return movie.title;
@@ -860,6 +863,10 @@ app.post("/moviesuggest2", async (req, res) => {
   const likedMovieTitlesString = likedMovieTitles.join(", ");
   console.log("likedMovieTitlesString: ", likedMovieTitlesString);
   const userQuery = req.body.query;
+  latestUserQuery.push(userQuery);
+  if (latestUserQuery.length > 15) {
+    latestSuggestions.pop(); // tar bort den sista
+  }
   console.log("Received user query:", userQuery);
 
   try {
@@ -868,10 +875,20 @@ app.post("/moviesuggest2", async (req, res) => {
       messages: [
         {
           role: "system",
-          content:
-            "This assistant will suggest 6 movies based on user descriptions. Additionally, it will provide Movie Names for those movies in the format of: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. It will only suggest movies and tv series. If the query is inapropriate (i.e foul language or anything else) respond in a funny way. Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. The suggested movie names should go inside [string]. Never add any additional numbers. If the movie name already exists in" +
-            likedMovieTitlesString +
-            "it will not be suggested. If you have no suggestions explain in your response.",
+          content: `This assistant will suggest 6 movies based on user descriptions. 
+          It will provide Movie Names for those movies in the format of: 
+          MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
+          MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
+          It will not answer any other queries. It will only suggest movies and TV series. 
+          If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
+          Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
+          MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
+          MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
+          Never add any additional numbers. If the movie name already exists in 
+          ${likedMovieTitlesString}, it will not be suggested. If you have no suggestions, 
+          explain in your response. Also, look inside ${latestSuggestions.join(
+            ", "
+          )} and ${latestUserQuery} and suggest movies based on the querys.`,
         },
         {
           role: "user",
@@ -888,11 +905,16 @@ app.post("/moviesuggest2", async (req, res) => {
     // TODO: spara ner userQuery och suggestion i backend?
 
     console.log("Suggestion structure:", suggestion);
+    console.log("suggested movie list:", latestSuggestions);
+
     const movieNames = parseMovieNames(suggestion);
     console.log("Movie names parsed: ", movieNames);
 
-    // Since TMDB ID handling and additional logic are commented out, I will leave them out for clarity.
     if (movieNames.length === 6) {
+      latestSuggestions.unshift(movieNames);
+      if (latestSuggestions.length > 36) {
+        latestSuggestions.pop(); // tar bort den sista
+      }
       res.json({ movieNames });
     } else {
       res.json({ suggestion });
@@ -999,6 +1021,36 @@ app.get("/dailymixbasedonlikes", async (req, res) => {
 
   res.json(data);
 });
+
+// made this an endpoint so we can simply load in the daily mix based on likes if it has already been generated earlier
+app.get("/me/dailymixbasedonlikes", async (req, res) => {
+
+  const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
+  
+  const mixMovieObjects = [];
+
+  if (mixOnlyIdsAndTitles.length > 0) {
+
+  mixOnlyIdsAndTitles.map((movie) => {
+    const movieObjectOurDatabase = getMovieObjectOurDatabase(
+      movie.id,
+      "movie"
+    );
+    // console.log("movieObject: ", movieObject);
+    //setLoading(false);
+
+    if (movieObjectOurDatabase) {
+      mixMovieObjects.push(movieObjectOurDatabase);
+    } else {
+      console.log("data.title does not exist?");
+    }
+  });
+  } else {
+    return res.json({ message: "No mix generated yet." });
+  }
+
+  res.json({mixMovieObjects});
+})
 
 /* function addToDailyMixBasedOnLikes(id, title) {
 
@@ -1270,6 +1322,8 @@ app.get("/generatedailymix2", async (req, res) => {
   }
 });
 
+
+
 // Spara streaming tjänsterna
 //* IMPORTANT INFORMATION: detta ska sparas i databasen
 app.post("/streaming-services", (req, res) => {
@@ -1290,114 +1344,12 @@ app.post("/streaming-services", (req, res) => {
 
 ///////////////FUNKTIONER MovieId-page////////////////////////
 
-const videos = [];
-const actorImages = [];
-const movieDetails = [];
-const credits = [];
+// const videos = [];
+// const actorImages = [];
+// // const movieDetails = [];
+// const credits = [];
 
-console.log("moviedetails on backend is:", movieDetails);
-
-// async function fetchVideo() {
-//   try {
-//     const response = await fetch(
-//       `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
-//     );
-
-//     const data = await response.json();
-//     console.log("videodata:", data.results[0].key);
-//     videos.push(data.results[1].key);
-//     return data.results;
-//   } catch (error) {
-//     console.error("Error fetching streaming services:", error);
-//     return {};
-//   }
-// }
-
-// const fetchActorsImages = async (actors) => {
-//   const imageFetchPromises = actors.map((actor) =>
-//     fetch(
-//       `https://api.themoviedb.org/3/person/${actor.id}/images?api_key=${movieAPI_KEY}`
-//     )
-//       .then((response) => response.json())
-//       .then((data) => ({
-//         id: actor.id,
-//         image:
-//           data.profiles && data.profiles[0] ? data.profiles[0].file_path : null,
-//       }))
-//       .catch((error) => {
-//         console.error(`Error fetching images for actor ID ${actor.id}:`, error);
-//         return { id: actor.id, image: null };
-//       })
-//   );
-
-//   try {
-//     const imagesResults = await Promise.all(imageFetchPromises);
-//     return imagesResults.reduce((acc, result) => {
-//       acc[result.id] = result.image;
-//       return acc;
-//     }, {});
-//   } catch (error) {
-//     console.error("Error fetching actor images:", error);
-//     return {};
-//   }
-// };
-
-// const fetchMovieDetails = async (movieId) => {
-//   if (!movieId) return null;
-
-//   try {
-//     const response = await fetch(
-//       `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
-//     );
-//     const data = await response.json();
-
-//     const creditsResponse = await fetch(
-//       `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-//     );
-//     const creditsData = await creditsResponse.json();
-
-//     const actors = creditsData.cast.slice(0, 6).map((actor) => ({
-//       name: actor.name,
-//       personId: actor.id,
-//       character: actor.character,
-//       imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
-//     }));
-
-//     const actorImages = await fetchActorsImages(actors);
-
-//     const movieDetails = {
-//       id: data.id,
-//       title: data.title,
-//       overview: data.overview,
-//       voteAverage: data.vote_average,
-//       release: data.release_date,
-//       tagline: data.tagline,
-//       runtime: data.runtime,
-//       backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
-//       poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-//       credits: {
-//         director: creditsData.crew.find((person) => person.job === "Director")
-//           ?.name,
-//         actors: actors.map((actor) => ({
-//           ...actor,
-//           imagePath: actorImages[actor.personId],
-//         })),
-//         otherCrew: creditsData.crew
-//           .filter((person) =>
-//             ["Producer", "Screenplay", "Music"].includes(person.job)
-//           )
-//           .map((crew) => ({ name: crew.name, job: crew.job })),
-//       },
-//     };
-
-//     return movieDetails;
-//   } catch (error) {
-//     console.error("Error fetching movie details:", error);
-//     return null;
-//   }
-// };
-
-// Define `fetchCompleteMovieDetails` function
+// console.log("moviedetails on backend is:", movieDetails);
 
 const baseImageUrl = "https://image.tmdb.org/t/p/w500";
 
@@ -1405,30 +1357,49 @@ const fetchCompleteMovieDetails = async (movieId) => {
   if (!movieId) return null;
 
   try {
-    const [movieResponse, creditsResponse, videosResponse, similarResponse] =
-      await Promise.all([
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
-        ),
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-        ),
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
-        ),
-        fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
-        ),
-      ]);
+    const [
+      movieResponse,
+      creditsResponse,
+      videosResponse,
+      similarResponse,
+      movieProviderResponse,
+      movieImagesResponse,
+    ] = await Promise.all([
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
+      ),
+      fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${movieAPI_KEY}`
+      ),
+    ]);
 
-    const [movieData, creditsData, videosData, similarData] = await Promise.all(
-      [
-        movieResponse.json(),
-        creditsResponse.json(),
-        videosResponse.json(),
-        similarResponse.json(),
-      ]
-    );
+    const [
+      movieData,
+      creditsData,
+      videosData,
+      similarData,
+      movieProviderData,
+      movieImagesData,
+    ] = await Promise.all([
+      movieResponse.json(),
+      creditsResponse.json(),
+      videosResponse.json(),
+      similarResponse.json(),
+      movieProviderResponse.json(),
+      movieImagesResponse.json(),
+    ]);
 
     addMovieToDatabase(movieData, "movie");
 
@@ -1485,10 +1456,21 @@ const fetchCompleteMovieDetails = async (movieId) => {
       poster: movie.poster_path ? `${baseImageUrl}${movie.poster_path}` : null,
     }));
 
+    const providers = movieProviderData.results.SE;
+    // (provider) => ({
+    //   name: provider.provider_name,
+    // })
+    // );
+
+    const movieImages = movieImagesData;
+
+    console.log("providers are:", providers);
+
     const movieDetails = {
       id: movieData.id,
       title: movieData.title,
       overview: movieData.overview,
+      providers: providers,
       voteAverage: movieData.vote_average,
       release: movieData.release_date,
       tagline: movieData.tagline,

@@ -19,7 +19,7 @@ const supportedServices = [
   "Apple TV",
   "SVT",
   "TV4 Play",
-  "Discovery+"
+  "Discovery+",
 ];
 
 //? dessa används inte??? var kommer länkarna ifrån då?
@@ -96,9 +96,12 @@ export default function FetchedMovies({
   console.log("fetched är", movieDetails);
   return (
     <>
-      <div className="flex flex-col w-full justify-center items-center py-10">
-        <h2 className="text-2xl font-semibold">Lights, Camera, Action!</h2>
-        <p>Your curated movies awaits!</p>
+      <div className="flex flex-col w-full justify-center items-start py-10">
+        <h2 className="text-2xl font-semibold pb-3">Lights, Camera, Action!</h2>
+        <p className="font-semibold">
+          See something you like? Liking it helps the AI deliver even better
+          recommendations tailored just for you.
+        </p>
       </div>
       <div className="grid grid-cols-2 gap-4 w-full ">
         {movieDetails.map((movie) => (
@@ -119,16 +122,23 @@ export default function FetchedMovies({
                   </Link>
                   <div
                     style={{
-                      backdropFilter: "blur(20px)",
-                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      border: "0.9px solid grey",
+                      backdropFilter: "blur(4px)",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
                     }}
                     onClick={() => handleLikeButtonClicked(movie.id)}
-                    className="absolute top-0 right-0 m-2 rounded-full h-10 w-10 flex justify-center items-center hover:cursor-pointer"
+                    className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                   >
                     {!likes[movie.id] ? (
-                      <FaRegHeart className="h-5 w-5 text-red-600" />
+                      <div className="flex flex-col justify-center items-center">
+                        <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
+                        <p className="text-slate-100 mb-1 text-sm">Like</p>
+                      </div>
                     ) : (
-                      <FaHeart className="h-5 w-5 text-red-600" />
+                      <div className="flex flex-col justify-center items-center">
+                        <FaHeart className="h-5 w-5 text-red-600 mb-1" />
+                        <p className="text-red-600 mb-1 text-sm">Unlike</p>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -190,23 +200,31 @@ export default function FetchedMovies({
                 <div className="w-auto flex justify-center items-center pt-5 px-2 ">
                   <button
                     onClick={() => {
-                      handleButtonClicked(movie.id);
+                      handleButtonClicked(movie.id); // Toggles like state
                       if (!watches[movie.id]) {
-                        postAddToWatchList(movie.id, "movie", movie.title);
+                        postAddToWatchList(movie.id, "movie", movie.title); // Adds to like list if not liked
                       } else {
-                        postRemoveFromWatchList(movie.id, "movie", movie.title);
+                        postRemoveFromWatchList(movie.id, "movie", movie.title); // Removes from like list if liked
                       }
                     }}
-                    className="w-full hover:cursor-pointer h-10 text-slate-100 bg-slate-900 flex justify-center items-center rounded-xl px-3 border-none"
+                    className={`w-full h-10 ${
+                      !watches[movie.id] ? "bg-[#3D3B8E]" : "bg-green-600"
+                    } flex justify-center items-center rounded-full px-3 border-none`}
                   >
                     {!watches[movie.id] ? (
-                      <FaPlus className="text-2xl" />
+                      <FaPlus className="text-2xl text-gray-200" />
                     ) : (
-                      <FaCheck className="text-2xl" />
+                      <FaCheck className="text-2xl text-gray-200" />
                     )}
-                    <span className="pl-2 text-xs">
-                      {!watches[movie.id] ? "ADD TO WATCH LIST" : "ADDED"}
-                    </span>
+                    {!watches[movie.id] ? (
+                      <span className="pl-2 w-full text-sm font-light text-gray-200">
+                        ADD TO LIST
+                      </span>
+                    ) : (
+                      <span className="pl-2 w-full text-sm font-light text-gray-200">
+                        ADDED
+                      </span>
+                    )}
                   </button>
                 </div>
               </div>

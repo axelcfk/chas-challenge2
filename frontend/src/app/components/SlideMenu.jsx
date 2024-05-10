@@ -11,16 +11,23 @@ export default function SlideMenu({ children }) {
   );
 }
 
-export function SlideMenuMovieCard({title, poster, overview}) {
+export function SlideMenuMovieCard({title, poster, overview, id}) {
+
+  if (!id || !poster || !title) { 
+    return <div className="mx-2 inline-block h-36 w-24">
+    Loading movie...</div>
+  }
 
   return (
     <div className="mx-2 inline-block h-36 w-24">
-      <img
-          style={{ border: "1px solid grey" }}
-          className="inline-block w-24 h-full mr-3 rounded-md"
-          src={poster}
-          alt={title}
-        />
+        <Link href={`/movie/${encodeURIComponent(id)}`}>
+        <img
+            style={{ border: "1px solid grey" }}
+            className="inline-block w-24 h-full mr-3 rounded-md"
+            src={poster}
+            alt={title}
+          />
+        </Link>
         {/* <div className=" flex flex-col ml-3">
           <h2 className="text-md mb-4 font-light">{title}</h2>
           <p className="font-light text-slate-400">
@@ -33,9 +40,11 @@ export function SlideMenuMovieCard({title, poster, overview}) {
 
 export function SlideMenuMixCard({imgSrc, mixName = "MixName"}) {
 
+
   return (
     <div className="mx-2 inline-block relative">
-      <Link href={`/mymixes/${encodeURIComponent(mixName)}`}>
+      {/* <Link href={`/mymixes2/${encodeURIComponent(mixName)}`}> */}
+      <Link href={`/mymixes2/${mixName}`}>
               
     <img
       
@@ -44,7 +53,7 @@ export function SlideMenuMixCard({imgSrc, mixName = "MixName"}) {
       alt="mix img"
     />
     <div className="absolute inset-0 flex items-center justify-center text-center flex-wrap w-full">
-      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100">{mixName}</p></div>
+      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100 text-white">{mixName}</p></div>
     </div>
     </Link>
   </div>
@@ -57,6 +66,7 @@ export function SlideMenuSearchHistoryCard({imgSrc, searchName = "Search #"}) {
   return (
     <div className="mx-2 inline-block relative">
       {/* <Link href={`/mymixes/${encodeURIComponent(searchName)}`}> */}
+    
               
     <img
       
@@ -65,7 +75,7 @@ export function SlideMenuSearchHistoryCard({imgSrc, searchName = "Search #"}) {
       alt="mix img"
     />
     <div className="absolute inset-0 flex items-center justify-center text-center flex-wrap w-full">
-      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100">{searchName}</p></div>
+      <div className="bg-[#2B1B41] rounded-full opacity-65 w-[80%] text-wrap"><p className="opacity-100 text-white">{searchName}</p></div>
     </div>
     {/* </Link> */}
   </div>

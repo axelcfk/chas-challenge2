@@ -24,10 +24,10 @@ export default function InputField({
         backdropFilter: "blur(20px)",
         backgroundColor: "rgba(0, 0, 0, 0.2)",
       }}
-      className="h-14 flex justify-center items-center rounded-xl z-10"
+      className="h-14 flex justify-center items-center rounded-full z-10"
     >
       <input
-        className="h-14 bg-transparent w-full md:w-1/3 rounded-xl text-lg text-center text-slate-50 md:mr-3 border-none"
+        className="h-14 bg-transparent w-full md:w-1/3 rounded-full text-lg text-center text-slate-50 md:mr-3 border-none"
         type="text"
         value={input}
         onChange={handleInputChange}

@@ -10,7 +10,7 @@ export default function AutoQuery({ setInput, input }) {
   return (
     <div className="grid md:grid-cols-2 grid-cols-1 gap-2  w-full pb-8 ">
       <p
-        className={`rounded-xl h-12 flex justify-center items-center hover:cursor-pointer ${
+        className={`rounded-full h-10 flex justify-center items-center hover:cursor-pointer ${
           input === autoQuery[0] ? "bg-slate-100 text-slate-950" : ""
         }`}
         onClick={() => setInput(autoQuery[0])}
@@ -19,7 +19,7 @@ export default function AutoQuery({ setInput, input }) {
         {autoQuery[0]}
       </p>
       <p
-        className={`rounded-xl h-12 flex justify-center items-center hover:cursor-pointer ${
+        className={`rounded-full h-10 flex justify-center items-center hover:cursor-pointer ${
           input === autoQuery[1] ? "bg-slate-100 text-slate-950" : ""
         }`}
         onClick={() => setInput(autoQuery[1])}
@@ -28,7 +28,7 @@ export default function AutoQuery({ setInput, input }) {
         {autoQuery[1]}
       </p>
       <p
-        className={`rounded-xl h-12 md:flex  hidden justify-center items-center hover:cursor-pointer ${
+        className={`rounded-full h-10 md:flex  hidden justify-center items-center hover:cursor-pointer ${
           input === autoQuery[2] ? "bg-slate-100 text-slate-950" : ""
         }`}
         onClick={() => setInput(autoQuery[2])}
@@ -37,7 +37,7 @@ export default function AutoQuery({ setInput, input }) {
         {autoQuery[2]}
       </p>
       <p
-        className={`rounded-xl h-12 md:flex hidden justify-center items-center hover:cursor-pointer ${
+        className={`rounded-full h-10 md:flex hidden justify-center items-center hover:cursor-pointer ${
           input === autoQuery[3] ? "bg-slate-100 text-slate-950" : ""
         }`}
         onClick={() => setInput(autoQuery[3])}

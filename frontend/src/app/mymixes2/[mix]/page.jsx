@@ -7,11 +7,13 @@ import { SlideMenuMovieCard } from "@/app/components/SlideMenu";
 import { postMovieToDatabase } from "@/app/utils";
 import { MovieCardMix } from "./MovieCardMix";
 import Navbar from "@/app/components/Navbar";
+import { FaPlus } from "react-icons/fa";
 
 export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
   const [reasoningFromGPT, setReasoningFromGPT] = useState("");
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
+  const [messageNoStoredMix, setMessageNoStoredMix] = useState("");
 
   const params = useParams();
   const mixTitle = params.mix; // Get movie ID from the URL parameter
@@ -47,25 +49,61 @@ export default function Mix() {
 
   // First time entering page or Refreshing page, check if we already have a dailymixbasedonlikes on backend
 
-  /* useEffect(() => {
-    getGenerateDailyMixFromGPT()
+  useEffect(() => {
+    setMixFromBackendObjects([]);
 
-  }, []) */
+    
+    async function getStoredMix() {
+      setLoading(true)
+      try {
+        const response = await fetch(`${host}/me/dailymixbasedonlikes`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          //body: JSON.stringify({ }),
+        });
+        const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
+        if (data.mixMovieObjects) {
+          setMessageNoStoredMix("");
+
+          setMixFromBackendObjects(data.mixMovieObjects);
+  
+          //setReasoningFromGPT(data.reasoning)
+
+        } else if (data.message) {
+
+          setMessageNoStoredMix(data.message);
+        } else {
+          setLoading(false);
+          console.error("Failed to fetch stored mix in response");
+        }
+      } catch (error) {
+        console.error("Failed to fetch stored mix:", error);
+      } finally {
+        //setLoading(false)
+  
+        //setSuggestionFetchedFromGPT(true);
+        //setMixIsFetched(true);
+      }
+    }
+    getStoredMix();
+
+  }, [])
 
   // ----------------------- onClick  getGenerateDailyMixFromGPT(); starts a sequence of useEffects --------------
 
   
   // triggers when getMixFromOurDatabaseOnlyIDs() is complete
   useEffect(() => {
+    setMixDetails([]);
+
    
       try {
         mixFromBackendObjects.forEach( (movieObject) => {
          
-          // console.log("movieObject: ", movieObject);
-          //setLoading(false);
+          // We map through the movie objects and just pick out the things we need ... this is good incase we want to add the credits and actors etc later since they are seperate fetches...?
 
           if (movieObject.title) {
-            setMixDetails((prevDetails) => [
+            setMixDetails((prevDetails) => [ 
               ...prevDetails,
               {
                 id: movieObject.id,
@@ -141,28 +179,30 @@ export default function Mix() {
       <div className="h-full">
         <div className="flex flex-col gap-8 my-8 h-52 justify-center items-center">
           <div className="flex w-full justify-center items-center text-center">
-            <h1 className="text-3xl font-semibold">{mixTitle} mix</h1>
+            <h1 className="">{mixTitle} mix</h1>
           </div>
           
           <button
-            className={`bg-[#3F295E] text-white rounded-full font-semibold w-52 border border-[#3F295E] hover:border-white`}
+            className={`bg-[#3F295E] text-white p-4 w-52 box-border border-2 border-solid border-[#3F295E] rounded-full hover:border-white`}
             onClick={() => {
               // setButtonClicked(true)
               getGenerateDailyMixFromGPT();
             }}
             //disabled={!input}
           >
-            <div className=" flex justify-center items-center text-center w-full p-4">
-              <p className="">Generate</p>
-            </div>
+              <p className="font-semibold">Generate</p>
           </button>
         </div>
 
-        <div className="bg-[#3F295E] min-h-full pb-8 pl-4">
-          <div className="flex w-full justify-end pr-8 pt-4 items-center">
-            <button className="flex justify-center items-center text-center p-6 py-2 bg-[#FF506C] rounded-lg">Save List</button> {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
-          </div>
+        <div className="bg-[#3F295E] min-h-full pb-8 pl-4 pr-8">
+          <div className="flex w-full justify-end pt-4 items-center"> {/* pr-8 here moves it outside screen? */}
          
+                         {/*  <FaCheck className="text-2xl text-gray-200" /> */}
+                        
+            <button className=" text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-[#FF506C] rounded-lg  border-2 border-solid border-[#FF506C] hover:border-white"><FaPlus className="text-2xl text-white" /> Save List</button> {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
+          </div>
+          
+          {loading === false && messageNoStoredMix !== "" && <div><p>{messageNoStoredMix}</p></div>}
           {loading === true ? (
             <div>Loading...</div>
           ) : (
@@ -172,6 +212,7 @@ export default function Mix() {
               {mixDetails.map((movie, index) => (
                 <MovieCardMix // TODO: ändra komponentnamnet till MovieMixCard...?
                   key={index}
+                  id={movie.id}
                   title={movie.title}
                   poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
                   overview={movie.overview}
