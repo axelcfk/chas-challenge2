@@ -9,7 +9,7 @@ import {
   FaStar,
   FaImage,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   postAddToLikeList,
   postAddToWatchList,
@@ -43,7 +43,9 @@ export default function MoviePage() {
 
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const params = useParams();
-  const movieId = params.movieId; // Get movie ID from the URL parameter
+  const movieId = params.movieId;
+
+  const parallaxRef = useRef(null);
 
   const serviceLogos = {
     Netflix: "/Netflix1.svg",
@@ -78,6 +80,24 @@ export default function MoviePage() {
       [id]: !prevLikes[id],
     }));
   }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const speed = 10;
+      if (parallaxRef.current) {
+        parallaxRef.current.style.transform = `translateY(${
+          scrollTop * speed
+        }px)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   //FETCHA ALLA MOVIE DETAILS FRÅN BACKEND
   // useEffect(() => {
   //   const fetchMovieDetails = async () => {
@@ -229,16 +249,16 @@ export default function MoviePage() {
   }
 
   if (!movieDetails) {
-    return <div>No movie found. Try a different search!</div>;
+    return <LoadingIndicator />;
   }
 
   console.log("similar object", similar);
-  console.log(
-    "providers are??:",
-    movieDetails.providers.flatrate[0].provider_name
-  );
+  // console.log(
+  //   "providers are??:",
+  //   movieDetails.providers.flatrate[0].provider_name
+  // );
 
-  const providerName = movieDetails.providers.flatrate[0].provider_name;
+  // const providerName = movieDetails.providers.flatrate[0].provider_name;
   const flatrateProviders = movieDetails.providers.flatrate.map((provider) => {
     return (
       <div
@@ -281,11 +301,18 @@ export default function MoviePage() {
       ) : (
         <div className="h-full flex flex-col justify-center items-center  relative z-10">
           {movieDetails.title ? (
-            <div className="flex flex-col justify-center items-center text-slate-400">
+            <div className="flex flex-col justify-center items-center text-slate-400 ">
               <div className="flex flex-col  justify-center items-center ">
                 {" "}
-                <div className="w-full flex flex-row justify-center items-center  ">
-                  <div className="w-full">
+                <div
+                  className="w-full flex flex-row justify-center items-center parallax-container rounded-lg p-5"
+                  // style={{
+                  //   backdropFilter: "blur(15px)",
+                  //   backgroundColor: "rgba(0, 0, 0, 0.1)",
+                  // }}
+                  ref={parallaxRef}
+                >
+                  <div className="w-full ">
                     <h2 className="text-2xl font-semibold  text-slate-50 mr-4">
                       {" "}
                       {movieDetails.title}
@@ -455,7 +482,7 @@ export default function MoviePage() {
         ></iframe>
       </div>
       <div className="w-full pb-5 text-xl pt-20">
-        <p>Actors</p>
+        <h2>Actors</h2>
       </div>
       <div className="grid grid-cols-3 justify-center items-center w-full">
         {credits.actors.map((actor, index) => (

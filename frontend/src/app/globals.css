@@ -248,10 +248,10 @@ input:focus {
   visibility: visible; /* Always show overlay when selected */
 }
 
-/* .parallax-container {
+.parallax-container {
   position: relative;
   overflow: hidden;
-  height: 60vh; 
+  /* height: 60vh; */
 }
 
 .parallax-image {
@@ -263,7 +263,7 @@ input:focus {
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
-} */
+}
 
 .fade-out {
   position: relative;
