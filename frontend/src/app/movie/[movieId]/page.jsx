@@ -50,8 +50,8 @@ export default function MoviePage() {
   const serviceLogos = {
     Netflix: "/Netflix1.svg",
     "HBO Max": "/HBO1.svg",
-    Viaplay: "/Viaplay1.svg",
-    "Amazon Prime Video": "Prime1.svg",
+    Viaplay: "/Viaplay.svg",
+    "Amazon Prime Video": "/PrimeVideo.svg",
     "Disney Plus": "/Disney1.svg",
     "Tele2 Play": "/tele2play.png",
     "Apple TV": "/AppleTV1.svg",
@@ -263,20 +263,28 @@ export default function MoviePage() {
   // );
 
   // const providerName = movieDetails.providers.flatrate[0].provider_name;
-  const flatrateProviders = movieDetails.providers.flatrate.map((provider) => {
-    return (
-      <div
-        key={provider.provider_name}
-        className="flex flex-row justify-start items-center "
-      >
-        <img
-          className="h-8 "
-          src={serviceLogos[provider.provider_name]}
-          alt={provider.provider_name}
-        />
-      </div>
-    );
-  });
+  const flatrateProviders = movieDetails.providers.flatrate
+    ? movieDetails.providers.flatrate
+        .filter((provider) => provider.provider_name) // Ensure provider_name is not empty
+        .map((provider) => {
+          return (
+            <div
+              // style={{
+              //   backdropFilter: "blur(20px)",
+              //   backgroundColor: "rgba(255, 255, 255, 0.5)",
+              // }}
+              key={provider.provider_id} // Use provider_id as a more unique key
+              className="w-full h-full flex  justify-evenly  items-center "
+            >
+              <img
+                className="h-6"
+                src={serviceLogos[provider.provider_name]}
+                alt={provider.provider_name}
+              />
+            </div>
+          );
+        })
+    : null;
 
   return (
     <div className="flex flex-col justify-center items-center md:items-start pt-20 pb-10  px-8 md:px-20 h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -453,15 +461,19 @@ export default function MoviePage() {
                     )}
                   </div>
                 </div>
-                <div className="w-full flex h-20 justify-start mt-8 bg-slate-100  ">
-                  {flatrateProviders ? (
-                    <>
-                      <h3 className="text-base">Watch it on:</h3>
-                      {flatrateProviders}
-                    </>
-                  ) : (
-                    <p>No providers in your area</p>
-                  )}
+                <div className="bg-slate-200 w-full mt-10 mb-10 ">
+                  <div className="w-full  ">
+                    {flatrateProviders && (
+                      <h3 className="text-base text-slate-950">Watch it on:</h3>
+                    )}
+                  </div>
+                  <div className="w-full h-full grid grid-cols-3 justify-center items-center my-2  ">
+                    {flatrateProviders ? (
+                      <>{flatrateProviders}</>
+                    ) : (
+                      <p>No providers in your area</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
