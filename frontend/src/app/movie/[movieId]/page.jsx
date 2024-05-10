@@ -396,24 +396,28 @@ export default function MoviePage() {
                   </div>
                 </div>
                 <div className="h-full lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
-                  <div className="h-full pb-5 " onClick={handleToggle}>
+                  <div className="h-full pb-5" onClick={handleToggle}>
                     {!toggleExpanded ? (
                       <div>
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className=" md:w-full text-base font-light">
+                        <div
+                          className={`md:w-full text-base font-light ${
+                            !toggleExpanded ? "fade-out" : ""
+                          }`}
+                        >
                           {movieDetails.overview.slice(0, 200)}...
-                        </p>
+                        </div>
                       </div>
                     ) : (
                       <div>
                         <p className="mt-10 mb-2 font-medium text-lg">
                           {movieDetails.tagline}
                         </p>
-                        <p className=" md:w-full font-light text-base">
+                        <div className="md:w-full font-light text-base">
                           {movieDetails.overview.slice(0, 600)}
-                        </p>
+                        </div>
                       </div>
                     )}
                   </div>
