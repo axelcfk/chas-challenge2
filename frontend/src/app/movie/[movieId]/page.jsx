@@ -52,7 +52,7 @@ export default function MoviePage() {
     "HBO Max": "/HBO1.svg",
     Viaplay: "/Viaplay.svg",
     "Amazon Prime Video": "/PrimeVideo.svg",
-    "Disney Plus": "/Disney1.svg",
+    "Disney Plus": "/Disney2.webp",
     "Tele2 Play": "/tele2play.png",
     "Apple TV": "/AppleTV1.svg",
     SVT: "/SVTPlay.svg",
@@ -99,71 +99,7 @@ export default function MoviePage() {
   }, []);
 
   //FETCHA ALLA MOVIE DETAILS FRÅN BACKEND
-  // useEffect(() => {
-  //   const fetchMovieDetails = async () => {
-  //     if (!movieId) return;
 
-  //     setLoading(true);
-  //     try {
-  //       const response = await fetch(
-  //         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${movieAPI_KEY}`
-  //       );
-  //       const data = await response.json();
-
-  //       // await postMovieToDatabase(data); // if it already exists it doesnt get added (see backend)
-
-  //       setMovieDetails({
-  //         id: data.id,
-  //         title: data.title,
-  //         overview: data.overview,
-  //         voteAverage: data.vote_average,
-  //         release: data.release_date,
-  //         tagline: data.tagline,
-  //         runtime: data.runtime,
-  //         backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
-  //         poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
-  //       });
-
-  //       const creditsResponse = await fetch(
-  //         `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${movieAPI_KEY}`
-  //       );
-  //       const creditsData = await creditsResponse.json();
-  //       setCredits({
-  //         director: creditsData.crew.find((person) => person.job === "Director")
-  //           ?.name,
-  //         actors: creditsData.cast.slice(0, 6).map((actor) => ({
-  //           // Only take the first six actors
-  //           name: actor.name,
-  //           personId: actor.id,
-  //           character: actor.character,
-  //           imagePath: actor.profile_path, // Assuming direct path is available; adjust based on API
-  //         })),
-  //         otherCrew: creditsData.crew
-  //           .filter((person) =>
-  //             ["Producer", "Screenplay", "Music"].includes(person.job)
-  //           )
-  //           .map((crew) => ({
-  //             name: crew.name,
-  //             job: crew.job,
-  //           })),
-  //       });
-
-  //       fetchActorsImages(creditsData.cast.slice(0, 6));
-  //     } catch (error) {
-  //       console.error("Error fetching movie details:", error);
-  //       setMovieDetails(null); // Handle errors by setting details to null
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   credits.actors.forEach((actor) => {
-  //     console.log(`Actor Name: ${actor.name}, Person ID: ${actor.personId}`);
-  //     // You can use `actor.personId` to fetch the actor's images or more details
-  //   });
-
-  //   fetchMovieDetails();
-  // }, [movieId]);
   useEffect(() => {
     async function fetchMoviePageDetails(movieId) {
       if (!movieId) {
@@ -355,9 +291,9 @@ export default function MoviePage() {
                       />
                       <div
                         style={{
-                          // border: "1px solid grey",
+                          border: "0.9px solid grey",
                           backdropFilter: "blur(4px)",
-                          backgroundColor: "rgba(255, 255, 255, 0.9)",
+                          backgroundColor: "rgba(0, 0, 0, 0.3)",
                         }}
                         onClick={() => {
                           handleLikeButtonClicked(movieDetails.id);
@@ -375,19 +311,17 @@ export default function MoviePage() {
                             );
                           }
                         }}
-                        className="absolute top-3 right-5 -m-4 rounded-xl h-16 w-10 flex justify-center items-center hover:cursor-pointer"
+                        className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                       >
                         {!likes[movieDetails.id] ? (
                           <div className="flex flex-col justify-center items-center">
-                            <FaRegHeart className="h-5 w-5 text-red-600 mb-1" />
-                            <p className="text-red-600 mb-1 ">Like</p>
+                            <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
+                            <p className="text-slate-100 mb-1 text-sm">Like</p>
                           </div>
                         ) : (
                           <div className="flex flex-col justify-center items-center">
                             <FaHeart className="h-5 w-5 text-red-600 mb-1" />
-                            <p className="text-red-600 mb-1 font-semibold">
-                              Like
-                            </p>
+                            <p className="text-red-600 mb-1 text-sm">Unlike</p>
                           </div>
                         )}
                       </div>
@@ -410,7 +344,11 @@ export default function MoviePage() {
                             ); // Removes from like list if liked
                           }
                         }}
-                        className="w-3/4 h-10 bg-[#623CEA] flex justify-center items-center rounded-full px-3 border-none"
+                        className={`w-3/4 h-10 ${
+                          !watches[movieDetails.id]
+                            ? "bg-[#623CEA]"
+                            : "bg-green-600"
+                        } flex justify-center items-center rounded-full px-3 border-none`}
                       >
                         {!watches[movieDetails.id] ? (
                           <FaPlus className="text-2xl text-gray-200" />
@@ -489,7 +427,7 @@ export default function MoviePage() {
         <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
         <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div>
         <iframe
-          className="border-none z-10"
+          className="border-none z-10 rounded-md"
           src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
           width="90%" // Adjust the width as needed
           height="90%"
