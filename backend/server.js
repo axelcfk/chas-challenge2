@@ -430,8 +430,8 @@ async function getMixFromOurDatabaseOnlyIDs() {
   }
 }
 
-const fetchedMovies = []; // TA BORT NÄR VI HAR FIXAT MYSQL
-const fetchedSeries = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+const fetchedMovies = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
+const fetchedSeries = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
 
 // BARA FÖR ATT SE VAD SOM HAR SPARATS, VI SKA INTE ANVÄNDA DENNA
 app.get("/allfetchedmoviesorseries", async (req, res) => {
@@ -1523,6 +1523,8 @@ app.post("/fetchingmoviepagedetails", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 
 ///////////////////////////////////////////////////
 
