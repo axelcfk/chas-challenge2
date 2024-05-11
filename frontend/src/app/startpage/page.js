@@ -40,16 +40,17 @@ export default function Startpage() {
         </main>
       </div>
       <div className="list-container flex justify-center flex-col text-white mt-[-240px] space-y-8">
-        <h2 className="ml-4 text-xl">My Watchlist</h2>
+        <h2 className="ml-4 text-xl">My Watchlist (likelist placeholder)</h2>
         <SlideMenu>
+          <LikeListSlideMenu2></LikeListSlideMenu2>
+          {/* <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          <SlideMenuMovieCard poster={"/troll-poster.jpg"} /> */}
         </SlideMenu>
         <h2 className="ml-4 text-xl">Search history</h2>
         <SlideMenu>
@@ -78,7 +79,7 @@ export default function Startpage() {
             imgSrc={"/search-history-img.png"}
           ></SlideMenuSearchHistoryCard>
         </SlideMenu>
-        <div className="ml-4 text-xl">Popular today </div>
+        <div className="ml-4 text-xl">Popular today (likelist placeholder) </div>
         {/* TODO: LIKELIST JUST NU, byt ut mot popular today */}
         {/* <SlideMenu>
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
@@ -93,6 +94,7 @@ export default function Startpage() {
         <LikeListSlideMenu2></LikeListSlideMenu2>
         <h2 className="ml-4 text-xl">Movie mixes</h2>
         <div>
+          
           <SlideMenu>
             <SlideMenuMixCard
               mixName={"Weekly"}
