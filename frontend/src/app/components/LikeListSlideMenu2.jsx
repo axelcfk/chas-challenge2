@@ -126,7 +126,7 @@ export default function LikeListSlideMenu2() {
           {likedMoviesListDetails.map((movie, index) => (
             <MovieCardWatchAndLike
               key={index}
-              isLiked={true}
+              isLiked={true} // såklart är filmen liked eftersom den är i likelistan.... :)
               id={movie.id}
               title={movie.title}
               poster={movie.poster}
