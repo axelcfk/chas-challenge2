@@ -13,7 +13,7 @@ export default function SlideMenu({ children }) {
 
 export function SlideMenuMovieCard({title, poster, overview, id}) {
 
-  if (!id || !poster || !title) { 
+  if (!poster) { 
     return <div className="mx-2 inline-block h-36 w-24">
     Loading movie...</div>
   }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchMovieObject, host } from "../utils";
 import SlideMenu from "./SlideMenu";
 import { SlideMenuMovieCard } from "./SlideMenu";
+import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 
 export default function LikeListSlideMenu2() {
   const [likedMoviesList, setLikedMoviesList] = useState(null);
@@ -59,13 +60,12 @@ export default function LikeListSlideMenu2() {
   }
 
   useEffect(() => {
-    
     if (
       (likedMoviesList && likedMoviesList.length > 0) ||
       (likedSeriesList && likedSeriesList.length > 0)
     ) {
-      likedMoviesList.forEach( async (movie) => {
-        const movieObject = await fetchMovieObject(movie.id) // from our database
+      likedMoviesList.forEach(async (movie) => {
+        const movieObject = await fetchMovieObject(movie.id); // from our database
         console.log("movieObject: ", movieObject);
 
         if (movieObject.title) {
@@ -88,12 +88,11 @@ export default function LikeListSlideMenu2() {
         }
       });
     }
-  //}, [showLikedDetails]);
+    //}, [showLikedDetails]);
   }, [likedMoviesFetched]);
 
- 
   //if (likedMoviesList == null || likedSeriesList == null) {
-  if (likedMoviesList == null ) {
+  if (likedMoviesList == null) {
     return (
       <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
         Loading like-lists...
@@ -114,23 +113,31 @@ export default function LikeListSlideMenu2() {
         Show Details
       </button>
  */}
-     
-        {likedMoviesListDetails && likedMoviesListDetails.length > 0 ? (
-          <SlideMenu>
-            {likedMoviesListDetails.map((movie, index) => (
-              <SlideMenuMovieCard
+      {/* <SlideMenuMovieCard
                 key={index}
                 id={movie.id}
                 title={movie.title}
                 poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
                 overview={movie.overview}
-              />
-            ))}
-          </SlideMenu>
-        ) : (
-          "No movies liked yet"
-        )}
-      
+              /> */}
+
+      {likedMoviesListDetails && likedMoviesListDetails.length > 0 ? (
+        <SlideMenu>
+          {likedMoviesListDetails.map((movie, index) => (
+            <MovieCardWatchAndLike
+              key={index}
+              isLiked={true} // såklart är filmen liked eftersom den är i likelistan.... :)
+              id={movie.id}
+              title={movie.title}
+              poster={movie.poster}
+              overview={movie.overview}
+              likedMoviesList={likedMoviesList}
+            ></MovieCardWatchAndLike>
+          ))}
+        </SlideMenu>
+      ) : (
+        "No movies liked yet"
+      )}
     </>
   );
 }
