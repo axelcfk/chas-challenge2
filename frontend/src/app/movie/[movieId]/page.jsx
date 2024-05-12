@@ -16,10 +16,10 @@ import {
   postMovieToDatabase,
   postRemoveFromLikeList,
   postRemoveFromWatchList,
-} from "@/app/utils";
-import { checkLikeList } from "@/app/utils";
-import BackButton from "@/app/components/BackButton";
-import SlideMenu from "@/app/components/SlideMenu";
+} from "../../utils";
+import { checkLikeList } from "../../utils";
+import BackButton from "../../components/BackButton";
+import SlideMenu from "../../components/SlideMenu";
 
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);

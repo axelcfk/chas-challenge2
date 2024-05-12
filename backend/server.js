@@ -1524,7 +1524,20 @@ app.post("/fetchingmoviepagedetails", async (req, res) => {
   }
 });
 
-
+app.get("/users/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const user = await query("SELECT * FROM users WHERE id = ?", [userId]);
+    if (user.length > 0) {
+      res.json(user[0]);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({error: "Internal server error"});
+  }
+});
 
 ///////////////////////////////////////////////////
 

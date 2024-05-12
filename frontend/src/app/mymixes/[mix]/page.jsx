@@ -1,12 +1,12 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchMovieObject, host } from "@/app/utils";
-import SlideMenu from "@/app/components/SlideMenu";
-import { SlideMenuMovieCard } from "@/app/components/SlideMenu";
-import { postMovieToDatabase } from "@/app/utils";
+import { fetchMovieObject, host } from "../../utils";
+import SlideMenu from "../../components/SlideMenu";
+import { SlideMenuMovieCard } from "../../components/SlideMenu";
+import { postMovieToDatabase } from "../../utils";
 import { MovieCardMix } from "./MovieCardMix";
-import Navbar from "@/app/components/Navbar";
+import Navbar from "../../components/Navbar";
 
 export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
@@ -347,7 +347,6 @@ export default function Mix() {
   console.log("Daily mix based on likes: ", mixDetails);
 
   return (
-    
     <div className="bg-[#251738] h-screen">
       {/* <Navbar></Navbar> */}
       <div className="border border-white">Navbar</div>
@@ -356,7 +355,7 @@ export default function Mix() {
           <div className="flex w-full justify-center items-center text-center">
             <h1 className="text-3xl font-semibold">{mixTitle} mix</h1>
           </div>
-          
+
           <button
             className={`bg-[#3F295E] text-white rounded-full font-semibold w-52 border border-[#3F295E] hover:border-white`}
             onClick={() => {
@@ -373,29 +372,32 @@ export default function Mix() {
 
         <div className="bg-[#3F295E] min-h-full pb-8 pl-4">
           <div className="flex w-full justify-end pr-8 pt-4 items-center">
-            <button className="flex justify-center items-center text-center p-6 py-2 bg-[#FF506C] rounded-lg">Save List</button> {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
+            <button className="flex justify-center items-center text-center p-6 py-2 bg-[#FF506C] rounded-lg">
+              Save List
+            </button>{" "}
+            {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
           </div>
-         
+
           {loading === true ? (
             <div>Loading...</div>
           ) : (
             <>
               {mixDetails && mixDetails.length > 0 ? (
-            <div className="flex w-full flex-col gap-8 bg-[#3F295E]">
-              {mixDetails.map((movie, index) => (
-                <MovieCardMix // TODO: ändra komponentnamnet till MovieMixCard...?
-                  key={index}
-                  title={movie.title}
-                  poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
-                  overview={movie.overview}
-                  voteAverage={movie.voteAverage}
-                  streamingServices="Streaming Services"
-                />
-              ))}
-            </div>
-          ) : (
-            ""
-          )}
+                <div className="flex w-full flex-col gap-8 bg-[#3F295E]">
+                  {mixDetails.map((movie, index) => (
+                    <MovieCardMix // TODO: ändra komponentnamnet till MovieMixCard...?
+                      key={index}
+                      title={movie.title}
+                      poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
+                      overview={movie.overview}
+                      voteAverage={movie.voteAverage}
+                      streamingServices="Streaming Services"
+                    />
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
             </>
           )}
         </div>

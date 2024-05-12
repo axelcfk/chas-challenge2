@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { host } from "../utils";
-import SlideMenu, { SlideMenuMovieCard } from "../components/SlideMenu";
+import SlideMenu, { SlideMenuMovieCard } from "./SlideMenu";
 
 export default function LikeListSlideMenu() {
-
   const [likedMoviesList, setLikedMoviesList] = useState(null);
   const [likedMoviesFetched, setLikedMoviesFetched] = useState(false);
   const [likedSeriesList, setLikedSeriesList] = useState(null);
@@ -41,8 +40,6 @@ export default function LikeListSlideMenu() {
     }
     //}, [likedMoviesFetched || likedSeriesFetched])
   }, [showLikedDetails]);
-
-  
 
   async function fetchLikedMovieDetails(id) {
     console.log("Fetching movie details for ID:", id);
@@ -121,8 +118,6 @@ export default function LikeListSlideMenu() {
     }
   }
 
- 
-
   // Loading... when just loading in data AND length > 0
   if (likedMoviesList == null || likedSeriesList == null) {
     return (
@@ -131,8 +126,6 @@ export default function LikeListSlideMenu() {
       </div>
     );
   }
-
- 
 
   return (
     <>
@@ -157,7 +150,7 @@ export default function LikeListSlideMenu() {
       <button
         className="p-8 bg-slate-500"
         onClick={() => {
-         // setShowLikedDetails(!showLikedDetails); // fetchar varje gång du open/close...
+          // setShowLikedDetails(!showLikedDetails); // fetchar varje gång du open/close...
           setShowLikedDetails(true);
         }}
       >

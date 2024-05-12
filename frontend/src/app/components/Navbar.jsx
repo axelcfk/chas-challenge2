@@ -1,10 +1,21 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MovieSearch from "../searchtest/page";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const savedUserId = localStorage.getItem("userId");
+    setIsLoggedIn(!!token);
+    if (token) {
+      setUserId(savedUserId);
+    }
+  }, []);
 
   return (
     <nav className="bg-deep-purple text-white">
@@ -55,29 +66,44 @@ export default function Navbar() {
                 isOpen ? "flex" : "hidden"
               } flex-col z-10 sm:flex-row sm:flex sm:items-center sm:space-x-4 absolute sm:relative bg-deep-purple w-full sm:w-auto sm:bg-transparent left-0 sm:left-auto right-0 top-16 sm:top-auto`}
             >
-              <Link href="/login">
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
-                  Log in
-                </span>
-              </Link>
-              <Link href="/chatpage2">
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
-                  Ai search
-                </span>
-              </Link>
-              <Link href="/profile">
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
-                  Account
-                </span>
-              </Link>
+              {!isLoggedIn ? (
+                <Link href="/login">
+                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
+                    Log in
+                  </span>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/chatpage2">
+                    <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
+                      Ai search
+                    </span>
+                  </Link>
+                  {userId && (
+                    <Link href={`/profile/${userId}`}>
+                      <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
+                        Profile
+                      </span>
+                    </Link>
+                  )}
+                  <Link
+                    href="/"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      localStorage.removeItem("userId");
+                      setIsLoggedIn(false);
+                      setUserId(null);
+                    }}
+                  >
+                    <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
+                      Log Out
+                    </span>
+                  </Link>
+                </>
+              )}
               <Link href="/services">
                 <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
                   About
-                </span>
-              </Link>
-              <Link href="/contact">
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center">
-                  Log Out
                 </span>
               </Link>
             </div>

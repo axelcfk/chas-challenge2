@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { postMovieToDatabase } from "../utils";
 
@@ -215,7 +215,6 @@ export default function ChatPage2() {
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
-
       {showVideo && movies.length < 2 && (
         <div
           className={` md:w-full flex flex-col justify-center items-center h-full ${

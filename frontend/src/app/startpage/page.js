@@ -13,7 +13,6 @@ import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 //TODO: rend watchlist on this page
 //? see what Friends watched on this page?
 
-
 export default function Startpage() {
   return (
     <div className="bg-[#110A1A] pb-8">
@@ -36,7 +35,7 @@ export default function Startpage() {
                 </Link>
               </div>
             </div>
-          </div>
+         </div>
         </main>
       </div>
       <div className="list-container flex justify-center flex-col text-white mt-[-240px] space-y-8">

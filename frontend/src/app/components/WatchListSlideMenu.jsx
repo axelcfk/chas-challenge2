@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { host } from "../utils";
-import SlideMenu, { SlideMenuMovieCard } from "../components/SlideMenu";
+import SlideMenu, { SlideMenuMovieCard } from "./SlideMenu";
 
 export default function WatchListSlideMenu() {
   const [likedMoviesList, setLikedMoviesList] = useState(null);
@@ -146,13 +146,11 @@ export default function WatchListSlideMenu() {
         className="p-8 bg-slate-500"
         onClick={() => {
           setShowWatchListDetails(true);
-         // setShowWatchListDetails(!showWatchListDetails); // fetchar varje gång
+          // setShowWatchListDetails(!showWatchListDetails); // fetchar varje gång
         }}
       >
         Show Details
       </button>
-
-      
 
       {showWatchListDetails ? (
         movieWatchListDetails && movieWatchListDetails.length > 0 ? (

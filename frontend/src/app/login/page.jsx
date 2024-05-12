@@ -10,8 +10,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-
-
   async function handleSignIn(e) {
     e.preventDefault();
 
