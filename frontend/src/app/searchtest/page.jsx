@@ -83,7 +83,7 @@ function MovieSearch() {
             <div className="relative">
               <input
                 ref={inputRef}
-                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-20" // Pr-10 for close button space
+                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-16" // Pr-10 for close button space
                 type="text"
                 value={inputValue}
                 onChange={handleChange}
