@@ -85,7 +85,7 @@ export default function WatchListSlideMenu2() {
           setMovieWatchListDetails((prevDetails) => [
             ...prevDetails, 
             {
-              id: movieObject.id, // or movie.id
+              id: movieObject.id, // or movi  e.id
               title: movieObject.title,
               overview: movieObject.overview,
               voteAverage: movieObject.vote_average,
@@ -110,7 +110,7 @@ export default function WatchListSlideMenu2() {
 
 
   //if (likedMoviesList = = null || likedSeriesList == null) {
-  if (!listsFetched) { 
+  if (likedMoviesList == null) { 
     return (
       <>
         <div className="inline-block w-full h-80 md:h-96 mx-4 bg-slate-950 text-slate-100">

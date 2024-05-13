@@ -133,7 +133,9 @@ export default function LikeListSlideMenu2() {
           ))}
         </SlideMenu>
       ) : (
-        "No movies liked yet"
+        <div className="inline-block w-full h-80 md:h-96 mx-4">
+          <p>No movies in Likelist yet</p>  {/*  TODO: detta visas i en millisekund när man refreshar... */}
+        </div>
       )}
     </>
   );
