@@ -70,7 +70,7 @@ export default function Mix() {
           setMessageNoStoredMix(data.message);
         } else {
           setLoading(false);
-          console.error("Failed to fetch stored mix in response");
+          console.error("Failed to fetch stored mix");
         }
       } catch (error) {
         console.error("Failed to fetch stored mix:", error);
@@ -83,9 +83,8 @@ export default function Mix() {
     getStoredMix();
   }, []);
 
-  // ----------------------- onClick  getGenerateDailyMixFromGPT(); starts a sequence of useEffects --------------
 
-  // triggers when getMixFromOurDatabaseOnlyIDs() is complete
+  // populate mixDetails after mixFromBackendObjects has been populated by a stored mix or new generated mix
   useEffect(() => {
     setMixDetails([]);
 
@@ -122,7 +121,9 @@ export default function Mix() {
     // }
   }, [mixFromBackendObjects]);
 
-  // --------------------- FUNCTIONS -----------------------------------------------------
+
+ 
+  // --------------------- onClick generate new mix, will suggested movies and their movie objects from TMDB ---------------------
 
   const getGenerateDailyMixFromGPT = async () => {
     resetState();
@@ -180,8 +181,8 @@ export default function Mix() {
           </button>
         </div>
 
-        <div className="bg-[#3F295E] min-h-full pb-8 pl-4 pr-8">
-          <div className="flex w-full justify-end pt-4 items-center">
+        <div className="bg-[#3F295E] min-h-full pt-4 pb-8 pl-4 pr-8">
+          <div className="flex w-full justify-end items-center">
             {" "}
             {/* pr-8 here moves it outside screen? */}
             {/*  <FaCheck className="text-2xl text-gray-200" /> */}
@@ -191,6 +192,7 @@ export default function Mix() {
             {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
           </div>
 
+          <div className="pt-8">
           {loading === false && messageNoStoredMix !== "" && (
             <div>
               <p>{messageNoStoredMix}</p>
@@ -211,6 +213,8 @@ export default function Mix() {
                       overview={movie.overview}
                       voteAverage={movie.voteAverage}
                       streamingServices="Streaming Services"
+                      isInWatchList={true}
+                      isLiked={true}
                     />
                   ))}
                 </div>
@@ -219,6 +223,7 @@ export default function Mix() {
               )}
             </>
           )}
+          </div>
         </div>
         {/* </div> */}
       </div>

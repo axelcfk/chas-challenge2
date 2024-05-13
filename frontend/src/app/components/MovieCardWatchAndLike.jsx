@@ -5,8 +5,9 @@ import {
   postRemoveFromLikeList,
   postRemoveFromWatchList,
 } from "../utils";
-import { FaPlus, FaCheck, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaPlus, FaCheck, FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 // likedMoviesList and watchedMoviesList provided by parent... will not fetch in every movieCard
 // the lists are just used to see if the current movie is liked/watchlisted or not... changing the color of the buttons..
@@ -15,9 +16,10 @@ export default function MovieCardWatchAndLike({
   poster,
   title,
   overview,
-  isLiked,  // check if it is liked when loading in movie
+  isLiked,  // sending this as a prop so we dont have to fetch like/watchlist every time we use a moviecard
   isInWatchList,
   streamingServices,
+  voteAverage,
 }) {
   const [watched, setWatched] = useState(isInWatchList);
   const [liked, setLiked] = useState(isLiked);
@@ -31,22 +33,25 @@ export default function MovieCardWatchAndLike({
 
   }
 
-  /*  if (!id || !poster || !title ) {
+   if (!id || !poster || !title || !voteAverage ) {
     return <div>Loading...</div>
   }
- */
+
 
   return (
     <div className="inline-block h-80 md:h-96 mx-4"> {/* w-44 md:w-80 */}
-      <div className="h-full w-full flex flex-col justify-center items-center gap-4 ">
-        <div className="h-64 md:h-80 w-full flex items-center justify-center m-0 p-0">
-          <div className="relative ">
+      <div className="h-full w-full flex flex-col justify-center gap-4">
+        <div className="h-52 w-full flex justify-center m-0 p-0 ">
+          <div className="relative h-full">
+          <Link href={`/movie/${encodeURIComponent(id)}`}>
+            
           <img
-            className="h-64 md:h-80 rounded-md w-auto box-border"
+            className="h-full rounded-md w-auto box-border"
             src={poster}
             alt="Movie Poster"
             style={{ border: "0.5px solid grey" }}
           />
+          </Link>
           <div 
             style={{
               border: "0.9px solid grey",
@@ -77,7 +82,12 @@ export default function MovieCardWatchAndLike({
           </div>
           </div>
         </div>
-        <div className="h-12 w-full flex justify-center "> {/* gap-4 */}
+        <div className="h-32 w-full flex flex-col justify-start"> {/* gap-4 */}
+          <div className="flex gap-2 justify-start items-center">
+                      <FaStar color="yellow" />
+                      <p>{voteAverage.toFixed(1)}</p>
+          </div>
+          <div className="mt-4">
           <button
             onClick={() => {
               handleButtonClicked(id); // Toggles like state
@@ -87,9 +97,12 @@ export default function MovieCardWatchAndLike({
                 postRemoveFromWatchList(id, "movie", title); // Removes from like list if liked
               }
             }}
-            className={`w-full h-auto ${
+           /*  className={`w-full h-auto ${
               !watched ? "bg-[#3D3B8E]" : "bg-green-600"
-            } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`}
+            } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`} */
+            className={`w-full h-12 bg-inherit border border-solid ${
+              !watched ? "border-[#3D3B8E]" : "border-green-600"
+            } hover:cursor-pointer flex justify-center items-center rounded-full  box-border`}
           >
             
             {!watched ? (
@@ -99,13 +112,14 @@ export default function MovieCardWatchAndLike({
                 <p className="leading-none ">WATCHLIST</p>
               </div>
             ) : (
-              <div className="w-full flex justify-center items-center font-light text-gray-200">
+              <div className="w-full flex justify-center gap-2   items-center font-light text-gray-200">
               <FaCheck className="text-2xl leading-none text-gray-200" />
 
               <p className=" leading-none ">ADDED</p>
               </div>
             )}
           </button>
+          </div>
         </div>
       </div>
     </div>

@@ -629,6 +629,16 @@ app.get("/me/watchlists", (req, res) => {
   res.json(data);
 });
 
+// usually use both watchlist and likelist in movie cards...
+app.get("/me/watchandlikelists", (req, res) => {
+  const data = {
+    movieWatchList: movieWatchList,
+    likedMoviesList: likedMoviesList,
+  };
+
+  res.json(data);
+});
+
 app.post("/me/likelists/addtolikelist", async (req, res) => {
   try {
     const { id, movieOrSeries, title } = req.body;

@@ -7,6 +7,7 @@ import SlideMenu, {
 } from "../components/SlideMenu";
 import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
 import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
+import WatchListSlideMenu2 from "../components/WatchListSlideMenu2";
 
 //TODO: texten i rutan ska var lite större
 //TODO: fetcha populära filmer och rendera under popular today
@@ -38,10 +39,10 @@ export default function Startpage() {
          </div>
         </main>
       </div>
-      <div className="list-container flex justify-center flex-col text-white mt-[-240px] space-y-8">
-        <h2 className="ml-4 text-xl">My Watchlist (likelist placeholder)</h2>
-        <SlideMenu>
-          <LikeListSlideMenu2></LikeListSlideMenu2>
+      <div className="flex justify-center flex-col text-white mt-[-340px] space-y-8">
+        <h2 className="ml-4 text-xl">My Watchlist</h2>
+          {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
+          <WatchListSlideMenu2></WatchListSlideMenu2> 
           {/* <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
@@ -50,7 +51,6 @@ export default function Startpage() {
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} /> */}
-        </SlideMenu>
         <h2 className="ml-4 text-xl">Search history</h2>
         <SlideMenu>
           <SlideMenuSearchHistoryCard
