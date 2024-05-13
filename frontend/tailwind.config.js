@@ -8,31 +8,42 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "deep-purple": "#241838", // custom
-        "lighter-purple": "#362B4E", // custom
+        "deep-purple": "#241838", // custom purple color
+        "lighter-purple": "#362B4E", // lighter shade of custom purple
+        midnight: "#020617", // custom color representing midnight
       },
       backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))", // custom radial gradient
         "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))", // custom conic gradient
       },
       keyframes: {
-        bounce: {
-          "0%, 100%": {
-            transform: "translateY(-25%)",
-            animationTimingFunction: "cubic-bezier(0.8, 0, 1, 1)",
+        "slide-up-fade": {
+          "0%": {
+            transform: "translateY(100%)", // Start from below the initial position
+            opacity: 0,
           },
-          "50%": {
-            transform: "translateY(0)",
-            animationTimingFunction: "cubic-bezier(0, 0, 0.2, 1)",
+          "100%": {
+            transform: "translateY(0)", // End at the initial position
+            opacity: 1,
+          },
+        },
+        "fade-out": {
+          from: {
+            opacity: 1,
+          },
+          to: {
+            opacity: 0,
           },
         },
       },
       animation: {
-        "bounce-up": "bounce 0.5s infinite",
+        "slide-up-fade-in": "slide-up-fade 0.5s ease-out forwards",
+        "fade-out": "fade-out 0.5s ease-out forwards",
       },
+
       fontFamily: {
-        manrope: ["Manrope", "sans-serif"],
+        manrope: ["Manrope", "sans-serif"], // Custom font family
       },
     },
   },

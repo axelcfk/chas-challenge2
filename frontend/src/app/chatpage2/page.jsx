@@ -59,7 +59,6 @@ export default function ChatPage2() {
   const router = useRouter();
 
   const handleNavigation = () => {
-    // Navigate back to the previous page
     router.back();
   };
 
@@ -80,12 +79,18 @@ export default function ChatPage2() {
 
       if (data.movieNames && data.movieNames.length > 0) {
         console.log("Received Movie Names:", data.movieNames);
-        // Delay setting movies and hiding video
+
+        //Spara resultat i localstorage
+        localStorage.setItem(
+          "latestSearch",
+          JSON.stringify({ movies: data.movieNames, input })
+        );
+
         setTimeout(() => {
-          setMovies(data.movieNames); // Now set movies here to trigger details fetching after the delay
-          setLoading(false); // Also set loading false here to ensure it happens after the video hides
+          setMovies(data.movieNames);
+          setLoading(false);
           setErrorMessage("");
-          setShowVideo(false); // Hide video after 10 seconds
+          setShowVideo(false);
         }, 10);
       } else {
         setErrorMessage(data.suggestion);
@@ -102,6 +107,16 @@ export default function ChatPage2() {
       changeSpeed(1);
     }
   };
+
+  //hämta resultat i loclstorage
+  useEffect(() => {
+    const savedSearch = localStorage.getItem("latestSearch");
+    if (savedSearch) {
+      const { movies, input } = JSON.parse(savedSearch);
+      setMovies(movies);
+      setInput(input);
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchAllMovieDetails() {
@@ -181,7 +196,6 @@ export default function ChatPage2() {
             } */
 
           if (data.title) {
-            // Check if data includes title
             setMovieDetails({
               ...movieDetails,
               titleFromAPI: data.title, // om vi inte redan gjort detta via ChatGpts response
@@ -193,8 +207,6 @@ export default function ChatPage2() {
               backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
             });
-
-            // setMovieDetailsFetched(true); // Mark that movie details have been fetched
           } else {
             console.error("No movie found with the given ID");
           }
@@ -206,8 +218,6 @@ export default function ChatPage2() {
 
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
-
-
 
   return (
     <div className=" flex flex-col justify-center items-center md:items-start px-5 md:px-20 h-lvh  text-slate-100 z-0 pb-5 bg-black">
