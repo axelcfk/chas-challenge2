@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/Navbar";
+import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
@@ -63,8 +64,30 @@ export default function Profile() {
         <h4>My lists</h4>
       </div>
       <div className="bg-[#201430] p-8">
-        <div>My favorites, only 3st </div>
-        <div>Recent activity</div>
+        <div className="mb-8">
+          <h3 className="text-2xl">My favorites, only 3st</h3>
+          <p>
+            Här ska man kunna trycka på en knapp så man får upp alla filmer som
+            ligger i sin "seen lista" och välja 3st favoriter som visas nedan.
+          </p>
+          <SlideMenu>
+            <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+            <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+            <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          </SlideMenu>
+        </div>
+        <div className="mb-8">
+          <h3 className="text-2xl">Recent activity</h3>
+          <p>
+            Här visas dom senaste filmerna man har kollat på (=lagt till i sin
+            seen/watchlist)
+          </p>
+          <SlideMenu>
+            <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+            <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+            <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+          </SlideMenu>
+        </div>
       </div>
     </main>
   );
