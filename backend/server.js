@@ -1034,33 +1034,31 @@ app.get("/dailymixbasedonlikes", async (req, res) => {
 
 // made this an endpoint so we can simply load in the daily mix based on likes if it has already been generated earlier
 app.get("/me/dailymixbasedonlikes", async (req, res) => {
-
   const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
-  
+
   const mixMovieObjects = [];
 
   if (mixOnlyIdsAndTitles.length > 0) {
+    mixOnlyIdsAndTitles.map((movie) => {
+      const movieObjectOurDatabase = getMovieObjectOurDatabase(
+        movie.id,
+        "movie"
+      );
+      // console.log("movieObject: ", movieObject);
+      //setLoading(false);
 
-  mixOnlyIdsAndTitles.map((movie) => {
-    const movieObjectOurDatabase = getMovieObjectOurDatabase(
-      movie.id,
-      "movie"
-    );
-    // console.log("movieObject: ", movieObject);
-    //setLoading(false);
-
-    if (movieObjectOurDatabase) {
-      mixMovieObjects.push(movieObjectOurDatabase);
-    } else {
-      console.log("data.title does not exist?");
-    }
-  });
+      if (movieObjectOurDatabase) {
+        mixMovieObjects.push(movieObjectOurDatabase);
+      } else {
+        console.log("data.title does not exist?");
+      }
+    });
   } else {
     return res.json({ message: "No mix generated yet." });
   }
 
-  res.json({mixMovieObjects});
-})
+  res.json({ mixMovieObjects });
+});
 
 /* function addToDailyMixBasedOnLikes(id, title) {
 
@@ -1332,8 +1330,6 @@ app.get("/generatedailymix2", async (req, res) => {
   }
 });
 
-
-
 // Spara streaming tjänsterna
 //* IMPORTANT INFORMATION: detta ska sparas i databasen
 app.post("/streaming-services", (req, res) => {
@@ -1513,7 +1509,7 @@ const fetchCompleteMovieDetails = async (movieId) => {
 
 app.post("/fetchingmoviepagedetails", async (req, res) => {
   try {
-    const { movieId } = req.body;
+    const { movieId, personId } = req.body;
 
     if (!movieId) {
       return res
@@ -1521,7 +1517,7 @@ app.post("/fetchingmoviepagedetails", async (req, res) => {
         .json({ error: "Missing required parameter: movieId" });
     }
 
-    const movieDetails = await fetchCompleteMovieDetails(movieId);
+    const movieDetails = await fetchCompleteMovieDetails(movieId, personId);
 
     if (movieDetails) {
       res.json({ movieDetails });
@@ -1545,7 +1541,7 @@ app.get("/users/:userId", async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching user:", error);
-    res.status(500).json({error: "Internal server error"});
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
