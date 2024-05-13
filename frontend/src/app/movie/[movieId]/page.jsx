@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -7,8 +8,10 @@ import {
   FaHeart,
   FaCheck,
   FaStar,
-  FaImage,
+  FaCaretLeft,
 } from "react-icons/fa";
+import { SlArrowLeft } from "react-icons/sl";
+
 import { useEffect, useState, useRef } from "react";
 import {
   postAddToLikeList,
@@ -44,8 +47,13 @@ export default function MoviePage() {
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const params = useParams();
   const movieId = params.movieId;
+  const router = useRouter();
 
   const parallaxRef = useRef(null);
+
+  const handleNavigation = () => {
+    router.back();
+  };
 
   const serviceLogos = {
     Netflix: "/Netflix.svg",
@@ -225,6 +233,13 @@ export default function MoviePage() {
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
+      <button
+        className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 py-2 z-10 text-slate-100 text-xl hover:cursor-pointer"
+        onClick={handleNavigation}
+      >
+        <SlArrowLeft />
+      </button>
+
       {movieDetails.backdrop && (
         <div className="">
           <img
