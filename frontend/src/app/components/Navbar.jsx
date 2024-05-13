@@ -37,7 +37,7 @@ export default function Navbar() {
           <div className="flex items-center md:hidden">
             {/* AI Search Link */}
             <Link href="/chatpage2" style={{ textDecoration: "none" }}>
-              <span className="hover:bg-lighter-purple px-3 py-2 text-white rounded-md text-base font-medium cursor-pointer block text-center">
+              <span className="hover:bg-lighter-purple px-3 py-2 mr-1.5 text-white rounded-md text-base font-medium cursor-pointer block text-center">
                 AI
                 <span style={{ marginLeft: "0.5em" }}>
                   <FaMagnifyingGlass />
