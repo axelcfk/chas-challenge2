@@ -12,6 +12,7 @@ export default function ActorPage() {
   const [loading, setLoading] = useState(true);
   const [movieDetails, setMovieDetails] = useState([]);
   const [actorDetails, setActorDetails] = useState([]);
+  const [toggleExpanded, setToggleExpanded] = useState(false);
 
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
@@ -77,6 +78,10 @@ export default function ActorPage() {
     router.back();
   };
 
+  function handleToggle() {
+    setToggleExpanded(!toggleExpanded);
+  }
+
   useEffect(() => {
     async function getActorDetails() {
       if (!personId) {
@@ -101,6 +106,7 @@ export default function ActorPage() {
         setActorDetails({
           name: actorName,
           profilePath: dataPersonInfo.profile_path,
+          biography: dataPersonInfo.biography,
         });
         //sorterar efter bäst film först
         const sortedMovies = moviesData.cast.sort(
@@ -128,17 +134,36 @@ export default function ActorPage() {
       </button>
       <div className="flex flex-col  justify-center items-center w-full py-10">
         <h2 className="text-2xl pb-8">{actorDetails.name}</h2>
-
-        <div className="w-60 h-60 rounded-full overflow-hidden bg-gray-300">
+        <div className="w-60 h-60 rounded-full overflow-hidden bg-gray-300 ">
           <img
             src={`https://image.tmdb.org/t/p/w500${actorDetails.profilePath}`}
             alt={"actor"}
             className="w-full h-full object-cover"
             onError={(e) => {
-              e.target.onerror = null; // Prevent looping
-              e.target.src = "path_to_default_image.jpg"; // Fallback image
+              e.target.onerror = null;
+              e.target.src = "path_to_default_image.jpg";
             }}
           />
+        </div>
+        <div className="h-full pt-8 px-8" onClick={handleToggle}>
+          {!toggleExpanded ? (
+            <div
+              className={`md:w-full text-base font-light  ${
+                !toggleExpanded ? "fade-out" : ""
+              }`}
+            >
+              {actorDetails.biography
+                ? actorDetails.biography.slice(0, 200)
+                : ""}
+              ...
+            </div>
+          ) : (
+            <div className="md:w-full font-light text-base">
+              {actorDetails.biography
+                ? actorDetails.biography.slice(0, 600)
+                : ""}
+            </div>
+          )}
         </div>
       </div>
       <div className="py-16 bg-[#1B1725]">
