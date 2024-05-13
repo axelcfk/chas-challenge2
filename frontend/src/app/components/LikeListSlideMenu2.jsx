@@ -128,7 +128,6 @@ export default function LikeListSlideMenu2() {
               title={movie.title}
               poster={movie.poster}
               overview={movie.overview}
-              likedMoviesList={likedMoviesList}
               voteAverage={movie.voteAverage}
             ></MovieCardWatchAndLike>
           ))}

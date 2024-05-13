@@ -14,6 +14,7 @@ import SlideMenu, {
 import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
 import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 import WatchListSlideMenu2 from "../components/WatchListSlideMenu2";
+import MovieCardWatchAndLike from '../components/MovieCardWatchAndLike';
 
 //TODO: texten i rutan ska var lite större
 //TODO: fetcha populära filmer och rendera under popular today
@@ -33,6 +34,8 @@ export default function Startpage() {
 
     fetchPopularMovies();
   }, []);
+
+
 
   return (
     <div className="bg-[#110A1A] pb-8">
@@ -97,17 +100,33 @@ export default function Startpage() {
             imgSrc={"/search-history-img.png"}
           ></SlideMenuSearchHistoryCard>
         </SlideMenu>
-        <div className="ml-4 text-xl">Popular today</div>
+        <div className="ml-4 text-xl">Popular today (isLiked=false, isInWatchList=false)</div>
         <SlideMenu>
-          {popularMovies.map(movie => (
+          {/* {popularMovies.map(movie => (
             <SlideMenuMovieCard
               key={movie.id}
+              id={movie.id}
               poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             />
+          ))} */}
+
+          {popularMovies.map(movie => (
+            <MovieCardWatchAndLike
+              key={movie.id}
+              isLiked={false} 
+              isInWatchList={false}
+              id={movie.id}
+              title={movie.title}
+              poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              overview={movie.overview}
+              voteAverage={movie.vote_average}
+            />
           ))}
+
+          
         </SlideMenu>
-        <LikeListSlideMenu2></LikeListSlideMenu2>
-        <h2 className="ml-4 text-xl">Movie mixes</h2>
+        
+        <div className="ml-4 text-xl">Movie mixes</div>
         <div>
           <SlideMenu>
             <SlideMenuMixCard
@@ -128,6 +147,9 @@ export default function Startpage() {
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
           </SlideMenu>
         </div>
+
+        <div className="ml-4 text-xl">Likes (ta bort?)</div>
+        <LikeListSlideMenu2></LikeListSlideMenu2>
       </div>
     </div>
   );
