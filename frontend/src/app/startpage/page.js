@@ -1,9 +1,6 @@
-
 "use client";
 
-
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Link from "next/link";
 import SlideMenu, {
@@ -25,7 +22,9 @@ export default function Startpage() {
   useEffect(() => {
     const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
     const fetchPopularMovies = async () => {
-      const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`);
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`
+      );
       const data = await response.json();
       setPopularMovies(data.results);
     };
@@ -54,7 +53,7 @@ export default function Startpage() {
                 </Link>
               </div>
             </div>
-         </div>
+          </div>
         </main>
       </div>
       <div className="list-container flex justify-center flex-col text-white mt-[-240px] space-y-8">
@@ -99,7 +98,7 @@ export default function Startpage() {
         </SlideMenu>
         <div className="ml-4 text-xl">Popular today</div>
         <SlideMenu>
-          {popularMovies.map(movie => (
+          {popularMovies.map((movie) => (
             <SlideMenuMovieCard
               key={movie.id}
               poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

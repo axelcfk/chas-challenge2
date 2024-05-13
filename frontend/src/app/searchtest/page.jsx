@@ -1,98 +1,130 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import RatingFilter from "../filter-components/RatingFilter";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { IoIosClose } from "react-icons/io";
 
 function MovieSearch() {
-  const [inputValue, setInputValue] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [movieDetails, setMovieDetails] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [ratingFilter, setRatingFilter] = useState("All");
+  const [inputValue, setInputValue] = useState(""); // State to hold input value
+  const [movies, setMovies] = useState([]); // State to hold movies fetched from the API
+  const [isSearching, setIsSearching] = useState(false); // State to toggle search input visibility
+  const [ratingFilter, setRatingFilter] = useState("All"); // State to handle the rating filter
 
+  const inputRef = useRef(null); // Reference for the input field
+
+  // API key for fetching movies, replace with your actual API key
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
   useEffect(() => {
-    if (movieAPI_KEY != null && loading && movieDetails.titleFromGPT) {
-      console.log("title received from GPT: ", movieDetails.titleFromGPT);
-      const encodedMovieTitle = encodeURIComponent(movieDetails.titleFromGPT);
-      console.log("encoded movie title: ", encodedMovieTitle);
-
+    // Fetching movies based on the input value
+    if (inputValue) {
       fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${encodedMovieTitle}&api_key=${movieAPI_KEY}`
+        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+          inputValue
+        )}&api_key=${movieAPI_KEY}`
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log("id from API: ", data.results[0].id);
-
-          setMovieDetails({
-            ...movieDetails,
-            idFromAPI: data.results[0].id,
-          });
+          setMovies(data.results);
         })
         .catch((error) => console.error("Error fetching data:", error));
     }
-  }, [movieDetails.titleFromGPT]);
+  }, [inputValue]);
+
+  const handleIconClick = () => {
+    setIsSearching(true); // Show the input field when icon is clicked
+    if (inputRef.current) {
+      inputRef.current.focus(); // Focus the input field after it appears
+    }
+  };
 
   const handleChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${inputValue}&api_key=${movieAPI_KEY}`
-      );
-      const data = await response.json();
-      setMovies(data.results);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    if (inputValue.trim()) {
+      setIsSearching(false); // Optionally hide the input field on submit
     }
   };
 
+  const handleBlur = () => {
+    if (!inputValue) {
+      setIsSearching(false); // Hide the input field when it loses focus and is empty
+    }
+  };
+
+  const handleClose = () => {
+    setInputValue(""); // Clear input value
+    setIsSearching(false); // Close the search field
+  };
+
+  // Filter movies based on rating
   const filteredMovies = movies.filter((movie) => {
     if (ratingFilter === "All") {
       return true;
     } else {
       const selectedRating = parseFloat(ratingFilter);
-      const movieRating = parseFloat(movie.vote_average);
-      return movieRating >= selectedRating && movieRating < selectedRating + 1;
+      return (
+        movie.vote_average >= selectedRating &&
+        movie.vote_average < selectedRating + 1
+      );
     }
   });
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          className="text-black"
-          type="text"
-          value={inputValue}
-          onChange={handleChange}
-          placeholder="Search for a movie..."
-          autoComplete=""
-        />
-        <button className="px-5" type="submit">
-          Search
-        </button>
+    <div className="relative">
+      <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
+          {isSearching ? (
+            <div className="relative">
+              <input
+                ref={inputRef}
+                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-20" // Pr-10 for close button space
+                type="text"
+                value={inputValue}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Search for a movie..."
+                autoComplete="off"
+              />
+              <IoIosClose // Close button icon
+                className="absolute top-0.5 right-2 transform -translate-y-1/2 cursor-pointer text-gray-400 text-3xl" // Text-xl for larger size of X
+                onClick={handleClose}
+              />
+            </div>
+          ) : (
+            <FaMagnifyingGlass
+              className="text-2xl cursor-pointer"
+              onClick={handleIconClick}
+            />
+          )}
+
+          {isSearching && (
+            <RatingFilter // Rating filter component
+              ratingFilter={ratingFilter}
+              setRatingFilter={setRatingFilter}
+            />
+          )}
+        </div>
       </form>
-      <RatingFilter
-        ratingFilter={ratingFilter}
-        setRatingFilter={setRatingFilter}
-      />
-      <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md ">
-        {filteredMovies.map((movie) => (
-          <li className="list-none " key={movie.id}>
-            <Link
-              className="text-black no-underline hover:underline"
-              href={`/movie/${encodeURIComponent(movie.id)}`}
-            >
-              {movie.title}{" "}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {movies.length > 0 && (
+        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full">
+          {filteredMovies.map((movie) => (
+            <li className="list-none p-2 hover:bg-gray-200" key={movie.id}>
+              <Link
+                className="text-black no-underline hover:underline"
+                href={`/movie/${encodeURIComponent(movie.id)}`}
+              >
+                {movie.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
