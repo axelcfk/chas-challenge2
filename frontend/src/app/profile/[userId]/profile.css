@@ -1,0 +1,9 @@
+.gradient-border-top {
+  border-top: 3px solid rgba(255, 80, 108, 1);
+  border-radius: 70px;
+}
+
+.active-tab {
+  background-color: rgba(255, 80, 108, 0.64);
+  border: 2px solid rgb(224, 80, 108, 1); /* FF506C with 64% opacity */
+}
