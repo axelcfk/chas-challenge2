@@ -1,3 +1,9 @@
+
+"use client";
+
+
+
+import React, { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar";
 import Link from "next/link";
 import SlideMenu, {
@@ -14,6 +20,19 @@ import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 //? see what Friends watched on this page?
 
 export default function Startpage() {
+  const [popularMovies, setPopularMovies] = useState([]);
+
+  useEffect(() => {
+    const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
+    const fetchPopularMovies = async () => {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`);
+      const data = await response.json();
+      setPopularMovies(data.results);
+    };
+
+    fetchPopularMovies();
+  }, []);
+
   return (
     <div className="bg-[#110A1A] pb-8">
       <Navbar />
@@ -78,22 +97,18 @@ export default function Startpage() {
             imgSrc={"/search-history-img.png"}
           ></SlideMenuSearchHistoryCard>
         </SlideMenu>
-        <div className="ml-4 text-xl">Popular today (likelist placeholder) </div>
-        {/* TODO: LIKELIST JUST NU, byt ut mot popular today */}
-        {/* <SlideMenu>
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-        </SlideMenu> */}
+        <div className="ml-4 text-xl">Popular today</div>
+        <SlideMenu>
+          {popularMovies.map(movie => (
+            <SlideMenuMovieCard
+              key={movie.id}
+              poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            />
+          ))}
+        </SlideMenu>
         <LikeListSlideMenu2></LikeListSlideMenu2>
         <h2 className="ml-4 text-xl">Movie mixes</h2>
         <div>
-          
           <SlideMenu>
             <SlideMenuMixCard
               mixName={"Weekly"}
