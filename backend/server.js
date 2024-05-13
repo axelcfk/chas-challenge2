@@ -330,6 +330,43 @@ const fetchAllMovieIdsFromTMDB = async (movieNamesFromGPT) => {
 })
  */
 
+// only SWEDENs providers
+async function fetchMovieProvidersObjectTMDB(id) {
+
+  try {
+    const url = `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${movieAPI_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.results.SE ) {
+      addProvidersOfMovieToDatabase(data.results.SE, id)
+
+      return data.results.SE;
+    } else if (!data.results.SE) {
+      console.log("No providers in sweden for movie id ", id);
+      addProvidersOfMovieToDatabase(0, id)
+
+
+      return {noProviders:"no providers in sweden", id};
+
+    }
+       else {
+      console.log("failed to fetch providers of movie from TMDB");
+    }
+    //await postMovieToDatabase(data);
+    // await postAddToMixOnBackend(data.id, data.title);
+      
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+  } finally {
+    //setLoading(false);
+    //setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
+  }
+
+  
+
+}
+
 // also saves whole Movie object to fetchedmovies
 async function fetchMovieObjectTMDB(id) {
   // console.log("Fetching movie details for ID:", id);
@@ -347,10 +384,14 @@ async function fetchMovieObjectTMDB(id) {
     // await postAddToMixOnBackend(data.id, data.title);
     if (data.title) {
       addMovieToDatabase(data, "movie"); // STORES FETCHED MOVIE OBJECT TO DATABASE
-      return data;
     } else {
       console.log("failed to fetch movie object from TMDB");
     }
+
+    
+    return data;
+
+
   } catch (error) {
     console.error("Error fetching movie details:", error);
   } finally {
@@ -395,6 +436,60 @@ function addMovieToDatabase(movieObject, movieOrSeries) {
     console.log("Could not determine if movie or series");
   }
 }
+
+
+// One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
+const fetchedProvidersOfMovie = [];
+
+app.get("/me/fetchedProvidersOfMovie", (req, res) => {
+  const data = {
+   fetchedProvidersOfMovie: fetchedProvidersOfMovie,
+  };
+
+  res.json(data);
+});
+
+
+function addProvidersOfMovieToDatabase(movieProvidersObject, id) {
+  if (!id) {
+    console.log(
+      "PROVIDERS of movie does not contain a movie 'id' ?."
+    );
+  }
+
+  const idExistsAlready = fetchedProvidersOfMovie.some(
+    (fetchedMovie) => fetchedMovie.id === id
+  );
+ /*  const idExistsInSeries = fetchedSeries.some(
+    (fetchedSerie) => fetchedSerie.id === movieObject.id
+  ); */
+
+  if (idExistsAlready ) {
+    console.log(
+      "Providers of movie ID ",
+      id,
+      " has already been fetched."
+    );
+    return; // TODO: return nothing?
+  } else {
+    // om redan finns?
+  }
+  
+  if (movieProvidersObject === 0) { 
+    fetchedProvidersOfMovie.push({noProviders:"no providers in sweden", id: id});
+  } else {
+     // added movie id to the object so it is easier to find later...
+    const movieProvidersObjectWithID = {...movieProvidersObject, id: id}
+
+    // One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
+    fetchedProvidersOfMovie.push(movieProvidersObjectWithID); // UPDATE LATER TO SQL
+    console.log("Added providers to movie ID ", id, " (array fetchedProvidersOfMovie)");
+  }
+
+ 
+  
+}
+
 
 async function getMixFromOurDatabaseOnlyIDs() {
   try {
@@ -466,6 +561,7 @@ function getMovieObjectOurDatabase(id, movieOrSeries) {
   return searchResult;
 }
 
+
 // GET
 app.post("/movieobject", async (req, res) => {
   try {
@@ -508,6 +604,26 @@ app.post("/movieobject", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+function getProvidersOfMOvieObjectOurDatabase(id) {
+  let searchResult;
+  try {
+   
+      searchResult = fetchedProvidersOfMovie.find((movie) => {
+        return id === movie.id;
+      });
+      //console.log("Movie-Search result: ", searchResult);
+    
+      //console.log("Series-Search result: ", searchResult);
+   
+  } catch (error) {
+    console.error("Error finding providers of movie from our database", error);
+    return res.status(500).send("Error finding providers of movie from our database"); // exit code
+  }
+
+  return searchResult;
+}
 
 app.post("/addmovietodatabase", async (req, res) => {
   try {
@@ -1038,6 +1154,7 @@ app.get("/me/dailymixbasedonlikes", async (req, res) => {
   const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
   
   const mixMovieObjects = [];
+  const mixMovieObjectsProviders = [];
 
   if (mixOnlyIdsAndTitles.length > 0) {
 
@@ -1052,14 +1169,22 @@ app.get("/me/dailymixbasedonlikes", async (req, res) => {
     if (movieObjectOurDatabase) {
       mixMovieObjects.push(movieObjectOurDatabase);
     } else {
-      console.log("data.title does not exist?");
+      console.log("movie objects failed to fetch from our own database?");
+    }
+
+    const movieObjectProvidersOurDatabase = getProvidersOfMOvieObjectOurDatabase(movie.id);
+
+    if (movieObjectProvidersOurDatabase) {
+      mixMovieObjectsProviders.push(movieObjectProvidersOurDatabase);
+    } else {
+      console.log("providers failed to fetch from our own database?");
     }
   });
   } else {
     return res.json({ message: "No mix generated yet." });
   }
 
-  res.json({mixMovieObjects});
+  res.json({mixMovieObjects, mixMovieObjectsProviders});
 })
 
 /* function addToDailyMixBasedOnLikes(id, title) {
@@ -1198,6 +1323,12 @@ app.get("/generatedailymix2", async (req, res) => {
 
   dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes
 
+  if (likedMoviesList.length === 0) {
+    return res.json({messageNoLikedMovies: "You need to like some movies before I can generate a Mix for you!"});
+  } else { 
+    /* console.log(""); */
+  }
+
   const likedMovieTitles = likedMoviesList.map((movie) => {
     return movie.title;
   });
@@ -1258,21 +1389,49 @@ app.get("/generatedailymix2", async (req, res) => {
 
       try {
         for (const movieId of movieIds) {
-          const movieObject = await fetchMovieObjectTMDB(movieId);
+          const movieObject = await fetchMovieObjectTMDB(movieId); // fetches from TMDB and stores into our database
+
           if (movieObject) {
+            console.log("id of movieobject fetched: ", movieObject.id);
             movieObjects.push(movieObject);
           } else {
-            console.log("failed fetching movie object from tmdb");
+            console.log("failed fetching movie object and providers from tmdb");
           }
+            
+        
         }
       } catch (error) {
         console.log("Error fetching movie objects:", error);
       }
+
+
     } else {
-      console.log("failed running fetchMovieDetails in /generatedailymix ");
+      console.log("failed running fetchMovieDetails in /generatedailymix2 ");
     }
 
-    if (movieObjects.length === movieNames.length) {
+   const arrayMovieObjectsProviders = [];
+     // waiting for the fetches above to complete...
+    if (movieObjects && movieObjects.length === movieNames.length && movieObjects.length > 0) {
+      console.log("all movie ids received from api: ", movieIds);
+
+      try {
+        for (const movieId of movieIds) {
+          const movieObjectProviders = await fetchMovieProvidersObjectTMDB(movieId); // fetch and store the movie's providers from TMDB... mainly do this to store in our database so we can use it later!
+
+          if (movieObjectProviders) {
+            arrayMovieObjectsProviders.push(movieObjectProviders)
+          }
+        }
+      } catch (error) {
+        console.log("Error fetching providers of movies:", error);
+      }
+
+    } else {
+      console.log("failed running fetchMovieProvidersObjectTMDBs in /generatedailymix2 ");
+    }
+
+    if (movieObjects && movieObjects.length === movieNames.length && arrayMovieObjectsProviders && arrayMovieObjectsProviders.length === movieNames.length && movieObjects.length > 0 && arrayMovieObjectsProviders.length > 0) {
+      /* console.log("movieObjects: ", movieObjects); */
       movieObjects.map((movie) => {
         dailyMixes.dailyMixBasedOnLikes.push({
           id: movie.id,
@@ -1292,10 +1451,11 @@ app.get("/generatedailymix2", async (req, res) => {
     }
 
     const mixMovieObjects = [];
+    const mixMovieObjectsProviders = [];
 
-    //dailyMixes.dailyMixBasedOnLikes.forEach( (movie) => {
+    // Here we fetch the movie object again, but from our own database (just to test), maybe some day we can remove the fetch TMDB above?
     movieObjects.map((movie) => {
-      const movieObjectOurDatabase = getMovieObjectOurDatabase(
+      const movieObjectOurDatabase = getMovieObjectOurDatabase( 
         movie.id,
         "movie"
       );
@@ -1305,18 +1465,22 @@ app.get("/generatedailymix2", async (req, res) => {
       if (movieObjectOurDatabase) {
         mixMovieObjects.push(movieObjectOurDatabase);
       } else {
-        console.log("data.title does not exist?");
+        console.log("movieObjectOurDatabase not populated?");
+      }
+
+      const providersObjectOurDatabase = getProvidersOfMOvieObjectOurDatabase(movie.id)
+
+      if (providersObjectOurDatabase) {
+        mixMovieObjectsProviders.push(providersObjectOurDatabase);
+      } else {
+        console.log("providersObjectOurDatabase not populated?");
       }
     });
 
-    //getMixFromOurDatabaseOnlyIDs()
-
-    // populate mixDetails
-
     //if (movieNames && reasoning) {
-    if (mixMovieObjects) {
+    if (mixMovieObjects && mixMovieObjectsProviders) {
       // res.json({ movieNames, reasoning });
-      res.json({ mixMovieObjects });
+      res.json({ mixMovieObjects, mixMovieObjectsProviders}); // SENDING ARRAY OF MOVIE OBJECTS
     } else {
       console.error("Failed to generate daily mix suggestion: ", suggestion);
       res.status(500).json({
@@ -1324,7 +1488,7 @@ app.get("/generatedailymix2", async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error in /dailymix endpoint:", error);
+    console.error("Error in /generatedailymix2 endpoint:", error);
     res.status(500).json({
       error: "Unable to process the daily mix at this time.",
       details: error.message,

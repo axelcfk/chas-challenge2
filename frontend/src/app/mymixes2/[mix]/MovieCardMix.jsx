@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FaStar, FaHeart, FaRegHeart, FaCheck, FaPlus } from "react-icons/fa"
 import Link from "next/link"
+import { postRemoveFromLikeList, postRemoveFromWatchList, postAddToLikeList, postAddToWatchList } from "@/app/utils";
 
 export function MovieCardMix({title, id, poster, overview, voteAverage, streamingServices, isInWatchList, isLiked}) {
 
@@ -19,6 +20,11 @@ export function MovieCardMix({title, id, poster, overview, voteAverage, streamin
   function handleButtonClicked() {
     setWatched(!watched);
 
+  }
+
+  console.log(streamingServices);
+  if (!streamingServices ){
+    <div>Loading streaming services...</div>
   }
 
 
@@ -84,7 +90,16 @@ export function MovieCardMix({title, id, poster, overview, voteAverage, streamin
                    
             
           </div>
-          <p>{streamingServices}</p>
+          <div className="flex">
+            {streamingServices && streamingServices.map((streamingService, index) => {
+              return (
+                <div key={index} className="">
+                  <p>{streamingService.provider_name}</p>
+                  
+                </div>
+              )
+            })}
+          </div>
 
           <button
             onClick={() => {
@@ -98,9 +113,7 @@ export function MovieCardMix({title, id, poster, overview, voteAverage, streamin
            /*  className={`w-full h-auto ${
               !watched ? "bg-[#3D3B8E]" : "bg-green-600"
             } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`} */
-            className={`w-32 h-12 bg-inherit border border-solid ${
-              !watched ? "border-white" : "border-green-600"
-            } hover:cursor-pointer flex justify-center items-center rounded-full  box-border`}
+            className={`w-32 h-12 bg-inherit border border-solid border-white hover:cursor-pointer flex justify-center items-center rounded-full  box-border`}
           >
             
             {!watched ? (

@@ -5,7 +5,7 @@ import SlideMenu from "./SlideMenu";
 import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 
 export default function WatchListSlideMenu2() {
-  const [movieWatchList, setMovieWatchList] = useState(null);
+  const [movieWatchList, setMovieWatchList] = useState([]);
   const [listsFetched, setListsFetched] = useState(false);
  // const [likedSeriesList, setLikedSeriesList] = useState(null);
   //const [likedSeriesFetched, setLikedSeriesFetched] = useState(false); // bara en behövs
@@ -109,12 +109,12 @@ export default function WatchListSlideMenu2() {
   }, [listsFetched]);
 
 
-  //if (likedMoviesList == null || likedSeriesList == null) {
-  if (movieWatchList == null) {
+  //if (likedMoviesList = = null || likedSeriesList == null) {
+  if (!listsFetched) { 
     return (
       <>
-        <div className="flex flex-col justify-center items-center md:items-start pb-10 px-8 md:px-20 w-full h-full bg-slate-950 text-slate-100">
-          Loading Watchlist...
+        <div className="inline-block w-full h-80 md:h-96 mx-4 bg-slate-950 text-slate-100">
+          Loading watchlist...
         </div>
       </>
     );
@@ -122,7 +122,7 @@ export default function WatchListSlideMenu2() {
 
   return (
     <>
-      {movieWatchListDetails && movieWatchListDetails.length > 0 ? (
+      {listsFetched && movieWatchListDetails && movieWatchListDetails.length > 0 ? (
         <SlideMenu>
           {movieWatchListDetails.map((movie, index) => (
             <MovieCardWatchAndLike
@@ -139,7 +139,9 @@ export default function WatchListSlideMenu2() {
           ))}
         </SlideMenu>
       ) : (
-        "No movies in watchlist yet"
+        <div className="inline-block w-full h-80 md:h-96 mx-4">
+          <p>No movies in watchlist yet</p>  {/*  TODO: detta visas i en millisekund när man refreshar... */}
+        </div>
       )}
     </>
   );
