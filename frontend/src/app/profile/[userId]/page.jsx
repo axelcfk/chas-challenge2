@@ -98,9 +98,16 @@ export default function Profile() {
             <h3 className="text-2xl">Recent activity</h3>
             <p className="text-sm">
               Här visas dom senaste filmerna man har kollat på (=lagt till i sin
-              seen/watchlist)
+              seen)
             </p>
             <SlideMenu>
+              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
               <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
               <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
               <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
