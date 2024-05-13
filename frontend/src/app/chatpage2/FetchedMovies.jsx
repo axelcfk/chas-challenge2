@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import { FaStar, FaHeart, FaRegHeart, FaPlus, FaCheck } from "react-icons/fa";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
@@ -58,12 +59,39 @@ export default function FetchedMovies({
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
   const [showToast, setShowToast] = useState(false);
+  const [animationClass, setAnimationClass] = useState("");
+
+  useEffect(() => {
+    if (showToast) {
+      setAnimationClass("animate-slide-up-fade-in");
+      setTimeout(() => {
+        setAnimationClass("animate-fade-out");
+        setTimeout(() => {
+          setShowToast(false);
+          setAnimationClass("");
+        }, 800); // Fade-out duration
+      }, 1000); // Display duration before fade-out
+    }
+  }, [showToast]);
 
   function handleButtonClicked(id) {
     setWatches((prevWatches) => ({
       ...prevWatches,
       [id]: !prevWatches[id],
     }));
+    if (!watches[id]) {
+      postAddToWatchList(
+        id,
+        "movie",
+        movieDetails.find((movie) => movie.id === id)?.title
+      );
+    } else {
+      postRemoveFromWatchList(
+        id,
+        "movie",
+        movieDetails.find((movie) => movie.id === id)?.title
+      );
+    }
   }
 
   function handleLikeButtonClicked(id) {
@@ -90,7 +118,6 @@ export default function FetchedMovies({
 
   function showToastMessage() {
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 1750);
   }
 
   console.log("fetched är", movieDetails);
@@ -145,7 +172,9 @@ export default function FetchedMovies({
               </div>
               <div className="w-full h-full py-5 ">
                 {showToast && (
-                  <div className="fixed bottom-20 left-5 w-auto max-w-full whitespace-nowrap p-3 bg-gray-600 text-white rounded-lg animate-bounce-up">
+                  <div
+                    className={`fixed bottom-20 left-5 w-auto max-w-full whitespace-nowrap p-3 bg-midnight text-white rounded-lg ${animationClass}`}
+                  >
                     Thank you for enhancing the AI!
                   </div>
                 )}
