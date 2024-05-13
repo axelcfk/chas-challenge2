@@ -2,14 +2,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import {
-  FaPlus,
-  FaRegHeart,
-  FaHeart,
-  FaCheck,
-  FaStar,
-  FaCaretLeft,
-} from "react-icons/fa";
+import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
 import { SlArrowLeft } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
@@ -21,7 +14,6 @@ import {
   postRemoveFromWatchList,
 } from "../../utils";
 import { checkLikeList } from "../../utils";
-import BackButton from "../../components/BackButton";
 import SlideMenu from "../../components/SlideMenu";
 
 export default function MoviePage() {
@@ -32,7 +24,7 @@ export default function MoviePage() {
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
-  const [seen, setSeen] = useState(false);
+  // const [seen, setSeen] = useState(false);
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
   const [actorImages, setActorImages] = useState({});
@@ -44,7 +36,6 @@ export default function MoviePage() {
     otherCrew: [],
   });
 
-  const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const params = useParams();
   const movieId = params.movieId;
   const router = useRouter();
@@ -206,28 +197,21 @@ export default function MoviePage() {
   //   movieDetails.providers.flatrate[0].provider_name
   // );
 
-  // const providerName = movieDetails.providers.flatrate[0].provider_name;
-  const flatrateProviders = movieDetails.providers.flatrate
+  const flatrateProviders = movieDetails.providers?.flatrate
     ? movieDetails.providers.flatrate
-        .filter((provider) => provider.provider_name) // Ensure provider_name is not empty
-        .map((provider) => {
-          return (
-            <div
-              // style={{
-              //   backdropFilter: "blur(20px)",
-              //   backgroundColor: "rgba(255, 255, 255, 0.5)",
-              // }}
-              key={provider.provider_id} // Use provider_id as a more unique key
-              className="bg-slate-200 rounded-full  h-12 w-full flex  justify-evenly  items-center "
-            >
-              <img
-                className="h-6"
-                src={serviceLogos[provider.provider_name]}
-                alt={provider.provider_name}
-              />
-            </div>
-          );
-        })
+        .filter((provider) => provider.provider_name)
+        .map((provider) => (
+          <div
+            key={provider.provider_id}
+            className="bg-slate-200 rounded-full h-12 w-full flex justify-evenly items-center"
+          >
+            <img
+              className="h-6"
+              src={serviceLogos[provider.provider_name]}
+              alt={provider.provider_name}
+            />
+          </div>
+        ))
     : null;
 
   return (
@@ -455,7 +439,7 @@ export default function MoviePage() {
       <div className="w-full pb-5 text-xl pt-16 ">
         <h2 className="text-xl px-8 font-normal">ACTORS</h2>
       </div>
-      <div className="grid grid-cols-3 pb-16  px-8">
+      <div className="px-5 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-6">
         {credits.actors.map((actor, index) => (
           <div
             key={index}
