@@ -8,10 +8,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "deep-purple": "#241838", // custom purple color
-        "lighter-purple": "#362B4E", // lighter shade of custom purple
+        "deep-purple": "#110A19", // custom purple color
+        "lighter-purple": "#241838", // lighter shade of custom purple
         midnight: "#020617", // custom color representing midnight
       },
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))", // custom radial gradient
         "gradient-conic":

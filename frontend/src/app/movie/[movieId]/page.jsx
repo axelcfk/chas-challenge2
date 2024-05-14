@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
-import { SlArrowLeft } from "react-icons/sl";
+import { SlArrowLeft, SlUser } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
 import {
@@ -320,11 +320,19 @@ export default function MoviePage() {
                     </p>
                     <div className=" h-10 flex items-end">
                       <p className="font-semibold  flex justify-center items-center">
-                        <span className=" mr-2  font-normal text-xl text-yellow-400">
+                        <span className={`mr-2  font-normal  text-yellow-400`}>
                           <FaStar />
                         </span>
-                        <span className=" text-xl text-zinc-100">
-                          {movieDetails.voteAverage.toFixed(1)}
+                        <span
+                          className={`${
+                            movieDetails.voteAverage === 0
+                              ? "text-sm"
+                              : "text-xl"
+                          } text-zinc-100`}
+                        >
+                          {movieDetails.voteAverage === 0
+                            ? "NO RATING AVAILABLE"
+                            : movieDetails.voteAverage.toFixed(1)}
                         </span>
                       </p>
                     </div>
@@ -502,22 +510,26 @@ export default function MoviePage() {
             className="w-full flex flex-col justify-between items-center "
           >
             {actorImages[actor.personId] ? (
-              <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${
-                    actorImages[actor.personId]
-                  }`}
-                  alt={actor.name}
-                  className="w-full h-full object-cover "
-                  onError={(e) => {
-                    e.target.onerror = null; // Prevent looping
-                    e.target.src = "path_to_default_image.jpg"; // Fallback image
-                  }}
-                />
-              </div>
+              <Link href={`/actor/${encodeURIComponent(actor.personId)}`}>
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${
+                      actorImages[actor.personId]
+                    }`}
+                    alt={actor.name}
+                    className="w-full h-full object-cover "
+                    onError={(e) => {
+                      e.target.onerror = null; // Prevent looping
+                      e.target.src = "path_to_default_image.jpg"; // Fallback image
+                    }}
+                  />
+                </div>
+              </Link>
             ) : (
               <div className="w-24 h-24 rounded-full bg-gray-300 flex justify-center items-center">
-                <span className="text-sm text-gray-500">Loading...</span>
+                <span className=" text-gray-500 text-6xl ">
+                  <SlUser />
+                </span>
               </div>
             )}
             <div className="  h-20">

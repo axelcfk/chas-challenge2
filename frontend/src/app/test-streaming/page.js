@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // bara en lista för att se vilka streaming tjänster som
 // är tillgängliga på TMDB.
