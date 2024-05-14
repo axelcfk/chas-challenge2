@@ -125,6 +125,11 @@ function MovieSearch() {
                 className="text-black no-underline hover:underline"
                 href={`/movie/${encodeURIComponent(movie.id)}`}
               >
+                <img
+                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                  alt={movie.title}
+                  className="w-10 h-10 mr-2"
+                />
                 {movie.title}
               </Link>
             </li>
