@@ -101,8 +101,10 @@ export default function Startpage() {
         </main>
         <div className=" flex justify-center flex-col text-white space-y-8">
           <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
-          {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
-          <WatchListSlideMenu2></WatchListSlideMenu2>
+          <div className="pl-8">
+            {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
+            <WatchListSlideMenu2></WatchListSlideMenu2>
+          </div>
           {/* <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
           <SlideMenuMovieCard poster={"/troll-poster.jpg"} />

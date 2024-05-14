@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import MovieSearch from "../searchtest/page";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { FaDotCircle } from "react-icons/fa";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,12 +21,17 @@ export default function Navbar() {
 
   return (
     <nav className="bg-[#110A1A] text-white w-full">
-      <div className=" mx-auto px-2 sm:px-6 lg:px-8">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link href="/">
-                <span className="font-bold cursor-pointer">Logo</span>
+              <Link className="no-underline" href="/">
+                <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl  text-center">
+                  <span>
+                    <FaDotCircle />
+                  </span>
+                  <span className="font-bebas no-underline">MovieAI</span>
+                </span>
               </Link>
             </div>
             <div className="ml-4">
@@ -36,12 +42,13 @@ export default function Navbar() {
           {/* This section becomes visible only on small screens */}
           <div className="flex items-center md:hidden">
             {/* AI Search Link */}
-            <Link href="/chatpage2" style={{ textDecoration: "none" }}>
-              <span className="hover:bg-lighter-purple px-2 py-2 mr-1 text-white rounded-md text-base font-medium cursor-pointer block text-center">
-                AI
-                <span style={{ marginLeft: "0.5em" }}>
-                  <FaMagnifyingGlass />
-                </span>
+            <Link
+              className="no-underline"
+              href="/chatpage2"
+              style={{ textDecoration: "none" }}
+            >
+              <span className="text-slate-100 mr-8 font-semibold">
+                AI-SEARCH
               </span>
             </Link>
 
@@ -77,9 +84,13 @@ export default function Navbar() {
 
           {/* Menu items for smaller screens */}
           <div
-            className={`${
-              isOpen ? "flex" : "hidden"
-            } flex-col md:hidden z-10 absolute bg-deep-purple w-full left-0 right-0 top-16`}
+            className={`menu-modal rounded-b-md ${
+              isOpen ? "open" : "close"
+            } flex-col md:hidden z-10 absolute w-full left-0 right-0 top-16`}
+            style={{
+              backdropFilter: "blur(4px)",
+              backgroundColor: "rgba(255, 255, 255, 0.1)",
+            }}
           >
             {!isLoggedIn ? (
               <Link href="/login" style={{ textDecoration: "none" }}>

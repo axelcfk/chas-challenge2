@@ -1,8 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@200..800&family=Staatliches&display=swap");
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
 
 /* html {
   background-color: #110A19;
@@ -288,4 +287,24 @@ input:focus {
     rgba(36, 16, 35, 1),
     rgba(0.07, 0.04, 0.1, 0.2)
   );
+}
+
+/* Navbar */
+
+/* Base class */
+.menu-modal {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.8s ease-out; /* Default to open transition duration */
+}
+
+/* Class for opening */
+.menu-modal.open {
+  max-height: 500px;
+  transition: max-height 0.8s ease-out; /* Set your desired open transition duration */
+}
+
+/* Class for closing */
+.menu-modal.close {
+  transition: max-height 0.8s ease-in; /* Set your desired close transition duration */
 }
