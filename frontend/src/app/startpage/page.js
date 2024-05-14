@@ -35,7 +35,6 @@ export default function Startpage() {
   }, []);
 
 
-
   return (
     <div className="bg-[#110A1A] pb-8">
       <div className="wrapper">

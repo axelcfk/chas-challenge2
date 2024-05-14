@@ -3,8 +3,8 @@
 import "./profile.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/app/components/Navbar";
 import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
+import WatchListForProfile from "@/app/components/WatchListForProfile";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
@@ -47,15 +47,11 @@ export default function Profile() {
     setActiveTab(tab);
   };
 
-
   const xOffset = tabIndex * -100;
-
-  //* Navbaren ska importeras globalt i layout senare
 
   return (
     <main>
-      <Navbar />
-      <div className="bg-[#201430] flex items-center flex-col ">
+      <div className="bg-[#110A19] flex items-center flex-col pb-12 ">
         {userData ? (
           <div className="flex items-center flex-col space-y-5 mt-12">
             <button className="bg-transparent border-none hover:cursor-pointer">
@@ -67,7 +63,7 @@ export default function Profile() {
           <p>Loading user data...</p>
         )}
       </div>
-      <div className="menu bg-[#110A19] flex flex-row justify-between px-8 items-center mt-12 h-16 mb-8">
+      <div className="menu bg-[#110A19] flex flex-row justify-between items-center">
         {["Profile", "Watchlist", "My lists"].map((tab) => (
           <button
             key={tab}
@@ -80,7 +76,7 @@ export default function Profile() {
         ))}
       </div>
       {activeTab === "Profile" && (
-        <div className="gradient-border-top bg-[#201430] p-8 ">
+        <div className="gradient-border-top bg-[#201430] p-8 mt-8">
           <div className="my-8">
             <h3 className="text-2xl">My favorites</h3>
             <p className="text-sm">
@@ -98,7 +94,7 @@ export default function Profile() {
             <h3 className="text-2xl">Recent activity</h3>
             <p className="text-sm">
               Här visas dom senaste filmerna man har kollat på (=lagt till i sin
-              seen)
+              seen list)
             </p>
             <SlideMenu>
               <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
@@ -116,12 +112,14 @@ export default function Profile() {
         </div>
       )}
       {activeTab === "Watchlist" && (
-        <div className="gradient-border-top bg-[#201430] p-8 ">
-          <p className="py-8">Content for watchlist</p>
+        <div className="gradient-border-top bg-[#201430] p-8 mt-8">
+          <p classame="py-8 ">
+          <WatchListForProfile profilePage={true}/>
+          </p>
         </div>
       )}
       {activeTab === "My lists" && (
-        <div className="gradient-border-top bg-[#201430] p-8 ">
+        <div className="gradient-border-top bg-[#201430] p-8 mt-8">
           <button className="py-8">Create new list</button>
         </div>
       )}
