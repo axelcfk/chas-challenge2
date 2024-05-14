@@ -12,6 +12,7 @@ import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
 import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 import WatchListSlideMenu2 from "../components/WatchListSlideMenu2";
 import MovieCardWatchAndLike from "../components/MovieCardWatchAndLike";
+import PopularSlideMenu from "../components/PopularSlideMenu";
 
 //TODO: texten i rutan ska var lite större
 //TODO: fetcha populära filmer och rendera under popular today
@@ -19,7 +20,7 @@ import MovieCardWatchAndLike from "../components/MovieCardWatchAndLike";
 //? see what Friends watched on this page?
 
 export default function Startpage() {
-  const [popularMovies, setPopularMovies] = useState([]);
+  //const [popularMovies, setPopularMovies] = useState([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,26 +39,12 @@ export default function Startpage() {
     };
   }, []);
 
-  useEffect(() => {
-    const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
-    const fetchPopularMovies = async () => {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`
-      );
-      const data = await response.json();
-      setPopularMovies(data.results);
-    };
-
-    fetchPopularMovies();
-  }, []);
-
   const parallaxRef = useRef(null);
 
   return (
     <>
-      <Navbar />
       <div className=" pb-8   ">
-        <main className="flex flex-col text-slate-100 py-20  justify-center px-8">
+        <main className="flex flex-col text-slate-100 py-20  justify-center px-4">
           <h2 className="mb-10 ">AI-SEARCH</h2>
           <div
             className="bg-[#3D348B] rounded-3xl p-8 h-40 "
@@ -65,8 +52,10 @@ export default function Startpage() {
 
             // style={{ border: "0.8px solid grey" }}
           >
-            <p className="pb-2 font-semibold">Don't know what to watch?</p>
-            <h3 className="text-2xl font-light">
+            <p className="pb-2 font-semibold z-50 relative">
+              Don't know what to watch?
+            </p>
+            <h3 className="font-light">
               {" "}
               Let our AI blow <br /> your mind!
             </h3>
@@ -75,7 +64,7 @@ export default function Startpage() {
                 Find a movie
               </button>
               <img
-                className="h-64 -mt-40 -mr-9 z-50"
+                className="h-64 -mt-40 -mr-9 z-10"
                 src="/image.png"
                 alt="AI"
               />
@@ -100,18 +89,35 @@ export default function Startpage() {
             </div>
           </div> */}
         </main>
+
+        <h2 className="mt-14 mb-4 pl-4 uppercase">Movie mixes</h2>
+        <div className="pl-4">
+          <SlideMenu>
+            <SlideMenuMixCard
+              mixName={"Weekly"}
+              imgSrc={"/mix-img.png"}
+            ></SlideMenuMixCard>
+            <SlideMenuMixCard
+              mixName={"Horror"}
+              imgSrc={"/mix-img.png"}
+            ></SlideMenuMixCard>
+            <SlideMenuMixCard
+              mixName={"Sunday"}
+              imgSrc={"/mix-img.png"}
+            ></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+          </SlideMenu>
+        </div>
         <div className=" flex justify-center flex-col text-white space-y-8">
           <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
-          {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
-          <WatchListSlideMenu2></WatchListSlideMenu2>
-          {/* <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} /> */}
+          <div className="pl-8">
+            {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
+            <WatchListSlideMenu2></WatchListSlideMenu2>
+          </div>
+
           <h2 className=" text-xl px-8 uppercase">Search history</h2>
           <div className="pl-8">
             <SlideMenu>
@@ -141,38 +147,21 @@ export default function Startpage() {
               ></SlideMenuSearchHistoryCard>
             </SlideMenu>
           </div>
-          <h2 className=" text-xl mb-5 pl-8 uppercase">
+          <h2 className="mt-14 pl-4 uppercase"> Watchlist</h2>
+          <div className="pl-4 ">
+            {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
+            <WatchListSlideMenu2></WatchListSlideMenu2>
+          </div>
+          <h2 className="mt-14 pl-4 uppercase">
             Popular today
             {/* (isLiked=false, isInWatchList=false) */}
           </h2>
           <div className="pl-8">
-            <SlideMenu>
-              {/* {popularMovies.map(movie => (
-            <SlideMenuMovieCard
-              key={movie.id}
-              id={movie.id}
-              poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            />
-          ))} */}
-
-              {popularMovies.map((movie) => (
-                <div className=" inline-block pr-4">
-                  <MovieCardWatchAndLike
-                    key={movie.id}
-                    isLiked={false}
-                    isInWatchList={false}
-                    id={movie.id}
-                    title={movie.title}
-                    poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    overview={movie.overview}
-                    voteAverage={movie.vote_average}
-                  />
-                </div>
-              ))}
-            </SlideMenu>
+            <PopularSlideMenu></PopularSlideMenu>
           </div>
-          <h2 className="text-xl pl-8 uppercase">Movie mixes</h2>
-          <div className="pl-8">
+
+          <div className="ml-4 text-xl">Movie mixes</div>
+          <div>
             <SlideMenu>
               <SlideMenuMixCard
                 mixName={"Weekly"}

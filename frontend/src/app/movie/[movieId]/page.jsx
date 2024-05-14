@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
-import { SlArrowLeft, SlUser } from "react-icons/sl";
+import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
 import {
@@ -85,7 +85,7 @@ export default function MoviePage() {
   }
 
   const handleOpenModal = () => {
-    setModalOpen(true);
+    setModalOpen(!isModalOpen);
   };
 
   const handleCloseModal = () => {
@@ -304,7 +304,7 @@ export default function MoviePage() {
                   ref={parallaxRef}
                 >
                   <div className="w-full ">
-                    <h2 className="text-2xl font-semibold  text-slate-50 ">
+                    <h2 className=" font-semibold  text-slate-50 ">
                       {" "}
                       {movieDetails.title}
                     </h2>
@@ -383,7 +383,7 @@ export default function MoviePage() {
                         )}
                       </div>
                     </div>
-                    <div className="w-full flex justify-center gap-4">
+                    <div className="w-full flex flex-col justify-center items-center gap-4 ">
                       <button
                         onClick={() => {
                           handleButtonClicked(movieDetails.id); // Toggles like state
@@ -401,7 +401,7 @@ export default function MoviePage() {
                             ); // Removes from like list if liked
                           }
                         }}
-                        className={`w-3/4 h-10 ${
+                        className={`w-full h-10 ${
                           !watches[movieDetails.id]
                             ? "bg-[#3D3B8E]"
                             : "bg-green-600"
@@ -413,21 +413,33 @@ export default function MoviePage() {
                           <FaCheck className="text-2xl text-gray-200" />
                         )}
                         {!watches[movieDetails.id] ? (
-                          <span className="pl-2 w-full text-sm font-light text-gray-200 hover:cursor-pointer">
-                            ADD TO WATCHLIST
-                          </span>
+                          <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
+                            <span className="pr-4">ADD TO WATCHLIST</span>
+                            <span
+                              onClick={handleOpenModal}
+                              className="pl-4 border-l-2 border-slate-200 flex items-center"
+                            >
+                              <SlArrowDown />
+                            </span>
+                          </p>
                         ) : (
-                          <span className="pl-2 w-full text-sm font-light text-gray-200 hover:cursor-pointer">
-                            ADDED
-                          </span>
+                          <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
+                            <span className="pr-4">ADDED</span>
+                            <span
+                              onClick={handleOpenModal}
+                              className="pl-4 border-l-2 border-slate-200 flex items-center"
+                            >
+                              <SlArrowDown />
+                            </span>
+                          </p>
                         )}
                       </button>
-                      <button
-                        onClick={handleOpenModal}
-                        className="text-sm font-light text-gray-200 rounded-full px-3 border-none bg-[#3D3B8E] hover:cursor-pointer"
-                      >
-                        Add to list (ikon)
-                      </button>
+
+                      {/* <div
+                        className={`w-40 -mt-5  bg-[#3D3B8E] flex justify-center items-center rounded-b-xl border-none  ${
+                          isModalOpen ? "h-40" : "h-0"
+                        }`}
+                      ></div> */}
                     </div>
                   </div>
                 </div>
@@ -487,8 +499,8 @@ export default function MoviePage() {
       )}
       {/* <div className=" w-screen  flex justify-center items-center"> */}
       <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
-        <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
-        <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div>
+        {/* <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
+        <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div> */}
         <iframe
           className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
           src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
