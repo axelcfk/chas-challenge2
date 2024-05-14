@@ -330,7 +330,9 @@ const fetchAllMovieIdsFromTMDB = async (movieNamesFromGPT) => {
 })
  */
 
-// only SWEDENs providers
+
+
+// fetch and return providers (in sweden) of movieId, also posts this data to our "database"-array fetchedProvidersOfMovie
 async function fetchMovieProvidersObjectTMDB(id) {
 
   try {
@@ -437,11 +439,10 @@ function addMovieToDatabase(movieObject, movieOrSeries) {
   }
 }
 
-
 // One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
 const fetchedProvidersOfMovie = [];
 
-app.get("/me/fetchedProvidersOfMovie", (req, res) => {
+app.get("/fetchedProvidersOfMovie", (req, res) => {
   const data = {
    fetchedProvidersOfMovie: fetchedProvidersOfMovie,
   };
@@ -450,10 +451,32 @@ app.get("/me/fetchedProvidersOfMovie", (req, res) => {
 });
 
 
+app.post("/addmovieproviderstodatabase", (req, res) => {
+
+  try {
+
+    const { movieProvidersObject, movieId } = req.body;
+  
+      if (!movieProvidersObject || movieId ) {
+        return res.status(400).json({ error: 'No object of providers or movie ID provided' });
+      }
+
+      addProvidersOfMovieToDatabase(movieProvidersObject, movieId)
+  
+    
+  } catch (error) {
+    console.error("1:Error attempting to use endpoint /addmovieproviderstodatabase: ", error);
+    res.status(500).json({ error: "Internal server error, Error attempting to use endpoint /addmovieproviderstodatabase" });
+  }
+  
+} )
+
+// WHEN USING THIS FUNCTION, set movieProvidersObject = 0 if SE has no provider...
+// e.g. addProvidersOfMovieToDatabase(0, id)
 function addProvidersOfMovieToDatabase(movieProvidersObject, id) {
-  if (!id) {
+  if (!movieProvidersObject || !id) {
     console.log(
-      "PROVIDERS of movie does not contain a movie 'id' ?."
+      "movie providers object or id not provided when attempting to add to our database."
     );
   }
 
@@ -475,7 +498,8 @@ function addProvidersOfMovieToDatabase(movieProvidersObject, id) {
     // om redan finns?
   }
   
-  if (movieProvidersObject === 0) { 
+  // ive set object to '0' if the movie had no providers in SE...
+  if (movieProvidersObject === 0) { // TODO: check 
     fetchedProvidersOfMovie.push({noProviders:"no providers in sweden", id: id});
   } else {
      // added movie id to the object so it is easier to find later...
@@ -486,8 +510,6 @@ function addProvidersOfMovieToDatabase(movieProvidersObject, id) {
     console.log("Added providers to movie ID ", id, " (array fetchedProvidersOfMovie)");
   }
 
- 
-  
 }
 
 

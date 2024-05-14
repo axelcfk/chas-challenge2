@@ -12,6 +12,7 @@ import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
 import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 import WatchListSlideMenu2 from "../components/WatchListSlideMenu2";
 import MovieCardWatchAndLike from '../components/MovieCardWatchAndLike';
+import PopularSlideMenu from "../components/PopularSlideMenu";
 
 //TODO: texten i rutan ska var lite större
 //TODO: fetcha populära filmer och rendera under popular today
@@ -19,7 +20,7 @@ import MovieCardWatchAndLike from '../components/MovieCardWatchAndLike';
 //? see what Friends watched on this page?
 
 export default function Startpage() {
-  const [popularMovies, setPopularMovies] = useState([]);
+ /*  const [popularMovies, setPopularMovies] = useState([]);
 
   useEffect(() => {
     const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
@@ -33,7 +34,7 @@ export default function Startpage() {
 
     fetchPopularMovies();
   }, []);
-
+ */
 
 
   return (
@@ -109,7 +110,7 @@ export default function Startpage() {
             />
           ))} */}
 
-          {popularMovies.map(movie => (
+         {/*  {popularMovies.map(movie => (
             <MovieCardWatchAndLike
               key={movie.id}
               isLiked={false} 
@@ -120,7 +121,9 @@ export default function Startpage() {
               overview={movie.overview}
               voteAverage={movie.vote_average}
             />
-          ))}
+          ))} */}
+
+          <PopularSlideMenu></PopularSlideMenu>
 
           
         </SlideMenu>

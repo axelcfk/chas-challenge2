@@ -129,7 +129,33 @@ export async function postMovieToDatabase(movieObject) {
     return true; // Indicate success if the request was successful
   } catch (error) {
     console.error("Error posting movie to database:", error);
-    return false; // Indicate failure if an error occurred
+    return false; // Indicate failure if an error occurred, not used atm???
+  }
+}
+
+
+
+export async function postMovieProvidersToDatabase(movieProvidersObject, movieId) {
+  try {
+    const responseBackend = await fetch(`${host}/addmovieproviderstodatabase`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        movieProvidersObject: movieProvidersObject,
+        movieId: movieId,
+      }),
+    });
+
+    if (!responseBackend.ok) {
+      throw new Error("Failed to fetch 'addmovieproviderstodatabase' POST");
+    }
+
+    return true; // Indicate success if the request was successful
+  } catch (error) {
+    console.error("Error posting movie-providers object to database: ", error);
+    return false; // Indicate failure if an error occurred,  not used atm???
   }
 }
 
