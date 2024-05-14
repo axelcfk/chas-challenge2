@@ -12,6 +12,7 @@ function MovieSearch() {
   const [isSearching, setIsSearching] = useState(false); // State to toggle search input visibility
   const [ratingFilter, setRatingFilter] = useState("All"); // State to handle the rating filter
   const [movieProviders, setMovieProviders] = useState([]); // State to handle
+  const [fetchStreamService, setFetchStreamService] = useState(false);
 
   const inputRef = useRef(null); // Reference for the input field
 
@@ -113,12 +114,12 @@ function MovieSearch() {
     }
   });
 
-  /* useEffect(() => {
+  useEffect(() => {
     filteredMovies.forEach((movie) => {
       fetchMovieProviders(movie.id);
     });
-  }, []);  */// ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
-   // }, [inputValue]);
+  }, [fetchStreamService]); // ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
+  // }, [inputValue]);
 
   console.log(movieProviders);
 
@@ -161,6 +162,8 @@ function MovieSearch() {
               setRatingFilter={setRatingFilter}
             />
           )}
+
+          <button onClick={() => setFetchStreamService(true)}>stream</button>
         </div>
       </form>
       {movies.length > 0 && (
