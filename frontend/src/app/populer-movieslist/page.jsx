@@ -22,7 +22,7 @@ export default function MovieSelection() {
 
         // store all fetched movies in database (unless they have been fetched before)
         data.results.forEach(async (movieObject) => {
-          await postMovieToDatabase(movieObject)
+          await postMovieToDatabase(movieObject);
         });
 
         // Shuffles 20 movies
@@ -55,7 +55,7 @@ export default function MovieSelection() {
   };
 
   return (
-    <div className="bg-gray-100 p-4">
+    <div className="bg-gray-100 p-4 w-full ">
       <h1 className="text-2xl font-bold text-center mb-4">Populer Movies</h1>
       <div className="grid grid-cols-3 gap-4">
         {movies.slice(0, moreOptions).map((movie) => (
@@ -95,5 +95,3 @@ export default function MovieSelection() {
     </div>
   );
 }
-
-
