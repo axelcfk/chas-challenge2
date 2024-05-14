@@ -38,7 +38,7 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className="inline-block  mx-1 rounded-lg"
+      className="mr-4 inline-block  mx-1 rounded-lg"
       style={{ border: "0.5px solid grey" }}
     >
       {" "}

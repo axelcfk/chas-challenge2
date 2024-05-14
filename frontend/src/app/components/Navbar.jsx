@@ -25,9 +25,9 @@ export default function Navbar() {
         <div className="relative flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link className="no-underline" href="/">
+              <Link className="no-underline" href="/startpage">
                 <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl  text-center">
-                  <span>
+                  <span className="text-xl">
                     <FaDotCircle />
                   </span>
                   <span className="font-bebas no-underline">MovieAI</span>

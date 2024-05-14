@@ -39,15 +39,12 @@ export default function Startpage() {
     };
   }, []);
 
-
   const parallaxRef = useRef(null);
-
-
 
   return (
     <>
       <div className=" pb-8   ">
-        <main className="flex flex-col text-slate-100 py-20  justify-center px-8">
+        <main className="flex flex-col text-slate-100 py-20  justify-center px-4">
           <h2 className="mb-10 ">AI-SEARCH</h2>
           <div
             className="bg-[#3D348B] rounded-3xl p-8 h-40 "
@@ -55,8 +52,10 @@ export default function Startpage() {
 
             // style={{ border: "0.8px solid grey" }}
           >
-            <p className="pb-2 font-semibold">Don't know what to watch?</p>
-            <h3 className="text-2xl font-light">
+            <p className="pb-2 font-semibold z-50 relative">
+              Don't know what to watch?
+            </p>
+            <h3 className="font-light">
               {" "}
               Let our AI blow <br /> your mind!
             </h3>
@@ -65,7 +64,7 @@ export default function Startpage() {
                 Find a movie
               </button>
               <img
-                className="h-64 -mt-40 -mr-9 z-50"
+                className="h-64 -mt-40 -mr-9 z-10"
                 src="/image.png"
                 alt="AI"
               />
@@ -90,13 +89,35 @@ export default function Startpage() {
             </div>
           </div> */}
         </main>
+
+        <h2 className="mt-14 mb-4 pl-4 uppercase">Movie mixes</h2>
+        <div className="pl-4">
+          <SlideMenu>
+            <SlideMenuMixCard
+              mixName={"Weekly"}
+              imgSrc={"/mix-img.png"}
+            ></SlideMenuMixCard>
+            <SlideMenuMixCard
+              mixName={"Horror"}
+              imgSrc={"/mix-img.png"}
+            ></SlideMenuMixCard>
+            <SlideMenuMixCard
+              mixName={"Sunday"}
+              imgSrc={"/mix-img.png"}
+            ></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+          </SlideMenu>
+        </div>
         <div className=" flex justify-center flex-col text-white space-y-8">
           <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
           <div className="pl-8">
             {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
             <WatchListSlideMenu2></WatchListSlideMenu2>
           </div>
-          
+
           <h2 className=" text-xl px-8 uppercase">Search history</h2>
           <div className="pl-8">
             <SlideMenu>
@@ -126,43 +147,40 @@ export default function Startpage() {
               ></SlideMenuSearchHistoryCard>
             </SlideMenu>
           </div>
-          <h2 className=" text-xl mb-5 pl-8 uppercase">
+          <h2 className="mt-14 pl-4 uppercase"> Watchlist</h2>
+          <div className="pl-4 ">
+            {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
+            <WatchListSlideMenu2></WatchListSlideMenu2>
+          </div>
+          <h2 className="mt-14 pl-4 uppercase">
             Popular today
             {/* (isLiked=false, isInWatchList=false) */}
           </h2>
           <div className="pl-8">
-           
-              
-
-        
-
-          <PopularSlideMenu></PopularSlideMenu>
-
+            <PopularSlideMenu></PopularSlideMenu>
           </div>
-       
 
-        
-        <div className="ml-4 text-xl">Movie mixes</div>
-        <div>
-          <SlideMenu>
-            <SlideMenuMixCard
-              mixName={"Weekly"}
-              imgSrc={"/mix-img.png"}
-            ></SlideMenuMixCard>
-            <SlideMenuMixCard
-              mixName={"Horror"}
-              imgSrc={"/mix-img.png"}
-            ></SlideMenuMixCard>
-            <SlideMenuMixCard
-              mixName={"Sunday"}
-              imgSrc={"/mix-img.png"}
-            ></SlideMenuMixCard>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-            <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
-          </SlideMenu>
-        </div>
+          <div className="ml-4 text-xl">Movie mixes</div>
+          <div>
+            <SlideMenu>
+              <SlideMenuMixCard
+                mixName={"Weekly"}
+                imgSrc={"/mix-img.png"}
+              ></SlideMenuMixCard>
+              <SlideMenuMixCard
+                mixName={"Horror"}
+                imgSrc={"/mix-img.png"}
+              ></SlideMenuMixCard>
+              <SlideMenuMixCard
+                mixName={"Sunday"}
+                imgSrc={"/mix-img.png"}
+              ></SlideMenuMixCard>
+              <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+              <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+              <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+              <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
+            </SlideMenu>
+          </div>
 
           {/* <div className="text-xl pl-8">Likes (ta bort?)</div>
           <LikeListSlideMenu2></LikeListSlideMenu2> */}
