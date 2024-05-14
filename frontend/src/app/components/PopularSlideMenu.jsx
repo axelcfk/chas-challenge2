@@ -8,15 +8,12 @@ export default function PopularSlideMenu() {
   const [movieWatchList, setMovieWatchList] = useState([]);
   const [likedMoviesList, setLikedMoviesList] = useState(null); // to check if a movie is liked...
   const [listsFetched, setListsFetched] = useState(false);
- // const [likedSeriesList, setLikedSeriesList] = useState(null);
+  // const [likedSeriesList, setLikedSeriesList] = useState(null);
   //const [likedSeriesFetched, setLikedSeriesFetched] = useState(false); // bara en behövs
-
 
   const [popularMovies, setPopularMovies] = useState([]);
 
   const [popularListDetails, setPopularListDetails] = useState([]);
-
-
 
   useEffect(() => {
     const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
@@ -35,8 +32,6 @@ export default function PopularSlideMenu() {
   }, []);
 
   // TODO: mappa igenom popular movies och spara de i databas?
-
-
 
   // TODO: flytta dessa useEffects till backend?
   useEffect(() => {
@@ -58,25 +53,26 @@ export default function PopularSlideMenu() {
           "Content-Type": "application/json",
         },
       });
-  
-      
+
       const data = await response.json();
 
-
-      
       if (data.movieWatchList && data.likedMoviesList) {
         //if (data.movieWatchList && data.movieWatchList.length > 0 && data.likedMoviesList && data.likedMoviesList.length > 0) {
-        
+
         console.log(
           "fetched data.movieWatchList from backend: ",
-          data.movieWatchList, " and fetched data.likedMoviesList from backend: ",
-          data.likedMoviesList)
+          data.movieWatchList,
+          " and fetched data.likedMoviesList from backend: ",
+          data.likedMoviesList
+        );
         setMovieWatchList(data.movieWatchList);
         setLikedMoviesList(data.likedMoviesList);
 
-       // setLikedSeriesList(data.likedSeriesList);
+        // setLikedSeriesList(data.likedSeriesList);
       } else {
-        console.log("failed to fetch watch- and like-lists from backend, or they are empty");
+        console.log(
+          "failed to fetch watch- and like-lists from backend, or they are empty"
+        );
       }
     } catch (error) {
       console.error("Error:", error);
@@ -88,38 +84,35 @@ export default function PopularSlideMenu() {
 
   useEffect(() => {
     if (
-      (popularMovies && popularMovies.length > 0 ) // ||
+      popularMovies &&
+      popularMovies.length > 0 // ||
       //(likedSeriesList && likedSeriesList.length > 0)
     ) {
       popularMovies.forEach(async (movie) => {
-
-        await postMovieToDatabase(movie); 
-
-        
+        await postMovieToDatabase(movie);
 
         // first check if movie in watchlist is liked
         let isLiked = false;
         if (likedMoviesList && likedMoviesList.length > 0) {
           isLiked = likedMoviesList.find((likedMovie) => {
-            return likedMovie.id === movie.id; 
-          })
+            return likedMovie.id === movie.id;
+          });
         }
 
         let isInWatchList = false;
         if (likedMoviesList && likedMoviesList.length > 0) {
           isInWatchList = movieWatchList.find((watchListedMovie) => {
-            return watchListedMovie.id === movie.id; 
-          })
+            return watchListedMovie.id === movie.id;
+          });
         }
 
-
         // now fetching movie object from our database
-       // const movieObject = await fetchMovieObject(movie.id); 
+        // const movieObject = await fetchMovieObject(movie.id);
         //console.log("movieObject: ", movieObject);
 
         if (movie.title) {
           setPopularListDetails((prevDetails) => [
-            ...prevDetails, 
+            ...prevDetails,
             {
               id: movie.id, // or movi  e.id
               title: movie.title,
@@ -130,24 +123,20 @@ export default function PopularSlideMenu() {
               runtime: movie.runtime,
               backdrop: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-              isLiked: isLiked, 
-              isInWatchList: isInWatchList, 
+              isLiked: isLiked,
+              isInWatchList: isInWatchList,
             },
           ]);
         } else {
           console.log("data.title does not exist?");
         }
-
-        
-        
       });
     }
     //}, [showLikedDetails]);
   }, [listsFetched]);
 
-
   //if (likedMoviesList = = null || likedSeriesList == null) {
-  if (likedMoviesList == null) { 
+  if (likedMoviesList == null) {
     return (
       <>
         <div className="inline-block w-full h-80 md:h-96 mx-4 bg-slate-950 text-slate-100">
@@ -158,7 +147,7 @@ export default function PopularSlideMenu() {
   }
 
   return (
-    <>
+    <div>
       {listsFetched && popularListDetails && popularListDetails.length > 0 ? (
         <SlideMenu>
           {popularListDetails.map((movie, index) => (
@@ -177,9 +166,10 @@ export default function PopularSlideMenu() {
         </SlideMenu>
       ) : (
         <div className="inline-block w-full h-80 md:h-96 mx-4">
-          <p>No movies in watchlist yet</p>  {/*  TODO: detta visas i en millisekund när man refreshar... */}
+          <p>No movies in watchlist yet</p>{" "}
+          {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
       )}
-    </>
+    </div>
   );
 }

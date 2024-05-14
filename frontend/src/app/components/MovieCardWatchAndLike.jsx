@@ -41,12 +41,12 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className="mr-4 inline-block mx-1 rounded-lg"
+      className="inline-block mx-1 rounded-lg"
       style={{ border: "0.5px solid grey" }}
     >
       {" "}
       {/* w-44 md:w-80 */}
-      <div className="h-full w-full flex flex-col justify-center">
+      <div className=" h-full w-full flex flex-col justify-center">
         <div className="h-60 w-full flex justify-center m-0">
           <div className="relative h-full">
             <Link href={`/movie/${encodeURIComponent(id)}`}>

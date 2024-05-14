@@ -117,7 +117,7 @@ export default function WatchListSlideMenu2() {
   }
 
   return (
-    <div className="mr-4">
+    <div className="">
       {listsFetched &&
       movieWatchListDetails &&
       movieWatchListDetails.length > 0 ? (
@@ -133,7 +133,7 @@ export default function WatchListSlideMenu2() {
               title={movie.title}
               poster={movie.poster}
               overview={movie.overview}
-            ></MovieCardWatchAndLike>
+            />
           ))}
         </SlideMenu>
       ) : (

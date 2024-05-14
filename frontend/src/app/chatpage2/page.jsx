@@ -228,7 +228,7 @@ export default function ChatPage2() {
   }, [movieDetails.idFromAPI]);
 
   return (
-    <div className="   flex flex-col justify-center items-center md:items-start px-5 md:px-20 text-slate-100 z-0 pb-5 ">
+    <div className=" flex flex-col justify-center items-center md:items-start px-5 md:px-20 text-slate-100 z-0 pb-5 ">
       {/* <button onClick={handleNavigation}>Go Back</button> */}
       {/* <BackButton /> */}
       {errorMessage && !loading && (
