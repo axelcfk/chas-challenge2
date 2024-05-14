@@ -35,6 +35,7 @@ function MovieSearch() {
     }
   }, [inputValue]);
 
+  //fetchar streamingtjänster från backend
   async function fetchMovieProviders(id) {
     try {
       const response = await fetch(`${host}/fetchmovieprovidersTMDB`, {
@@ -64,6 +65,7 @@ function MovieSearch() {
     } finally {
     }
   }
+  //fetchar streamingtjänster från backend
 
   const handleIconClick = () => {
     setIsSearching(true); // Show the input field when icon is clicked
