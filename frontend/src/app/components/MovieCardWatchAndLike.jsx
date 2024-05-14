@@ -91,6 +91,16 @@ export default function MovieCardWatchAndLike({
             <FaStar color="yellow" />
             <p className="pl-1">{voteAverage.toFixed(1)}</p>
           </div>
+          <div className="h-6">
+          {streamingServices && streamingServices.map((streamingService, index) => {
+              return (
+                <div key={index} className="">
+                  <p>{streamingService.provider_name}</p>
+                  
+                </div>
+              )
+            })}
+          </div>
           <div className="mt-4 px-2">
             <button
               onClick={() => {

@@ -513,6 +513,91 @@ function addProvidersOfMovieToDatabase(movieProvidersObject, id) {
 
 }
 
+const fetchPopularMovies = async () => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/popular?api_key=${movieAPI_KEY}&language=en-US&page=1`
+  );
+  const data = await response.json();
+
+  //postMovieToDatabase(data)
+
+  return data.results;
+};
+
+app.get("/popularmovies", async (req, res)  => {
+
+  try {
+  const popularMovies = await fetchPopularMovies();
+
+ // const popularMoviesProviders = [];
+
+  const popularMoviesAndProviders = [];
+
+  if (popularMovies.length > 0) {
+
+    
+    for (const movie of popularMovies) {
+      
+  
+        if (!movie.id) {
+          return res.status(400).json({ error: 'No movie id found in popular movie?' });
+        }
+  
+        addMovieToDatabase(movie, "movie");
+        
+        const movieProvidersObject = await fetchMovieProvidersObjectTMDB(movie.id)
+
+        console.log("movieProvidersObject: ", movieProvidersObject);
+  
+        let streamingProviders;
+          if (movieProvidersObject) {
+            streamingProviders = movieProvidersObject;
+          } else {
+            console.log("failed to read movieProvidersObject");
+          }
+           
+        console.log("streaming providers of movie id ", movie.id, ": ", streamingProviders);
+  
+        let isLiked = false;
+          if (likedMoviesList && likedMoviesList.length > 0) {
+            isLiked = likedMoviesList.some((likedMovie) => {
+              return likedMovie.id === movie.id; 
+            })
+          }
+  
+          let isInWatchList = false;
+          if (movieWatchList && movieWatchList.length > 0) {
+           isInWatchList = movieWatchList.some((watchListedMovie) => {
+              return watchListedMovie.id === movie.id; 
+            })
+        
+          }
+  
+  
+         
+        popularMoviesAndProviders.push({movie, streamingProviders, isLiked, isInWatchList})
+      };
+
+      
+    } else {
+      console.log("failed to map through popular movies, length === 0 ?");
+    }
+
+  if (popularMoviesAndProviders.length > 0) {
+    console.log(popularMoviesAndProviders);
+    res.json(popularMoviesAndProviders);
+  } else {
+    console.log("popularMoviesAndProviders failed to populate");
+  }
+
+    
+  } catch (error) {
+    console.log("failed to run /popularmovies endpoint");
+  }
+
+
+  
+});
 
 async function getMixFromOurDatabaseOnlyIDs() {
   try {

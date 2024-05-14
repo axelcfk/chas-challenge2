@@ -62,6 +62,39 @@ export default function WatchListSlideMenu2() {
     }
   }
 
+  async function fetchMovieProviders(id) {
+    try {
+      const response = await fetch(`${host}/fetchmovieprovidersTMDB`, {
+        // users sidan på backend! dvs inte riktiga sidan!
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+
+          //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.movieId && data.movieProvidersObject) {
+
+        return data;
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } /* finally {
+      if (movieProvidersBackend.length === 20) {
+        setFetchedMovieProviders(true);
+      } else {
+        return;
+      }
+    } */
+  }
+
+
   useEffect(() => {
     if (
       movieWatchList &&
@@ -79,9 +112,16 @@ export default function WatchListSlideMenu2() {
 
         // now fetching movie object from our database
         const movieObject = await fetchMovieObject(movie.id);
+
+        const movieProviders = await fetchMovieProviders(movie.id);
+
         console.log("movieObject: ", movieObject);
 
-        if (movieObject.title) {
+        console.log("movieProvidersObject: ", movieProviders);
+
+       
+
+        if (movieObject.title && movieProviders.movieProvidersObject) {
           setMovieWatchListDetails((prevDetails) => [
             ...prevDetails,
             {
@@ -95,6 +135,7 @@ export default function WatchListSlideMenu2() {
               backdrop: `https://image.tmdb.org/t/p/w500${movieObject.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${movieObject.poster_path}`,
               isLiked: isLiked,
+              flatrate: movieProviders.movieProvidersObject.flatrate,
             },
           ]);
         } else {
@@ -133,6 +174,7 @@ export default function WatchListSlideMenu2() {
               title={movie.title}
               poster={movie.poster}
               overview={movie.overview}
+              streamingServices={movie.flatrate}
             ></MovieCardWatchAndLike>
           ))}
         </SlideMenu>
