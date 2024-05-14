@@ -1,8 +1,8 @@
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Chas Challenge",
@@ -11,8 +11,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html className="bg-[#110A1A] text-white" lang="en">
-      <body className={inter.className}>
+    <html className="font-manrope bg-[#110A1A] text-white" lang="en">
+      <body>
         <Navbar />
         {children}
       </body>

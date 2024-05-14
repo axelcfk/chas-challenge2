@@ -1,5 +1,5 @@
 "use client";
-
+import { host } from "../utils";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import RatingFilter from "../filter-components/RatingFilter";
@@ -11,6 +11,7 @@ function MovieSearch() {
   const [movies, setMovies] = useState([]); // State to hold movies fetched from the API
   const [isSearching, setIsSearching] = useState(false); // State to toggle search input visibility
   const [ratingFilter, setRatingFilter] = useState("All"); // State to handle the rating filter
+  const [movieProviders, setMovieProviders] = useState([]); // State to handle
 
   const inputRef = useRef(null); // Reference for the input field
 
@@ -33,6 +34,36 @@ function MovieSearch() {
     }
   }, [inputValue]);
 
+  async function fetchMovieProviders(id) {
+    try {
+      const response = await fetch(`${host}/fetchmovieprovidersTMDB`, {
+        // users sidan på backend! dvs inte riktiga sidan!
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+
+          //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
+        }),
+      });
+
+      const data = await response.json();
+
+      setMovieProviders((prevDetails) => [
+        ...prevDetails,
+        {
+          providers: data.movieProvidersObject,
+          movieId: data.movieId,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+    }
+  }
+
   const handleIconClick = () => {
     setIsSearching(true); // Show the input field when icon is clicked
     if (inputRef.current) {
@@ -41,7 +72,13 @@ function MovieSearch() {
   };
 
   const handleChange = (event) => {
-    setInputValue(event.target.value);
+    const newValue = event.target.value;
+    setInputValue(newValue);
+
+    // If the input value is empty, clear the movie list
+    if (!newValue.trim()) {
+      setMovies([]);
+    }
   };
 
   const handleSubmit = (event) => {
@@ -75,6 +112,15 @@ function MovieSearch() {
       );
     }
   });
+
+  /* useEffect(() => {
+    filteredMovies.forEach((movie) => {
+      fetchMovieProviders(movie.id);
+    });
+  }, []);  */// ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
+   // }, [inputValue]);
+
+  console.log(movieProviders);
 
   return (
     <div className="relative">
@@ -125,6 +171,11 @@ function MovieSearch() {
                 className="text-black no-underline hover:underline"
                 href={`/movie/${encodeURIComponent(movie.id)}`}
               >
+                <img
+                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                  alt={movie.title}
+                  className="w-10 h-10 mr-2"
+                />
                 {movie.title}
               </Link>
             </li>

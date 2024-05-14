@@ -208,7 +208,7 @@ export default function MyLists() {
   // Loading... when just loading in data AND length > 0
   if (likedMoviesList == null || likedSeriesList == null) {
     return (
-      <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+      <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20  bg-slate-950 text-slate-100">
         Loading like-lists...
       </div>
     );
@@ -216,14 +216,14 @@ export default function MyLists() {
 
   if (movieWatchList == null || seriesWatchList == null) {
     return (
-      <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+      <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 bg-slate-950 text-slate-100">
         Loading watch-lists...
       </div>
     );
   }
 
   return (
-    <div className="relative flex flex-col justify-center items-center pb-10 px-8 md:px-20 h-screen bg-slate-950 text-slate-100">
+    <div className="relative flex flex-col justify-center items-center pb-10 px-8 md:px-20  bg-slate-950 text-slate-100">
       <h2>Liked</h2>
 
       {likedMoviesList && likedMoviesList.length > 0 ? (
@@ -239,7 +239,7 @@ export default function MyLists() {
         </ul>
       ) : (
         "No movies liked yet"
-      )} 
+      )}
 
       <h2>Liked Detailed</h2>
       <button
@@ -250,7 +250,7 @@ export default function MyLists() {
       >
         Show Details
       </button>
-      
+
       {showLikedDetails ? (
         likedMoviesListDetails && likedMoviesListDetails.length > 0 ? (
           <SlideMenu>
@@ -269,7 +269,6 @@ export default function MyLists() {
       ) : (
         ""
       )}
-
 
       <h2>Watchlist</h2>
       {movieWatchList && movieWatchList.length > 0 ? (
@@ -318,8 +317,6 @@ export default function MyLists() {
       ) : (
         ""
       )}
-
-
     </div>
   );
 }

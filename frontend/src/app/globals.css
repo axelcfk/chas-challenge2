@@ -1,12 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@200..800&family=Staatliches&display=swap");
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
-
-/* html, body {
-  background-color: #201430;
+/* html {
+  background-color: #110A19;
 } */
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 300;
+}
 
 * {
   margin: 0;
@@ -264,12 +278,12 @@ input:focus {
   pointer-events: none; /* Allows clicks to pass through */
 }
 
-/* .gradient-top {
+.gradient-top {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 5px; 
+  height: 5px;
   background: linear-gradient(
     to top,
     rgba(36, 16, 35, 1),
@@ -288,4 +302,24 @@ input:focus {
     rgba(36, 16, 35, 1),
     rgba(0.07, 0.04, 0.1, 0.2)
   );
-} */
+}
+
+/* Navbar */
+
+/* Base class */
+.menu-modal {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.8s ease-out; /* Default to open transition duration */
+}
+
+/* Class for opening */
+.menu-modal.open {
+  max-height: 500px;
+  transition: max-height 0.8s ease-out; /* Set your desired open transition duration */
+}
+
+/* Class for closing */
+.menu-modal.close {
+  transition: max-height 0.8s ease-in; /* Set your desired close transition duration */
+}
