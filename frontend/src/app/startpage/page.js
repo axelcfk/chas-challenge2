@@ -96,14 +96,7 @@ export default function Startpage() {
             {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
             <WatchListSlideMenu2></WatchListSlideMenu2>
           </div>
-          {/* <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-          <SlideMenuMovieCard poster={"/troll-poster.jpg"} /> */}
+          
           <h2 className=" text-xl px-8 uppercase">Search history</h2>
           <div className="pl-8">
             <SlideMenu>
@@ -138,15 +131,16 @@ export default function Startpage() {
             {/* (isLiked=false, isInWatchList=false) */}
           </h2>
           <div className="pl-8">
-            <SlideMenu>
+           
               
 
         
 
           <PopularSlideMenu></PopularSlideMenu>
 
-          
-        </SlideMenu>
+          </div>
+       
+
         
         <div className="ml-4 text-xl">Movie mixes</div>
         <div>

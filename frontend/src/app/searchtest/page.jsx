@@ -113,11 +113,12 @@ function MovieSearch() {
     }
   });
 
-  useEffect(() => {
+  /* useEffect(() => {
     filteredMovies.forEach((movie) => {
       fetchMovieProviders(movie.id);
     });
-  }, [inputValue]);
+  }, []);  */// ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
+   // }, [inputValue]);
 
   console.log(movieProviders);
 
