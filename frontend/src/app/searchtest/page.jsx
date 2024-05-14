@@ -60,6 +60,7 @@ function MovieSearch() {
   const handleClose = () => {
     setInputValue(""); // Clear input value
     setIsSearching(false); // Close the search field
+    setMovies([]);
   };
 
   // Filter movies based on rating
@@ -88,6 +89,11 @@ function MovieSearch() {
                 value={inputValue}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleClose();
+                  }
+                }}
                 placeholder="Search for a movie..."
                 autoComplete="off"
               />
