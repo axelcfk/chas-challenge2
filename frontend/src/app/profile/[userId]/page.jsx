@@ -122,7 +122,7 @@ export default function Profile() {
       )}
       {activeTab === "My lists" && (
         <div className="gradient-border-top bg-[#201430] p-8 ">
-          <p className="py-8">Content for my lists</p>
+          <button className="py-8">Create new list</button>
         </div>
       )}
     </main>

@@ -121,7 +121,7 @@ export default function LikeListSlideMenu() {
   // Loading... when just loading in data AND length > 0
   if (likedMoviesList == null || likedSeriesList == null) {
     return (
-      <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20 h-screen w-screen bg-slate-950 text-slate-100">
+      <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20  bg-slate-950 text-slate-100">
         Loading like-lists...
       </div>
     );
