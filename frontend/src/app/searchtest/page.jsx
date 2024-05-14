@@ -124,7 +124,7 @@ function MovieSearch() {
   console.log(movieProviders);
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <form onSubmit={handleSubmit} className="flex items-center space-x-2">
         <div className="flex items-center space-x-2">
           {isSearching ? (

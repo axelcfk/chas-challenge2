@@ -34,9 +34,6 @@ export default function Navbar() {
                 </span>
               </Link>
             </div>
-            <div className="ml-4">
-              <MovieSearch />
-            </div>
           </div>
 
           {/* This section becomes visible only on small screens */}
@@ -47,10 +44,11 @@ export default function Navbar() {
               href="/chatpage2"
               style={{ textDecoration: "none" }}
             >
-              <span className="text-slate-100 mr-8 font-semibold">
-                AI-SEARCH
-              </span>
+              <span className="text-slate-100 mr-8 font-semibold"></span>
             </Link>
+            <div className="mr-4">
+              <MovieSearch />
+            </div>
 
             {/* Burger icon */}
             <button

@@ -43,11 +43,11 @@ export default function Startpage() {
 
   return (
     <>
-      <div className=" pb-8   ">
+      <div className=" pb-8 h-full  ">
         <main className="flex flex-col text-slate-100 py-20  justify-center px-4">
           <h2 className="mb-10 ">AI-SEARCH</h2>
           <div
-            className="bg-[#3D348B] rounded-3xl p-8 h-40 "
+            className="bg-[#29274C] rounded-3xl p-8 h-40 "
             ref={parallaxRef}
 
             // style={{ border: "0.8px solid grey" }}
@@ -60,9 +60,11 @@ export default function Startpage() {
               Let our AI blow <br /> your mind!
             </h3>
             <div className=" h-2/3 flex justify-between items-center">
-              <button className="border-none bg-slate-100 w-40 h-10 rounded-full font-semibold">
-                Find a movie
-              </button>
+              <Link href={"/chatpage2"}>
+                <button className="hover:cursor-pointer border-none bg-slate-100 w-40 h-10 rounded-full font-semibold">
+                  Find a movie
+                </button>
+              </Link>
               <img
                 className="h-64 -mt-40 -mr-9 z-10"
                 src="/image.png"
@@ -89,8 +91,15 @@ export default function Startpage() {
             </div>
           </div> */}
         </main>
+        <h2 className="mt-14 mb-8 pl-4 uppercase">
+          Popular today
+          {/* (isLiked=false, isInWatchList=false) */}
+        </h2>
+        <div className="pl-4">
+          <PopularSlideMenu></PopularSlideMenu>
+        </div>
 
-        <h2 className="mt-14 mb-4 pl-4 uppercase">Movie mixes</h2>
+        <h2 className="mt-14 mb-8 pl-4 uppercase">Movie mixes</h2>
         <div className="pl-4">
           <SlideMenu>
             <SlideMenuMixCard
@@ -111,15 +120,14 @@ export default function Startpage() {
             <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
           </SlideMenu>
         </div>
-        <div className=" flex justify-center flex-col text-white space-y-8">
-          <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
+        <div className=" flex justify-center flex-col text-white ">
+          {/* <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
           <div className="pl-8">
-            {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
             <WatchListSlideMenu2></WatchListSlideMenu2>
-          </div>
+          </div> */}
 
-          <h2 className=" text-xl px-8 uppercase">Search history</h2>
-          <div className="pl-8">
+          <h2 className="mt-14 mb-8 text-xl pl-4 uppercase">Search history</h2>
+          <div className=" pl-4">
             <SlideMenu>
               <SlideMenuSearchHistoryCard
                 searchName="Search 1"
@@ -147,20 +155,13 @@ export default function Startpage() {
               ></SlideMenuSearchHistoryCard>
             </SlideMenu>
           </div>
-          <h2 className="mt-14 pl-4 uppercase"> Watchlist</h2>
+          <h2 className="mt-14 mb-8 pl-4 uppercase"> Watchlist</h2>
           <div className="pl-4 ">
             {/* <LikeListSlideMenu2></LikeListSlideMenu2> */}
             <WatchListSlideMenu2></WatchListSlideMenu2>
           </div>
-          <h2 className="mt-14 pl-4 uppercase">
-            Popular today
-            {/* (isLiked=false, isInWatchList=false) */}
-          </h2>
-          <div className="pl-8">
-            <PopularSlideMenu></PopularSlideMenu>
-          </div>
 
-          <div className="ml-4 text-xl">Movie mixes</div>
+          {/* <div className="ml-4 text-xl">Movie mixes</div>
           <div>
             <SlideMenu>
               <SlideMenuMixCard
@@ -180,7 +181,7 @@ export default function Startpage() {
               <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
               <SlideMenuMixCard imgSrc={"/mix-img.png"}></SlideMenuMixCard>
             </SlideMenu>
-          </div>
+          </div> */}
 
           {/* <div className="text-xl pl-8">Likes (ta bort?)</div>
           <LikeListSlideMenu2></LikeListSlideMenu2> */}

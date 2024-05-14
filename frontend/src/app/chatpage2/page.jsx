@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { postMovieToDatabase } from "../utils";
@@ -47,6 +47,8 @@ export default function ChatPage2() {
 
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const videoRef = useRef(null);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const handleInputChange = (e) => setInput(e.target.value);
 
@@ -55,8 +57,6 @@ export default function ChatPage2() {
       videoRef.current.playbackRate = speed;
     }
   };
-
-  const router = useRouter();
 
   const handleNavigation = () => {
     router.back();
@@ -109,14 +109,22 @@ export default function ChatPage2() {
   };
 
   //hämta resultat i loclstorage
-  useEffect(() => {
-    const savedSearch = localStorage.getItem("latestSearch");
-    if (savedSearch) {
-      const { movies, input } = JSON.parse(savedSearch);
-      setMovies(movies);
-      setInput(input);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (pathname === "/startpage") {
+  //     localStorage.removeItem("latestSearch");
+  //     setMovies([]);
+  //     setInput("");
+  //   }
+
+  //   const savedSearch = localStorage.getItem("latestSearch");
+  //   if (savedSearch) {
+  //     const { movies, input } = JSON.parse(savedSearch);
+  //     setMovies(movies);
+  //     setInput(input);
+  //   }
+  // }, [pathname]);
+
+  // console.log(movies);
 
   useEffect(() => {
     async function fetchAllMovieDetails() {
@@ -220,7 +228,7 @@ export default function ChatPage2() {
   }, [movieDetails.idFromAPI]);
 
   return (
-    <div className=" flex flex-col justify-center items-center md:items-start px-5 md:px-20 h-lvh  text-slate-100 z-0 pb-5 bg-black">
+    <div className="   flex flex-col justify-center items-center md:items-start px-5 md:px-20 text-slate-100 z-0 pb-5 ">
       {/* <button onClick={handleNavigation}>Go Back</button> */}
       {/* <BackButton /> */}
       {errorMessage && !loading && (
@@ -230,13 +238,11 @@ export default function ChatPage2() {
       )}
       {showVideo && movies.length < 2 && (
         <div
-          className={` md:w-full flex flex-col justify-center items-center h-full ${
-            loading ? "-mt-48" : ""
-          } `}
+          className={` md:w-full flex flex-col justify-center items-center h-full   `}
         >
-          <div className=" h-96 flex justify-center items-center ">
+          <div className="relative h-96 flex justify-center items-center">
             <video
-              className="md:w-1/3 w-2/3 transform scale- "
+              className="md:w-1/3 w-2/3 transform  rounded-full z-10"
               ref={videoRef}
               autoPlay
               loop
@@ -245,25 +251,25 @@ export default function ChatPage2() {
               <source src="/ai-gif.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+            <div className="video-gradient-overlay"></div>
           </div>
+
           {!loading ? (
             <p className="px-5 text-xl flex flex-col items-center  h-24 ">
               {" "}
               <span className="mb-4 text-2xl font-semibold text-center">
                 I'm your AI movie matcher
               </span>{" "}
-              <span className="font-light text-center">
-                I give you the best movie suggestions based on your mood, vibe
-                or
-              </span>{" "}
             </p>
           ) : (
-            <p className="px-5 text-xl flex flex-col items-center  h-24 ">
-              {" "}
-              <span className="mb-4 text-2xl font-semibold text-center">
-                Finding the best match for you...
-              </span>
-            </p>
+            <div className="h-full flex justify-center items-center ">
+              <p className="px-5 text-xl flex flex-col items-center  h-24 ">
+                {" "}
+                <span className="mb-4 text-2xl font-semibold text-center">
+                  Finding the best match for you...
+                </span>
+              </p>
+            </div>
           )}
         </div>
       )}
@@ -291,7 +297,9 @@ export default function ChatPage2() {
 
       {!loading && movies < 2 ? (
         <>
-          <AutoQuery input={input} setInput={setInput} />
+          <div className="sticky inset-x-0 bottom-20 w-full">
+            <AutoQuery input={input} setInput={setInput} />
+          </div>
           <div className="sticky inset-x-0 bottom-8 w-full">
             <InputField
               input={input}
