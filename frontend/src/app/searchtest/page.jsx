@@ -12,6 +12,7 @@ function MovieSearch() {
   const [isSearching, setIsSearching] = useState(false); // State to toggle search input visibility
   const [ratingFilter, setRatingFilter] = useState("All"); // State to handle the rating filter
   const [movieProviders, setMovieProviders] = useState([]); // State to handle
+  const [fetchStreamService, setFetchStreamService] = useState(false);
 
   const inputRef = useRef(null); // Reference for the input field
 
@@ -34,6 +35,7 @@ function MovieSearch() {
     }
   }, [inputValue]);
 
+  //fetchar streamingtjänster från backend
   async function fetchMovieProviders(id) {
     try {
       const response = await fetch(`${host}/fetchmovieprovidersTMDB`, {
@@ -63,6 +65,7 @@ function MovieSearch() {
     } finally {
     }
   }
+  //fetchar streamingtjänster från backend
 
   const handleIconClick = () => {
     setIsSearching(true); // Show the input field when icon is clicked
@@ -113,17 +116,17 @@ function MovieSearch() {
     }
   });
 
-  /* useEffect(() => {
+  useEffect(() => {
     filteredMovies.forEach((movie) => {
       fetchMovieProviders(movie.id);
     });
-  }, []);  */// ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
-   // }, [inputValue]);
+  }, [fetchStreamService]); // ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
+  // }, [inputValue]);
 
   console.log(movieProviders);
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <form onSubmit={handleSubmit} className="flex items-center space-x-2">
         <div className="flex items-center space-x-2">
           {isSearching ? (
@@ -161,6 +164,8 @@ function MovieSearch() {
               setRatingFilter={setRatingFilter}
             />
           )}
+
+          <button onClick={() => setFetchStreamService(true)}>stream</button>
         </div>
       </form>
       {movies.length > 0 && (

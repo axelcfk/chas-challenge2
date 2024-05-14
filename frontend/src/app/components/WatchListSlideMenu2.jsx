@@ -150,7 +150,7 @@ export default function WatchListSlideMenu2() {
   if (likedMoviesList == null) {
     return (
       <>
-        <div className="flex flex-col justify-center items-center md:items-start pb-10 px-8 md:px-20  h-full bg-slate-950 text-slate-100">
+        <div className="flex flex-col justify-center items-center md:items-start pb-10  md:px-20  h-full bg-slate-950 text-slate-100">
           Loading Watchlist...
         </div>
       </>
@@ -158,7 +158,7 @@ export default function WatchListSlideMenu2() {
   }
 
   return (
-    <>
+    <div className="">
       {listsFetched &&
       movieWatchListDetails &&
       movieWatchListDetails.length > 0 ? (
@@ -175,7 +175,7 @@ export default function WatchListSlideMenu2() {
               poster={movie.poster}
               overview={movie.overview}
               streamingServices={movie.flatrate}
-            ></MovieCardWatchAndLike>
+            />
           ))}
         </SlideMenu>
       ) : (
@@ -184,6 +184,6 @@ export default function WatchListSlideMenu2() {
           {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -25,17 +25,14 @@ export default function Navbar() {
         <div className="relative flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link className="no-underline" href="/">
+              <Link className="no-underline" href="/startpage">
                 <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl  text-center">
-                  <span>
+                  <span className="text-xl">
                     <FaDotCircle />
                   </span>
                   <span className="font-bebas no-underline">MovieAI</span>
                 </span>
               </Link>
-            </div>
-            <div className="ml-4">
-              <MovieSearch />
             </div>
           </div>
 
@@ -47,10 +44,11 @@ export default function Navbar() {
               href="/chatpage2"
               style={{ textDecoration: "none" }}
             >
-              <span className="text-slate-100 mr-8 font-semibold">
-                AI-SEARCH
-              </span>
+              <span className="text-slate-100 mr-8 font-semibold"></span>
             </Link>
+            <div className="mr-4">
+              <MovieSearch />
+            </div>
 
             {/* Burger icon */}
             <button
@@ -126,7 +124,7 @@ export default function Navbar() {
                 </Link>
               </>
             )}
-            <Link href="/services" style={{ textDecoration: "none" }}>
+            <Link href="/about" style={{ textDecoration: "none" }}>
               <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                 About
               </span>
@@ -134,15 +132,14 @@ export default function Navbar() {
           </div>
 
           {/* Ordinary Navbar for larger screens */}
-          <div className="hidden md:flex items-center">
-            {!isLoggedIn ? (
+          <div className="hidden md:flex items-center">            {!isLoggedIn ? (
               <Link href="/login" style={{ textDecoration: "none" }}>
                 <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                   Log in
                 </span>
               </Link>
             ) : (
-              <>
+              <>            
                 {userId && (
                   <Link
                     href={`/profile/${userId}`}
@@ -152,7 +149,12 @@ export default function Navbar() {
                       Profile
                     </span>
                   </Link>
-                )}
+                )}<Link href="/services" style={{ textDecoration: "none" }}>
+              <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                About
+              </span>
+            </Link>
+
                 <Link
                   href="/"
                   onClick={() => {
@@ -169,11 +171,7 @@ export default function Navbar() {
                 </Link>
               </>
             )}
-            <Link href="/services" style={{ textDecoration: "none" }}>
-              <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
-                About
-              </span>
-            </Link>
+
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 "use client";
+
 import {
   postAddToLikeList,
   postAddToWatchList,
@@ -20,6 +21,8 @@ export default function MovieCardWatchAndLike({
   isInWatchList,
   streamingServices,
   voteAverage,
+  showRating = true,
+  profilePage,
 }) {
   const [watched, setWatched] = useState(isInWatchList);
   const [liked, setLiked] = useState(isLiked);
@@ -38,13 +41,13 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className="inline-block  mx-1 rounded-lg"
+      className="inline-block mx-1 rounded-lg"
       style={{ border: "0.5px solid grey" }}
     >
       {" "}
       {/* w-44 md:w-80 */}
-      <div className="h-full w-full flex flex-col justify-center">
-        <div className="h-60 w-full flex justify-center m-0  ">
+      <div className=" h-full w-full flex flex-col justify-center">
+        <div className="h-60 w-full flex justify-center m-0">
           <div className="relative h-full">
             <Link href={`/movie/${encodeURIComponent(id)}`}>
               <img
@@ -87,10 +90,12 @@ export default function MovieCardWatchAndLike({
         <div className="h-32 w-full flex flex-col justify-start">
           {" "}
           {/* gap-4 */}
-          <div className="flex  justify-start items-center px-2 mt-5">
-            <FaStar color="yellow" />
-            <p className="pl-1">{voteAverage.toFixed(1)}</p>
-          </div>
+          {showRating && (
+            <div className="flex gap-2 justify-start items-center px-2">
+              <FaStar color="yellow" />
+              <p className="pl-1">{voteAverage.toFixed(1)}</p>
+            </div>
+          )}
           <div className="h-6">
           {streamingServices && streamingServices.map((streamingService, index) => {
               return (
@@ -111,12 +116,19 @@ export default function MovieCardWatchAndLike({
                   postRemoveFromWatchList(id, "movie", title); // Removes from like list if liked
                 }
               }}
-              /*  className={`w-full h-auto ${
-              !watched ? "bg-[#3D3B8E]" : "bg-green-600"
-            } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`} */
               className={`w-full h-10 bg-inherit border border-solid ${
-                !watched ? "border-[#3D3B8E]" : "border-green-600"
-              } hover:cursor-pointer flex justify-center items-center rounded-full  box-border`}
+                !watched
+                  ? "border-[#3D3B8E]"
+                  : profilePage
+                  ? "border-profile-page"
+                  : "border-green-600"
+              } hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
+                !watched
+                  ? ""
+                  : profilePage
+                  ? "profile-added-button"
+                  : "added-button"
+              }`}
             >
               {!watched ? (
                 <div className="w-full flex gap-2 justify-center items-center leading-none font-light text-gray-200">
@@ -125,10 +137,9 @@ export default function MovieCardWatchAndLike({
                   <p className="leading-none text-xs">WATCHLIST</p>
                 </div>
               ) : (
-                <div className="w-full flex justify-center gap-2   items-center font-light text-gray-200">
+                <div className="w-full flex justify-center gap-2 items-center font-light text-gray-200">
                   <FaCheck className="text-2xl leading-none text-gray-200" />
-
-                  <p className=" leading-none ">ADDED</p>
+                  <p className="leading-none ">ADDED</p>
                 </div>
               )}
             </button>
