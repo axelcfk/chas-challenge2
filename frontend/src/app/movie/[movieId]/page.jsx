@@ -15,6 +15,7 @@ import {
 } from "../../utils";
 import { checkLikeList } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
+import ListModal from "@/app/components/ListModal";
 
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -35,6 +36,9 @@ export default function MoviePage() {
     actors: [],
     otherCrew: [],
   });
+  const [userLists, setUserLists] = useState([]);
+  const [newListName, setNewListName] = useState("");
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const params = useParams();
   const movieId = params.movieId;
@@ -79,6 +83,14 @@ export default function MoviePage() {
       [id]: !prevLikes[id],
     }));
   }
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -213,6 +225,44 @@ export default function MoviePage() {
           </div>
         ))
     : null;
+
+  const handleAddMovieToList = async (listId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3010/me/lists/add/${listId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ movieId: movieDetails.id }),
+        }
+      );
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error("Failed to add movie to list:", error);
+    }
+    handleCloseModal();
+  };
+
+  const handleCreateNewList = async () => {
+    try {
+      const response = await fetch(`http://localhost:3010/me/lists/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
+      });
+      const data = await response.json();
+      setUserLists([...userLists, { id: data.listId, name: newListName }]);
+      setNewListName("");
+    } catch (error) {
+      console.error("Failed to create new list:", error);
+    }
+    handleCloseModal();
+  };
 
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -355,14 +405,20 @@ export default function MoviePage() {
                           <FaCheck className="text-2xl text-gray-200" />
                         )}
                         {!watches[movieDetails.id] ? (
-                          <span className="pl-2 w-full text-sm font-light text-gray-200">
-                            ADD TO LIST
+                          <span className="pl-2 w-full text-sm font-light text-gray-200 hover:cursor-pointer">
+                            ADD TO WATCHLIST
                           </span>
                         ) : (
-                          <span className="pl-2 w-full text-sm font-light text-gray-200">
+                          <span className="pl-2 w-full text-sm font-light text-gray-200 hover:cursor-pointer">
                             ADDED
                           </span>
                         )}
+                      </button>
+                      <button
+                        onClick={handleOpenModal}
+                        className="text-sm font-light text-gray-200 rounded-full px-3 border-none bg-[#3D3B8E] hover:cursor-pointer"
+                      >
+                        Add to list (ikon)
                       </button>
                     </div>
                   </div>

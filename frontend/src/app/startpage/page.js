@@ -35,7 +35,6 @@ export default function Startpage() {
 
   return (
     <div className="bg-[#110A1A] pb-8">
-      <Navbar />
       <div className="wrapper">
         <main className="startpage-main text-white flex justify-center">
           <div className="flex align-items-center justify-center pt-28 px-4 container">
