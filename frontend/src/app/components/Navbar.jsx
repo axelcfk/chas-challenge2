@@ -115,7 +115,7 @@ export default function Navbar() {
                 </Link>
               </>
             )}
-            <Link href="/services" style={{ textDecoration: "none" }}>
+            <Link href="/about" style={{ textDecoration: "none" }}>
               <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                 About
               </span>
