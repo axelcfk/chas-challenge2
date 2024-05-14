@@ -41,7 +41,13 @@ function MovieSearch() {
   };
 
   const handleChange = (event) => {
-    setInputValue(event.target.value);
+    const newValue = event.target.value;
+    setInputValue(newValue);
+
+    // If the input value is empty, clear the movie list
+    if (!newValue.trim()) {
+      setMovies([]);
+    }
   };
 
   const handleSubmit = (event) => {

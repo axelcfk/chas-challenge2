@@ -55,7 +55,6 @@ export default function Startpage() {
 
   return (
     <>
-      <Navbar />
       <div className=" pb-8   ">
         <main className="flex flex-col text-slate-100 py-20  justify-center px-8">
           <h2 className="mb-10 ">AI-SEARCH</h2>
