@@ -80,7 +80,6 @@ export default function WatchListSlideMenu2() {
       const data = await response.json();
 
       if (data.movieId && data.movieProvidersObject) {
-
         return data;
       }
     } catch (error) {
@@ -93,7 +92,6 @@ export default function WatchListSlideMenu2() {
       }
     } */
   }
-
 
   useEffect(() => {
     if (
@@ -118,8 +116,6 @@ export default function WatchListSlideMenu2() {
         console.log("movieObject: ", movieObject);
 
         console.log("movieProvidersObject: ", movieProviders);
-
-       
 
         if (movieObject.title && movieProviders.movieProvidersObject) {
           setMovieWatchListDetails((prevDetails) => [

@@ -305,23 +305,36 @@ input:focus {
 }
 
 /* Navbar */
-
-/* Base class */
 .menu-modal {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.8s ease-out; /* Default to open transition duration */
+  transition: max-height 0.5s ease-out; /* Default to open transition duration */
+  position: fixed;
+  top: 64px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 64px); /* Adjust to match the height of your navbar */
+  z-index: 90; /* Ensure it is above other elements */
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Class for opening */
 .menu-modal.open {
-  max-height: 500px;
-  transition: max-height 0.8s ease-out; /* Set your desired open transition duration */
+  max-height: calc(
+    100vh - 64px
+  ); /* Ensure it covers the remaining viewport height */
+  transition: max-height 0.4s ease-out; /* Set your desired open transition duration */
 }
 
 /* Class for closing */
 .menu-modal.close {
-  transition: max-height 0.8s ease-in; /* Set your desired close transition duration */
+  transition: max-height 0.4s ease-in; /* Set your desired close transition duration */
+}
+
+/* Disable scrolling */
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .video-gradient-overlay {

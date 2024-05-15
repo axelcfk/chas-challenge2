@@ -110,9 +110,9 @@ export default function MovieCardWatchAndLike({
             </p>
           )}
           <div className="w-full ">
-            <h2 className="px-2 h-20 text-wrap">{title}</h2>
+            <h2 className="px-2 h-14 text-wrap">{title}</h2>
           </div>
-          <div className="h-10 flex px-2">
+          <div className="h-8 flex px-2">
             {streamingServices &&
               streamingServices.map((streamingService, index) => {
                 return (
@@ -125,7 +125,7 @@ export default function MovieCardWatchAndLike({
                 );
               })}
           </div>
-          <div className="mt-4 px-2">
+          <div className="mt-4 px-4 ">
             <button
               onClick={() => {
                 handleButtonClicked(id); // Toggles like state
@@ -135,7 +135,7 @@ export default function MovieCardWatchAndLike({
                   postRemoveFromWatchList(id, "movie", title); // Removes from like list if liked
                 }
               }}
-              className={`w-full h-10 bg-inherit border border-solid ${
+              className={`w-full h-8 bg-inherit border border-solid mb-4 ${
                 !watched
                   ? "border-[#3D3B8E]"
                   : profilePage
