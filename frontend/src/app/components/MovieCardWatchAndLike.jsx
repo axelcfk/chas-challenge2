@@ -39,6 +39,19 @@ export default function MovieCardWatchAndLike({
     return <div>Loading...</div>;
   }
 
+  const serviceLogos = {
+    Netflix: "/Netflix1.svg",
+    "HBO Max": "/HBO1.svg",
+    Viaplay: "/Viaplay1.svg",
+    "Amazon Prime Video": "/Prime1.svg",
+    "Disney Plus": "/Disney1.svg",
+    "Tele2 Play": "/tele2play.png",
+    "Apple TV": "/AppleTV1.svg",
+    SVT: "/SVTPlay.svg",
+    TV4Play: "/TV4Play.svg",
+    "Discovery+": "/Discovery+.svg",
+  };
+
   return (
     <div
       className="inline-block mx-1 rounded-lg"
@@ -96,12 +109,18 @@ export default function MovieCardWatchAndLike({
               <span className="pl-1"> {voteAverage.toFixed(1)}</span>
             </p>
           )}
-          <div className="h-6">
+          <div className="w-full ">
+            <h2 className="px-2 h-20 text-wrap">{title}</h2>
+          </div>
+          <div className="h-10 flex px-2">
             {streamingServices &&
               streamingServices.map((streamingService, index) => {
                 return (
-                  <div key={index} className="">
-                    <p>{streamingService.provider_name}</p>
+                  <div key={index} className="bg-slate-50 rounded-xl ml-2 p-1">
+                    <img
+                      className="h-full"
+                      src={serviceLogos[streamingService.provider_name]}
+                    />
                   </div>
                 );
               })}
