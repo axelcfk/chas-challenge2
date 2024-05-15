@@ -467,12 +467,10 @@ app.post("/addmovieproviderstodatabase", (req, res) => {
       "1:Error attempting to use endpoint /addmovieproviderstodatabase: ",
       error
     );
-    res
-      .status(500)
-      .json({
-        error:
-          "Internal server error, Error attempting to use endpoint /addmovieproviderstodatabase",
-      });
+    res.status(500).json({
+      error:
+        "Internal server error, Error attempting to use endpoint /addmovieproviderstodatabase",
+    });
   }
 });
 
@@ -531,85 +529,87 @@ const fetchPopularMovies = async () => {
   return data.results;
 };
 
-app.get("/popularmovies", async (req, res)  => {
-
+app.get("/popularmovies", async (req, res) => {
   try {
-  const popularMovies = await fetchPopularMovies();
+    const popularMovies = await fetchPopularMovies();
 
- // const popularMoviesProviders = [] 
+    // const popularMoviesProviders = []
 
-  const popularMoviesAndProviders = [];
+    const popularMoviesAndProviders = [];
 
-  if (popularMovies.length > 0) {
-
-    
-    for (const movie of popularMovies) {
-      
-  
+    if (popularMovies.length > 0) {
+      for (const movie of popularMovies) {
         if (!movie.id) {
-          return res.status(400).json({ error: 'No movie id found in popular movie?' });
+          return res
+            .status(400)
+            .json({ error: "No movie id found in popular movie?" });
         }
-  
+
         addMovieToDatabase(movie, "movie"); // doesnt add if already added
 
         // first check if movieproviders exists in our database
-        let movieProvidersObject = getProvidersOfMOvieObjectOurDatabase(movie.id);
-        
+        let movieProvidersObject = getProvidersOfMOvieObjectOurDatabase(
+          movie.id
+        );
+
         // if it doesnt exist we fetch providers from tmdb
         if (movieProvidersObject == null) {
-          console.log("movie providers not in our database, fetching from TMDB");
+          console.log(
+            "movie providers not in our database, fetching from TMDB"
+          );
 
           // fetches movie's providers and adds to our database
-          movieProvidersObject = await fetchMovieProvidersObjectTMDB(movie.id) 
+          movieProvidersObject = await fetchMovieProvidersObjectTMDB(movie.id);
         } else {
-          console.log("Providers of movie id ", movieProvidersObject.id,  " exists in our database, skipping fetch from TMDB.");
+          console.log(
+            "Providers of movie id ",
+            movieProvidersObject.id,
+            " exists in our database, skipping fetch from TMDB."
+          );
         }
 
         //console.log("streaming providers of movie id ", movie.id, ": ", movieProvidersObject);
-  
+
         let isLiked = false;
-          if (likedMoviesList && likedMoviesList.length > 0) {
-            isLiked = likedMoviesList.some((likedMovie) => {
-              return likedMovie.id === movie.id; 
-            })
-          }
-  
-          let isInWatchList = false;
-          if (movieWatchList && movieWatchList.length > 0) {
-           isInWatchList = movieWatchList.some((watchListedMovie) => {
-              return watchListedMovie.id === movie.id; 
-            })
-        
-          }
-  
-  
-        if (movieProvidersObject) {
-
-          popularMoviesAndProviders.push({movie, movieProvidersObject, isLiked, isInWatchList})
-        } else {
-          console.log("failed to read movieProvidersObject in /popularmovies endpoint, did not push values into array popularMoviesAndProviders");
+        if (likedMoviesList && likedMoviesList.length > 0) {
+          isLiked = likedMoviesList.some((likedMovie) => {
+            return likedMovie.id === movie.id;
+          });
         }
-      };
 
-      
+        let isInWatchList = false;
+        if (movieWatchList && movieWatchList.length > 0) {
+          isInWatchList = movieWatchList.some((watchListedMovie) => {
+            return watchListedMovie.id === movie.id;
+          });
+        }
+
+        if (movieProvidersObject) {
+          popularMoviesAndProviders.push({
+            movie,
+            movieProvidersObject,
+            isLiked,
+            isInWatchList,
+          });
+        } else {
+          console.log(
+            "failed to read movieProvidersObject in /popularmovies endpoint, did not push values into array popularMoviesAndProviders"
+          );
+        }
+      }
     } else {
       console.log("failed to map through popular movies, length === 0 ?");
     }
 
-  if (popularMoviesAndProviders.length > 0) {
-   // console.log(popularMoviesAndProviders);
-    res.json(popularMoviesAndProviders);
-  } else {
-    console.log("popularMoviesAndProviders failed to populate");
-  }
-
-    
+    if (popularMoviesAndProviders.length > 0) {
+      // console.log(popularMoviesAndProviders);
+      res.json(popularMoviesAndProviders);
+    } else {
+      console.log("popularMoviesAndProviders failed to populate");
+    }
   } catch (error) {
     console.log("failed to run /popularmovies endpoint");
   }
-
-
-  
 });
 
 async function getMixFromOurDatabaseOnlyIDs() {
@@ -1126,19 +1126,30 @@ app.post("/moviesuggest2", async (req, res) => {
         {
           role: "system",
           content: `This assistant will suggest 6 movies based on user descriptions. 
-          It will provide Movie Names for those movies in the format of: 
-          MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
-          MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
-          It will not answer any other queries. It will only suggest movies and TV series. 
-          If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
-          Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
-          MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
-          MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
-          Never add any additional numbers. If the movie name already exists in 
-          ${likedMovieTitlesString}, it will not be suggested. If you have no suggestions, 
-          explain in your response. Also, look inside ${latestSuggestions.join(
+It will provide Movie Names for those movies in the format of: 
+MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
+MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
+It will not answer any other queries. It will only suggest movies and TV series. 
+If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
+Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
+MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
+MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
+Never add any additional numbers.
+
+When making suggestions, follow these steps:
+1. Review the latest user query: ${latestUserQuery}.
+2. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+3. Avoid suggesting movies that are already in the latest suggestions.
+4. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+5. Consider the genres, themes, or keywords from the latest user query to refine the search.
+6. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+7. If no suitable suggestions are available, explain why and provide alternative options.
+
+For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
+
+If you have no suggestions, explain in your response. Also, look inside ${latestSuggestions.join(
             ", "
-          )} and ${latestUserQuery} and suggest movies based on the querys.`,
+          )} and ${latestUserQuery} and suggest movies based on the queries.`,
         },
         {
           role: "user",
