@@ -47,7 +47,7 @@ export default function Profile() {
     setActiveTab(tab);
   };
 
-  const xOffset = tabIndex * -100;
+
 
   return (
     <main>
@@ -64,7 +64,7 @@ export default function Profile() {
         )}
       </div>
       <div className="menu bg-[#110A19] flex flex-row justify-between items-center">
-        {["Profile", "Watchlist", "My lists"].map((tab) => (
+        {tabNames.map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabClick(tab)}
@@ -75,6 +75,10 @@ export default function Profile() {
           </button>
         ))}
       </div>
+      <div 
+      className="tabs-container" 
+      style={{ transform: `translateX(${tabIndex * -100}%)`}}
+      ></div>
       {activeTab === "Profile" && (
         <div className="gradient-border-top bg-[#201430] p-8 mt-8">
           <div className="my-8">
@@ -113,9 +117,9 @@ export default function Profile() {
       )}
       {activeTab === "Watchlist" && (
         <div className="gradient-border-top bg-[#201430] p-8 mt-8">
-          <p classame="py-8 ">
+          <div classame="py-8 ">
           <WatchListForProfile profilePage={true}/>
-          </p>
+          </div>
         </div>
       )}
       {activeTab === "My lists" && (

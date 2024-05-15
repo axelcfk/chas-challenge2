@@ -38,6 +38,7 @@ export default function CreateAccount() {
 
       console.log("Success:", data);
       setSuccessMessage("You've successfully created an account!");
+      router.push("/new-user"); // Gå till new user page
     } catch (error) {
       console.error(error);
       setErrorMessage(error.message);

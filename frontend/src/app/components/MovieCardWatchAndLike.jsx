@@ -23,6 +23,7 @@ export default function MovieCardWatchAndLike({
   voteAverage,
   showRating = true,
   profilePage,
+  className,
 }) {
   const [watched, setWatched] = useState(isInWatchList);
   const [liked, setLiked] = useState(isLiked);
@@ -41,10 +42,9 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className="mr-4 inline-block mx-1 rounded-lg"
-      style={{ border: "0.5px solid grey" }}
+      className={`mr-4 inline-block mx-1 rounded-lg ${className}`}
+      style={{ border: profilePage ? "none" : "0.5px solid grey" }}
     >
-      {" "}
       {/* w-44 md:w-80 */}
       <div className="h-full w-full flex flex-col justify-center">
         <div className="h-60 w-full flex justify-center m-0">
@@ -54,7 +54,6 @@ export default function MovieCardWatchAndLike({
                 className="h-full rounded-t-lg w-auto box-border"
                 src={poster}
                 alt="Movie Poster"
-                // style={{ border: "0.5px solid grey" }}
               />
             </Link>
             <div
@@ -87,7 +86,7 @@ export default function MovieCardWatchAndLike({
             </div>
           </div>
         </div>
-        <div className="h-32 w-full flex flex-col justify-start">
+        <div className="w-full flex flex-col justify-start">
           {" "}
           {/* gap-4 */}
           {showRating && (
