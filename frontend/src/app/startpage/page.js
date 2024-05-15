@@ -55,10 +55,10 @@ export default function Startpage() {
               <p className="pb-2 font-semibold z-50 relative">
                 Don't know what to watch?
               </p>
-              <h3 className="font-light">
+              <h2 className="font-light text-xl">
                 {" "}
                 Let our AI blow <br /> your mind!
-              </h3>
+              </h2>
               <div className=" h-2/3 flex justify-between items-center">
                 <Link href={"/chatpage2"}>
                   <button className="hover:cursor-pointer border-none bg-slate-100 w-40 h-10 rounded-full font-semibold">
@@ -104,9 +104,7 @@ export default function Startpage() {
             <WatchListSlideMenu2></WatchListSlideMenu2>
           </div> */}
         <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 mb-8 text-xl pl-4 md:pl-0 uppercase">
-            Search history
-          </h2>
+          <h2 className="mt-14 mb-8  pl-4 md:pl-0 uppercase">Search history</h2>
           <div className=" pl-4 md:pl-0">
             <SlideMenu>
               <SlideMenuSearchHistoryCard

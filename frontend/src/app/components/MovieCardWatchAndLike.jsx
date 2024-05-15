@@ -44,14 +44,12 @@ export default function MovieCardWatchAndLike({
       className="inline-block mx-1 rounded-lg"
       style={{ border: "0.5px solid grey" }}
     >
-      {" "}
-      {/* w-44 md:w-80 */}
       <div className=" h-full w-full flex flex-col justify-center">
         <div className="h-60 w-full flex justify-center m-0">
           <div className="relative h-full">
             <Link href={`/movie/${encodeURIComponent(id)}`}>
               <img
-                className="h-full rounded-t-lg w-auto box-border"
+                className="h-full rounded-t-lg w-40 box-border"
                 src={poster}
                 alt="Movie Poster"
                 // style={{ border: "0.5px solid grey" }}
@@ -87,24 +85,26 @@ export default function MovieCardWatchAndLike({
             </div>
           </div>
         </div>
-        <div className="h-32 w-full flex flex-col justify-start">
+        <div className="h-full w-40 flex flex-col justify-start">
           {" "}
           {/* gap-4 */}
           {showRating && (
-            <div className="flex gap-2 justify-start items-center px-2">
-              <FaStar color="yellow" />
-              <p className="pl-1">{voteAverage.toFixed(1)}</p>
-            </div>
+            <p className="flex pb-4  justify-start items-center px-2 pt-2">
+              <span>
+                <FaStar color="yellow" />
+              </span>
+              <span className="pl-1"> {voteAverage.toFixed(1)}</span>
+            </p>
           )}
           <div className="h-6">
-          {streamingServices && streamingServices.map((streamingService, index) => {
-              return (
-                <div key={index} className="">
-                  <p>{streamingService.provider_name}</p>
-                  
-                </div>
-              )
-            })}
+            {streamingServices &&
+              streamingServices.map((streamingService, index) => {
+                return (
+                  <div key={index} className="">
+                    <p>{streamingService.provider_name}</p>
+                  </div>
+                );
+              })}
           </div>
           <div className="mt-4 px-2">
             <button
@@ -132,14 +132,16 @@ export default function MovieCardWatchAndLike({
             >
               {!watched ? (
                 <div className="w-full flex gap-2 justify-center items-center leading-none font-light text-gray-200">
-                  <FaPlus className="text-2xl leading-none text-gray-200" />
+                  <FaPlus className="text-base leading-none text-gray-200" />
 
-                  <p className="leading-none text-xs">WATCHLIST</p>
+                  <p className="leading-none text-xs font-semibold">
+                    WATCHLIST
+                  </p>
                 </div>
               ) : (
                 <div className="w-full flex justify-center gap-2 items-center font-light text-gray-200">
-                  <FaCheck className="text-2xl leading-none text-gray-200" />
-                  <p className="leading-none ">ADDED</p>
+                  <FaCheck className="text-base leading-none text-gray-200" />
+                  <p className="leading-none  font-semibold">ADDED</p>
                 </div>
               )}
             </button>
@@ -149,3 +151,9 @@ export default function MovieCardWatchAndLike({
     </div>
   );
 }
+
+// setProviderName(data.movie.flatrate[0])
+
+// providerNamer.map((provider)=> {
+//   provider.provider
+// })
