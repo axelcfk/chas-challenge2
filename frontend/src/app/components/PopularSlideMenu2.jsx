@@ -97,7 +97,7 @@ export default function PopularSlideMenu2() {
           poster: `https://image.tmdb.org/t/p/w500${movieData.movie.poster_path}`,
           isLiked: movieData.isLiked, 
           isInWatchList: movieData.isInWatchList, 
-          flatrate: movieData.streamingProviders.flatrate, // skips this if flatrate doesnt exist
+          flatrate: movieData.movieProvidersObject.flatrate, // skips this if flatrate doesnt exist
         }));
       });
     }

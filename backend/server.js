@@ -536,7 +536,7 @@ app.get("/popularmovies", async (req, res)  => {
   try {
   const popularMovies = await fetchPopularMovies();
 
- // const popularMoviesProviders = [];
+ // const popularMoviesProviders = [] 
 
   const popularMoviesAndProviders = [];
 
@@ -550,20 +550,22 @@ app.get("/popularmovies", async (req, res)  => {
           return res.status(400).json({ error: 'No movie id found in popular movie?' });
         }
   
-        addMovieToDatabase(movie, "movie");
-        
-        const movieProvidersObject = await fetchMovieProvidersObjectTMDB(movie.id)
+        addMovieToDatabase(movie, "movie"); // doesnt add if already added
 
-        console.log("movieProvidersObject: ", movieProvidersObject);
-  
-        let streamingProviders;
-          if (movieProvidersObject) {
-            streamingProviders = movieProvidersObject;
-          } else {
-            console.log("failed to read movieProvidersObject");
-          }
-           
-        console.log("streaming providers of movie id ", movie.id, ": ", streamingProviders);
+        // first check if movieproviders exists in our database
+        let movieProvidersObject = getProvidersOfMOvieObjectOurDatabase(movie.id);
+        
+        // if it doesnt exist we fetch providers from tmdb
+        if (movieProvidersObject == null) {
+          console.log("movie providers not in our database, fetching from TMDB");
+
+          // fetches movie's providers and adds to our database
+          movieProvidersObject = await fetchMovieProvidersObjectTMDB(movie.id) 
+        } else {
+          console.log("Providers of movie id ", movieProvidersObject.id,  " exists in our database, skipping fetch from TMDB.");
+        }
+
+        //console.log("streaming providers of movie id ", movie.id, ": ", movieProvidersObject);
   
         let isLiked = false;
           if (likedMoviesList && likedMoviesList.length > 0) {
@@ -581,8 +583,12 @@ app.get("/popularmovies", async (req, res)  => {
           }
   
   
-         
-        popularMoviesAndProviders.push({movie, streamingProviders, isLiked, isInWatchList})
+        if (movieProvidersObject) {
+
+          popularMoviesAndProviders.push({movie, movieProvidersObject, isLiked, isInWatchList})
+        } else {
+          console.log("failed to read movieProvidersObject in /popularmovies endpoint, did not push values into array popularMoviesAndProviders");
+        }
       };
 
       
@@ -591,7 +597,7 @@ app.get("/popularmovies", async (req, res)  => {
     }
 
   if (popularMoviesAndProviders.length > 0) {
-    console.log(popularMoviesAndProviders);
+   // console.log(popularMoviesAndProviders);
     res.json(popularMoviesAndProviders);
   } else {
     console.log("popularMoviesAndProviders failed to populate");
@@ -726,6 +732,11 @@ function getProvidersOfMOvieObjectOurDatabase(id) {
       return id === movie.id;
     });
     //console.log("Movie-Search result: ", searchResult);
+
+    if (searchResult == null) {
+      console.log("providers not found in our database, returning null");
+      return null;
+    }
 
     //console.log("Series-Search result: ", searchResult);
   } catch (error) {
