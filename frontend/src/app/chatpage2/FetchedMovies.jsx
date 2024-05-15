@@ -100,16 +100,17 @@ export default function FetchedMovies({
       ...prevLikes,
       [id]: newLikes,
     }));
-    
-    if (newLikes) { // Only proceed if the movie is being liked (not unliked)
+
+    if (newLikes) {
+      // Only proceed if the movie is being liked (not unliked)
       postAddToLikeList(
         id,
         "movie",
         movieDetails.find((movie) => movie.id === id)?.title
       );
-      if (!localStorage.getItem('thankYouShown')) {
+      if (!localStorage.getItem("thankYouShown")) {
         showToastMessage();
-        localStorage.setItem('thankYouShown', 'true'); // Set flag in local storage
+        localStorage.setItem("thankYouShown", "true"); // Set flag in local storage
       }
     } else {
       postRemoveFromLikeList(
@@ -119,7 +120,6 @@ export default function FetchedMovies({
       );
     }
   }
-  
 
   function showToastMessage() {
     setShowToast(true);

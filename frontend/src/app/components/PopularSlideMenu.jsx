@@ -8,17 +8,24 @@ export default function PopularSlideMenu() {
   const [movieWatchList, setMovieWatchList] = useState([]);
   const [likedMoviesList, setLikedMoviesList] = useState(null); // to check if a movie is liked...
   const [listsFetched, setListsFetched] = useState(false);
+  const [movieProvidersBackend, setMovieProvidersBackend] = useState([]);
  // const [likedSeriesList, setLikedSeriesList] = useState(null);
   //const [likedSeriesFetched, setLikedSeriesFetched] = useState(false); // bara en behövs
+  const [fetchedMovieProviders, setFetchedMovieProviders] = useState(false);
 
 
   const [popularMovies, setPopularMovies] = useState([]);
 
   const [popularListDetails, setPopularListDetails] = useState([]);
 
+   // TODO: flytta dessa useEffects till backend?
+   useEffect(() => {
+    fetchWatchAndLikeList();
+  }, []);
 
 
   useEffect(() => {
+    setPopularMovies([]);
     const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
     const fetchPopularMovies = async () => {
       const response = await fetch(
@@ -32,16 +39,70 @@ export default function PopularSlideMenu() {
     };
 
     fetchPopularMovies();
-  }, []);
+  }, [listsFetched]);
 
   // TODO: mappa igenom popular movies och spara de i databas?
 
+ 
 
-
-  // TODO: flytta dessa useEffects till backend?
   useEffect(() => {
-    fetchWatchAndLikeList();
-  }, [popularMovies]);
+
+    popularMovies.forEach(async (movie) =>  {
+      await fetchMovieProviders(movie.id);
+    });
+    /* if (movieProvidersBackend.length === 20 ){
+      setFetchedMovieProviders(true);
+    } */
+
+  }, [popularMovies])
+
+  useEffect(() => {
+
+    if (movieProvidersBackend.length === 20 ){
+      setFetchedMovieProviders(true);
+    }
+    
+  }, [movieProvidersBackend])
+  console.log("pop movies: ", popularMovies);
+  console.log(movieProvidersBackend);
+
+  async function fetchMovieProviders(id) {
+    try {
+      const response = await fetch(`${host}/fetchmovieprovidersTMDB`, {
+        // users sidan på backend! dvs inte riktiga sidan!
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+
+          //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
+        }),
+      });
+
+      const data = await response.json();
+
+      if (movieProvidersBackend.movieId !== data.movieId) {
+
+        setMovieProvidersBackend((prevDetails) => [
+          ...prevDetails,
+          {
+            providers: data.movieProvidersObject,
+            movieId: data.movieId,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } /* finally {
+      if (movieProvidersBackend.length === 20) {
+        setFetchedMovieProviders(true);
+      } else {
+        return;
+      }
+    } */
+  }
 
   async function fetchWatchAndLikeList() {
     try {
@@ -58,25 +119,26 @@ export default function PopularSlideMenu() {
           "Content-Type": "application/json",
         },
       });
-  
-      
+
       const data = await response.json();
 
-
-      
       if (data.movieWatchList && data.likedMoviesList) {
         //if (data.movieWatchList && data.movieWatchList.length > 0 && data.likedMoviesList && data.likedMoviesList.length > 0) {
-        
+
         console.log(
           "fetched data.movieWatchList from backend: ",
-          data.movieWatchList, " and fetched data.likedMoviesList from backend: ",
-          data.likedMoviesList)
+          data.movieWatchList,
+          " and fetched data.likedMoviesList from backend: ",
+          data.likedMoviesList
+        );
         setMovieWatchList(data.movieWatchList);
         setLikedMoviesList(data.likedMoviesList);
 
-       // setLikedSeriesList(data.likedSeriesList);
+        // setLikedSeriesList(data.likedSeriesList);
       } else {
-        console.log("failed to fetch watch- and like-lists from backend, or they are empty");
+        console.log(
+          "failed to fetch watch- and like-lists from backend, or they are empty"
+        );
       }
     } catch (error) {
       console.error("Error:", error);
@@ -86,40 +148,64 @@ export default function PopularSlideMenu() {
     }
   }
 
+  
+
   useEffect(() => {
     if (
-      (popularMovies && popularMovies.length > 0 ) // ||
+      popularMovies &&
+      popularMovies.length > 0 // ||
       //(likedSeriesList && likedSeriesList.length > 0)
     ) {
       popularMovies.forEach(async (movie) => {
 
         await postMovieToDatabase(movie); 
 
-        
+        let movieProvidersObject;
+        console.log("movieProvidersBackend: ", movieProvidersBackend);
+        if (movieProvidersBackend.length != 0) {
 
+          movieProvidersObject = movieProvidersBackend.find(movieProviders => {
+            return movieProviders.movieId === movie.id;
+          })
+        } else {
+          console.log("failed to fetch movie providers? ");
+        }
+        console.log("movieProvidersObject: ", movieProvidersObject);
+
+        let streamingProviders;
+        if (movieProvidersObject.providers.flatrate) {
+          streamingProviders = movieProvidersObject.providers.flatrate;
+        } else if (movieProvidersObject.providers.noProviders) {
+          streamingProviders = movieProvidersObject.providers.noProviders
+        } else {
+          console.log("failed to read movieProvidersObject.providers");
+        }
+         
+        console.log("streaming providers of movie id ", movie.id, ": ", streamingProviders);
+        
+        
         // first check if movie in watchlist is liked
         let isLiked = false;
         if (likedMoviesList && likedMoviesList.length > 0) {
           isLiked = likedMoviesList.find((likedMovie) => {
-            return likedMovie.id === movie.id; 
-          })
+            return likedMovie.id === movie.id;
+          });
         }
 
         let isInWatchList = false;
         if (likedMoviesList && likedMoviesList.length > 0) {
           isInWatchList = movieWatchList.find((watchListedMovie) => {
-            return watchListedMovie.id === movie.id; 
-          })
+            return watchListedMovie.id === movie.id;
+          });
         }
 
-
         // now fetching movie object from our database
-       // const movieObject = await fetchMovieObject(movie.id); 
+        // const movieObject = await fetchMovieObject(movie.id);
         //console.log("movieObject: ", movieObject);
 
         if (movie.title) {
           setPopularListDetails((prevDetails) => [
-            ...prevDetails, 
+            ...prevDetails,
             {
               id: movie.id, // or movi  e.id
               title: movie.title,
@@ -132,22 +218,20 @@ export default function PopularSlideMenu() {
               poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
               isLiked: isLiked, 
               isInWatchList: isInWatchList, 
+              flatrate: streamingProviders,
             },
           ]);
         } else {
           console.log("data.title does not exist?");
         }
-
-        
-        
       });
     }
     //}, [showLikedDetails]);
-  }, [listsFetched]);
+  }, [fetchedMovieProviders]);
 
 
   //if (likedMoviesList = = null || likedSeriesList == null) {
-  if (likedMoviesList == null) { 
+  if (popularListDetails.length === 0) { 
     return (
       <>
         <div className="inline-block w-full h-80 md:h-96 mx-4 bg-slate-950 text-slate-100">
@@ -158,7 +242,7 @@ export default function PopularSlideMenu() {
   }
 
   return (
-    <>
+    <div>
       {listsFetched && popularListDetails && popularListDetails.length > 0 ? (
         <SlideMenu>
           {popularListDetails.map((movie, index) => (
@@ -172,14 +256,16 @@ export default function PopularSlideMenu() {
               title={movie.title}
               poster={movie.poster}
               overview={movie.overview}
+              streamingServices={movie.flatrate}
             ></MovieCardWatchAndLike>
           ))}
         </SlideMenu>
       ) : (
         <div className="inline-block w-full h-80 md:h-96 mx-4">
-          <p>No movies in watchlist yet</p>  {/*  TODO: detta visas i en millisekund när man refreshar... */}
+          <p>No movies in watchlist yet</p>{" "}
+          {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -2,6 +2,7 @@
 import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
 import LikeListSlideMenu from "../components/LikeListSlideMenu";
 import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
+import PopularSlideMenu2 from "../components/PopularSlideMenu2";
 import WatchListSlideMenu from "../components/WatchListSlideMenu";
 
 export default function TestMyList() {
@@ -16,6 +17,8 @@ export default function TestMyList() {
       <LikeListSlideMenu2></LikeListSlideMenu2>
 
       <DailyMixBasedOnLikesSlideMenu></DailyMixBasedOnLikesSlideMenu>
+
+      <PopularSlideMenu2></PopularSlideMenu2>
     </div>
   )
 }

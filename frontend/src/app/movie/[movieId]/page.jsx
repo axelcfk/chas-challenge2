@@ -226,6 +226,40 @@ export default function MoviePage() {
         ))
     : null;
 
+  const rentProviders = movieDetails.providers?.rent
+    ? movieDetails.providers.rent
+        .filter((provider) => provider.provider_name)
+        .map((provider) => (
+          <div
+            key={provider.provider_id}
+            className="bg-slate-200 rounded-full h-12 w-full flex justify-evenly items-center"
+          >
+            <img
+              className="h-6"
+              src={serviceLogos[provider.provider_name]}
+              alt={provider.provider_name}
+            />
+          </div>
+        ))
+    : null;
+
+  const buyProviders = movieDetails.providers?.buy
+    ? movieDetails.providers.buy
+        .filter((provider) => provider.provider_name)
+        .map((provider) => (
+          <div
+            key={provider.provider_id}
+            className="bg-slate-200 rounded-full h-12 w-full flex justify-evenly items-center"
+          >
+            <img
+              className="h-6"
+              src={serviceLogos[provider.provider_name]}
+              alt={provider.provider_name}
+            />
+          </div>
+        ))
+    : null;
+
   const handleAddMovieToList = async (listId) => {
     try {
       const response = await fetch(
@@ -474,13 +508,29 @@ export default function MoviePage() {
                   <div className="w-full  ">
                     {flatrateProviders && (
                       <h3 className="text-sm text-slate-100 uppercase">
-                        Watch it on:
+                        STREAM ON:
+                      </h3>
+                    )}
+                  </div>
+                  <div className=" grid grid-cols-2 gap-2 justify-center items-center mt-2  mb-16 ">
+                    {flatrateProviders ? (
+                      <>{flatrateProviders}</>
+                    ) : (
+                      <p className="uppercase">
+                        No streaming providers in your area
+                      </p>
+                    )}
+                  </div>
+                  <div className="w-full  ">
+                    {rentProviders && (
+                      <h3 className="text-sm text-slate-100 uppercase">
+                        BUY AND RENT ON:
                       </h3>
                     )}
                   </div>
                   <div className=" grid grid-cols-3 justify-center items-center mt-2  mb-16">
-                    {flatrateProviders ? (
-                      <>{flatrateProviders}</>
+                    {rentProviders ? (
+                      <>{rentProviders}</>
                     ) : (
                       <p>No providers in your area</p>
                     )}

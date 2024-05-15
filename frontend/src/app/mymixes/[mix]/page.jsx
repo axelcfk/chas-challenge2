@@ -331,7 +331,7 @@ export default function Mix() {
   //console.log("idsReceivedFromAPI: ", idsReceivedFromAPI);
 
   // TODO: fetch streaming services...
-  async function fetchStreamingServices(movieId) {
+  /* async function fetchStreamingServices(movieId) {
     try {
       const response = await fetch(
         `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
@@ -343,7 +343,7 @@ export default function Mix() {
       //return {};
     }
   }
-
+ */
   console.log("Daily mix based on likes: ", mixDetails);
 
   return (

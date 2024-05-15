@@ -29,7 +29,8 @@ const pool = mysql.createPool({
   user: "root",
   password: "root",
   database: "movie-app",
-  port: 8889 || 3306,
+  port: 3306,
+  //port: 8889 || 3306,
 });
 
 function generateOTP() {
@@ -330,6 +331,7 @@ const fetchAllMovieIdsFromTMDB = async (movieNamesFromGPT) => {
 })
  */
 
+//streaming tjänster
 app.post("/fetchmovieprovidersTMDB", async (req, res) => {
   try {
     const { id } = req.body;
@@ -341,8 +343,7 @@ app.post("/fetchmovieprovidersTMDB", async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
+//streaming tjänster
 
 // fetch and return providers (in sweden) of movieId, also posts this data to our "database"-array fetchedProvidersOfMovie
 async function fetchMovieProvidersObjectTMDB(id) {
@@ -351,22 +352,27 @@ async function fetchMovieProvidersObjectTMDB(id) {
     const response = await fetch(url);
     const data = await response.json();
 
+    // ändra så att vi skickar alla data till addProvidersOfMovieToDatabase funktionen
+
+    addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
+
+
     if (data.results.SE) {
-      addProvidersOfMovieToDatabase(data.results.SE, id);
 
       return data.results.SE;
     } else if (!data.results.SE) {
       console.log("No providers in sweden for movie id ", id);
-      addProvidersOfMovieToDatabase(0, id);
-
+      
       return { noProviders: "no providers in sweden", id };
     } else {
       console.log("failed to fetch providers of movie from TMDB");
     }
+
+    
     //await postMovieToDatabase(data);
     // await postAddToMixOnBackend(data.id, data.title);
   } catch (error) {
-    console.error("Error fetching movie details:", error);
+    console.error("Error fetching movie providers:", error);
   } finally {
     //setLoading(false);
     //setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
@@ -451,68 +457,181 @@ app.get("/fetchedProvidersOfMovie", (req, res) => {
   res.json(data);
 });
 
-
 app.post("/addmovieproviderstodatabase", (req, res) => {
-
   try {
+    const { movieProvidersObject } = req.body;
 
-    const { movieProvidersObject, movieId } = req.body;
-  
-      if (!movieProvidersObject || movieId ) {
-        return res.status(400).json({ error: 'No object of providers or movie ID provided' });
-      }
+    if (!movieProvidersObject) {
+      return res
+        .status(400)
+        .json({ error: "No object of providers or movie ID provided" });
+    }
 
-      addProvidersOfMovieToDatabase(movieProvidersObject, movieId)
-  
-    
+    addProvidersOfMovieToDatabase(movieProvidersObject);
   } catch (error) {
-    console.error("1:Error attempting to use endpoint /addmovieproviderstodatabase: ", error);
-    res.status(500).json({ error: "Internal server error, Error attempting to use endpoint /addmovieproviderstodatabase" });
+    console.error(
+      "1:Error attempting to use endpoint /addmovieproviderstodatabase: ",
+      error
+    );
+    res.status(500).json({
+      error:
+        "Internal server error, Error attempting to use endpoint /addmovieproviderstodatabase",
+    });
   }
-  
-} )
+});
 
 // WHEN USING THIS FUNCTION, set movieProvidersObject = 0 if SE has no provider...
 // e.g. addProvidersOfMovieToDatabase(0, id)
-function addProvidersOfMovieToDatabase(movieProvidersObject, id) {
-  if (!movieProvidersObject || !id) {
+function addProvidersOfMovieToDatabase(movieProvidersObject) {
+  if (!movieProvidersObject) {
     console.log(
       "movie providers object or id not provided when attempting to add to our database."
     );
+    return; //exit code // TODO: ändra att den returnerar något annat? typ error?
   }
 
+
   const idExistsAlready = fetchedProvidersOfMovie.some(
-    (fetchedMovie) => fetchedMovie.id === id
+    (fetchedMovie) => fetchedMovie.id === movieProvidersObject.id
   );
   /*  const idExistsInSeries = fetchedSeries.some(
     (fetchedSerie) => fetchedSerie.id === movieObject.id
   ); */
 
   if (idExistsAlready) {
-    console.log("Providers of movie ID ", id, " has already been fetched.");
+    console.log("Providers of movie ID ", movieProvidersObject.id, " has already been fetched.");
     return; // TODO: return nothing?
   } else {
-    // om redan finns?
+    // fortsätt kod... 
   }
-  
-  // ive set object to '0' if the movie had no providers in SE...
-  if (movieProvidersObject === 0) { // TODO: check 
-    fetchedProvidersOfMovie.push({noProviders:"no providers in sweden", id: id});
+
+
+    /* if (data.results.SE) {
+      addProvidersOfMovieToDatabase(data.results.SE, id);
+
+      return data.results.SE;
+    } else if (!data.results.SE) {
+      console.log("No providers in sweden for movie id ", id);
+      addProvidersOfMovieToDatabase(0, id);
+
+      return { noProviders: "no providers in sweden", id };
+    } else {
+      console.log("failed to fetch providers of movie from TMDB");
+    } */
+  //
+  if (!movieProvidersObject.results?.SE ) {
+    // TODO: check
+    fetchedProvidersOfMovie.push({
+      noProviders: "no providers in sweden",
+      id: movieProvidersObject.id,
+    });
   } else {
     // added movie id to the object so it is easier to find later...
-    const movieProvidersObjectWithID = { ...movieProvidersObject, id: id };
+    const movieProvidersObjectWithID = { ...movieProvidersObject.results.SE, id: movieProvidersObject.id };
 
     // One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
     fetchedProvidersOfMovie.push(movieProvidersObjectWithID); // UPDATE LATER TO SQL
     console.log(
-      "Added providers to movie ID ",
-      id,
-      " (array fetchedProvidersOfMovie)"
+      "Added providers of movie ID ",
+      movieProvidersObject.id,
+      " into array fetchedProvidersOfMovie"
     );
   }
-
 }
 
+const fetchPopularMovies = async () => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/popular?api_key=${movieAPI_KEY}&language=en-US&page=1`
+  );
+  const data = await response.json();
+
+  //postMovieToDatabase(data)
+
+  return data.results;
+};
+
+app.get("/popularmovies", async (req, res) => {
+  try {
+    const popularMovies = await fetchPopularMovies();
+
+    // const popularMoviesProviders = []
+
+    const popularMoviesAndProviders = [];
+
+    if (popularMovies.length > 0) {
+      for (const movie of popularMovies) {
+        if (!movie.id) {
+          return res
+            .status(400)
+            .json({ error: "No movie id found in popular movie?" });
+        }
+
+        addMovieToDatabase(movie, "movie"); // doesnt add if already added
+
+        // first check if movieproviders exists in our database
+        let movieProvidersObject = getProvidersOfMOvieObjectOurDatabase(
+          movie.id
+        );
+
+        // if it doesnt exist we fetch providers from tmdb
+        if (movieProvidersObject == null) {
+          console.log(
+            "movie providers not in our database, fetching from TMDB"
+          );
+
+          // fetches movie's providers and adds to our database
+          movieProvidersObject = await fetchMovieProvidersObjectTMDB(movie.id);
+        } else {
+          console.log(
+            "Providers of movie id ",
+            movieProvidersObject.id,
+            " exists in our database, skipping fetch from TMDB."
+          );
+        }
+
+        //console.log("streaming providers of movie id ", movie.id, ": ", movieProvidersObject);
+
+        let isLiked = false;
+        if (likedMoviesList && likedMoviesList.length > 0) {
+          isLiked = likedMoviesList.some((likedMovie) => {
+            return likedMovie.id === movie.id;
+          });
+        }
+
+        let isInWatchList = false;
+        if (movieWatchList && movieWatchList.length > 0) {
+          isInWatchList = movieWatchList.some((watchListedMovie) => {
+            return watchListedMovie.id === movie.id;
+          });
+        }
+
+        if (movieProvidersObject) {
+          popularMoviesAndProviders.push({
+            movie,
+            movieProvidersObject,
+            isLiked,
+            isInWatchList,
+          });
+        } else {
+          console.log(
+            "failed to read movieProvidersObject in /popularmovies endpoint, did not push values into array popularMoviesAndProviders"
+          );
+        }
+      }
+    } else {
+      console.log("failed to map through popular movies, length === 0 ?");
+    }
+
+    if (popularMoviesAndProviders.length > 0) {
+      // console.log(popularMoviesAndProviders);
+      res.json(popularMoviesAndProviders);
+    } else {
+      console.log("popularMoviesAndProviders failed to populate");
+    }
+  } catch (error) {
+    console.log("failed to run /popularmovies endpoint");
+  }
+});
 
 async function getMixFromOurDatabaseOnlyIDs() {
   try {
@@ -634,6 +753,11 @@ function getProvidersOfMOvieObjectOurDatabase(id) {
       return id === movie.id;
     });
     //console.log("Movie-Search result: ", searchResult);
+
+    if (searchResult == null) {
+      console.log("providers not found in our database, returning null");
+      return null;
+    }
 
     //console.log("Series-Search result: ", searchResult);
   } catch (error) {
@@ -895,13 +1019,13 @@ app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
     // }
 
     if (movieOrSeries === "movie") {
-      likedMoviesList = likedMoviesList.filter((movie) => movie.id !== id);
-      console.log("Removed movie ID ", id, " from WatchMoviesList");
+      movieWatchList = movieWatchList.filter((movie) => movie.id !== id);
+      console.log("Removed movie ID ", id, " from movieWatchList");
     }
 
     if (movieOrSeries === "series") {
-      likedSeriesList = likedSeriesList.filter((serie) => serie.id !== id);
-      console.log("Removed series ID ", id, " from WatchSeriesList");
+      seriesWatchList = seriesWatchList.filter((serie) => serie.id !== id);
+      console.log("Removed series ID ", id, " from seriesWatchList");
     }
 
     res.status(201).json({
@@ -1023,19 +1147,30 @@ app.post("/moviesuggest2", async (req, res) => {
         {
           role: "system",
           content: `This assistant will suggest 6 movies based on user descriptions. 
-          It will provide Movie Names for those movies in the format of: 
-          MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
-          MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
-          It will not answer any other queries. It will only suggest movies and TV series. 
-          If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
-          Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
-          MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
-          MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
-          Never add any additional numbers. If the movie name already exists in 
-          ${likedMovieTitlesString}, it will not be suggested. If you have no suggestions, 
-          explain in your response. Also, look inside ${latestSuggestions.join(
+It will provide Movie Names for those movies in the format of: 
+MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
+MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
+It will not answer any other queries. It will only suggest movies and TV series. 
+If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
+Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
+MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
+MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
+Never add any additional numbers.
+
+When making suggestions, follow these steps:
+1. Review the latest user query: ${latestUserQuery}.
+2. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+3. Avoid suggesting movies that are already in the latest suggestions.
+4. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+5. Consider the genres, themes, or keywords from the latest user query to refine the search.
+6. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+7. If no suitable suggestions are available, explain why and provide alternative options.
+
+For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
+
+If you have no suggestions, explain in your response. Also, look inside ${latestSuggestions.join(
             ", "
-          )} and ${latestUserQuery} and suggest movies based on the querys.`,
+          )} and ${latestUserQuery} and suggest movies based on the queries.`,
         },
         {
           role: "user",
