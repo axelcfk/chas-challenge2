@@ -179,7 +179,7 @@ export default function WatchListSlideMenu2() {
           ))}
         </SlideMenu>
       ) : (
-        <div className="inline-block w-full h-80 md:h-96 mx-4">
+        <div className="inline-block w-full h-80 md:h-96">
           <p>No movies in watchlist yet</p>{" "}
           {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
