@@ -351,22 +351,27 @@ async function fetchMovieProvidersObjectTMDB(id) {
     const response = await fetch(url);
     const data = await response.json();
 
+    // ändra så att vi skickar alla data till addProvidersOfMovieToDatabase funktionen
+
+    addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
+
+
     if (data.results.SE) {
-      addProvidersOfMovieToDatabase(data.results.SE, id);
 
       return data.results.SE;
     } else if (!data.results.SE) {
       console.log("No providers in sweden for movie id ", id);
-      addProvidersOfMovieToDatabase(0, id);
-
+      
       return { noProviders: "no providers in sweden", id };
     } else {
       console.log("failed to fetch providers of movie from TMDB");
     }
+
+    
     //await postMovieToDatabase(data);
     // await postAddToMixOnBackend(data.id, data.title);
   } catch (error) {
-    console.error("Error fetching movie details:", error);
+    console.error("Error fetching movie providers:", error);
   } finally {
     //setLoading(false);
     //setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
@@ -453,15 +458,15 @@ app.get("/fetchedProvidersOfMovie", (req, res) => {
 
 app.post("/addmovieproviderstodatabase", (req, res) => {
   try {
-    const { movieProvidersObject, movieId } = req.body;
+    const { movieProvidersObject } = req.body;
 
-    if (!movieProvidersObject || movieId) {
+    if (!movieProvidersObject) {
       return res
         .status(400)
         .json({ error: "No object of providers or movie ID provided" });
     }
 
-    addProvidersOfMovieToDatabase(movieProvidersObject, movieId);
+    addProvidersOfMovieToDatabase(movieProvidersObject);
   } catch (error) {
     console.error(
       "1:Error attempting to use endpoint /addmovieproviderstodatabase: ",
@@ -478,44 +483,59 @@ app.post("/addmovieproviderstodatabase", (req, res) => {
 
 // WHEN USING THIS FUNCTION, set movieProvidersObject = 0 if SE has no provider...
 // e.g. addProvidersOfMovieToDatabase(0, id)
-function addProvidersOfMovieToDatabase(movieProvidersObject, id) {
-  if (!movieProvidersObject || !id) {
+function addProvidersOfMovieToDatabase(movieProvidersObject) {
+  if (!movieProvidersObject) {
     console.log(
       "movie providers object or id not provided when attempting to add to our database."
     );
+    return; //exit code // TODO: ändra att den returnerar något annat? typ error?
   }
 
+
   const idExistsAlready = fetchedProvidersOfMovie.some(
-    (fetchedMovie) => fetchedMovie.id === id
+    (fetchedMovie) => fetchedMovie.id === movieProvidersObject.id
   );
   /*  const idExistsInSeries = fetchedSeries.some(
     (fetchedSerie) => fetchedSerie.id === movieObject.id
   ); */
 
   if (idExistsAlready) {
-    console.log("Providers of movie ID ", id, " has already been fetched.");
+    console.log("Providers of movie ID ", movieProvidersObject.id, " has already been fetched.");
     return; // TODO: return nothing?
   } else {
-    // om redan finns?
+    // fortsätt kod... 
   }
 
-  // ive set object to '0' if the movie had no providers in SE...
-  if (movieProvidersObject === 0) {
+
+    /* if (data.results.SE) {
+      addProvidersOfMovieToDatabase(data.results.SE, id);
+
+      return data.results.SE;
+    } else if (!data.results.SE) {
+      console.log("No providers in sweden for movie id ", id);
+      addProvidersOfMovieToDatabase(0, id);
+
+      return { noProviders: "no providers in sweden", id };
+    } else {
+      console.log("failed to fetch providers of movie from TMDB");
+    } */
+  //
+  if (!movieProvidersObject.results?.SE ) {
     // TODO: check
     fetchedProvidersOfMovie.push({
       noProviders: "no providers in sweden",
-      id: id,
+      id: movieProvidersObject.id,
     });
   } else {
     // added movie id to the object so it is easier to find later...
-    const movieProvidersObjectWithID = { ...movieProvidersObject, id: id };
+    const movieProvidersObjectWithID = { ...movieProvidersObject.results.SE, id: movieProvidersObject.id };
 
     // One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
     fetchedProvidersOfMovie.push(movieProvidersObjectWithID); // UPDATE LATER TO SQL
     console.log(
-      "Added providers to movie ID ",
-      id,
-      " (array fetchedProvidersOfMovie)"
+      "Added providers of movie ID ",
+      movieProvidersObject.id,
+      " into array fetchedProvidersOfMovie"
     );
   }
 }
