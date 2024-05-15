@@ -29,7 +29,8 @@ const pool = mysql.createPool({
   user: "root",
   password: "root",
   database: "movie-app",
-  port: 8889 || 3306,
+  port: 3306,
+  //port: 8889 || 3306,
 });
 
 function generateOTP() {
@@ -1018,13 +1019,13 @@ app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
     // }
 
     if (movieOrSeries === "movie") {
-      likedMoviesList = likedMoviesList.filter((movie) => movie.id !== id);
-      console.log("Removed movie ID ", id, " from WatchMoviesList");
+      movieWatchList = movieWatchList.filter((movie) => movie.id !== id);
+      console.log("Removed movie ID ", id, " from movieWatchList");
     }
 
     if (movieOrSeries === "series") {
-      likedSeriesList = likedSeriesList.filter((serie) => serie.id !== id);
-      console.log("Removed series ID ", id, " from WatchSeriesList");
+      seriesWatchList = seriesWatchList.filter((serie) => serie.id !== id);
+      console.log("Removed series ID ", id, " from seriesWatchList");
     }
 
     res.status(201).json({
