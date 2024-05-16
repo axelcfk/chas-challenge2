@@ -61,7 +61,7 @@ export default function Login() {
           Login
         </h2>
         <div className="flex flex-col ">
-          <p className="mb-2 text-slate-100">Username</p>
+          <p className="mb-2 text-slate-100">Email</p>
           <input
             onChange={(e) => setUsername(e.target.value)}
             value={username}
