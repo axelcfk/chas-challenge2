@@ -210,7 +210,7 @@ function MovieSearch() {
         </div>
       </form>
       {movies.length > 0 && (
-        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full">
+        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full max-h-[500px] overflow-y-scroll">
           {filteredMovies.map((movie) => (
             <li className="list-none p-2 hover:bg-gray-200" key={movie.id}>
               <Link
