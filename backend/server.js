@@ -29,13 +29,12 @@ const pool = mysql.createPool({
   user: "root",
   password: "root",
   database: "movie-app",
-  port: 8889,
-  //port: 3306,
+  port: 3306,
   //port: 8889 || 3306,
 });
 
 let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
-let likedMoviesListId = 1
+let likedMoviesListId = 1;
 let likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let movieWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let movieWatchListId = 1;
@@ -60,63 +59,6 @@ app.use(bodyParser.json());
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // const apiKey = process.env.movieAPI_KEY;
 
-app.post("/joke", async (req, res) => {
-  //Tar emot input från frontend och storear i userQuery
-  const userQuery = req.body.input;
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a mental health coach only. You should not respond to anything that is not related to mental health, guidence, gratitude and life goals. If the user asks about anything else you should respond with a message explaining that you are not created to answer that question.",
-        },
-        {
-          role: "user",
-          content:
-            userQuery ||
-            "Please provide a short daily reflection, around 100 words, on an aspect of gratitude. Focus on different subjects each time, such as interactions, personal achievements, or everyday blessings.",
-        },
-      ],
-    });
-
-    console.log("OpenAI API Response:", JSON.stringify(completion, null, 2));
-
-    //Här ligger meddelandet man får från open api
-    const result = completion.choices[0].message.content;
-
-    //skickar result tillbaka till frontend
-    res.json({ joke: result });
-
-    // STORING USERQUERY AND AIRESPONSE TO MYSQL
-    const user_id = 1; // PLACEHOLDER USER_ID
-    try {
-      // create an empty account (0 kr) for the user, with the user_id attached to it
-      const userQueryAndResponseSQLData = await query(
-        "INSERT INTO chatgpt (user_id, user_query, ai_response) VALUES (?, ?, ?)",
-        [user_id, userQuery, result]
-      );
-      console.log("userQuerySQLData: ", userQueryAndResponseSQLData[0]);
-    } catch (error) {
-      console.error(
-        "Error saving user query and ai response to mysql: ",
-        error
-      );
-      return res
-        .status(500)
-        .send("Error saving user query and ai response to mysql");
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({
-      error: "Unable to fetch a joke at this time.",
-      details: error.message,
-    });
-  }
-});
-
 //CREATE ACCOUNT
 app.post("/users", async (req, res) => {
   const { username, password } = req.body;
@@ -140,14 +82,19 @@ app.post("/users", async (req, res) => {
     );
     const userId = insertResult.insertId;
 
-
     // create empty likelist for new user
-    likedMoviesList.push({likedMoviesListId: likedMoviesListId++, userId: userId, myLikedMoviesList: []})   
+    likedMoviesList.push({
+      likedMoviesListId: likedMoviesListId++,
+      userId: userId,
+      myLikedMoviesList: [],
+    });
 
     // create empty watchlist for new user
-    movieWatchList.push({movieWatchListId: movieWatchListId++, userId: userId, myMovieWatchList: []})   
-
-
+    movieWatchList.push({
+      movieWatchListId: movieWatchListId++,
+      userId: userId,
+      myMovieWatchList: [],
+    });
 
     res
       .status(201)
@@ -571,20 +518,22 @@ const fetchPopularMovies = async () => {
 };
 
 async function checkIfLiked(movieId, currentUserId) {
+  // before likedMoviesList is in mySQL:
+  const userLikedMoviesList = likedMoviesList.find((list) => {
+    return list.userId === currentUserId;
+  });
 
-
-    // before likedMoviesList is in mySQL:
-    const userLikedMoviesList = likedMoviesList.find((list) => {
-      return list.userId === currentUserId;
-    }); 
-
-    if (userLikedMoviesList == null) {
-      console.log("CheckIfLiked function failed finding likedMoviesList of user id: ", currentUserId);
-      return res.status(500).send("CheckIfLiked function failed finding user's likedMoviesList");
-    } else {
-      //continue code...
-    }
-
+  if (userLikedMoviesList == null) {
+    console.log(
+      "CheckIfLiked function failed finding likedMoviesList of user id: ",
+      currentUserId
+    );
+    return res
+      .status(500)
+      .send("CheckIfLiked function failed finding user's likedMoviesList");
+  } else {
+    //continue code...
+  }
 
   /* let isLiked = false;
   if (likedMoviesList && likedMoviesList.length > 0) {
@@ -599,47 +548,46 @@ async function checkIfLiked(movieId, currentUserId) {
       return likedMovie.id === movieId;
     });
   }
-  console.log("movieId: ", movieId,  " isLiked: ", isLiked);
+  console.log("movieId: ", movieId, " isLiked: ", isLiked);
 
- 
   return isLiked;
 }
 
 async function checkIfWatchListed(movieId, currentUserId) {
-
   const userMoviesWatchList = movieWatchList.find((list) => {
     return list.userId === currentUserId;
-  }); 
-
+  });
 
   if (userMoviesWatchList == null) {
-    console.log("checkIfWatchListed function failed finding userMoviesWatchList of user id: ", currentUserId);
-    return res.status(500).send("checkIfWatchListed function failed finding user's movieWatchList");
+    console.log(
+      "checkIfWatchListed function failed finding userMoviesWatchList of user id: ",
+      currentUserId
+    );
+    return res
+      .status(500)
+      .send("checkIfWatchListed function failed finding user's movieWatchList");
   } else {
     //continue code...
     console.log("userMoviesWatchList: ", userMoviesWatchList);
   }
 
-
-
   let isInWatchList = false;
   if (userMoviesWatchList && userMoviesWatchList.myMovieWatchList.length > 0) {
-    isInWatchList = userMoviesWatchList.myMovieWatchList.some((watchListedMovie) => {
-      return watchListedMovie.id === movieId;
-    });
+    isInWatchList = userMoviesWatchList.myMovieWatchList.some(
+      (watchListedMovie) => {
+        return watchListedMovie.id === movieId;
+      }
+    );
   }
 
-  console.log("movieId: ", movieId,  " isInWatchList: ", isInWatchList);
-
+  console.log("movieId: ", movieId, " isInWatchList: ", isInWatchList);
 
   return isInWatchList;
-
 }
 
 app.post("/popularmovies", async (req, res) => {
   try {
-
-    const {token} = req.body;
+    const { token } = req.body;
 
     let sessionSearchResult;
     try {
@@ -652,10 +600,8 @@ app.post("/popularmovies", async (req, res) => {
       console.error("2:Error finding session", error);
       return res.status(500).send("2:Error finding session");
     }
-    const currentSession = sessionSearchResult[0]
+    const currentSession = sessionSearchResult[0];
     const currentUserId = currentSession.user_id;
-
-    
 
     const popularMovies = await fetchPopularMovies();
 
@@ -696,10 +642,9 @@ app.post("/popularmovies", async (req, res) => {
 
         //console.log("streaming providers of movie id ", movie.id, ": ", movieProvidersObject);
 
-        const isLiked = await checkIfLiked(movie.id, currentUserId)
-        const isInWatchList = await checkIfWatchListed(movie.id, currentUserId) // TODO: check currentUserId !!!
-      
-        
+        const isLiked = await checkIfLiked(movie.id, currentUserId);
+        const isInWatchList = await checkIfWatchListed(movie.id, currentUserId); // TODO: check currentUserId !!!
+
         if (movieProvidersObject) {
           popularMoviesAndProviders.push({
             movie,
@@ -916,7 +861,6 @@ app.post("/addmovietodatabase", async (req, res) => {
   }
 });
 
-
 // post the lists
 app.post("/me/likelists", async (req, res) => {
   //const
@@ -991,20 +935,16 @@ app.get("/watchandlikelists", (req, res) => {
   res.json(data);
 });
 
-
 // user-specific watchandlikelists
 app.post("/me/watchandlikelists", async (req, res) => {
-
   try {
     const { token } = req.body;
 
-    if (!token ) {
+    if (!token) {
       return res.status(400).json({
-        error:
-          "Failed receiving token to /me/watchandlikelists.",
+        error: "Failed receiving token to /me/watchandlikelists.",
       });
     }
-
 
     let sessionSearchResult;
     try {
@@ -1017,15 +957,18 @@ app.post("/me/watchandlikelists", async (req, res) => {
       console.error("2:Error finding session", error);
       return res.status(500).send("2:Error finding session");
     }
-    const currentSession = sessionSearchResult[0]
+    const currentSession = sessionSearchResult[0];
 
     // before likedMoviesList is in mySQL:
     const userLikedMoviesList = likedMoviesList.find((list) => {
       return list.userId === currentSession.user_id;
-    }); 
+    });
 
     if (userLikedMoviesList == null) {
-      console.log("Couldn't find likelist of user id: ", currentSession.user_id);
+      console.log(
+        "Couldn't find likelist of user id: ",
+        currentSession.user_id
+      );
       return res.status(500).send("Error finding user's likedMoviesList");
     } else {
       //continue code...
@@ -1033,31 +976,33 @@ app.post("/me/watchandlikelists", async (req, res) => {
 
     const userMoviesWatchList = movieWatchList.find((list) => {
       return list.userId === currentSession.user_id;
-    }); 
+    });
 
     if (userMoviesWatchList == null) {
-      console.log("Couldn't find movieWatchList of user id: ", currentSession.user_id);
+      console.log(
+        "Couldn't find movieWatchList of user id: ",
+        currentSession.user_id
+      );
       return res.status(500).send("Error finding user's moviesWatchList");
-
     } else {
       //continue code...
     }
 
     const data = {
-      likedMoviesList:userLikedMoviesList.myLikedMoviesList,
-      movieWatchList:userMoviesWatchList.myMovieWatchList
+      likedMoviesList: userLikedMoviesList.myLikedMoviesList,
+      movieWatchList: userMoviesWatchList.myMovieWatchList,
     };
-  
 
-    
     if (userMoviesWatchList && userLikedMoviesList) {
       res.json(data);
     } else {
-      console.log("userMoviesWatchList and/or userLikedMoviesList not defined, can't send to frontend");
+      console.log(
+        "userMoviesWatchList and/or userLikedMoviesList not defined, can't send to frontend"
+      );
     }
 
     // SQL, ändra till likelist ist för account
-      /* let userAccountSearchResult;
+    /* let userAccountSearchResult;
     try {
       // fetch the user's account by giving the user_id
       userAccountSearchResult = await query(
@@ -1071,13 +1016,13 @@ app.post("/me/watchandlikelists", async (req, res) => {
       return res.status(500).send("4:Error finding user's account");
     }
     const loggedInUserAccount = userAccountSearchResult[0]; */
-
-  
-  } catch(error) {
-    res.status(500).json({ error: "Internal server error when trying to run /me/watchandlikelists" });
-
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        error: "Internal server error when trying to run /me/watchandlikelists",
+      });
   }
-
 
   /* const data = {
     movieWatchList: movieWatchList,
@@ -1109,22 +1054,22 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
       console.error("2:Error finding session", error);
       return res.status(500).send("2:Error finding session");
     }
-    const currentSession = sessionSearchResult[0]
+    const currentSession = sessionSearchResult[0];
 
     // before likedMoviesList is in mySQL:
     const userLikedMoviesList = likedMoviesList.find((list) => {
       return list.userId === currentSession.user_id;
-    }); 
+    });
 
     if (userLikedMoviesList == null) {
-      console.log("Couldn't find likelist of user id: ", currentSession.user_id);
+      console.log(
+        "Couldn't find likelist of user id: ",
+        currentSession.user_id
+      );
       return res.status(500).send("Error finding user's likedMoviesList");
-
     } else {
       //continue code...
     }
-
-    
 
     /* const idExistsInMovies = likedMoviesList.some(
       (likedMovie) => likedMovie.id === id
@@ -1142,7 +1087,7 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
       (likedSeries) => likedSeries.id === id
     ); */
 
-   /*  if (idExistsInMovies || idExistsInSeries) {
+    /*  if (idExistsInMovies || idExistsInSeries) {
       console.log("movie/series ID ", id, " is already liked.");
       return res
         .status(200)
@@ -1155,10 +1100,9 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
         .json({ message: "Liked movie OR Liked series is already liked." });
     }
 
-
     if (movieOrSeries === "movie") {
       // maybe change to some sort of True/False variable instead...
-     // likedMoviesList.push({ id, title }); // UPDATE LATER TO SQL
+      // likedMoviesList.push({ id, title }); // UPDATE LATER TO SQL
       userLikedMoviesList.myLikedMoviesList.push({ id, title }); // UPDATE LATER TO SQL
       console.log(
         "Added movie ID ",
@@ -1183,12 +1127,12 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
   }
 });
 
-// TODO: fix so it removes from the user's likelist 
+// TODO: fix so it removes from the user's likelist
 app.post("/me/likelists/removefromlikelist", async (req, res) => {
   try {
     const { id, movieOrSeries, token } = req.body;
 
-    if (!id || !movieOrSeries || !token ) {
+    if (!id || !movieOrSeries || !token) {
       return res
         .status(400)
         .json({ error: "Token and/or Liked movie/series is required." });
@@ -1227,8 +1171,7 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
   }
 });
 
-
-// TODO: fix so it removes from the user's watchlist 
+// TODO: fix so it removes from the user's watchlist
 app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
   try {
     const { id, movieOrSeries } = req.body;
@@ -1293,24 +1236,22 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
       console.error("2:Error finding session", error);
       return res.status(500).send("2:Error finding session");
     }
-    const currentSession = sessionSearchResult[0]
-
+    const currentSession = sessionSearchResult[0];
 
     const userMoviesWatchList = movieWatchList.find((list) => {
       return list.userId === currentSession.user_id;
-      
-    }); 
+    });
 
     if (userMoviesWatchList == null) {
-      console.log("Couldn't find movieWatchList of user id: ", currentSession.user_id);
+      console.log(
+        "Couldn't find movieWatchList of user id: ",
+        currentSession.user_id
+      );
       return res.status(500).send("Error finding user's movieWatchList");
-
     } else {
       //continue code...
     }
 
-
-   
     const idExistsInMovieWatchList = userMoviesWatchList.myMovieWatchList.some(
       (movie) => movie.id === id
     );
@@ -1318,7 +1259,7 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
       (series) => series.id === id
     ); */
     //if (idExistsInMovieWatchList || idExistsInSeriesWatchList) {
-    if (idExistsInMovieWatchList ) {
+    if (idExistsInMovieWatchList) {
       console.log("movie/series ID ", id, " is already saved in watchlist.");
       return res.status(200).json({
         message: "Liked movie OR Liked series is already in watchlist.",
@@ -2145,65 +2086,6 @@ app.get("/users/:userId", async (req, res) => {
   }
 });
 
-let lists = [];
-let listIdCounter = 1;
-
-// Endpoint för att skapa en ny lista och lägga till en film i listan
-app.post("/me/lists/new", (req, res) => {
-  const { name, movieId } = req.body;
-
-  if (!name || !movieId) {
-    return res.status(400).json({ error: "name and movieId are required" });
-  }
-
-  const newList = {
-    id: listIdCounter++,
-    name,
-    movies: [movieId],
-  };
-
-  lists.push(newList);
-
-  return res.status(201).json({ message: "List created", listId: newList.id });
-});
-
-// Endpoint för att lägga till en film i en lista som finns
-app.post("/me/lists/add/:listId", (req, res) => {
-  const { listId } = req.params;
-  const { movieId } = req.body;
-
-  const list = lists.find((l) => l.id === parseInt(listId));
-
-  if (!list) {
-    return res.status(404).json({ error: "List not found" });
-  }
-
-  if (list.movies.includes(movieId)) {
-    return res.status(400).json({ error: "Movie already in list" });
-  }
-
-  list.movies.push(movieId);
-
-  return res.status(200).json({ message: "movie added to list" });
-});
-
-// Endpoint för att hämta alla custom listor
-app.get("/me/lists", (req, res) => {
-  return res.status(200).json(lists);
-});
-
-app.get("/me/lists/:listId", (req, res) => {
-  const { listId } = req.params; 
-
-  const list = lists.find((l) => l.id === parseInt(listId));
-
-  if (!list) {
-    return res.status(404).json({ error: "List not found" });
-  }
-
-  return res.status(200).json(list);
-});
-
 ///////////////////////////////////////////////////
 
 app.listen(port, "0.0.0.0", () => {
@@ -2255,13 +2137,14 @@ app.post("/me/seenlists/removefromseenlist", async (req, res) => {
     seenMoviesList = seenMoviesList.filter((movie) => movie.id !== id);
     console.log(`Removed movie ID ${id} from seen list`);
 
-    res.status(200).json({ message: "Movie removed from seen list successfully" });
+    res
+      .status(200)
+      .json({ message: "Movie removed from seen list successfully" });
   } catch (error) {
     console.error("Error removing movie from seen list:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 //retrieve the seen movies list
 app.get("/me/seenlists", (req, res) => {
