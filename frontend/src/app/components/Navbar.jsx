@@ -138,16 +138,13 @@ export default function Navbar() {
           </div>
 
           {/* Ordinary Navbar for larger screens */}
-          <div className="hidden md:flex items-center">
-            {" "}
-            {!isLoggedIn ? (
+          <div className="hidden md:flex items-center">            {!isLoggedIn ? (
               <Link href="/login" style={{ textDecoration: "none" }}>
                 <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                   Log in
                 </span>
               </Link>
             ) : (
-              <>
               <>
                 {userId && (
                   <Link
@@ -158,12 +155,6 @@ export default function Navbar() {
                       Profile
                     </span>
                   </Link>
-                )}
-                <Link href="/services" style={{ textDecoration: "none" }}>
-                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
-                    About
-                  </span>
-                </Link>
                 )}
                 <Link href="/services" style={{ textDecoration: "none" }}>
                   <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
