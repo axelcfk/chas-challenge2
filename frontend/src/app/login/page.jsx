@@ -31,7 +31,7 @@ export default function Login() {
         // Kolla så  att både token och userId finns
         localStorage.setItem("token", data.token); // Lägg till token i local storage
         localStorage.setItem("userId", data.userId); // Lägg till userId i local storage
-        router.push("/new-user"); // Gå till new user page
+        router.push("/startpage"); // Gå till new user page
       } else {
         throw new Error("Authentication failed, no token or userId received.");
       }

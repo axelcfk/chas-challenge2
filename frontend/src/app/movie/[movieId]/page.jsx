@@ -15,7 +15,6 @@ import {
 } from "../../utils";
 import { checkLikeList } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
-import ListModal from "@/app/components/ListModal";
 
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -39,6 +38,7 @@ export default function MoviePage() {
   const [userLists, setUserLists] = useState([]);
   const [newListName, setNewListName] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const params = useParams();
   const movieId = params.movieId;
@@ -90,6 +90,61 @@ export default function MoviePage() {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+  };
+
+  const handleToggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleAddMovieToList = async (listId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3010/me/lists/add/${listId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ movieId: movieDetails.id }),
+        }
+      );
+      const data = await response.json();
+      console.log(`Added movie to list ${listId}:`, data);
+      console.log(data.message);
+    } catch (error) {
+      console.error("Failed to add movie to list:", error);
+    }
+    handleCloseModal();
+  };
+
+  const fetchUserLists = async () => {
+    try {
+      const response = await fetch("http://localhost:3010/me/lists");
+      const data = await response.json();
+      setUserLists(data);
+      console.log("Fetcheded user lists:", data);
+    } catch (error) {
+      console.error("Failed to fetch user lists:", error);
+    }
+  };
+
+  const handleCreateNewList = async () => {
+    try {
+      const response = await fetch(`http://localhost:3010/me/lists/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
+      });
+      const data = await response.json();
+      console.log("Created new list:", data);
+      setUserLists([...userLists, { id: data.listId, name: newListName }]);
+      setNewListName("");
+    } catch (error) {
+      console.error("Failed to create new list:", error);
+    }
+    handleCloseModal();
   };
 
   useEffect(() => {
@@ -181,6 +236,10 @@ export default function MoviePage() {
     fetchLikeList();
   }, [movieId]);
 
+  useEffect(() => {
+    fetchUserLists();
+  },[]);
+
   const isMovieLiked = likedMovies.some(
     (movie) => movie.id === movieDetails?.id
   );
@@ -260,44 +319,6 @@ export default function MoviePage() {
         ))
     : null;
 
-  const handleAddMovieToList = async (listId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3010/me/lists/add/${listId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ movieId: movieDetails.id }),
-        }
-      );
-      const data = await response.json();
-      console.log(data.message);
-    } catch (error) {
-      console.error("Failed to add movie to list:", error);
-    }
-    handleCloseModal();
-  };
-
-  const handleCreateNewList = async () => {
-    try {
-      const response = await fetch(`http://localhost:3010/me/lists/new`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
-      });
-      const data = await response.json();
-      setUserLists([...userLists, { id: data.listId, name: newListName }]);
-      setNewListName("");
-    } catch (error) {
-      console.error("Failed to create new list:", error);
-    }
-    handleCloseModal();
-  };
-
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
@@ -312,11 +333,10 @@ export default function MoviePage() {
         <div className="">
           <img
             id="img"
-            className="absolute top-0 left-0 w-full  object-cover z-0 "
+            className="absolute top-0 left-0 w-full object-cover z-0 "
             src={movieDetails.backdrop}
             alt="Movie Backdrop"
           />
-
           <div className="gradient"></div>
         </div>
       )}
@@ -324,11 +344,10 @@ export default function MoviePage() {
       {loading ? (
         <LoadingIndicator />
       ) : (
-        <div className="h-full flex flex-col justify-center items-center  relative z-10 px-8">
+        <div className="h-full flex flex-col justify-center items-center relative z-10 px-8">
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center text-slate-400 ">
               <div className="flex flex-col  justify-center items-center ">
-                {" "}
                 <div
                   className="w-full flex flex-row justify-center items-center parallax-container rounded-lg p-5"
                   // style={{
@@ -339,7 +358,6 @@ export default function MoviePage() {
                 >
                   <div className="w-full ">
                     <h2 className=" font-semibold  text-slate-50 ">
-                      {" "}
                       {movieDetails.title}
                     </h2>
                     <div className="flex text-sm">
@@ -354,7 +372,7 @@ export default function MoviePage() {
                     </p>
                     <div className=" h-10 flex items-end">
                       <p className="font-semibold  flex justify-center items-center">
-                        <span className={`mr-2  font-normal  text-yellow-400`}>
+                        <span className={`mr-2 font-normal text-yellow-400`}>
                           <FaStar />
                         </span>
                         <span
@@ -449,31 +467,48 @@ export default function MoviePage() {
                         {!watches[movieDetails.id] ? (
                           <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
                             <span className="pr-4">ADD TO WATCHLIST</span>
-                            <span
-                              onClick={handleOpenModal}
-                              className="pl-4 border-l-2 border-slate-200 flex items-center"
-                            >
-                              <SlArrowDown />
+                            <span className="pl-4 border-l-2 border-slate-200 flex items-center">
+                              <button
+                                onClick={handleToggleDropdown}
+                                className="bg-transparent border-none text-white"
+                              >
+                                <SlArrowDown />
+                              </button>
                             </span>
                           </p>
                         ) : (
                           <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
                             <span className="pr-4">ADDED</span>
                             <span
-                              onClick={handleOpenModal}
+                              onClick={handleToggleDropdown}
                               className="pl-4 border-l-2 border-slate-200 flex items-center"
                             >
-                              <SlArrowDown />
+                              <button className="bg-transparent border-none text-white">
+                                <SlArrowDown />
+                              </button>
                             </span>
                           </p>
                         )}
                       </button>
-
-                      {/* <div
-                        className={`w-40 -mt-5  bg-[#3D3B8E] flex justify-center items-center rounded-b-xl border-none  ${
-                          isModalOpen ? "h-40" : "h-0"
-                        }`}
-                      ></div> */}
+                      {dropdownOpen && (
+                        <div className="bg-[#3D3B8E] rounded-lg shadow-lg py-2 mt-2 w-full">
+                          <div
+                            className="px-4 py-2 hover:bg-[#5755d9] cursor-pointer"
+                            onClick={handleOpenModal}
+                          >
+                            Create New List
+                          </div>
+                          {userLists.map((list) => (
+                            <div
+                              key={list.id}
+                              className="px-4 py-2 hover:bg-[#5755d9] cursor-pointer"
+                              onClick={() => handleAddMovieToList(list.id)}
+                            >
+                              {list.name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -632,6 +667,33 @@ export default function MoviePage() {
           )}
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-md w-80">
+            <h2 className="text-xl font-bold mb-4">Create New List</h2>
+            <input
+              type="text"
+              value={newListName}
+              onChange={(e) => setNewListName(e.target.value)}
+              className="w-full p-2 mb-4 border rounded"
+              placeholder="List Name"
+            ></input>
+            <button
+              onClick={handleCreateNewList}
+              className="w-full p-2 bg-blue-500 text-white rounded"
+            >
+              Create
+            </button>
+            <button
+              onClick={handleCloseModal}
+              className="w-full p-2 mt-2 text-gray-600"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

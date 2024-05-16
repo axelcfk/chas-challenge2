@@ -28,7 +28,7 @@ export default function Navbar() {
   }, [isOpen]);
 
   return (
-    <nav className="bg-[#110A1A] text-white w-full">
+    <nav className="bg-[#110A1A] text-white w-full sticky top-0 z-50">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -148,7 +148,6 @@ export default function Navbar() {
               </Link>
             ) : (
               <>
-
                 {userId && (
                   <Link
                     href={`/profile/${userId}`}
@@ -164,7 +163,7 @@ export default function Navbar() {
                     About
                   </span>
                 </Link> */}
-                
+
                 <Link href="/services" style={{ textDecoration: "none" }}>
                   <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                     About

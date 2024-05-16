@@ -374,19 +374,16 @@ async function fetchMovieProvidersObjectTMDB(id) {
 
     addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
 
-
     if (data.results.SE) {
-
       return data.results.SE;
     } else if (!data.results.SE) {
       console.log("No providers in sweden for movie id ", id);
-      
+
       return { noProviders: "no providers in sweden", id };
     } else {
       console.log("failed to fetch providers of movie from TMDB");
     }
 
-    
     //await postMovieToDatabase(data);
     // await postAddToMixOnBackend(data.id, data.title);
   } catch (error) {
@@ -508,7 +505,6 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
     return; //exit code // TODO: ändra att den returnerar något annat? typ error?
   }
 
-
   const idExistsAlready = fetchedProvidersOfMovie.some(
     (fetchedMovie) => fetchedMovie.id === movieProvidersObject.id
   );
@@ -517,14 +513,17 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
   ); */
 
   if (idExistsAlready) {
-    console.log("Providers of movie ID ", movieProvidersObject.id, " has already been fetched.");
+    console.log(
+      "Providers of movie ID ",
+      movieProvidersObject.id,
+      " has already been fetched."
+    );
     return; // TODO: return nothing?
   } else {
-    // fortsätt kod... 
+    // fortsätt kod...
   }
 
-
-    /* if (data.results.SE) {
+  /* if (data.results.SE) {
       addProvidersOfMovieToDatabase(data.results.SE, id);
 
       return data.results.SE;
@@ -537,7 +536,7 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
       console.log("failed to fetch providers of movie from TMDB");
     } */
   //
-  if (!movieProvidersObject.results?.SE ) {
+  if (!movieProvidersObject.results?.SE) {
     // TODO: check
     fetchedProvidersOfMovie.push({
       noProviders: "no providers in sweden",
@@ -545,7 +544,10 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
     });
   } else {
     // added movie id to the object so it is easier to find later...
-    const movieProvidersObjectWithID = { ...movieProvidersObject.results.SE, id: movieProvidersObject.id };
+    const movieProvidersObjectWithID = {
+      ...movieProvidersObject.results.SE,
+      id: movieProvidersObject.id,
+    };
 
     // One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
     fetchedProvidersOfMovie.push(movieProvidersObjectWithID); // UPDATE LATER TO SQL
@@ -2143,8 +2145,128 @@ app.get("/users/:userId", async (req, res) => {
   }
 });
 
+let lists = [];
+let listIdCounter = 1;
+
+// Endpoint för att skapa en ny lista och lägga till en film i listan
+app.post("/me/lists/new", (req, res) => {
+  const { name, movieId } = req.body;
+
+  if (!name || !movieId) {
+    return res.status(400).json({ error: "name and movieId are required" });
+  }
+
+  const newList = {
+    id: listIdCounter++,
+    name,
+    movies: [movieId],
+  };
+
+  lists.push(newList);
+
+  return res.status(201).json({ message: "List created", listId: newList.id });
+});
+
+// Endpoint för att lägga till en film i en lista som finns
+app.post("/me/lists/add/:listId", (req, res) => {
+  const { listId } = req.params;
+  const { movieId } = req.body;
+
+  const list = lists.find((l) => l.id === parseInt(listId));
+
+  if (!list) {
+    return res.status(404).json({ error: "List not found" });
+  }
+
+  if (list.movies.includes(movieId)) {
+    return res.status(400).json({ error: "Movie already in list" });
+  }
+
+  list.movies.push(movieId);
+
+  return res.status(200).json({ message: "movie added to list" });
+});
+
+// Endpoint för att hämta alla custom listor
+app.get("/me/lists", (req, res) => {
+  return res.status(200).json(lists);
+});
+
+app.get("/me/lists/:listId", (req, res) => {
+  const { listId } = req.params; 
+
+  const list = lists.find((l) => l.id === parseInt(listId));
+
+  if (!list) {
+    return res.status(404).json({ error: "List not found" });
+  }
+
+  return res.status(200).json(list);
+});
+
 ///////////////////////////////////////////////////
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
+});
+
+// Temporarily storing seen movies
+let seenMoviesList = [];
+//endpoint to add a movie to the seen list
+app.post("/me/seenlists/addtoseenlist", async (req, res) => {
+  try {
+    const { id, title } = req.body;
+
+    if (!id || !title) {
+      return res
+        .status(400)
+        .json({ error: "Movie ID and title are required." });
+    }
+
+    const idExistsInSeen = seenMoviesList.some(
+      (seenMovie) => seenMovie.id === id
+    );
+
+    if (idExistsInSeen) {
+      return res
+        .status(200)
+        .json({ message: "Movie is already in seen list." });
+    }
+
+    seenMoviesList.push({ id, title });
+    console.log(`Added movie ID ${id} with title "${title}" to seen list`);
+
+    res.status(201).json({ message: "Movie added to seen list successfully" });
+  } catch (error) {
+    console.error("Error adding movie to seen list:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//remove a movie from the seen list
+app.post("/me/seenlists/removefromseenlist", async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "Movie ID is required." });
+    }
+
+    seenMoviesList = seenMoviesList.filter((movie) => movie.id !== id);
+    console.log(`Removed movie ID ${id} from seen list`);
+
+    res.status(200).json({ message: "Movie removed from seen list successfully" });
+  } catch (error) {
+    console.error("Error removing movie from seen list:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+//retrieve the seen movies list
+app.get("/me/seenlists", (req, res) => {
+  res.status(200).json({
+    message: "Seen movies list retrieved successfully",
+    seenMoviesList: seenMoviesList,
+  });
 });
