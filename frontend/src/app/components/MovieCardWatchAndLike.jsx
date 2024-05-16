@@ -47,7 +47,7 @@ export default function MovieCardWatchAndLike({
     "Amazon Prime Video": "/Prime1.svg",
     "Disney Plus": "/Disney1.svg",
     "Tele2 Play": "/tele2play.png",
-    "Apple TV": "/AppleTV1.svg",
+    "Apple TV": "/AppleTv.svg",
     SVT: "/SVTPlay.svg",
     TV4Play: "/TV4Play.svg",
     "Discovery+": "/Discovery+.svg",
