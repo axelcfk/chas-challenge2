@@ -15,7 +15,7 @@ export default function WatchListForProfile({ profilePage }) {
 
   async function fetchWatchAndLikeList() {
     try {
-      const response = await fetch(`${host}/me/watchandlikelists`, {
+      const response = await fetch(`${host}/watchandlikelists`, { // TODO: ändra till /me/watchandlikelists och POST för user-specific lists...
         method: "GET",
         headers: {
           "Content-Type": "application/json",

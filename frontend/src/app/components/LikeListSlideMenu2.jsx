@@ -21,7 +21,7 @@ export default function LikeListSlideMenu2() {
 
   async function fetchWatchAndLikeList() {
     try {
-      //const tokenStorage = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
       //setToken(tokenStorage);
       /* console.log(
         "fetched localStorage token for Account data: ",
@@ -29,10 +29,14 @@ export default function LikeListSlideMenu2() {
       ); */
       const response = await fetch(`${host}/me/watchandlikelists`, {
         // users sidan på backend! dvs inte riktiga sidan!
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
+        }, 
+        body: JSON.stringify({
+          token: token,
+          //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
+        }),
       });
 
       const data = await response.json();

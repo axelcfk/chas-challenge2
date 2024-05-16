@@ -5,6 +5,10 @@ import SlideMenu from "./SlideMenu";
 import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 
 export default function WatchListSlideMenu2() {
+
+  //const [token, setToken] = useState(tokenStorage)
+
+
   const [movieWatchList, setMovieWatchList] = useState([]);
   const [listsFetched, setListsFetched] = useState(false);
   // const [likedSeriesList, setLikedSeriesList] = useState(null);
@@ -20,6 +24,8 @@ export default function WatchListSlideMenu2() {
 
   async function fetchWatchAndLikeList() {
     try {
+      const token = localStorage.getItem("token");
+
       //const tokenStorage = localStorage.getItem("token");
       //setToken(tokenStorage);
       /* console.log(
@@ -28,10 +34,14 @@ export default function WatchListSlideMenu2() {
       ); */
       const response = await fetch(`${host}/me/watchandlikelists`, {
         // users sidan på backend! dvs inte riktiga sidan!
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          token: token,
+          //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
+        }),
       });
 
       const data = await response.json();
