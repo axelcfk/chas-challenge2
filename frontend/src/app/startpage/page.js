@@ -12,7 +12,6 @@ import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
 import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 import WatchListSlideMenu2 from "../components/WatchListSlideMenu2";
 import MovieCardWatchAndLike from "../components/MovieCardWatchAndLike";
-import PopularSlideMenu from "../components/PopularSlideMenu";
 import PopularSlideMenu2 from "../components/PopularSlideMenu2";
 
 //TODO: texten i rutan ska var lite större

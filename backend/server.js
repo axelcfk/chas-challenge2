@@ -1947,3 +1947,64 @@ app.get("/me/lists/:listId", (req, res) => {
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+// Temporarily storing seen movies
+let seenMoviesList = [];
+//endpoint to add a movie to the seen list
+app.post("/me/seenlists/addtoseenlist", async (req, res) => {
+  try {
+    const { id, title } = req.body;
+
+    if (!id || !title) {
+      return res
+        .status(400)
+        .json({ error: "Movie ID and title are required." });
+    }
+
+    const idExistsInSeen = seenMoviesList.some(
+      (seenMovie) => seenMovie.id === id
+    );
+
+    if (idExistsInSeen) {
+      return res
+        .status(200)
+        .json({ message: "Movie is already in seen list." });
+    }
+
+    seenMoviesList.push({ id, title });
+    console.log(`Added movie ID ${id} with title "${title}" to seen list`);
+
+    res.status(201).json({ message: "Movie added to seen list successfully" });
+  } catch (error) {
+    console.error("Error adding movie to seen list:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//remove a movie from the seen list
+app.post("/me/seenlists/removefromseenlist", async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "Movie ID is required." });
+    }
+
+    seenMoviesList = seenMoviesList.filter((movie) => movie.id !== id);
+    console.log(`Removed movie ID ${id} from seen list`);
+
+    res.status(200).json({ message: "Movie removed from seen list successfully" });
+  } catch (error) {
+    console.error("Error removing movie from seen list:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+//retrieve the seen movies list
+app.get("/me/seenlists", (req, res) => {
+  res.status(200).json({
+    message: "Seen movies list retrieved successfully",
+    seenMoviesList: seenMoviesList,
+  });
+});

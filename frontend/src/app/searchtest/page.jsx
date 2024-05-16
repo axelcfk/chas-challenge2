@@ -120,10 +120,29 @@ function MovieSearch() {
     filteredMovies.forEach((movie) => {
       fetchMovieProviders(movie.id);
     });
+
+
   }, [fetchStreamService]); // ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
   // }, [inputValue]);
 
-  console.log(movieProviders);
+  //console.log(movieProviders);
+
+  const [filteredMoviesAndProviders, setFilteredMoviesAndProviders] = useState([]);
+  
+  if (movieProviders.length === 20) {
+    movieProviders.map((movie) => {
+      if (movie.providers.flatrate) {
+        console.log("flatrates of movie ID ", movie.movieId ,": ", movie.providers.flatrate);
+
+
+      } else if (!movie.providers.flatrate) {
+        console.log("no providers for movie ID ", movie.movieId ,": ", movie.providers.noProviders);
+
+      }
+    })
+  }
+
+  console.log("filteredmovies: ", filteredMovies);
 
   return (
     <div className="relative ">
@@ -181,6 +200,17 @@ function MovieSearch() {
                   alt={movie.title}
                   className="w-10 h-10 mr-2"
                 />
+                {movieProviders && movieProviders.map((movieProviderObj) => {
+                  return( 
+                    <div>
+                      {movieProviderObj.movieId === movie.id && movieProviderObj.providers.noProviders && (<p>{movieProviderObj.providers.noProviders}</p>)}
+
+                      {movieProviderObj.movieId === movie.id && movieProviderObj.providers.flatrate && (<p>{movieProviderObj.providers.flatrate[0].provider_name}</p>)}
+
+                    </div>
+                    )
+                  
+                })}
                 {movie.title}
               </Link>
             </li>

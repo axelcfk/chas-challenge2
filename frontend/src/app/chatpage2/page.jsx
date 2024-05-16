@@ -1,26 +1,20 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { postMovieToDatabase } from "../utils";
-
 import AutoQuery from "./autoQuery";
 import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
-// import BackButton from "../components/BackButton";
 
 const streamingServiceLinks = {
-  Netflix: "https://www.netflix.com/se", //funkar
+  Netflix: "https://www.netflix.com/se",
   HBOMax: "https://www.hbo.com/se",
-  Viaplay: "https://www.viaplay.com/se", //funkar
-  "Amazon Prime Video": "https://www.primevideo.com/", //funkar
+  Viaplay: "https://www.viaplay.com/se",
+  "Amazon Prime Video": "https://www.primevideo.com/",
   "Disney+": "https://www.disneyplus.com/se",
 };
 
-// Kolla om filmen är tillgänglig på en av de streaming-tjänsterna vi "stödjer" på vår sida
-// (annars ersätter "not available" t.ex. Hoopla, Cinemax, Showtime Apple TV, FXNow, fuboTV, som vi
-// inte känner till)
 const isAvailableOnSupportedServices = (streaming) => {
   const supportedServices = [
     { name: "Netflix", logo: "/netflix.svg" },
@@ -31,7 +25,9 @@ const isAvailableOnSupportedServices = (streaming) => {
     { name: "Tele2Play", logo: "/tele2play.png" },
   ];
   return streaming?.flatrate?.some((provider) =>
-    supportedServices.includes(provider.provider_name)
+    supportedServices
+      .map((service) => service.name)
+      .includes(provider.provider_name)
   );
 };
 
@@ -65,9 +61,20 @@ export default function ChatPage2() {
   const handleQuerySubmit = async () => {
     setLoading(true);
     setMovies([]);
-    // setInput("");
     setShowVideo(true);
     changeSpeed(5);
+
+    // Check localStorage for cached data
+    const cachedData = JSON.parse(localStorage.getItem("latestSearch"));
+    console.log("Cached Data from localStorage:", cachedData);
+
+    if (cachedData && cachedData.input === input) {
+      setMovies(cachedData.movies);
+      console.log("Using cached movies:", cachedData.movies);
+      setLoading(false);
+      setShowVideo(false);
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:3010/moviesuggest2", {
@@ -78,16 +85,22 @@ export default function ChatPage2() {
       const data = await response.json();
 
       if (data.movieNames && data.movieNames.length > 0) {
-        console.log("Received Movie Names:", data.movieNames);
-
-        //Spara resultat i localstorage
+        // Store the movie names in localStorage without extra quotes
+        const sanitizedMovieNames = data.movieNames.map((name) =>
+          name.replace(/^"|"$/g, "")
+        );
         localStorage.setItem(
           "latestSearch",
-          JSON.stringify({ movies: data.movieNames, input })
+          JSON.stringify({ movies: sanitizedMovieNames, input })
         );
+        console.log("Saving to localStorage:", {
+          movies: sanitizedMovieNames,
+          input,
+        });
 
         setTimeout(() => {
-          setMovies(data.movieNames);
+          setMovies(sanitizedMovieNames);
+          console.log("Fetched movie names:", sanitizedMovieNames);
           setLoading(false);
           setErrorMessage("");
           setShowVideo(false);
@@ -108,24 +121,6 @@ export default function ChatPage2() {
     }
   };
 
-  //hämta resultat i loclstorage
-  // useEffect(() => {
-  //   if (pathname === "/startpage") {
-  //     localStorage.removeItem("latestSearch");
-  //     setMovies([]);
-  //     setInput("");
-  //   }
-
-  //   const savedSearch = localStorage.getItem("latestSearch");
-  //   if (savedSearch) {
-  //     const { movies, input } = JSON.parse(savedSearch);
-  //     setMovies(movies);
-  //     setInput(input);
-  //   }
-  // }, [pathname]);
-
-  // console.log(movies);
-
   useEffect(() => {
     async function fetchAllMovieDetails() {
       const allMovieDetails = await Promise.all(
@@ -144,18 +139,25 @@ export default function ChatPage2() {
               const detailsData = await detailsResponse.json();
               const streamingData = await fetchStreamingServices(movieId);
               await postMovieToDatabase(detailsData);
-              // TODO: post streaming data into database as well?
               const posterPath = detailsData.poster_path;
               const posterUrl = posterPath
                 ? `https://image.tmdb.org/t/p/w500${posterPath}`
                 : null;
+              console.log("Fetched movie details:", {
+                title: detailsData.title,
+                id: movieId,
+                poster: posterUrl,
+                overview: detailsData.overview,
+                voteAverage: detailsData.vote_average,
+                streaming: streamingData.SE,
+              });
               return {
                 title: detailsData.title,
                 id: movieId,
                 poster: posterUrl,
                 overview: detailsData.overview,
                 voteAverage: detailsData.vote_average,
-                streaming: streamingData.SE, // Hämtar providers utifrån SE region
+                streaming: streamingData.SE,
               };
             }
           } catch (error) {
@@ -175,6 +177,7 @@ export default function ChatPage2() {
         `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
       );
       const data = await response.json();
+      console.log("Fetched streaming services:", data.results);
       return data.results;
     } catch (error) {
       console.error("Error fetching streaming services:", error);
@@ -183,30 +186,18 @@ export default function ChatPage2() {
   }
 
   useEffect(() => {
-    //setLoading(true);
-
     const fetchMovieDetails = async () => {
       if (movieDetails.idFromAPI) {
-        console.log("Fetching movie details for ID:", movieDetails.idFromAPI);
         try {
-          // TODO: kolla först om filmen redan finns i våran databas, annars fetcha ifrån APIt OCH spara film till våran databas
-
           const url = `https://api.themoviedb.org/3/movie/${movieDetails.idFromAPI}?api_key=${movieAPI_KEY}`;
           const response = await fetch(url);
           const data = await response.json();
-          console.log("fetched movie details data: ", data);
-          console.log(data.vote_average);
-
           await postMovieToDatabase(data);
-
-          /* if (!responseBackend.ok) {
-              throw new Error("Failed to fetch 'addmovietodatabase' POST");
-            } */
 
           if (data.title) {
             setMovieDetails({
               ...movieDetails,
-              titleFromAPI: data.title, // om vi inte redan gjort detta via ChatGpts response
+              titleFromAPI: data.title,
               overview: data.overview,
               voteAverage: data.vote_average,
               release: data.release_date,
@@ -215,6 +206,7 @@ export default function ChatPage2() {
               backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
             });
+            console.log("Fetched movie details for ID:", data);
           } else {
             console.error("No movie found with the given ID");
           }
@@ -227,22 +219,34 @@ export default function ChatPage2() {
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
 
+  // Clear localStorage when visiting /startpage
+  useEffect(() => {
+    console.log("Current pathname is", pathname);
+    if (pathname === "/startpage") {
+      console.log("Clearing localStorage");
+      localStorage.removeItem("latestSearch");
+    }
+  }, [pathname]);
+
+  // Log localStorage on mount
+  useEffect(() => {
+    console.log("Initial localStorage:", localStorage);
+  }, []);
+
   return (
-    <div className=" flex flex-col justify-center items-center md:items-start px-5 md:px-20 text-slate-100 z-0 pb-5 ">
-      {/* <button onClick={handleNavigation}>Go Back</button> */}
-      {/* <BackButton /> */}
+    <div className="flex flex-col justify-center items-center md:items-start px-5 md:px-20 text-slate-100 z-0 pb-5">
       {errorMessage && !loading && (
-        <div className="  h-full flex justify-center items-center ">
+        <div className="h-full flex justify-center items-center">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
       {showVideo && movies.length < 2 && (
         <div
-          className={` md:w-full flex flex-col justify-center items-center h-full   `}
+          className={`md:w-full flex flex-col justify-center items-center h-full`}
         >
           <div className="relative h-96 flex justify-center items-center">
             <video
-              className="md:w-1/3 w-2/3 transform  rounded-full z-10"
+              className="md:w-1/3 w-2/3 transform rounded-full z-10"
               ref={videoRef}
               autoPlay
               loop
@@ -253,18 +257,15 @@ export default function ChatPage2() {
             </video>
             <div className="video-gradient-overlay"></div>
           </div>
-
           {!loading ? (
-            <p className="px-5 text-xl flex flex-col items-center  h-24 ">
-              {" "}
+            <p className="px-5 text-xl flex flex-col items-center h-24">
               <span className="mb-4 text-2xl font-semibold text-center">
                 I'm your AI movie matcher
-              </span>{" "}
+              </span>
             </p>
           ) : (
-            <div className="h-full flex justify-center items-center ">
-              <p className="px-5 text-xl flex flex-col items-center  h-24 ">
-                {" "}
+            <div className="h-full flex justify-center items-center">
+              <p className="px-5 text-xl flex flex-col items-center h-24">
                 <span className="mb-4 text-2xl font-semibold text-center">
                   Finding the best match for you...
                 </span>
@@ -275,7 +276,7 @@ export default function ChatPage2() {
       )}
 
       {movies.length === 6 && (
-        <div className=" h-full w-full ">
+        <div className="h-full w-full">
           <div className="sticky inset-x-0 top-4 w-full z-10">
             <InputField
               input={input}
@@ -295,7 +296,7 @@ export default function ChatPage2() {
         </div>
       )}
 
-      {!loading && movies < 2 ? (
+      {!loading && movies.length < 2 ? (
         <>
           <div className="sticky inset-x-0 bottom-20 w-full">
             <AutoQuery input={input} setInput={setInput} />

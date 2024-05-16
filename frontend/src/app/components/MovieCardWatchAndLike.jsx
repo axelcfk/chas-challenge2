@@ -47,7 +47,7 @@ export default function MovieCardWatchAndLike({
     "Amazon Prime Video": "/Prime1.svg",
     "Disney Plus": "/Disney1.svg",
     "Tele2 Play": "/tele2play.png",
-    "Apple TV": "/AppleTV1.svg",
+    "Apple TV": "/AppleTv.svg",
     SVT: "/SVTPlay.svg",
     TV4Play: "/TV4Play.svg",
     "Discovery+": "/Discovery+.svg",
@@ -55,7 +55,7 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className={`inline-block mx-1 rounded-lg ${className}`}
+      className={`inline-block mx-1 rounded-2xl ${className}`}
       style={{ border: profilePage ? "none" : "0.5px solid grey" }}
     >
       <div className=" h-full w-full flex flex-col justify-center">
@@ -110,9 +110,9 @@ export default function MovieCardWatchAndLike({
             </p>
           )}
           <div className="w-full ">
-            <h2 className="px-2 h-20 text-wrap">{title}</h2>
+            <h2 className="px-2 h-14 text-wrap">{title}</h2>
           </div>
-          <div className="h-10 flex px-2">
+          <div className="h-8 flex px-2">
             {streamingServices &&
               streamingServices.map((streamingService, index) => {
                 return (
@@ -125,7 +125,7 @@ export default function MovieCardWatchAndLike({
                 );
               })}
           </div>
-          <div className="mt-4 px-2">
+          <div className="mt-4 px-4 ">
             <button
               onClick={() => {
                 handleButtonClicked(id); // Toggles like state
@@ -135,7 +135,7 @@ export default function MovieCardWatchAndLike({
                   postRemoveFromWatchList(id, "movie", title); // Removes from like list if liked
                 }
               }}
-              className={`w-full h-10 bg-inherit border border-solid ${
+              className={`w-full h-8 bg-inherit border border-solid mb-4 ${
                 !watched
                   ? "border-[#3D3B8E]"
                   : profilePage

@@ -57,7 +57,7 @@ export default function MoviePage() {
     "Amazon Prime Video": "/PrimeVideo.svg",
     "Disney Plus": "/Disney2.webp",
     "Tele2 Play": "/tele2play.png",
-    "Apple TV": "/AppleTV1.svg",
+    "Apple TV": "/AppleTv.svg",
     SVT: "/SVTPlay.svg",
     TV4Play: "/TV4Play.svg",
     "Discovery+": "/Discovery+.svg",

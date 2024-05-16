@@ -3,7 +3,22 @@ import Link from "next/link";
 export default function SlideMenu({ children }) {
   return (
     <div className="flex max-w-full">
-      <div className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth">
+      <div className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth removeScrollbar "
+      >
+        <style>
+      {`
+        @media (min-width: 459px) {
+          .removeScrollbar::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+          }
+          .removeScrollbar {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+          }
+        }
+      
+      `}
+    </style>
         {children}
       </div>
     </div>

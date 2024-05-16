@@ -104,7 +104,10 @@ export default function PopularSlideMenu2() {
   }, [popularMoviesData]);
 
 
-  console.log(popularListDetails);
+  if (popularListDetails.length === 20) {
+
+    console.log(popularListDetails);
+  }
 
   if (popularListDetails.length === 0) {
     return (
