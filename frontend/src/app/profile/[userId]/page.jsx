@@ -8,8 +8,11 @@ import WatchListForProfile from "@/app/components/WatchListForProfile";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
+  const [userLists, setUserLists] = useState([]);
+  const [newListName, setNewListNane] = useState("");
   //standard menyn som visas när man besöker sidan är "profile"
   const [activeTab, setActiveTab] = useState("Profile");
+  const [loadingLists, setLoadingLists] = useState(true);
   const router = useRouter();
 
   const tabNames = ["Profile", "Watchlist", "My lists"];
@@ -43,11 +46,47 @@ export default function Profile() {
 
   console.log("second userdata: ", userData);
 
+  useEffect(() => {
+    const fetchUserLists = async () => {
+      setLoadingLists(true);
+      try {
+        const response = await fetch("http://localhost:3010/me/lists");
+        const data = await response.json();
+        setUserLists(data);
+        console.log("Fetcheded user lists:", data);
+      } catch (error) {
+        console.error("Failed to fetch user lists", error);
+      } finally {
+        setLoadingLists(false);
+      }
+    };
+
+    fetchUserLists();
+  }, []);
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
-
+  const handleCreateNewList = async () => {
+    try {
+      const response = await fetch(`http://localhost:3010/me/lists/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newListName, movieId: null }), // Ingen initial film
+      });
+      const data = await response.json();
+      setUserLists([
+        ...userLists,
+        { id: data.listId, name: newListName, movies: [] },
+      ]);
+      setNewListName("");
+    } catch (error) {
+      console.error("Failed to create new list:", error);
+    }
+  };
 
   return (
     <main>
@@ -68,16 +107,17 @@ export default function Profile() {
           <button
             key={tab}
             onClick={() => handleTabClick(tab)}
-            className={`text-white border-none hover:cursor-pointer h-16 w-28 ${activeTab === tab ? 'active-tab' : 'bg-transparent'
-          }`} 
+            className={`text-white border-none hover:cursor-pointer h-16 w-28 ${
+              activeTab === tab ? "active-tab" : "bg-transparent"
+            }`}
           >
             <h4>{tab}</h4>
           </button>
         ))}
       </div>
-      <div 
-      className="tabs-container" 
-      style={{ transform: `translateX(${tabIndex * -100}%)`}}
+      <div
+        className="tabs-container"
+        style={{ transform: `translateX(${tabIndex * -100}%)` }}
       ></div>
       {activeTab === "Profile" && (
         <div className="gradient-border-top bg-[#201430] p-8 mt-8">
@@ -118,13 +158,47 @@ export default function Profile() {
       {activeTab === "Watchlist" && (
         <div className="gradient-border-top bg-[#201430] p-8 mt-8">
           <div classame="py-8 ">
-          <WatchListForProfile profilePage={true}/>
+            <WatchListForProfile profilePage={true} />
           </div>
         </div>
       )}
       {activeTab === "My lists" && (
         <div className="gradient-border-top bg-[#201430] p-8 mt-8">
-          <button className="py-8">Create new list</button>
+          <div className="py-8">
+            <button
+              onClick={handleCreateNewList}
+              className="py-2 px-4 bg-blue-500 text-white rounded"
+            >
+              Create new list
+            </button>
+            {loadingLists ? (
+              <p>Loading lists...</p>
+            ) : (
+              <div className="mt-4">
+                {userLists.length === 0 ? (
+                  <p>No lists created</p>
+                ) : (
+                  userLists.map((list) => (
+                    <div key={list.id} className="my-4">
+                      <h4 className="text-lg font-bold">{list.name}</h4>
+                      {list.movies.length === 0 ? (
+                        <p>No movies in this list</p>
+                      ) : (
+                        <SlideMenu>
+                          {list.movies.map((movieId) => (
+                            <SlideMenuMovieCard
+                              key={movieId}
+                              movieId={movieId}
+                            />
+                          ))}
+                        </SlideMenu>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </main>

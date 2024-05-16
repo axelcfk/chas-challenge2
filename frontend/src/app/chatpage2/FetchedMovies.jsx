@@ -252,7 +252,7 @@ export default function FetchedMovies({
                     )}
                     {!watches[movie.id] ? (
                       <span className="pl-2 w-full text-sm font-light text-gray-200">
-                        ADD TO LIST
+                        ADD TO WATCHLIST
                       </span>
                     ) : (
                       <span className="pl-2 w-full text-sm font-light text-gray-200">
@@ -260,6 +260,7 @@ export default function FetchedMovies({
                       </span>
                     )}
                   </button>
+              
                 </div>
               </div>
             </div>
