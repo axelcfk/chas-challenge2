@@ -319,43 +319,43 @@ export default function MoviePage() {
         ))
     : null;
 
-  const handleAddMovieToList = async (listId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3010/me/lists/add/${listId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ movieId: movieDetails.id }),
-        }
-      );
-      const data = await response.json();
-      console.log(data.message);
-    } catch (error) {
-      console.error("Failed to add movie to list:", error);
-    }
-    handleCloseModal();
-  };
+  // const handleAddMovieToList = async (listId) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3010/me/lists/add/${listId}`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ movieId: movieDetails.id }),
+  //       }
+  //     );
+  //     const data = await response.json();
+  //     console.log(data.message);
+  //   } catch (error) {
+  //     console.error("Failed to add movie to list:", error);
+  //   }
+  //   handleCloseModal();
+  // };
 
-  const handleCreateNewList = async () => {
-    try {
-      const response = await fetch(`http://localhost:3010/me/lists/new`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
-      });
-      const data = await response.json();
-      setUserLists([...userLists, { id: data.listId, name: newListName }]);
-      setNewListName("");
-    } catch (error) {
-      console.error("Failed to create new list:", error);
-    }
-    handleCloseModal();
-  };
+  // const handleCreateNewList = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:3010/me/lists/new`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
+  //     });
+  //     const data = await response.json();
+  //     setUserLists([...userLists, { id: data.listId, name: newListName }]);
+  //     setNewListName("");
+  //   } catch (error) {
+  //     console.error("Failed to create new list:", error);
+  //   }
+  //   handleCloseModal();
+  // };
 
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
