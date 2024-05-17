@@ -16,6 +16,8 @@ export default function PopularSlideMenu2() {
   async function fetchPopularMoviesAndDetailsFromTMDB() {
     try {
       const token = localStorage.getItem("token");
+
+      console.log("token: ", token);
       //setToken(tokenStorage);
       /* console.log(
         "fetched localStorage token for Account data: ",

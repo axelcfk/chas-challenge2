@@ -29,7 +29,7 @@ const pool = mysql.createPool({
   user: "root",
   password: "root",
   database: "movie-app",
-  port: 8889,
+  port: 3306,
   //port: 3306,
   //port: 8889 || 3306,
 });
@@ -571,16 +571,21 @@ const fetchPopularMovies = async () => {
 };
 
 async function checkIfLiked(movieId, currentUserId) {
+    let isLiked = false;
+
 
 
     // before likedMoviesList is in mySQL:
-    const userLikedMoviesList = likedMoviesList.find((list) => {
+    const userLikedMoviesList = likedMoviesList.find((list) => { // go through the lists (one likelist per user)
       return list.userId === currentUserId;
     }); 
 
-    if (userLikedMoviesList == null) {
-      console.log("CheckIfLiked function failed finding likedMoviesList of user id: ", currentUserId);
-      return res.status(500).send("CheckIfLiked function failed finding user's likedMoviesList");
+    if (!userLikedMoviesList) {
+      console.log("Empty like list or CheckIfLiked function failed finding likedMoviesList of user id: ", currentUserId);
+
+
+      //return res.status(500).send("CheckIfLiked function failed finding user's likedMoviesList");
+      return isLiked;
     } else {
       //continue code...
     }
@@ -593,7 +598,6 @@ async function checkIfLiked(movieId, currentUserId) {
     });
   } */
 
-  let isLiked = false;
   if (userLikedMoviesList && userLikedMoviesList.myLikedMoviesList.length > 0) {
     isLiked = userLikedMoviesList.myLikedMoviesList.some((likedMovie) => {
       return likedMovie.id === movieId;
@@ -606,15 +610,19 @@ async function checkIfLiked(movieId, currentUserId) {
 }
 
 async function checkIfWatchListed(movieId, currentUserId) {
+  let isInWatchList = false;
+
 
   const userMoviesWatchList = movieWatchList.find((list) => {
     return list.userId === currentUserId;
   }); 
 
 
-  if (userMoviesWatchList == null) {
-    console.log("checkIfWatchListed function failed finding userMoviesWatchList of user id: ", currentUserId);
-    return res.status(500).send("checkIfWatchListed function failed finding user's movieWatchList");
+  if (!userMoviesWatchList) {
+    console.log("Empty watchlist or checkIfWatchListed function failed finding userMoviesWatchList of user id: ", currentUserId);
+    //return res.status(500).send("checkIfWatchListed function failed finding user's movieWatchList");
+
+    return isInWatchList;
   } else {
     //continue code...
     console.log("userMoviesWatchList: ", userMoviesWatchList);
@@ -622,7 +630,6 @@ async function checkIfWatchListed(movieId, currentUserId) {
 
 
 
-  let isInWatchList = false;
   if (userMoviesWatchList && userMoviesWatchList.myMovieWatchList.length > 0) {
     isInWatchList = userMoviesWatchList.myMovieWatchList.some((watchListedMovie) => {
       return watchListedMovie.id === movieId;
@@ -641,21 +648,37 @@ app.post("/popularmovies", async (req, res) => {
 
     const {token} = req.body;
 
+    console.log("token: ", token);
+
     let sessionSearchResult;
+
+    let loggedIn;
     try {
       // use the token to find the current session (user_id that is logged in)
       sessionSearchResult = await query(
         "SELECT * FROM sessions WHERE token = ?",
         [token]
       );
-    } catch (error) {
-      console.error("2:Error finding session", error);
-      return res.status(500).send("2:Error finding session");
-    }
-    const currentSession = sessionSearchResult[0]
-    const currentUserId = currentSession.user_id;
+      console.log("sessionSearchResult: ", sessionSearchResult);
 
-    
+    } catch (error) {
+      loggedIn = false;
+      console.log("Not logged in or Error finding session", error);
+    }
+
+    let currentSession;
+    let currentUserId;
+    if (sessionSearchResult.length === 0) {
+      loggedIn = false;
+      
+    } else  {
+      currentSession = sessionSearchResult[0]
+      currentUserId = currentSession.user_id;
+      loggedIn = true;
+     // loggedIn = false;
+    }
+    //return res.status(500).send("2:Error finding session");
+
 
     const popularMovies = await fetchPopularMovies();
 
@@ -695,9 +718,17 @@ app.post("/popularmovies", async (req, res) => {
         }
 
         //console.log("streaming providers of movie id ", movie.id, ": ", movieProvidersObject);
+        let isLiked;
+        let isInWatchList;
+        if (loggedIn) {
 
-        const isLiked = await checkIfLiked(movie.id, currentUserId)
-        const isInWatchList = await checkIfWatchListed(movie.id, currentUserId) // TODO: check currentUserId !!!
+          isLiked = await checkIfLiked(movie.id, currentUserId)
+          isInWatchList = await checkIfWatchListed(movie.id, currentUserId) // TODO: check currentUserId !!!
+        } else {
+          console.log("Not online so will NOT check like and watchlist ");
+          isLiked = false;
+          isInWatchList = false;
+        }
       
         
         if (movieProvidersObject) {
@@ -1025,7 +1056,7 @@ app.post("/me/watchandlikelists", async (req, res) => {
     }); 
 
     if (userLikedMoviesList == null) {
-      console.log("Couldn't find likelist of user id: ", currentSession.user_id);
+      console.log("1:Couldn't find likelist of user id: ", currentSession.user_id);
       return res.status(500).send("Error finding user's likedMoviesList");
     } else {
       //continue code...
