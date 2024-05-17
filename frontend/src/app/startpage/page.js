@@ -151,7 +151,7 @@ export default function Startpage() {
         </div>
 
         <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase"> Watchlist</h2>
+          <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase"> Likelist (REMOVE, just testing)</h2>
           <div className="w-full pl-4 md:pl-0 ">
             <LikeListSlideMenu2 />
           </div>
