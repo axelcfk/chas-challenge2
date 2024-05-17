@@ -188,33 +188,33 @@ export default function Mix() {
   return (
     <div className="bg-[#29274C] h-screen p-8">
       {/* <Navbar></Navbar> */}
-      <div className="border border-white">Navbar</div>
-      <div className="h-full flex flex-col items-center">
-        <div className="bg-[#110A19] rounded-3xl p-6 w-full mx-2 flex justify-between items-center" style={{ maxWidth: 'calc(100% - 16px)' }}>
-          <div className="flex flex-col justify-center">
-            <h1 className="text-white font-light text-xl">{mixTitle} mix</h1>
-            <button
-              className="bg-slate-100 w-40 h-10 rounded-full font-semibold hover:cursor-pointer border-none mt-4"
-              onClick={getGenerateDailyMixFromGPT}
-            >
-              Generate with AI
-            </button>
-          </div>
-          <img
-            className="h-64 -mt-16 -mr-4 z-10"
-            src="/image.png"
-            alt="AI"
-          />
-        </div>
+      
+      <div className="h-full flex flex-col items-center pt-8">
+
+      <div className="bg-[#110A19] rounded-3xl p-6 w-3/4 flex justify-between items-center">
+  <div className="flex flex-col justify-center items-center">
+    <h1 className="text-white font-light text-xl mb-2">{mixTitle} mix</h1>
+    <button
+      className="bg-slate-100 w-40 h-10 rounded-full font-semibold border-none mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer"
+      onClick={getGenerateDailyMixFromGPT}
+    >
+      Generate with AI
+    </button>
+  </div>
+  <img className="h-64 -mt-16 -mr-4 z-10" src="/image.png" alt="AI" />
+</div>
+
+
+
+
 
         <div className="bg-[#110A19] rounded-3xl min-h-full pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0 mt-8 w-full">
           <div className="flex w-full justify-end items-center">
-            {" "}
             {/* pr-8 here moves it outside screen? */}
             {/*  <FaCheck className="text-2xl text-gray-200" /> */}
             <button className="text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-inherit rounded-lg border-2 border-solid border-[#FF506C] hover:border-white">
               <FaPlus className="text-2xl text-white" /> Save List
-            </button>{" "}
+            </button>
             {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
           </div>
 
@@ -264,4 +264,3 @@ export default function Mix() {
     </div>
   );
 }
-
