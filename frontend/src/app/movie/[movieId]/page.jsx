@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
+import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar, FaEye, FaEyeSlash } from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
@@ -24,7 +24,7 @@ export default function MoviePage() {
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
-  // const [seen, setSeen] = useState(false);
+  const [seen, setSeen] = useState({});
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
   const [actorImages, setActorImages] = useState({});
@@ -319,6 +319,44 @@ export default function MoviePage() {
         ))
     : null;
 
+  const handleAddMovieToList = async (listId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3010/me/lists/add/${listId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ movieId: movieDetails.id }),
+        }
+      );
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error("Failed to add movie to list:", error);
+    }
+    handleCloseModal();
+  };
+
+  const handleCreateNewList = async () => {
+    try {
+      const response = await fetch(`http://localhost:3010/me/lists/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
+      });
+      const data = await response.json();
+      setUserLists([...userLists, { id: data.listId, name: newListName }]);
+      setNewListName("");
+    } catch (error) {
+      console.error("Failed to create new list:", error);
+    }
+    handleCloseModal();
+  };
+
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
       {/* <BackButton /> */}
@@ -490,25 +528,12 @@ export default function MoviePage() {
                           </p>
                         )}
                       </button>
-                      {dropdownOpen && (
-                        <div className="bg-[#3D3B8E] rounded-lg shadow-lg py-2 mt-2 w-full">
-                          <div
-                            className="px-4 py-2 hover:bg-[#5755d9] cursor-pointer"
-                            onClick={handleOpenModal}
-                          >
-                            Create New List
-                          </div>
-                          {userLists.map((list) => (
-                            <div
-                              key={list.id}
-                              className="px-4 py-2 hover:bg-[#5755d9] cursor-pointer"
-                              onClick={() => handleAddMovieToList(list.id)}
-                            >
-                              {list.name}
-                            </div>
-                          ))}
-                        </div>
-                      )}
+
+                      {/* <div
+                        className={`w-40 -mt-5  bg-[#3D3B8E] flex justify-center items-center rounded-b-xl border-none  ${
+                          isModalOpen ? "h-40" : "h-0"
+                        }`}
+                      ></div> */}
                     </div>
                   </div>
                 </div>

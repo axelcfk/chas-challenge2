@@ -29,7 +29,8 @@ function MovieSearch() {
       )
         .then((response) => response.json())
         .then((data) => {
-          setMovies(data.results);
+          const slicedResults = data.results.slice(0, 10);
+          setMovies(slicedResults);
         })
         .catch((error) => console.error("Error fetching data:", error));
     }
@@ -103,6 +104,10 @@ function MovieSearch() {
     setMovies([]);
   };
 
+  const handleCloseLinkClick = () => {
+    handleClose(); // Call the handleClose function to close the search list
+  };
+
   // Filter movies based on rating
   const filteredMovies = movies.filter((movie) => {
     if (ratingFilter === "All") {
@@ -117,32 +122,40 @@ function MovieSearch() {
   });
 
   useEffect(() => {
-    filteredMovies.forEach((movie) => {
-      fetchMovieProviders(movie.id);
-    });
-
-
-  }, [fetchStreamService]); // ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
+    if (fetchStreamService) {
+      // Clear previous providers
+      setMovieProviders([]);
+      // Fetch providers for each filtered movie
+      filteredMovies.forEach((movie) => {
+        fetchMovieProviders(movie.id);
+      });
+      // Reset fetchStreamService to false after fetching providers
+      setFetchStreamService(false);
+    }
+  }, [fetchStreamService, filteredMovies]); // ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
   // }, [inputValue]);
 
   //console.log(movieProviders);
 
-  const [filteredMoviesAndProviders, setFilteredMoviesAndProviders] = useState([]);
-  
   if (movieProviders.length === 20) {
     movieProviders.map((movie) => {
       if (movie.providers.flatrate) {
-        console.log("flatrates of movie ID ", movie.movieId ,": ", movie.providers.flatrate);
-
-
+        console.log(
+          "flatrates of movie ID ",
+          movie.movieId,
+          ": ",
+          movie.providers.flatrate
+        );
       } else if (!movie.providers.flatrate) {
-        console.log("no providers for movie ID ", movie.movieId ,": ", movie.providers.noProviders);
-
+        console.log(
+          "no providers for movie ID ",
+          movie.movieId,
+          ": ",
+          movie.providers.noProviders
+        );
       }
-    })
+    });
   }
-
-  console.log("filteredmovies: ", filteredMovies);
 
   return (
     <div className="relative ">
@@ -178,39 +191,59 @@ function MovieSearch() {
           )}
 
           {isSearching && (
-            <RatingFilter // Rating filter component
-              ratingFilter={ratingFilter}
-              setRatingFilter={setRatingFilter}
-            />
+            <>
+              <RatingFilter // Rating filter component
+                ratingFilter={ratingFilter}
+                setRatingFilter={setRatingFilter}
+              />
+              <button
+                type="button"
+                className="text-gray-500 rounded-s bg-deep-purple px-1 py-1.5 hover:bg-lighter-purple cursor-pointer border border-solid border-gray-500 focus:border-gray-500 focus:outline-none"
+                onClick={() => (
+                  setMovieProviders([]), setFetchStreamService(true)
+                )}
+              >
+                stream
+              </button>
+            </>
           )}
-
-          <button onClick={() => setFetchStreamService(true)}>stream</button>
         </div>
       </form>
       {movies.length > 0 && (
-        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full">
+        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full max-h-[500px] overflow-y-scroll">
           {filteredMovies.map((movie) => (
             <li className="list-none p-2 hover:bg-gray-200" key={movie.id}>
               <Link
                 className="text-black no-underline hover:underline"
                 href={`/movie/${encodeURIComponent(movie.id)}`}
+                onClick={handleCloseLinkClick} /* Add onClick handler */
               >
                 <img
                   src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                   alt={movie.title}
                   className="w-10 h-10 mr-2"
                 />
-                {movieProviders && movieProviders.map((movieProviderObj) => {
-                  return( 
-                    <div>
-                      {movieProviderObj.movieId === movie.id && movieProviderObj.providers.noProviders && (<p>{movieProviderObj.providers.noProviders}</p>)}
+                {movieProviders &&
+                  movieProviders.map((movieProviderObj) => {
+                    return (
+                      <div>
+                        {movieProviderObj.movieId === movie.id &&
+                          movieProviderObj.providers.noProviders && (
+                            <p>{movieProviderObj.providers.noProviders}</p>
+                          )}
 
-                      {movieProviderObj.movieId === movie.id && movieProviderObj.providers.flatrate && (<p>{movieProviderObj.providers.flatrate[0].provider_name}</p>)}
-
-                    </div>
-                    )
-                  
-                })}
+                        {movieProviderObj.movieId === movie.id &&
+                          movieProviderObj.providers.flatrate && (
+                            <p>
+                              {
+                                movieProviderObj.providers.flatrate[0]
+                                  .provider_name
+                              }
+                            </p>
+                          )}
+                      </div>
+                    );
+                  })}
                 {movie.title}
               </Link>
             </li>

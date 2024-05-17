@@ -16,11 +16,7 @@ function RatingFilter({ ratingFilter, setRatingFilter }) {
             key={rating}
             value={rating}
           >
-            {rating === "All" ? (
-              "Ratings"
-            ) : (
-              `Above ${rating}`
-            )}
+            {rating === "All" ? "Ratings" : `Above ${rating}`}
           </option>
         ))}
       </select>
