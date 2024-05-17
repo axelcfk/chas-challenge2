@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchMovieObject, host } from "../../utils";
+import { fetchMovieObject, fetchWatchAndLikeList, host } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
 import { SlideMenuMovieCard } from "../../components/SlideMenu";
 import { postMovieToDatabase } from "../../utils";
@@ -47,6 +47,7 @@ export default function Mix() {
 
   useEffect(() => {
     setMixFromBackendObjects([]);
+    setMixFromBackendProvidersObjects([]);
 
     async function getStoredMix() {
       setLoading(true);
@@ -89,7 +90,7 @@ export default function Mix() {
     setMixDetails([]);
 
     try {
-      mixFromBackendObjects.forEach((movieObject) => {
+      mixFromBackendObjects.forEach(async (movieObject) => {
         // We map through the movie objects and just pick out the things we need ... this is good incase we want to add the credits and actors etc later since they are seperate fetches...?
 
         /* let isLiked;
@@ -99,6 +100,17 @@ export default function Mix() {
           })
         } */
         // and same for watchlist
+
+        const watchAndLikeData = await fetchWatchAndLikeList();
+
+        const isInWatchList = watchAndLikeData.movieWatchList.some((movie) => {
+          return movie.movie_id === movieObject.id
+        })
+
+        const isLiked = watchAndLikeData.likedMoviesList.some((movie) => {
+          return movie.movie_id === movieObject.id
+        })
+
 
         const providersOfMovie = mixFromBackendProvidersObjects.find(movieObjectProviders => {
           return movieObjectProviders.id === movieObject.id;
@@ -121,6 +133,8 @@ export default function Mix() {
               backdrop: `https://image.tmdb.org/t/p/w500${movieObject.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${movieObject.poster_path}`,
               flatrate: providersOfMovie.flatrate,
+              isLiked: isLiked,
+              isInWatchList: isInWatchList,
               /* isLiked: isLiked,
               isInWatchList: isInWatchList, */
             },
@@ -151,10 +165,14 @@ export default function Mix() {
 
 
     try {
+      const token = localStorage.getItem("token");
+
       const response = await fetch(`${host}/generatedailymix2`, {
-        method: "GET",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        //body: JSON.stringify({ }),
+        body: JSON.stringify({ 
+          token: token,
+        }),
       });
       const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
       if (data.mixMovieObjects && data.mixMovieObjectsProviders) {
@@ -255,8 +273,8 @@ export default function Mix() {
                       overview={movie.overview}
                       voteAverage={movie.voteAverage}
                       streamingServices={movie.flatrate}
-                      isInWatchList={true}
-                      isLiked={true}
+                      isInWatchList={movie.isInWatchList}
+                      isLiked={movie.isLiked}
                     />
                   ))}
                 </div>

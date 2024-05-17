@@ -34,7 +34,7 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        movieId: id,
         title: title,
         movieOrSeries: movieOrSeries,
         token: token,
@@ -46,6 +46,7 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
 }
 
 export async function postRemoveFromLikeList(id, movieOrSeries, title) {
+  console.log("test");
   try {
     const token = localStorage.getItem("token");
 
@@ -57,7 +58,7 @@ export async function postRemoveFromLikeList(id, movieOrSeries, title) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        movieId: id,
         movieOrSeries: movieOrSeries,
         title: title,
         token: token,
@@ -80,7 +81,7 @@ export async function postAddToWatchList(id, movieOrSeries, title) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        movieId: id,
         movieOrSeries: movieOrSeries,
         title: title,
         token: token,
@@ -210,4 +211,53 @@ export async function checkLikeList() {
     console.error("Error fetching likelist:", error);
     return [];
   }
+}
+
+export async function fetchWatchAndLikeList() {
+  try {
+    const token = localStorage.getItem("token");
+
+    //const tokenStorage = localStorage.getItem("token");
+    //setToken(tokenStorage);
+    /* console.log(
+      "fetched localStorage token for Account data: ",
+      tokenStorage
+    ); */
+    const response = await fetch(`${host}/me/watchandlikelists`, {
+      // users sidan på backend! dvs inte riktiga sidan!
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token,
+        //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
+      }),
+    });
+
+    const data = await response.json();
+
+    // TODO: lägg till data.movieWatchList 
+    if (data.likedMoviesList && data.movieWatchList) {
+    //if (data.movieWatchList && data.likedMoviesList) {
+     
+      console.log(
+        "fetched data.likedMoviesList from backend: ",
+        data.likedMoviesList
+      );
+     // setMovieWatchList(data.movieWatchList);
+      //setLikedMoviesList(data.likedMoviesList);
+
+      return data;
+
+      // setLikedSeriesList(data.likedSeriesList);
+    } else {
+      console.log(
+        "failed to fetch like-lists from backend, or it is empty"
+      );
+    }
+  } catch (error) {
+    console.error("Error fetching likelist:", error);
+    
+  } 
 }

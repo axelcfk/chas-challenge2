@@ -109,19 +109,19 @@ export default function WatchListSlideMenu2() {
       movieWatchList.length > 0 // ||
       //(likedSeriesList && likedSeriesList.length > 0)
     ) {
-      movieWatchList.forEach(async (movie) => {
+      movieWatchList.forEach(async (watchListedMovie) => {
         // first check if movie in watchlist is liked
         let isLiked;
         if (likedMoviesList && likedMoviesList.length > 0) {
-          isLiked = likedMoviesList.find((likedMovie) => {
-            return likedMovie.id === movie.id;
+          isLiked = likedMoviesList.some((likedMovie) => {
+            return likedMovie.movie_id === watchListedMovie.movie_id;
           });
         }
 
         // now fetching movie object from our database
-        const movieObject = await fetchMovieObject(movie.id);
+        const movieObject = await fetchMovieObject(watchListedMovie.movie_id);
 
-        const movieProviders = await fetchMovieProviders(movie.id);
+        const movieProviders = await fetchMovieProviders(watchListedMovie.movie_id);
 
         console.log("movieObject: ", movieObject);
 
@@ -156,7 +156,7 @@ export default function WatchListSlideMenu2() {
   if (likedMoviesList == null) {
     return (
       <>
-        <div className="flex flex-col justify-center items-center md:items-start pb-10  md:px-20  h-full bg-slate-950 text-slate-100">
+        <div className="flex flex-col justify-center items-center md:items-start pb-10 px-8  md:px-20  bg-slate-950 text-slate-100">
           Loading Watchlist...
         </div>
       </>
@@ -164,7 +164,7 @@ export default function WatchListSlideMenu2() {
   }
 
   return (
-    <div className="">
+    <>
       {listsFetched &&
       movieWatchListDetails &&
       movieWatchListDetails.length > 0 ? (
@@ -190,6 +190,6 @@ export default function WatchListSlideMenu2() {
           {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
       )}
-    </div>
+    </>
   );
 }

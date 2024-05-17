@@ -73,14 +73,16 @@ export default function LikeListSlideMenu2() {
       likedMoviesList.length > 0 // ||
       //(likedSeriesList && likedSeriesList.length > 0)
     ) {
-      likedMoviesList.forEach(async (movie) => {
-        const movieObject = await fetchMovieObject(movie.id); // from our database
+      likedMoviesList.forEach(async (likedMovie) => {
+        console.log("likedMovie: ", likedMovie);
+        //const movieObject = await fetchMovieObject(movie.id); // from our database
+        const movieObject = await fetchMovieObject(likedMovie.movie_id);
         console.log("movieObject: ", movieObject);
 
         let isInWatchList;
         if (movieWatchList && movieWatchList.length > 0) {
-          isInWatchList = movieWatchList.find((watchListedMovie) => {
-            return watchListedMovie.id === movie.id;
+          isInWatchList = movieWatchList.some((watchListedMovie) => {
+            return watchListedMovie.movie_id === likedMovie.movie_id;
           });
         }
 
@@ -112,7 +114,7 @@ export default function LikeListSlideMenu2() {
   if (!listsFetched) {
     return (
       <>
-        <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20  bg-slate-950 text-slate-100">
+        <div className="flex flex-col justify-center items-center md:items-start pb-10  bg-slate-950 text-slate-100">
           Loading like-lists...
         </div>
       </>
@@ -137,7 +139,7 @@ export default function LikeListSlideMenu2() {
           ))}
         </SlideMenu>
       ) : (
-        <div className="inline-block w-full h-80 md:h-96 mx-4">
+        <div className="inline-block w-full h-80 md:h-96">
           <p>No movies in Likelist yet</p>{" "}
           {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
