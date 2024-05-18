@@ -1918,6 +1918,7 @@ app.post("/addtodailymixbasedonlikes", async (req, res) => {
   }
 });
 
+// TODO: i mysql så kör vi bara en table med dailymixes och så får man hitta den korrekta med hjälp av user_id
 let dailyMixes = { dailyMixBasedOnLikes: [] };
 
 app.get("/generatedailymix", async (req, res) => {
@@ -2016,7 +2017,7 @@ app.post("/generatedailymix2", async (req, res) => {
 
     const userId = currentSession.user_id;
 
-  dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes
+  dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes... // TODO: med mysql, ska vi spara alla mixes eller alltid ta bort den gamla innan vi generar en ny?
 
 
 
@@ -2162,7 +2163,7 @@ app.post("/generatedailymix2", async (req, res) => {
         dailyMixes.dailyMixBasedOnLikes.push({
           id: movie.id,
           title: movie.title,
-        });
+        }); // TODO: ändra till INSERT in i dailymixen i MySQL databasen (typ INSERT INTO dailymixes where user_id är userId...) s
 
         console.log(
           "Added movie ID ",

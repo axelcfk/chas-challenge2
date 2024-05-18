@@ -46,6 +46,7 @@ export default function Mix() {
   // First time entering page or Refreshing page, check if we already have a dailymixbasedonlikes on backend
 
   useEffect(() => {
+    setMixDetails([]);
     setMixFromBackendObjects([]);
     setMixFromBackendProvidersObjects([]);
 
@@ -85,70 +86,51 @@ export default function Mix() {
 
   // populate mixDetails after mixFromBackendObjects has been populated by a stored mix or new generated mix
   useEffect(() => {
-    setMixDetails([]);
+    const fetchDetails = async () => {
+      const details = [];
 
-    try {
-      mixFromBackendObjects.forEach(async (movieObject) => {
-        // We map through the movie objects and just pick out the things we need ... this is good incase we want to add the credits and actors etc later since they are seperate fetches...?
-
-        /* let isLiked;
-        if (likedMoviesList && likedMoviesList.length > 0) {
-          isLiked = likedMoviesList.find((likedMovie) => {
-            return likedMovie.id === movie.id; 
-          })
-        } */
-        // and same for watchlist
-
+      for (const movieObject of mixFromBackendObjects) {
         const watchAndLikeData = await fetchWatchAndLikeList();
 
         const isInWatchList = watchAndLikeData.movieWatchList.some((movie) => {
-          return movie.movie_id === movieObject.id
-        })
+          return movie.movie_id === movieObject.id;
+        });
 
         const isLiked = watchAndLikeData.likedMoviesList.some((movie) => {
-          return movie.movie_id === movieObject.id
-        })
+          return movie.movie_id === movieObject.id;
+        });
 
-
-        const providersOfMovie = mixFromBackendProvidersObjects.find(movieObjectProviders => {
-          return movieObjectProviders.id === movieObject.id;
-        })
-
-        console.log(providersOfMovie);
+        const providersOfMovie = mixFromBackendProvidersObjects.find(
+          (movieObjectProviders) => {
+            return movieObjectProviders.id === movieObject.id;
+          }
+        );
 
         if (movieObject.title) {
-          setMixDetails((prevDetails) => [
-            ...prevDetails,
-            {
-              id: movieObject.id,
-              title: movieObject.title,
-              overview: movieObject.overview,
-              voteAverage: movieObject.vote_average,
-              release: movieObject.release_date,
-              tagline: movieObject.tagline,
-              runtime: movieObject.runtime,
-              backdrop: `https://image.tmdb.org/t/p/w500${movieObject.backdrop_path}`,
-              poster: `https://image.tmdb.org/t/p/w500${movieObject.poster_path}`,
-              flatrate: providersOfMovie.flatrate,
-              isLiked: isLiked,
-              isInWatchList: isInWatchList,
-              /* isLiked: isLiked,
-              isInWatchList: isInWatchList, */
-            },
-          ]);
-        } else {
-          console.log("data.title does not exist?");
+          details.push({
+            id: movieObject.id,
+            title: movieObject.title,
+            overview: movieObject.overview,
+            voteAverage: movieObject.vote_average,
+            release: movieObject.release_date,
+            tagline: movieObject.tagline,
+            runtime: movieObject.runtime,
+            backdrop: `https://image.tmdb.org/t/p/w500${movieObject.backdrop_path}`,
+            poster: `https://image.tmdb.org/t/p/w500${movieObject.poster_path}`,
+            flatrate: providersOfMovie.flatrate,
+            isLiked: isLiked,
+            isInWatchList: isInWatchList,
+          });
         }
-        setLoading(false);
-      });
-    } catch (error) {
-      console.log("error fetching movie objects from backend database", error);
-    } finally {
-      //setLoading(false);
-    }
+      }
 
-    //setShowDetails(true);
-    // }
+      setMixDetails(details);
+      setLoading(false);
+    };
+
+    if (mixFromBackendObjects.length > 0) {
+      fetchDetails();
+    }
   }, [mixFromBackendObjects]);
 
   // --------------------- onClick generate new mix, will suggested movies and their movie objects from TMDB ---------------------
@@ -225,14 +207,15 @@ export default function Mix() {
 
 
         <div className="bg-[#110A19] rounded-3xl min-h-full pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0 mt-8 w-full">
-          <div className="flex w-full justify-end items-center">
-            {/* pr-8 here moves it outside screen? */}
-            {/*  <FaCheck className="text-2xl text-gray-200" /> */}
+          
+        {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
+          {/* <div className="flex w-full justify-end items-center">
+          
             <button className="text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-inherit rounded-lg border-2 border-solid border-[#FF506C] hover:border-white">
               <FaPlus className="text-2xl text-white" /> Save List
             </button>
-            {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
-          </div>
+           
+          </div> */}
 
           <div className="pt-8">
             {loading === false && messageNoStoredMix !== "" && (
@@ -250,7 +233,7 @@ export default function Mix() {
 
             {loading === true ? (
               <h2 className="text-white">
-                AI Generating a mix based on your likes......
+                AI Generating a mix based on your likes...
               </h2>
             ) : (
               <>
