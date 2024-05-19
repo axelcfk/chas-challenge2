@@ -76,7 +76,7 @@ export default function MovieCardWatchAndLike({
               }}
               onClick={() => {
                 handleLikeButtonClicked();
-                if (!liked) {
+                if (liked === false) {
                   postAddToLikeList(id, "movie", title);
                 } else {
                   postRemoveFromLikeList(id, "movie", title);

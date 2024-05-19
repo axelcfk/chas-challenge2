@@ -2,11 +2,12 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
+import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar, FaEye, FaEyeSlash } from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
 import {
+  fetchWatchAndLikeList,
   postAddToLikeList,
   postAddToWatchList,
   postMovieToDatabase,
@@ -24,7 +25,7 @@ export default function MoviePage() {
   const [toggleExpanded, setToggleExpanded] = useState(false);
   const [actorsToggle, setActorsToggle] = useState(false);
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
-  // const [seen, setSeen] = useState(false);
+  const [seen, setSeen] = useState({});
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
   const [actorImages, setActorImages] = useState({});
@@ -219,30 +220,69 @@ export default function MoviePage() {
   }, [movieId]);
 
   //fetcha likelist
+  //const [fetchedLikedMovies, setFetchedLikedMovies] = useState(false);
 
   useEffect(() => {
     const fetchLikeList = async () => {
       try {
-        const movies = await checkLikeList();
-        setLikedMovies(movies);
-        if (movies.some((movie) => movie.id === movieId)) {
-          setLikeButtonClicked(true);
-        }
+       const movies = await fetchWatchAndLikeList();
+
+       console.log(movies[0].movie_id);
+
+       setLikedMovies(movies);
+
+      
+        
+      /*  if (movieId !== undefined) {
+        // Check if the movie is in the liked list
+        const isLiked = movies.some((movie) => movie.movie_id === movieId);
+        console.log("Movie ID:", movieId, "Is Liked:", isLiked);
+
+        // Update the state
+        setLikeButtonClicked(isLiked);
+      } else {
+        console.warn("movieId is not defined");
+      } */
+        
+        
       } catch (error) {
         console.error("Failed to fetch liked movies list");
-      }
+      } 
     };
 
     fetchLikeList();
   }, [movieId]);
 
+  //console.log(likeButtonClicked); 
+
+  useEffect(() => {
+    console.log("likedmovies: ", likedMovies);
+    if (likedMovies.length > 0) {
+
+      likedMovies.map((movie) => {
+        if (movie.movie_id === movieId) {
+          setLikes(isLiked);
+        }
+     })
+    }
+  }, [likedMovies])
+
+ /*  useEffect(() => {
+
+    if (likedMovies.some((movie) => movie.movie_id === movieId)) {
+      setLikeButtonClicked(true);
+    }
+  }, [fetchedLikedMovies])
+  
+ */
+
   useEffect(() => {
     fetchUserLists();
   },[]);
 
-  const isMovieLiked = likedMovies.some(
-    (movie) => movie.id === movieDetails?.id
-  );
+  /* const isMovieLiked = likedMovies.some(
+    (movie) => movie.movie_id === movieDetails?.id
+  ); */
 
   function LoadingIndicator() {
     return (
@@ -254,12 +294,16 @@ export default function MoviePage() {
     );
   }
 
-  if (!movieDetails) {
+  if (!movieDetails || likedMovies.length === 0) {
     return (
       <div className="h-lvh flex justify-center items-center">
         <LoadingIndicator />
       </div>
     );
+  }
+
+  if (likeButtonClicked === false) {
+    <div>Loading...</div>
   }
 
   console.log("similar object", similar);
@@ -318,6 +362,44 @@ export default function MoviePage() {
           </div>
         ))
     : null;
+
+  // const handleAddMovieToList = async (listId) => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://localhost:3010/me/lists/add/${listId}`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ movieId: movieDetails.id }),
+  //       }
+  //     );
+  //     const data = await response.json();
+  //     console.log(data.message);
+  //   } catch (error) {
+  //     console.error("Failed to add movie to list:", error);
+  //   }
+  //   handleCloseModal();
+  // };
+
+  // const handleCreateNewList = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:3010/me/lists/new`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
+  //     });
+  //     const data = await response.json();
+  //     setUserLists([...userLists, { id: data.listId, name: newListName }]);
+  //     setNewListName("");
+  //   } catch (error) {
+  //     console.error("Failed to create new list:", error);
+  //   }
+  //   handleCloseModal();
+  // };
 
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -422,7 +504,7 @@ export default function MoviePage() {
                         }}
                         className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                       >
-                        {!likes[movieDetails.id] ? (
+                        {!likeButtonClicked ? (
                           <div className="flex flex-col justify-center items-center">
                             <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
                             <p className="text-slate-100 mb-1 text-sm">Like</p>
@@ -490,25 +572,12 @@ export default function MoviePage() {
                           </p>
                         )}
                       </button>
-                      {dropdownOpen && (
-                        <div className="bg-[#3D3B8E] rounded-lg shadow-lg py-2 mt-2 w-full">
-                          <div
-                            className="px-4 py-2 hover:bg-[#5755d9] cursor-pointer"
-                            onClick={handleOpenModal}
-                          >
-                            Create New List
-                          </div>
-                          {userLists.map((list) => (
-                            <div
-                              key={list.id}
-                              className="px-4 py-2 hover:bg-[#5755d9] cursor-pointer"
-                              onClick={() => handleAddMovieToList(list.id)}
-                            >
-                              {list.name}
-                            </div>
-                          ))}
-                        </div>
-                      )}
+
+                      {/* <div
+                        className={`w-40 -mt-5  bg-[#3D3B8E] flex justify-center items-center rounded-b-xl border-none  ${
+                          isModalOpen ? "h-40" : "h-0"
+                        }`}
+                      ></div> */}
                     </div>
                   </div>
                 </div>

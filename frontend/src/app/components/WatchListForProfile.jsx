@@ -15,11 +15,16 @@ export default function WatchListForProfile({ profilePage }) {
 
   async function fetchWatchAndLikeList() {
     try {
-      const response = await fetch(`${host}/me/watchandlikelists`, {
-        method: "GET",
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${host}/me/watchandlikelists`, { 
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          token: token,
+        }),
       });
 
       const data = await response.json();
@@ -53,11 +58,11 @@ export default function WatchListForProfile({ profilePage }) {
             let isLiked = false;
             if (likedMoviesList && likedMoviesList.length > 0) {
               isLiked = likedMoviesList.some(
-                (likedMovie) => likedMovie.id === movie.id
+                (likedMovie) => likedMovie.movie_id === movie.movie_id
               );
             }
 
-            const movieObject = await fetchMovieObject(movie.id);
+            const movieObject = await fetchMovieObject(movie.movie_id);
             console.log("movieObject: ", movieObject);
 
             if (movieObject.title) {

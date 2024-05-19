@@ -1,6 +1,30 @@
+"use client"
+
+import { useEffect, useState } from "react";
+
 export const host = "http://localhost:3010";
 
 export async function postAddToLikeList(id, movieOrSeries, title) {
+
+  //const [token, setToken] = useState(null);
+
+  /* useEffect(() => {
+
+    const tokenStorage = localStorage.getItem("token");
+    //setToken(tokenStorage);
+    console.log(
+      "fetched token from localStorage: ",
+      tokenStorage
+    );
+ 
+    setToken(tokenStorage);
+  }, []) */
+
+  const token = localStorage.getItem("token");
+
+ 
+  
+
   try {
     //const response = await fetch("http://localhost:4000/sessions", {
     const response = await fetch(`${host}/me/likelists/addtolikelist`, {
@@ -10,9 +34,10 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        movieId: id,
         title: title,
         movieOrSeries: movieOrSeries,
+        token: token,
       }),
     });
   } catch (error) {
@@ -21,7 +46,10 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
 }
 
 export async function postRemoveFromLikeList(id, movieOrSeries, title) {
+  console.log("test");
   try {
+    const token = localStorage.getItem("token");
+
     //const response = await fetch("http://localhost:4000/sessions", {
     const response = await fetch(`${host}/me/likelists/removefromlikelist`, {
       // users sidan på backend! dvs inte riktiga sidan!
@@ -30,9 +58,10 @@ export async function postRemoveFromLikeList(id, movieOrSeries, title) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        movieId: id,
         movieOrSeries: movieOrSeries,
         title: title,
+        token: token,
       }),
     });
   } catch (error) {
@@ -42,6 +71,8 @@ export async function postRemoveFromLikeList(id, movieOrSeries, title) {
 
 export async function postAddToWatchList(id, movieOrSeries, title) {
   try {
+    const token = localStorage.getItem("token");
+
     //const response = await fetch("http://localhost:4000/sessions", {
     const response = await fetch(`${host}/me/watchlists/addtowatchlist`, {
       // users sidan på backend! dvs inte riktiga sidan!
@@ -50,9 +81,10 @@ export async function postAddToWatchList(id, movieOrSeries, title) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        movieId: id,
         movieOrSeries: movieOrSeries,
         title: title,
+        token: token,
       }),
     });
   } catch (error) {
@@ -64,6 +96,8 @@ export async function postAddToWatchList(id, movieOrSeries, title) {
 
 export async function postRemoveFromWatchList(id, movieOrSeries, title) {
   try {
+    const token = localStorage.getItem("token");
+
     //const response = await fetch("http://localhost:4000/sessions", {
     const response = await fetch(`${host}/me/watchlists/removefromwatchlist`, {
       // users sidan på backend! dvs inte riktiga sidan!
@@ -75,6 +109,7 @@ export async function postRemoveFromWatchList(id, movieOrSeries, title) {
         id: id,
         movieOrSeries: movieOrSeries,
         title: title,
+        token: token,
       }),
     });
   } catch (error) {
@@ -177,17 +212,4 @@ export async function checkLikeList() {
     console.error("Error fetching likelist:", error);
     return [];
   }
-}
-
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-
-export async function fetchTMDBMovieDetails(movieId) {
-  const response = await fetch(
-    `${TMDB_BASE_URL}/movie/${movieId}?api_key=${"b0aa22976a88a1f9ab9dbcd9828204b5"}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch movie details from TMDB");
-  }
-  const data = await response.json();
-  return data;
 }

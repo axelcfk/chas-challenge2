@@ -22,6 +22,8 @@ import PopularSlideMenu2 from "../components/PopularSlideMenu2";
 export default function Startpage() {
   //const [popularMovies, setPopularMovies] = useState([]);
 
+  //const [tokenStorage, setTokenStorage] = useState(null)
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
@@ -40,6 +42,20 @@ export default function Startpage() {
   }, []);
 
   const parallaxRef = useRef(null);
+
+  /* useEffect(() => {
+
+    const tokenStorage = localStorage.getItem("token");
+        //setToken(tokenStorage);
+        console.log(
+          "fetched token from localStorage: ",
+          tokenStorage
+        );
+     
+    setTokenStorage(tokenStorage);
+    
+    
+  }, []) */
 
   return (
     <div className="px-4">
@@ -79,7 +95,7 @@ export default function Startpage() {
             {/* (isLiked=false, isInWatchList=false) */}
           </h2>
           <div className="pl-4 md:pl-0">
-           <PopularSlideMenu2/>
+            <PopularSlideMenu2 />
           </div>
         </div>
 
@@ -125,10 +141,24 @@ export default function Startpage() {
             </SlideMenu>
           </div>
         </div>
+
         <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase"> Watchlist</h2>
-          <div className="w-full pl-4 md:pl-0 ">
+          <h2 className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase">
+            Watchlist
+            {/* (isLiked=false, isInWatchList=false) */}
+          </h2>
+          <div className="pl-4 md:pl-0">
             <WatchListSlideMenu2 />
+          </div>
+        </div>
+
+        <div className="w-full  md:px-24 ">
+          <h2 className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase">
+            Likelist (REMOVE, just testing)
+            {/* (isLiked=false, isInWatchList=false) */}
+          </h2>
+          <div className="pl-4 md:pl-0">
+            <LikeListSlideMenu2 />
           </div>
         </div>
       </div>

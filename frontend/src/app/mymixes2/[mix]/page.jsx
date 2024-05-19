@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchMovieObject, host } from "../../utils";
+import { fetchMovieObject, fetchWatchAndLikeList, host } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
 import { SlideMenuMovieCard } from "../../components/SlideMenu";
 import { postMovieToDatabase } from "../../utils";
@@ -19,13 +19,13 @@ export default function Mix() {
   const mixTitle = params.mix; // Get movie ID from the URL parameter
 
   const [userHasNoLikes, setUserHasNoLikes] = useState(true);
-  const [messageNoLikedMovies, setMessageNoLikedMovies] = useState("")
+  const [messageNoLikedMovies, setMessageNoLikedMovies] = useState("");
 
   const [loading, setLoading] = useState(false);
- 
-  const [mixFromBackendObjects, setMixFromBackendObjects] = useState([]);
-  const [mixFromBackendProvidersObjects, setMixFromBackendProvidersObjects] = useState([]);
 
+  const [mixFromBackendObjects, setMixFromBackendObjects] = useState([]);
+  const [mixFromBackendProvidersObjects, setMixFromBackendProvidersObjects] =
+    useState([]);
 
   const [mixDetails, setMixDetails] = useState([]);
 
@@ -46,7 +46,9 @@ export default function Mix() {
   // First time entering page or Refreshing page, check if we already have a dailymixbasedonlikes on backend
 
   useEffect(() => {
+    setMixDetails([]);
     setMixFromBackendObjects([]);
+    setMixFromBackendProvidersObjects([]);
 
     async function getStoredMix() {
       setLoading(true);
@@ -62,11 +64,10 @@ export default function Mix() {
 
           setMixFromBackendObjects(data.mixMovieObjects);
 
-          setMixFromBackendProvidersObjects(data.mixMovieObjectsProviders)
-          
+          setMixFromBackendProvidersObjects(data.mixMovieObjectsProviders);
+
           //setReasoningFromGPT(data.reasoning)
-        } 
-          else if (data.message) {
+        } else if (data.message) {
           setMessageNoStoredMix(data.message);
         } else {
           setLoading(false);
@@ -83,78 +84,70 @@ export default function Mix() {
     getStoredMix();
   }, []);
 
-
   // populate mixDetails after mixFromBackendObjects has been populated by a stored mix or new generated mix
   useEffect(() => {
-    setMixDetails([]);
+    const fetchDetails = async () => {
+      const details = [];
 
-    try {
-      mixFromBackendObjects.forEach((movieObject) => {
-        // We map through the movie objects and just pick out the things we need ... this is good incase we want to add the credits and actors etc later since they are seperate fetches...?
+      for (const movieObject of mixFromBackendObjects) {
+        const watchAndLikeData = await fetchWatchAndLikeList();
 
-        /* let isLiked;
-        if (likedMoviesList && likedMoviesList.length > 0) {
-          isLiked = likedMoviesList.find((likedMovie) => {
-            return likedMovie.id === movie.id; 
-          })
-        } */
-        // and same for watchlist
+        const isInWatchList = watchAndLikeData.movieWatchList.some((movie) => {
+          return movie.movie_id === movieObject.id;
+        });
 
-        const providersOfMovie = mixFromBackendProvidersObjects.find(movieObjectProviders => {
-          return movieObjectProviders.id === movieObject.id;
-        })
+        const isLiked = watchAndLikeData.likedMoviesList.some((movie) => {
+          return movie.movie_id === movieObject.id;
+        });
 
-        console.log(providersOfMovie);
-
+        const providersOfMovie = mixFromBackendProvidersObjects.find(
+          (movieObjectProviders) => {
+            return movieObjectProviders.id === movieObject.id;
+          }
+        );
 
         if (movieObject.title) {
-          setMixDetails((prevDetails) => [
-            ...prevDetails,
-            {
-              id: movieObject.id,
-              title: movieObject.title,
-              overview: movieObject.overview,
-              voteAverage: movieObject.vote_average,
-              release: movieObject.release_date,
-              tagline: movieObject.tagline,
-              runtime: movieObject.runtime,
-              backdrop: `https://image.tmdb.org/t/p/w500${movieObject.backdrop_path}`,
-              poster: `https://image.tmdb.org/t/p/w500${movieObject.poster_path}`,
-              flatrate: providersOfMovie.flatrate,
-              /* isLiked: isLiked,
-              isInWatchList: isInWatchList, */
-            },
-          ]);
-        } else {
-          console.log("data.title does not exist?");
+          details.push({
+            id: movieObject.id,
+            title: movieObject.title,
+            overview: movieObject.overview,
+            voteAverage: movieObject.vote_average,
+            release: movieObject.release_date,
+            tagline: movieObject.tagline,
+            runtime: movieObject.runtime,
+            backdrop: `https://image.tmdb.org/t/p/w500${movieObject.backdrop_path}`,
+            poster: `https://image.tmdb.org/t/p/w500${movieObject.poster_path}`,
+            flatrate: providersOfMovie.flatrate,
+            isLiked: isLiked,
+            isInWatchList: isInWatchList,
+          });
         }
-        setLoading(false)
-      });
-    } catch (error) {
-      console.log("error fetching movie objects from backend database", error);
-    } finally {
-      //setLoading(false);
-    }
+      }
 
-    //setShowDetails(true);
-    // }
+      setMixDetails(details);
+      setLoading(false);
+    };
+
+    if (mixFromBackendObjects.length > 0) {
+      fetchDetails();
+    }
   }, [mixFromBackendObjects]);
 
-
- 
   // --------------------- onClick generate new mix, will suggested movies and their movie objects from TMDB ---------------------
 
   const getGenerateDailyMixFromGPT = async () => {
     resetState();
     // setLoading(true);
 
-
-
     try {
+      const token = localStorage.getItem("token");
+
       const response = await fetch(`${host}/generatedailymix2`, {
-        method: "GET",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        //body: JSON.stringify({ }),
+        body: JSON.stringify({ 
+          token: token,
+        }),
       });
       const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
       if (data.mixMovieObjects && data.mixMovieObjectsProviders) {
@@ -163,13 +156,10 @@ export default function Mix() {
         setMixFromBackendProvidersObjects(data.mixMovieObjectsProviders);
 
         // TODO: also have this endpoint make a list of the movie ids and a true/false if they are liked or not, and same for watchlisted. And then check the setMixDetails above (the utkommenterade delen)
-        
-
 
         //setReasoningFromGPT(data.reasoning)
       } else if (data.messageNoLikedMovies) {
-
-        setMessageNoLikedMovies(data.messageNoLikedMovies)
+        setMessageNoLikedMovies(data.messageNoLikedMovies);
         setLoading(false);
         console.log("No movies liked yet");
       } else {
@@ -194,80 +184,82 @@ export default function Mix() {
   console.log("mixFromBackendProvidersObjects", mixFromBackendProvidersObjects);
 
   return (
-    <div className="bg-[#201430] h-screen">
+    <div className="bg-[#29274C] h-screen p-8">
       {/* <Navbar></Navbar> */}
-      <div className="border border-white">Navbar</div>
-      <div className="h-full">
-        <div className="flex flex-col gap-8 my-8 h-52 justify-center items-center">
-          <div className="flex w-full justify-center items-center text-center">
-            <h1 className="">{mixTitle} mix</h1>
-          </div>
+      
+      <div className="h-full flex flex-col items-center pt-8">
 
-          <button
-            className={`bg-inherit text-white p-4 w-52 box-border border-2 border-solid border-[#FF506C] rounded-full hover:border-white`}
-            onClick={() => {
-              // setButtonClicked(true)
-              getGenerateDailyMixFromGPT();
-            }}
-            //disabled={!input}
-          >
-            <p className="font-semibold">Generate with AI</p>
-          </button>
-        </div>
+      <div className="bg-[#110A19] rounded-3xl p-6 w-3/4 flex justify-between items-center">
+  <div className="flex flex-col justify-center items-center">
+    <h1 className="text-white font-light text-xl mb-2">{mixTitle} mix</h1>
+    <button
+      className="bg-slate-100 w-40 h-10 rounded-full font-semibold border-none mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer"
+      onClick={getGenerateDailyMixFromGPT}
+    >
+      Generate with AI
+    </button>
+  </div>
+  <img className="h-64 -mt-16 -mr-4 z-10" src="/image.png" alt="AI" />
+</div>
 
-        <div className="bg-[#110A19] rounded-3xl min-h-full pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0">
-          <div className="flex w-full justify-end items-center">
-            {" "}
-            {/* pr-8 here moves it outside screen? */}
-            {/*  <FaCheck className="text-2xl text-gray-200" /> */}
-            <button className=" text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-inherit rounded-lg  border-2 border-solid border-[#FF506C] hover:border-white">
+
+
+
+
+        <div className="bg-[#110A19] rounded-3xl min-h-full pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0 mt-8 w-full">
+          
+        {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
+          {/* <div className="flex w-full justify-end items-center">
+          
+            <button className="text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-inherit rounded-lg border-2 border-solid border-[#FF506C] hover:border-white">
               <FaPlus className="text-2xl text-white" /> Save List
-            </button>{" "}
-            {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page! */}
-          </div>
+            </button>
+           
+          </div> */}
 
           <div className="pt-8">
-          {loading === false && messageNoStoredMix !== "" && (
-            <div>
-              <p>{messageNoStoredMix}</p>
-            </div>
-          )}
+            {loading === false && messageNoStoredMix !== "" && (
+              <div>
+                <p>{messageNoStoredMix}</p>
+              </div>
+            )}
 
-          {loading === false && messageNoLikedMovies !== "" && (
-            <div>
-              <p>{messageNoLikedMovies}</p>
-            </div>
-          )}
+            {loading === false && messageNoLikedMovies !== "" && (
+              <div>
+                <p>{messageNoLikedMovies}</p>
+              </div>
+            )}
 
 
-          {loading === true ? (
-            <h2>AI Generating a mix based on your likes......</h2>
-          ) : (
-            <>
-              {mixDetails && mixDetails.length > 0 ? (
-                <div className="flex w-full flex-col gap-8">
-                  {mixDetails.map((movie, index) => (
-                    <MovieCardMix // TODO: ändra komponentnamnet till MovieMixCard...?
-                      key={index}
-                      id={movie.id}
-                      title={movie.title}
-                      poster={movie.poster} // Assuming you have 'poster' and 'overview' properties in 'likedMoviesListDetails'
-                      overview={movie.overview}
-                      voteAverage={movie.voteAverage}
-                      streamingServices={movie.flatrate}
-                      isInWatchList={true}
-                      isLiked={true}
-                    />
-                  ))}
-                </div>
-              ) : (
-                ""
-              )}
-            </>
-          )}
+            {loading === true ? (
+              <h2 className="text-white">
+                AI Generating a mix based on your likes...
+              </h2>
+            ) : (
+              <>
+                {mixDetails && mixDetails.length > 0 ? (
+                  <div className="flex w-full flex-col gap-8">
+                    {mixDetails.map((movie, index) => (
+                      <MovieCardMix
+                        key={index}
+                        id={movie.id}
+                        title={movie.title}
+                        poster={movie.poster}
+                        overview={movie.overview}
+                        voteAverage={movie.voteAverage}
+                        streamingServices={movie.flatrate}
+                        isInWatchList={movie.isInWatchList}
+                        isLiked={movie.isLiked}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  ""
+                )}
+              </>
+            )}
           </div>
         </div>
-        {/* </div> */}
       </div>
     </div>
   );
