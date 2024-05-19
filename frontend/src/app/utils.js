@@ -1,11 +1,10 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 
 export const host = "http://localhost:3010";
 
 export async function postAddToLikeList(id, movieOrSeries, title) {
-
   //const [token, setToken] = useState(null);
 
   /* useEffect(() => {
@@ -21,9 +20,6 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
   }, []) */
 
   const token = localStorage.getItem("token");
-
- 
-  
 
   try {
     //const response = await fetch("http://localhost:4000/sessions", {
@@ -212,4 +208,63 @@ export async function checkLikeList() {
     console.error("Error fetching likelist:", error);
     return [];
   }
+}
+
+export async function fetchWatchAndLikeList() {
+  try {
+    const token = localStorage.getItem("token");
+
+    //const tokenStorage = localStorage.getItem("token");
+    //setToken(tokenStorage);
+    /* console.log(
+      "fetched localStorage token for Account data: ",
+      tokenStorage
+    ); */
+    const response = await fetch(`${host}/me/watchandlikelists`, {
+      // users sidan på backend! dvs inte riktiga sidan!
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token,
+        //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
+      }),
+    });
+
+    const data = await response.json();
+
+    // TODO: lägg till data.movieWatchList
+    if (data.likedMoviesList && data.movieWatchList) {
+      //if (data.movieWatchList && data.likedMoviesList) {
+
+      console.log(
+        "fetched data.likedMoviesList from backend: ",
+        data.likedMoviesList
+      );
+      // setMovieWatchList(data.movieWatchList);
+      //setLikedMoviesList(data.likedMoviesList);
+
+      return data;
+
+      // setLikedSeriesList(data.likedSeriesList);
+    } else {
+      console.log("failed to fetch like-lists from backend, or it is empty");
+    }
+  } catch (error) {
+    console.error("Error fetching likelist:", error);
+  }
+}
+
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+export async function fetchTMDBMovieDetails(movieId) {
+  const response = await fetch(
+    `${TMDB_BASE_URL}/movie/${movieId}?api_key=${"b0aa22976a88a1f9ab9dbcd9828204b5"}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch movie details from TMDB");
+  }
+  const data = await response.json();
+  return data;
 }
