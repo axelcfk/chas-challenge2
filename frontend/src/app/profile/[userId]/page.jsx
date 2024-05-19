@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
 import WatchListForProfile from "@/app/components/WatchListForProfile";
+import { fetchTMDBMovieDetails } from "@/app/utils";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
   const [userLists, setUserLists] = useState([]);
-  const [newListName, setNewListNane] = useState("");
-  //standard menyn som visas när man besöker sidan är "profile"
+  const [newListName, setNewListName] = useState("");
   const [activeTab, setActiveTab] = useState("Profile");
   const [loadingLists, setLoadingLists] = useState(true);
   const router = useRouter();
@@ -26,9 +26,6 @@ export default function Profile() {
     }
     const userId = localStorage.getItem("userId");
 
-    console.log("Current userId:", userId);
-    console.log("Current userData:", userData);
-
     fetch(`http://localhost:3010/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -42,9 +39,7 @@ export default function Profile() {
       })
       .then((data) => setUserData(data))
       .catch((error) => console.error("Failed to fetch user data", error));
-  }, []);
-
-  console.log("second userdata: ", userData);
+  }, [router]);
 
   useEffect(() => {
     const fetchUserLists = async () => {
@@ -52,8 +47,25 @@ export default function Profile() {
       try {
         const response = await fetch("http://localhost:3010/me/lists");
         const data = await response.json();
-        setUserLists(data);
-        console.log("Fetcheded user lists:", data);
+
+        const listsWithMovieDetails = await Promise.all(
+          data.map(async (list) => {
+            const moviesWithDetails = await Promise.all(
+              list.movies.map(async (movieId) => {
+                const movie = await fetchTMDBMovieDetails(movieId);
+                return {
+                  id: movie.id,
+                  title: movie.title,
+                  overview: movie.overview,
+                  poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`, // Construct full URL
+                };
+              })
+            );
+            return { ...list, movies: moviesWithDetails };
+          })
+        );
+        setUserLists(listsWithMovieDetails);
+        console.log("Fetched user lists:", listsWithMovieDetails);
       } catch (error) {
         console.error("Failed to fetch user lists", error);
       } finally {
@@ -75,7 +87,7 @@ export default function Profile() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: newListName, movieId: null }), // Ingen initial film
+        body: JSON.stringify({ name: newListName, movieId: null }),
       });
       const data = await response.json();
       setUserLists([
@@ -90,11 +102,11 @@ export default function Profile() {
 
   return (
     <main>
-      <div className="bg-[#110A19] flex items-center flex-col pb-12 ">
+      <div className="bg-[#110A19] flex items-center flex-col pb-12">
         {userData ? (
           <div className="flex items-center flex-col space-y-5 mt-12">
             <button className="bg-transparent border-none hover:cursor-pointer">
-              <img src="/profile-user.svg" className="h-28"></img>
+              <img src="/profile-user.svg" className="h-28" alt="User Profile" />
             </button>
             <h1>{userData.username}</h1>
           </div>
@@ -157,7 +169,7 @@ export default function Profile() {
       )}
       {activeTab === "Watchlist" && (
         <div className="gradient-border-top bg-[#201430] p-8 mt-8">
-          <div classame="py-8 ">
+          <div className="py-8">
             <WatchListForProfile profilePage={true} />
           </div>
         </div>
@@ -185,10 +197,13 @@ export default function Profile() {
                         <p>No movies in this list</p>
                       ) : (
                         <SlideMenu>
-                          {list.movies.map((movieId) => (
+                          {list.movies.map((movie) => (
                             <SlideMenuMovieCard
-                              key={movieId}
-                              movieId={movieId}
+                              key={movie.id}
+                              id={movie.id}
+                              title={movie.title}
+                              poster={movie.poster}
+                              overview={movie.overview}
                             />
                           ))}
                         </SlideMenu>

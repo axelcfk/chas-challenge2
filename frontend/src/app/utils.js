@@ -103,7 +103,7 @@ export async function fetchMovieObject(id) {
   } */
 
   const data = await response.json();
-  //console.log("data.searchResult: ", data.searchResult);
+  console.log("data.searchResult: ", data.searchResult);
 
   return data.searchResult; // RETURNERAR MOVIE-OBJEKTET
 }
@@ -133,9 +133,10 @@ export async function postMovieToDatabase(movieObject) {
   }
 }
 
-
-
-export async function postMovieProvidersToDatabase(movieProvidersObject, movieId) {
+export async function postMovieProvidersToDatabase(
+  movieProvidersObject,
+  movieId
+) {
   try {
     const responseBackend = await fetch(`${host}/addmovieproviderstodatabase`, {
       method: "POST",
@@ -176,4 +177,17 @@ export async function checkLikeList() {
     console.error("Error fetching likelist:", error);
     return [];
   }
+}
+
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+export async function fetchTMDBMovieDetails(movieId) {
+  const response = await fetch(
+    `${TMDB_BASE_URL}/movie/${movieId}?api_key=${"b0aa22976a88a1f9ab9dbcd9828204b5"}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch movie details from TMDB");
+  }
+  const data = await response.json();
+  return data;
 }
