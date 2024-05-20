@@ -22,10 +22,23 @@ export function MovieCardMix({title, id, poster, overview, voteAverage, streamin
 
   }
 
-  console.log(streamingServices);
+  //console.log(streamingServices);
   if (!streamingServices ){
     <div>Loading streaming services...</div>
   }
+
+  const serviceLogos = {
+    Netflix: "/Netflix1.svg",
+    "HBO Max": "/HBO1.svg",
+    Viaplay: "/Viaplay1.svg",
+    "Amazon Prime Video": "/Prime1.svg",
+    "Disney Plus": "/Disney1.svg",
+    "Tele2 Play": "/tele2play.png",
+    "Apple TV": "/AppleTv.svg",
+    SVT: "/SVTPlay.svg",
+    TV4Play: "/TV4Play.svg",
+    "Discovery+": "/Discovery+.svg",
+  };
 
 
   return (
@@ -82,7 +95,7 @@ export function MovieCardMix({title, id, poster, overview, voteAverage, streamin
         </div>
         <div className="flex flex-col gap-4"> 
 
-          <h3>{title}</h3>
+          <p>{title}</p>
           <div className="flex gap-2 justify-start items-center">
             
                       <FaStar color="yellow" />
@@ -90,13 +103,19 @@ export function MovieCardMix({title, id, poster, overview, voteAverage, streamin
                    
             
           </div>
-          <div className="flex">
+          <div className="h-6 flex pr-2">
             {streamingServices && streamingServices.map((streamingService, index) => {
               return (
-                <div key={index} className="">
+                <div key={index} className="bg-slate-50 rounded-xl ml-2 p-1">
+                  {/* <div key={index} className="">
                   <p>{streamingService.provider_name}</p>
                   
-                </div>
+                </div> */}
+                    <img
+                      className="h-full"
+                      src={serviceLogos[streamingService.provider_name]}
+                    />
+                  </div>
               )
             })}
           </div>
@@ -113,7 +132,7 @@ export function MovieCardMix({title, id, poster, overview, voteAverage, streamin
            /*  className={`w-full h-auto ${
               !watched ? "bg-[#3D3B8E]" : "bg-green-600"
             } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`} */
-            className={`w-32 h-12 bg-inherit border border-solid border-white hover:cursor-pointer flex justify-center items-center rounded-full  box-border`}
+            className={`w-32 h-12 bg-inherit border border-solid hover:cursor-pointer flex justify-center items-center rounded-full box-border ${!watched ? "border-[#3D3B8E]" : "border-green-600"}`}
           >
             
             {!watched ? (

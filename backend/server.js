@@ -361,7 +361,7 @@ async function fetchMovieObjectTMDB(id) {
     //await postMovieToDatabase(data);
     // await postAddToMixOnBackend(data.id, data.title);
     if (data.title) {
-      addMovieToDatabase(data, "movie"); // STORES FETCHED MOVIE OBJECT TO DATABASE
+      await addMovieToDatabase(data, "movie"); // STORES FETCHED MOVIE OBJECT TO DATABASE
     } else {
       console.log("failed to fetch movie object from TMDB");
     }
@@ -557,7 +557,7 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
     }
     // Update the providers column for the specific movie ID
     await query(
-      "INSERT INTO fetched_movie_providers (id, data) VALUES (?, ?)",
+      "INSERT INTO fetched_movie_providers (movie_id, data) VALUES (?, ?)",
       [movieId, movieProvidersData]
     );
     console.log(
@@ -1024,7 +1024,7 @@ async function getProvidersOfMOvieObjectOurDatabase(movieId) {
   try {
 
     searchResult = await query(
-      "SELECT data FROM fetched_movie_providers WHERE id = ?",
+      "SELECT data FROM fetched_movie_providers WHERE movie_id = ?",
       [movieId]
     );  // JSON EXTRACT isnt need here because id is outside of the providers-object in a seperate column
 
@@ -1033,7 +1033,7 @@ async function getProvidersOfMOvieObjectOurDatabase(movieId) {
     //console.log("Series-Search result: ", searchResult);
   } catch (error) {
     console.error("Error finding providers of movie from our database", error);
-    return;
+    return null;
   }
 
   if (searchResult.length > 0) {
@@ -1048,7 +1048,9 @@ async function getProvidersOfMOvieObjectOurDatabase(movieId) {
 
     return providersObject;
   } else {
-    console.log("Movie not found");
+
+    console.log("Movie providers not found in our database");
+    return null;
   }
 }
 
@@ -2085,8 +2087,39 @@ app.get("/dailymixbasedonlikes", async (req, res) => {
 });
 
 // made this an endpoint so we can simply load in the daily mix based on likes if it has already been generated earlier
-app.get("/me/dailymixbasedonlikes", async (req, res) => {
-  const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
+app.post("/me/dailymixbasedonlikes", async (req, res) => {
+  //const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
+
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({
+      error:
+        "token is required to retrieve /me/dailymixbasedonlikes",
+    });
+  }
+
+  let sessionSearchResult;
+    try {
+      // use the token to find the current session (user_id that is logged in)
+      sessionSearchResult = await query(
+        "SELECT * FROM sessions WHERE token = ?",
+        [token]
+      );
+    } catch (error) {
+      console.error("2:Error finding session", error);
+      return res.status(500).send("2:Error finding session");
+    }
+    if (sessionSearchResult.length === 0) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+    const currentSession = sessionSearchResult[0];
+
+    const userId = currentSession.user_id;
+
+    console.log("userId: ", userId);
+
+  const mixOnlyIdsAndTitles = await query("SELECT * FROM mix WHERE user_id = ?", [userId]);
 
   const mixMovieObjects = [];
   const mixMovieObjectsProviders = [];
@@ -2095,8 +2128,9 @@ app.get("/me/dailymixbasedonlikes", async (req, res) => {
     console.log("found a saved dailymix, mapping through it and running getMovieObjectOurDatabase() for each movie");
     for (const movie of mixOnlyIdsAndTitles) {
     //mixOnlyIdsAndTitles.map(async (movie) => {
+      //console.log("searching for object of movie id ", movie.id);
       const movieObjectOurDatabase = await getMovieObjectOurDatabase(
-        movie.id,
+        movie.movie_id,
         "movie"
       );
       // console.log("movieObject: ", movieObject);
@@ -2108,8 +2142,7 @@ app.get("/me/dailymixbasedonlikes", async (req, res) => {
         console.log("movie objects failed to fetch from our own database?");
       }
 
-      const movieObjectProvidersOurDatabase =
-        await getProvidersOfMOvieObjectOurDatabase(movie.id);
+      const movieObjectProvidersOurDatabase = await getProvidersOfMOvieObjectOurDatabase(movie.movie_id);
 
       if (movieObjectProvidersOurDatabase) {
         mixMovieObjectsProviders.push(movieObjectProvidersOurDatabase);
@@ -2291,7 +2324,20 @@ app.post("/generatedailymix2", async (req, res) => {
 
   const userId = currentSession.user_id;
 
-  dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes... // TODO: med mysql, ska vi spara alla mixes eller alltid ta bort den gamla innan vi generar en ny?
+
+
+  //dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes... // TODO: med mysql, ska vi spara alla mixes eller alltid ta bort den gamla innan vi generar en ny?
+
+  try {
+    const result = await query(
+      "DELETE FROM mix WHERE user_id = ?",
+      [userId]
+    );
+    console.log(`Deleted ${result.affectedRows} rows (from mix)`);
+  } catch (error) {
+    console.error("Error deleting user's mix:", error);
+  }
+
 
   const watchAndLikeList = await getWatchAndLikeList(token);
   let userLikedMoviesList;
@@ -2336,7 +2382,7 @@ app.post("/generatedailymix2", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
+            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'",
         },
         {
           role: "user",
@@ -2430,11 +2476,22 @@ app.post("/generatedailymix2", async (req, res) => {
       arrayMovieObjectsProviders.length > 0
     ) {
       /* console.log("movieObjects: ", movieObjects); */
-      movieObjects.map((movie) => {
-        dailyMixes.dailyMixBasedOnLikes.push({
+      //movieObjects.map((movie) => {
+      for (const movie of movieObjects) {
+
+        try {
+          const insertQuery = await query(
+            "INSERT INTO mix (user_id, movie_id, movie_title) VALUES (?, ?, ?)",
+            [userId, movie.id, movie.title]
+          );
+          console.log('Inserting movie to user mix successful:', insertQuery);
+        } catch (error) {
+          console.error('Error during database insertion into mix:', error);
+        }
+        /* dailyMixes.dailyMixBasedOnLikes.push({
           id: movie.id,
           title: movie.title,
-        }); // TODO: ändra till INSERT in i dailymixen i MySQL databasen (typ INSERT INTO dailymixes where user_id är userId...) s
+        });  */// TODO: ändra till INSERT in i dailymixen i MySQL databasen (typ INSERT INTO dailymixes where user_id är userId...) s
 
         console.log(
           "Added movie ID ",
@@ -2443,7 +2500,7 @@ app.post("/generatedailymix2", async (req, res) => {
           movie.title,
           " to dailyMixBasedOnLikes"
         );
-      });
+      };
     } else {
       console.log("Failed pushing to dailymixbasedonlikes ");
     }

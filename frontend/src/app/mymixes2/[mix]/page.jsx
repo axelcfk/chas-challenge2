@@ -46,17 +46,23 @@ export default function Mix() {
   // First time entering page or Refreshing page, check if we already have a dailymixbasedonlikes on backend
 
   useEffect(() => {
-    setMixDetails([]);
-    setMixFromBackendObjects([]);
-    setMixFromBackendProvidersObjects([]);
+   
 
     async function getStoredMix() {
+      /* setMixDetails([]);
+      setMixFromBackendObjects([]);
+      setMixFromBackendProvidersObjects([]); */
       setLoading(true);
       try {
+
+        const token = localStorage.getItem("token");
+
         const response = await fetch(`${host}/me/dailymixbasedonlikes`, {
-          method: "GET",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          //body: JSON.stringify({ }),
+          body: JSON.stringify({ 
+            token: token,
+          }),
         });
         const data = await response.json(); // ändra i server.js så att chatgpt bara returnerar movie name, och sen kan vi göra en query för TMDB ID (se första useEffecten i firstpage/page.js)
         if (data.mixMovieObjects && data.mixMovieObjectsProviders) {
@@ -75,11 +81,7 @@ export default function Mix() {
         }
       } catch (error) {
         console.error("Failed to fetch stored mix:", error);
-      } finally {
-        //setLoading(false)
-        //setSuggestionFetchedFromGPT(true);
-        //setMixIsFetched(true);
-      }
+      } 
     }
     getStoredMix();
   }, []);
@@ -184,26 +186,27 @@ export default function Mix() {
   console.log("mixFromBackendProvidersObjects", mixFromBackendProvidersObjects);
 
   return (
-    <div className="bg-[#29274C] h-screen p-8">
+    <div className="bg-[#29274C] min-h-screen p-8 pt-0">
       {/* <Navbar></Navbar> */}
 
       <div className="h-full flex flex-col items-center pt-8">
-        <div className="bg-[#110A19] rounded-3xl p-6 w-3/4 flex justify-between items-center">
-          <div className="flex flex-col justify-center items-center">
-            <h1 className="text-white font-light text-xl mb-2">
-              {mixTitle} mix
+        <div className="bg-[#110A19] box-border rounded-3xl p-12 w-full flex justify-between items-center my-8 h-72">
+          <div className="w-full flex flex-col justify-center items-center h-full">
+            <h1 className="text-white font-light mb-2">
+              {mixTitle} Mix by AI
             </h1>
             <button
-              className="bg-slate-100 w-40 h-10 rounded-full font-semibold border-none mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer"
+              className="bg-slate-100 w-40 h-12 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black"
               onClick={getGenerateDailyMixFromGPT}
             >
-              Generate with AI
+               Generate
             </button>
           </div>
-          <img className="h-64 -mt-16 -mr-4 z-10" src="/image.png" alt="AI" />
+          <img className="h-full w-auto z-10" src="/image.png" alt="AI" />
         </div>
 
-        <div className="bg-[#110A19] rounded-3xl min-h-full pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0 mt-8 w-full">
+        {/* min-h-full  */}
+        <div className="bg-[#110A19] rounded-3xl min-h-[1000px] pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0 mt-8 w-full">
           {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
           {/* <div className="flex w-full justify-end items-center">
           
