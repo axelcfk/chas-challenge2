@@ -373,10 +373,11 @@ async function fetchMovieObjectTMDB(id) {
 }
 
 async function addMovieToDatabase(movie, movieOrSeries) {
-
   try {
     if (!movie.id || !movieOrSeries) {
-      console.log("Received movie does not contain an id, and/or need to define if movie or series.");
+      console.log(
+        "Received movie does not contain an id, and/or need to define if movie or series."
+      );
       return;
     }
 
@@ -419,7 +420,7 @@ async function addMovieToDatabase(movie, movieOrSeries) {
       console.log("Could not determine if movie or series");
     }
 
-  /*   res.status(201).json({
+    /*   res.status(201).json({
       message: "Movie/Series saved to fetched_movies/fetched_series",
     });
  */
@@ -1767,22 +1768,26 @@ It will provide Movie Names for those movies in the format of:
 MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
 MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
 It will not answer any other queries. It will only suggest movies and TV series. 
-If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
+
 Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
 MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
 MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
 Never add any additional numbers.
 
 When making suggestions, follow these steps:
-1. Review the latest user query: ${latestUserQuery}.
-2. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
-3. Avoid suggesting movies that are already in the latest suggestions.
-4. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
-5. Consider the genres, themes, or keywords from the latest user query to refine the search.
-6. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
-7. If no suitable suggestions are available, explain why and provide alternative options.
+1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), dont suggest any movies but respond in a funny way. Also ignore any queries in ${latestUserQuery} if foul is present language.
 
+2. Review the latest user query: ${latestUserQuery}.
+3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+4. Avoid suggesting movies that are already in the latest suggestions.
+5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+6. Consider the genres, themes, or keywords from the latest user query to refine the search.
+7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+8. If no suitable suggestions are available, explain why and provide alternative options.
 For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
+
+
+
 
 If you have no suggestions, explain in your response. Also, look inside ${latestSuggestions.join(
             ", "
