@@ -1189,11 +1189,9 @@ app.post("/me/watchandlikelists", async (req, res) => {
 
     
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Internal server error when trying to run /me/watchandlikelists",
-      });
+    res.status(500).json({
+      error: "Internal server error when trying to run /me/watchandlikelists",
+    });
   }
 
   /* const data = {
@@ -1639,6 +1637,21 @@ const latestSuggestions = [];
 const latestUserQuery = [];
 
 app.post("/moviesuggest2", async (req, res) => {
+  // const { token } = req.body.token;
+  const userQuery = req.body.query;
+
+  // let sessionSearchResult;
+  // try {
+  //   // use the token to find the current session (user_id that is logged in)
+  //   isSession = await query(
+  //     "SELECT * FROM sessions WHERE token = ?",
+  //     [token]
+  //   );
+  // } catch (error) {
+  //   console.error("2:Error finding session", error);
+  //   return res.status(500).send("2:Error finding session");
+  // }
+
   const likedMovieTitles = likedMoviesList.map((movie) => {
     return movie.title;
   });
@@ -1647,7 +1660,6 @@ app.post("/moviesuggest2", async (req, res) => {
 
   const likedMovieTitlesString = likedMovieTitles.join(", ");
   console.log("likedMovieTitlesString: ", likedMovieTitlesString);
-  const userQuery = req.body.query;
   latestUserQuery.push(userQuery);
   if (latestUserQuery.length > 15) {
     latestSuggestions.pop(); // tar bort den sista
