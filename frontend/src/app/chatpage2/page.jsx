@@ -2,6 +2,9 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import { useSearch } from "../context/SearchContext";
+import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
+
 import { postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
 import InputField from "./inputField";
@@ -32,14 +35,19 @@ const isAvailableOnSupportedServices = (streaming) => {
 };
 
 export default function ChatPage2() {
-  const [input, setInput] = useState("");
+  const { input, setInput, movies, loading, showVideo, errorMessage } =
+    useSearch();
+  // const [input, setInput] = useState("");
   const [movieDetails, setMovieDetails] = useState([]);
   const [movieCredits, setMovieCredits] = useState({});
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [noResult, setNoResult] = useState(false);
-  const [showVideo, setShowVideo] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
+  const { handleQuerySubmit } = useHandleQuerySubmit();
+
+  // const [movies, setMovies] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  // const [noResult, setNoResult] = useState(false);
+  // const [showVideo, setShowVideo] = useState(true);
+
+  // const [errorMessage, setErrorMessage] = useState("");
 
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
   const videoRef = useRef(null);
@@ -51,75 +59,6 @@ export default function ChatPage2() {
   const changeSpeed = (speed) => {
     if (videoRef.current) {
       videoRef.current.playbackRate = speed;
-    }
-  };
-
-  const handleNavigation = () => {
-    router.back();
-  };
-
-  const handleQuerySubmit = async () => {
-    setLoading(true);
-    setMovies([]);
-    setShowVideo(true);
-    changeSpeed(5);
-
-    // Check localStorage for cached data
-    const cachedData = JSON.parse(localStorage.getItem("latestSearch"));
-    const token = localStorage.getItem("token");
-
-    console.log("Cached Data from localStorage:", cachedData);
-
-    if (cachedData && cachedData.input === input) {
-      setMovies(cachedData.movies);
-      console.log("Using cached movies:", cachedData.movies);
-      setLoading(false);
-      setShowVideo(false);
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:3010/moviesuggest2", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: input, token: token }),
-      });
-      const data = await response.json();
-
-      if (data.movieNames && data.movieNames.length > 0) {
-        // Store the movie names in localStorage without extra quotes
-        const sanitizedMovieNames = data.movieNames.map((name) =>
-          name.replace(/^"|"$/g, "")
-        );
-        localStorage.setItem(
-          "latestSearch",
-          JSON.stringify({ movies: sanitizedMovieNames, input })
-        );
-        console.log("Saving to localStorage:", {
-          movies: sanitizedMovieNames,
-          input,
-        });
-
-        setTimeout(() => {
-          setMovies(sanitizedMovieNames);
-          console.log("Fetched movie names:", sanitizedMovieNames);
-          setLoading(false);
-          setErrorMessage("");
-          setShowVideo(false);
-        }, 10);
-      } else {
-        setErrorMessage(data.suggestion);
-        console.log("Error Message Set:", data.suggestion);
-        setNoResult(true);
-        setLoading(false);
-        setShowVideo(false);
-      }
-    } catch (error) {
-      console.error("Failed to fetch AI suggestion:", error);
-      setNoResult(true);
-      setLoading(false);
-      setShowVideo(false);
-      changeSpeed(1);
     }
   };
 
@@ -145,14 +84,6 @@ export default function ChatPage2() {
               const posterUrl = posterPath
                 ? `https://image.tmdb.org/t/p/w500${posterPath}`
                 : null;
-              console.log("Fetched movie details:", {
-                title: detailsData.title,
-                id: movieId,
-                poster: posterUrl,
-                overview: detailsData.overview,
-                voteAverage: detailsData.vote_average,
-                streaming: streamingData.SE,
-              });
               return {
                 title: detailsData.title,
                 id: movieId,
@@ -179,7 +110,6 @@ export default function ChatPage2() {
         `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
       );
       const data = await response.json();
-      console.log("Fetched streaming services:", data.results);
       return data.results;
     } catch (error) {
       console.error("Error fetching streaming services:", error);
@@ -208,7 +138,6 @@ export default function ChatPage2() {
               backdrop: `https://image.tmdb.org/t/p/w500${data.backdrop_path}`,
               poster: `https://image.tmdb.org/t/p/w500${data.poster_path}`,
             });
-            console.log("Fetched movie details for ID:", data);
           } else {
             console.error("No movie found with the given ID");
           }
@@ -221,20 +150,15 @@ export default function ChatPage2() {
     fetchMovieDetails();
   }, [movieDetails.idFromAPI]);
 
-  // Clear localStorage when visiting /startpage
   useEffect(() => {
-    console.log("Current pathname is", pathname);
     if (pathname === "/startpage") {
-      console.log("Clearing localStorage");
       localStorage.removeItem("latestSearch");
     }
   }, [pathname]);
 
-  // Log localStorage on mount
   useEffect(() => {
     console.log("Initial localStorage:", localStorage);
   }, []);
-
   return (
     <div className="flex flex-col justify-center items-center md:items-start px-5 md:px-20 text-slate-100 z-0 pb-5">
       {errorMessage && !loading && (

@@ -4,11 +4,20 @@ import { useEffect, useState } from "react";
 import MovieSearch from "../searchtest/page";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { FaDotCircle } from "react-icons/fa";
+import InputField from "../chatpage2/inputField";
+import { useRouter } from "next/navigation";
+import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
+import { useSearch } from "../context/SearchContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [input, setInput] = useState("");
+  const { input, setInput } = useSearch();
+  const { handleQuerySubmit } = useHandleQuerySubmit();
+
+  const handleInputChange = (e) => setInput(e.target.value);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -18,6 +27,13 @@ export default function Navbar() {
       setUserId(savedUserId);
     }
   }, []);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      performSearch();
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -43,6 +59,7 @@ export default function Navbar() {
               </Link>
             </div>
           </div>
+          {/* <InputField /> */}
 
           {/* This section becomes visible only on small screens */}
           <div className="flex items-center md:hidden">
@@ -188,6 +205,32 @@ export default function Navbar() {
             )}
           </div>
         </div>
+        <InputField
+          handleInputChange={handleInputChange}
+          handleQuerySubmit={handleQuerySubmit}
+          heightDiv={"h-10"}
+          placeholder={"AI SEARCH"}
+        />
+        {/* <input
+            className="h-14 bg-transparent w-full md:w-1/3 rounded-full text-lg text-center text-slate-50 md:mr-3 border-none"
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Search for movies..."
+          />
+          <button
+            className="flex justify-center items-center border-none bg-transparent bg-white"
+            onClick={handleQuerySubmit}
+            disabled={!input}
+          >
+            <FaDotCircle
+              className={`h-8 w-8 mr-5 ${
+                input
+                  ? " hover:text-slate-300  hover:cursor-pointer"
+                  : " text-slate-400"
+              } rounded-full`}
+            />
+          </button> */}
       </div>
     </nav>
   );
