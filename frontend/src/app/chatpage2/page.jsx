@@ -66,6 +66,8 @@ export default function ChatPage2() {
 
     // Check localStorage for cached data
     const cachedData = JSON.parse(localStorage.getItem("latestSearch"));
+    const token = localStorage.getItem("token");
+
     console.log("Cached Data from localStorage:", cachedData);
 
     if (cachedData && cachedData.input === input) {
@@ -80,7 +82,7 @@ export default function ChatPage2() {
       const response = await fetch("http://localhost:3010/moviesuggest2", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: input }),
+        body: JSON.stringify({ query: input, token: token }),
       });
       const data = await response.json();
 

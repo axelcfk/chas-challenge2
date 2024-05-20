@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 
 export default function SlideMenu({ children }) {
   return (
@@ -26,6 +27,8 @@ export default function SlideMenu({ children }) {
 }
 
 export function SlideMenuMovieCard({ title, poster, overview, id }) {
+  console.log("SlideMenuMovieCard props:", { title, poster, overview, id });
+
   if (!poster) {
     return <div className="mx-2 inline-block h-36 w-24">Loading movie...</div>;
   }
@@ -49,6 +52,13 @@ export function SlideMenuMovieCard({ title, poster, overview, id }) {
     </div>
   );
 }
+
+SlideMenuMovieCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  poster: PropTypes.string.isRequired,
+  overview: PropTypes.string,
+  id: PropTypes.string.isRequired,
+};
 
 export function SlideMenuMixCard({ imgSrc, mixName = "MixName" }) {
   return (
