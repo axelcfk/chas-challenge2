@@ -93,7 +93,7 @@ function MovieSearch() {
   };
 
   const handleBlur = () => {
-    if (!inputValue) {
+    if (!inputValue && !isSearching) {
       setIsSearching(false); // Hide the input field when it loses focus and is empty
     }
   };
@@ -106,6 +106,12 @@ function MovieSearch() {
 
   const handleCloseLinkClick = () => {
     handleClose(); // Call the handleClose function to close the search list
+  };
+
+  const handleIconKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleIconClick();
+    }
   };
 
   // Filter movies based on rating
@@ -160,12 +166,18 @@ function MovieSearch() {
   return (
     <div className="relative ">
       <form onSubmit={handleSubmit} className="flex items-center space-x-2">
-        <div className="flex items-center space-x-2">
+        <div
+          className={`flex items-center space-x-2 p-1 text-white ${
+            isSearching
+              ? "border border-solid border-t-0 border-x-0 border-gray-500"
+              : ""
+          } bg-deep-purple`}
+        >
           {isSearching ? (
-            <div className="relative">
+            <div className="relative ">
               <input
                 ref={inputRef}
-                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-16" // Pr-10 for close button space
+                className="p-2 text-white bg-deep-purple rounded shadow border-none pr-10" // Pr-10 for close button space
                 type="text"
                 value={inputValue}
                 onChange={handleChange}
@@ -177,16 +189,17 @@ function MovieSearch() {
                 }}
                 placeholder="Search for a movie..."
                 autoComplete="off"
-              />
-              <IoIosClose // Close button icon
-                className="absolute top-0.5 right-2 transform -translate-y-1/2 cursor-pointer text-gray-400 text-3xl" // Text-xl for larger size of X
-                onClick={handleClose}
+                aria-label="Search for a movie"
               />
             </div>
           ) : (
             <FaMagnifyingGlass
+              role="button"
+              tabIndex={0}
               className="text-2xl cursor-pointer"
               onClick={handleIconClick}
+              onKeyPress={handleIconKeyPress}
+              aria-label="search button"
             />
           )}
 
@@ -195,16 +208,26 @@ function MovieSearch() {
               <RatingFilter // Rating filter component
                 ratingFilter={ratingFilter}
                 setRatingFilter={setRatingFilter}
+                aria-label="Filter rating"
               />
               <button
+                tabIndex={0}
                 type="button"
-                className="text-gray-500 rounded-s bg-deep-purple px-1 py-1.5 hover:bg-lighter-purple cursor-pointer border border-solid border-gray-500 focus:border-gray-500 focus:outline-none"
+                className="text-gray-500 rounded-s bg-deep-purple px-1 py-1.5 hover:bg-lighter-purple cursor-pointer border border-solid border-gray-500 focus:border-gray-500"
                 onClick={() => (
                   setMovieProviders([]), setFetchStreamService(true)
                 )}
+                aria-label="Shows streaming provider"
               >
                 stream
               </button>
+              <IoIosClose // Close button icon
+                tabIndex={0}
+                className="top-0.5 right-2 transform -translate-y-1/2 cursor-pointer text-gray-400 text-3xl" // Text-xl for larger size of X
+                onClick={handleClose}
+                onKeyPress={handleClose}
+                aria-label="close search bar"
+              />
             </>
           )}
         </div>
@@ -222,6 +245,7 @@ function MovieSearch() {
                   src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                   alt={movie.title}
                   className="w-10 h-10 mr-2"
+                  aria-hidden="true"
                 />
                 {movieProviders &&
                   movieProviders.map((movieProviderObj) => {

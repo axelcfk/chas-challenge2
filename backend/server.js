@@ -373,10 +373,11 @@ async function fetchMovieObjectTMDB(id) {
 }
 
 async function addMovieToDatabase(movie, movieOrSeries) {
-
   try {
     if (!movie.id || !movieOrSeries) {
-      console.log("Received movie does not contain an id, and/or need to define if movie or series.");
+      console.log(
+        "Received movie does not contain an id, and/or need to define if movie or series."
+      );
       return;
     }
 
@@ -419,7 +420,7 @@ async function addMovieToDatabase(movie, movieOrSeries) {
       console.log("Could not determine if movie or series");
     }
 
-  /*   res.status(201).json({
+    /*   res.status(201).json({
       message: "Movie/Series saved to fetched_movies/fetched_series",
     });
  */
@@ -1858,24 +1859,43 @@ const latestSuggestions = [];
 const latestUserQuery = [];
 
 app.post("/moviesuggest2", async (req, res) => {
-  // const { token } = req.body.token;
-  const userQuery = req.body.query;
+  const { token, query: userQuery } = req.body;
 
-  // let sessionSearchResult;
-  // try {
-  //   // use the token to find the current session (user_id that is logged in)
-  //   isSession = await query(
-  //     "SELECT * FROM sessions WHERE token = ?",
-  //     [token]
-  //   );
-  // } catch (error) {
-  //   console.error("2:Error finding session", error);
-  //   return res.status(500).send("2:Error finding session");
-  // }
+  if (!token || !userQuery) {
+    return res.status(400).json({ error: "Token and query are required" });
+  }
 
-  const likedMovieTitles = likedMoviesList.map((movie) => {
-    return movie.title;
-  });
+  let sessionSearchResult;
+  try {
+    // Use the token to find the current session (user_id that is logged in)
+    sessionSearchResult = await query(
+      "SELECT * FROM sessions WHERE token = ?",
+      [token]
+    );
+  } catch (error) {
+    console.error("Error finding session", error);
+    return res.status(500).send("Error finding session");
+  }
+
+  if (sessionSearchResult.length === 0) {
+    return res.status(401).json({ error: "Invalid session token" });
+  }
+
+  const currentSession = sessionSearchResult[0];
+  const currentUserId = currentSession.user_id;
+
+  let likedMovies;
+  try {
+    likedMovies = await query(
+      "SELECT movie_id FROM liked_movies WHERE user_id = ?",
+      [currentUserId]
+    );
+  } catch (error) {
+    console.error("Error fetching liked movies:", error);
+    return res.status(500).send("Error fetching liked movies");
+  }
+
+  const likedMovieTitles = likedMovies.map((movie) => movie.title);
 
   console.log("likedMovieTitles: ", likedMovieTitles);
 
@@ -1883,7 +1903,7 @@ app.post("/moviesuggest2", async (req, res) => {
   console.log("likedMovieTitlesString: ", likedMovieTitlesString);
   latestUserQuery.push(userQuery);
   if (latestUserQuery.length > 15) {
-    latestSuggestions.pop(); // tar bort den sista
+    latestUserQuery.pop(); // Remove the oldest one if the length exceeds 15
   }
   console.log("Received user query:", userQuery);
 
@@ -1898,22 +1918,26 @@ It will provide Movie Names for those movies in the format of:
 MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
 MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
 It will not answer any other queries. It will only suggest movies and TV series. 
-If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
+
 Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
 MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
 MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
 Never add any additional numbers.
 
 When making suggestions, follow these steps:
-1. Review the latest user query: ${latestUserQuery}.
-2. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
-3. Avoid suggesting movies that are already in the latest suggestions.
-4. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
-5. Consider the genres, themes, or keywords from the latest user query to refine the search.
-6. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
-7. If no suitable suggestions are available, explain why and provide alternative options.
+1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), dont suggest any movies but respond in a funny way. Also ignore any queries in ${latestUserQuery} if foul is present language.
 
+2. Review the latest user query: ${latestUserQuery}.
+3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+4. Avoid suggesting movies that are already in the latest suggestions.
+5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+6. Consider the genres, themes, or keywords from the latest user query to refine the search.
+7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+8. If no suitable suggestions are available, explain why and provide alternative options.
 For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
+
+
+
 
 If you have no suggestions, explain in your response. Also, look inside ${latestSuggestions.join(
             ", "
@@ -1931,7 +1955,19 @@ If you have no suggestions, explain in your response. Also, look inside ${latest
 
     const suggestion = completion.choices[0].message.content;
 
-    // TODO: spara ner userQuery och suggestion i backend?
+    // Save the query and suggestions to the database
+    try {
+      await query(
+        "INSERT INTO chatgpt (user_id, user_query, ai_response) VALUES (?, ?, ?)",
+        [currentUserId, userQuery, suggestion]
+      );
+      console.log("Search query and suggestions saved to database");
+    } catch (dbError) {
+      console.error(
+        "Error saving search query and suggestions to database:",
+        dbError
+      );
+    }
 
     console.log("Suggestion structure:", suggestion);
     console.log("suggested movie list:", latestSuggestions);
@@ -1942,8 +1978,9 @@ If you have no suggestions, explain in your response. Also, look inside ${latest
     if (movieNames.length === 6) {
       latestSuggestions.unshift(movieNames);
       if (latestSuggestions.length > 36) {
-        latestSuggestions.pop(); // tar bort den sista
+        latestSuggestions.pop(); // Remove the oldest one if the length exceeds 36
       }
+
       res.json({ movieNames });
     } else {
       res.json({ suggestion });
@@ -1951,13 +1988,9 @@ If you have no suggestions, explain in your response. Also, look inside ${latest
         "Failed to extract Movie Names from AI response:",
         suggestion
       );
-
-      // res.status(500).json({
-      //   error: "Failed to extract Movie Names from AI response",
-      // });
     }
   } catch (error) {
-    console.error("Error in /moviesuggest endpoint:", error);
+    console.error("Error in /moviesuggest2 endpoint:", error);
     res.status(500).json({
       error: "Unable to process the movie suggestion at this time.",
       details: error.message,
