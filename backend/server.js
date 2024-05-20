@@ -31,7 +31,7 @@ const pool = mysql.createPool({
   database: "movie-app-sql",
   // port: 3306,
   //port: 3306,
-  port: 8889 || 3306,
+  port: 3306,
 });
 
 let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
