@@ -294,7 +294,7 @@ export default function MoviePage() {
     );
   }
 
-  if (!movieDetails || likedMovies.length === 0) {
+  if (!movieDetails) {
     return (
       <div className="h-lvh flex justify-center items-center">
         <LoadingIndicator />

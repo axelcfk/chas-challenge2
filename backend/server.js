@@ -378,40 +378,63 @@ async function fetchMovieObjectTMDB(id) {
   }
 }
 
-function addMovieToDatabase(movieObject, movieOrSeries) {
-  if (!movieObject.id || !movieOrSeries) {
-    console.log(
-      "Received movie does not contain an id, and/or need to define if movie or series."
+async function addMovieToDatabase(movie, movieOrSeries) {
+
+  try {
+    if (!movie.id || !movieOrSeries) {
+      console.log("Received movie does not contain an id, and/or need to define if movie or series.");
+      return;
+    }
+
+    // Check if the movie or series already exists in the fetched_movies or fetched_series tables
+    let idExistsInMovies;
+    let idExistsInSeries;
+
+    if (movieOrSeries === "movie") {
+      idExistsInMovies = await query(
+        "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    } else if (movieOrSeries === "series") {
+      idExistsInSeries = await query(
+        "SELECT id FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    }
+
+    if (
+      (idExistsInMovies && idExistsInMovies.length > 0) ||
+      (idExistsInSeries && idExistsInSeries.length > 0)
+    ) {
+      console.log("movie/series ID ", movie.id, " has already been fetched.");
+      return;
+    }
+
+    // Insert the movie or series into the appropriate table
+    if (movieOrSeries === "movie") {
+      await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added movie ID ", movie.id, " to fetched_movies");
+    } else if (movieOrSeries === "series") {
+      await query("INSERT INTO fetched_series (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added series ID ", movie.id, " to fetched_series");
+    } else {
+      console.log("Could not determine if movie or series");
+    }
+
+  /*   res.status(201).json({
+      message: "Movie/Series saved to fetched_movies/fetched_series",
+    });
+ */
+    console.log("Movie/Series saved to fetched_movies/fetched_series");
+  } catch (error) {
+    console.error(
+      "1:Error adding movie/series to fetched_movies/fetched_series:",
+      error
     );
-  }
-
-  const idExistsInMovies = fetchedMovies.some(
-    (fetchedMovie) => fetchedMovie.id === movieObject.id
-  );
-  const idExistsInSeries = fetchedSeries.some(
-    (fetchedSerie) => fetchedSerie.id === movieObject.id
-  );
-
-  if (idExistsInMovies || idExistsInSeries) {
-    console.log(
-      "movie/series ID ",
-      movieObject.id,
-      " has already been fetched."
-    );
-    return; // TODO: return nothing?
-  } else {
-    // om redan finns?
-  }
-
-  if (movieOrSeries === "movie") {
-    // maybe change to some sort of True/False variable instead...
-    fetchedMovies.push(movieObject); // UPDATE LATER TO SQL
-    console.log("Added movie ID ", movieObject.id, " to fetchedMovies");
-  } else if (movieOrSeries === "series") {
-    fetchedSeries.push(movieObject); // UPDATE LATER TO SQL
-    console.log("Added series ID ", movieObject.id, " to fetchedSeries");
-  } else {
-    console.log("Could not determine if movie or series");
   }
 }
 
