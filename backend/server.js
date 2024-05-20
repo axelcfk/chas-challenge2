@@ -29,9 +29,9 @@ const pool = mysql.createPool({
   user: "root",
   password: "root",
   database: "movie-app-sql",
-  port: 3306,
+  // port: 3306,
   //port: 3306,
-  //port: 8889 || 3306,
+  port: 8889 || 3306,
 });
 
 let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
@@ -83,9 +83,6 @@ app.post("/users", async (req, res) => {
     );
     const userId = insertResult.insertId;
 
-
-    
-   
     // TODO: TA BORT NÄR MYSQL ÄR REDO (behöver inte skapa tomma listor med mysql):
     likedMoviesList.push({
       likedMoviesListId: likedMoviesListId++,
@@ -98,7 +95,7 @@ app.post("/users", async (req, res) => {
       movieWatchListId: movieWatchListId++,
       userId: userId,
       myMovieWatchList: [],
-    }); 
+    });
 
     res
       .status(201)
@@ -325,19 +322,16 @@ async function fetchMovieProvidersObjectTMDB(id) {
 
     addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
 
-
     if (data.results.SE) {
-
       return data.results.SE;
     } else if (!data.results.SE) {
       console.log("No providers in sweden for movie id ", id);
-      
+
       return { noProviders: "no providers in sweden", id };
     } else {
       console.log("failed to fetch providers of movie from TMDB");
     }
 
-    
     //await postMovieToDatabase(data);
     // await postAddToMixOnBackend(data.id, data.title);
   } catch (error) {
@@ -459,7 +453,6 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
     return; //exit code // TODO: ändra att den returnerar något annat? typ error?
   }
 
-
   const idExistsAlready = fetchedProvidersOfMovie.some(
     (fetchedMovie) => fetchedMovie.id === movieProvidersObject.id
   );
@@ -468,14 +461,17 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
   ); */
 
   if (idExistsAlready) {
-    console.log("Providers of movie ID ", movieProvidersObject.id, " has already been fetched.");
+    console.log(
+      "Providers of movie ID ",
+      movieProvidersObject.id,
+      " has already been fetched."
+    );
     return; // TODO: return nothing?
   } else {
-    // fortsätt kod... 
+    // fortsätt kod...
   }
 
-
-    /* if (data.results.SE) {
+  /* if (data.results.SE) {
       addProvidersOfMovieToDatabase(data.results.SE, id);
 
       return data.results.SE;
@@ -488,7 +484,7 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
       console.log("failed to fetch providers of movie from TMDB");
     } */
   //
-  if (!movieProvidersObject.results?.SE ) {
+  if (!movieProvidersObject.results?.SE) {
     // TODO: check
     fetchedProvidersOfMovie.push({
       noProviders: "no providers in sweden",
@@ -496,7 +492,10 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
     });
   } else {
     // added movie id to the object so it is easier to find later...
-    const movieProvidersObjectWithID = { ...movieProvidersObject.results.SE, id: movieProvidersObject.id };
+    const movieProvidersObjectWithID = {
+      ...movieProvidersObject.results.SE,
+      id: movieProvidersObject.id,
+    };
 
     // One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
     fetchedProvidersOfMovie.push(movieProvidersObjectWithID); // UPDATE LATER TO SQL
@@ -522,28 +521,34 @@ const fetchPopularMovies = async () => {
 async function checkIfLiked(movieId, userId) {
   //  let isLiked = false;
 
+  try {
+    // Check if the movie is in the user's like list
+    const checkResults = await query(
+      "SELECT * FROM liked_movies WHERE user_id = ? AND movie_id = ?",
+      [userId, movieId]
+    );
 
-    try {
-      // Check if the movie is in the user's like list
-      const checkResults = await query(
-        "SELECT * FROM liked_movies WHERE user_id = ? AND movie_id = ?",
-        [userId, movieId]
-      );
-
-      if (checkResults.length === 0) {
-        //console.log("Movie id ", movieId, ", is not liked by user id ", userId);
-        return false;
-      } else if (checkResults.length > 0) { // maybe should have more precise check?
-        return true;
-      }
-
-    } catch (error) {
-      console.error('checkIfLiked: Error trying to find if a movie is liked by user in checkIfLiked function ', error);
-      return res.status(500).send('checkIfLiked: Error trying to find if a movie is liked by user in checkIfLiked function');
+    if (checkResults.length === 0) {
+      //console.log("Movie id ", movieId, ", is not liked by user id ", userId);
+      return false;
+    } else if (checkResults.length > 0) {
+      // maybe should have more precise check?
+      return true;
     }
+  } catch (error) {
+    console.error(
+      "checkIfLiked: Error trying to find if a movie is liked by user in checkIfLiked function ",
+      error
+    );
+    return res
+      .status(500)
+      .send(
+        "checkIfLiked: Error trying to find if a movie is liked by user in checkIfLiked function"
+      );
+  }
 
-    // before likedMoviesList is in mySQL:
-   /*  const userLikedMoviesList = likedMoviesList.find((list) => { // go through the lists (one likelist per user)
+  // before likedMoviesList is in mySQL:
+  /*  const userLikedMoviesList = likedMoviesList.find((list) => { // go through the lists (one likelist per user)
       return list.userId === currentUserId;
     }); 
 
@@ -580,15 +585,22 @@ async function checkIfWatchListed(movieId, userId) {
     if (checkResults.length === 0) {
       //console.log("Movie id ", movieId, ", is not liked by user id ", userId);
       return false;
-    } else if (checkResults.length > 0) { // maybe should have more precise check?
+    } else if (checkResults.length > 0) {
+      // maybe should have more precise check?
       return true;
     }
-
   } catch (error) {
-    console.error('checkIfWatchListed: Error trying to find if a movie is in watchlist in checkIfWatchListed function ', error);
-    return res.status(500).send('checkIfWatchListed: Error trying to find if a movie is in watchlist in checkIfWatchListed function');
+    console.error(
+      "checkIfWatchListed: Error trying to find if a movie is in watchlist in checkIfWatchListed function ",
+      error
+    );
+    return res
+      .status(500)
+      .send(
+        "checkIfWatchListed: Error trying to find if a movie is in watchlist in checkIfWatchListed function"
+      );
   }
-/* 
+  /* 
 
   const userMoviesWatchList = movieWatchList.find((list) => {
     return list.userId === currentUserId;
@@ -621,8 +633,7 @@ async function checkIfWatchListed(movieId, userId) {
 
 app.post("/popularmovies", async (req, res) => {
   try {
-
-    const {token} = req.body;
+    const { token } = req.body;
 
     console.log("token: ", token);
 
@@ -636,7 +647,6 @@ app.post("/popularmovies", async (req, res) => {
         [token]
       );
       console.log("sessionSearchResult: ", sessionSearchResult);
-
     } catch (error) {
       loggedIn = false;
       console.log("Not logged in or Error finding session", error);
@@ -646,15 +656,13 @@ app.post("/popularmovies", async (req, res) => {
     let currentUserId;
     if (sessionSearchResult.length === 0) {
       loggedIn = false;
-      
-    } else  {
-      currentSession = sessionSearchResult[0]
+    } else {
+      currentSession = sessionSearchResult[0];
       currentUserId = currentSession.user_id;
       loggedIn = true;
-     // loggedIn = false;
+      // loggedIn = false;
     }
     //return res.status(500).send("2:Error finding session");
-
 
     const popularMovies = await fetchPopularMovies();
 
@@ -697,16 +705,14 @@ app.post("/popularmovies", async (req, res) => {
         let isLiked;
         let isInWatchList;
         if (loggedIn) {
-
-          isLiked = await checkIfLiked(movie.id, currentUserId)
-          isInWatchList = await checkIfWatchListed(movie.id, currentUserId) // TODO: check currentUserId !!!
+          isLiked = await checkIfLiked(movie.id, currentUserId);
+          isInWatchList = await checkIfWatchListed(movie.id, currentUserId); // TODO: check currentUserId !!!
         } else {
           console.log("Not online so will NOT check like and watchlist ");
           isLiked = false;
           isInWatchList = false;
         }
-      
-        
+
         if (movieProvidersObject) {
           popularMoviesAndProviders.push({
             movie,
@@ -872,11 +878,12 @@ function getProvidersOfMOvieObjectOurDatabase(id) {
   return searchResult;
 }
 
-app.post("/addmovietodatabase", async (req, res) => {
-  try {
-    //console.log("/addmovietodatabase req.body: ", req.body);
-    const { movie, movieOrSeries } = req.body;
+//////////////////////ADD MOVIE TO DATABASE //////////////////////////////////
 
+app.post("/addmovietodatabase", async (req, res) => {
+  const { movie, movieOrSeries } = req.body;
+
+  try {
     if (!movie.id || !movieOrSeries) {
       return res.status(400).json({
         error:
@@ -884,44 +891,63 @@ app.post("/addmovietodatabase", async (req, res) => {
       });
     }
 
-    const idExistsInMovies = fetchedMovies.some(
-      (fetchedMovie) => fetchedMovie.id === movie.id
-    );
-    const idExistsInSeries = fetchedSeries.some(
-      (fetchedSerie) => fetchedSerie.id === movie.id
-    );
+    // Check if the movie or series already exists in the fetched_movies or fetched_series tables
+    let idExistsInMovies;
+    let idExistsInSeries;
 
-    if (idExistsInMovies || idExistsInSeries) {
+    if (movieOrSeries === "movie") {
+      idExistsInMovies = await query(
+        "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    } else if (movieOrSeries === "series") {
+      idExistsInSeries = await query(
+        "SELECT id FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    }
+
+    if (
+      (idExistsInMovies && idExistsInMovies.length > 0) ||
+      (idExistsInSeries && idExistsInSeries.length > 0)
+    ) {
       console.log("movie/series ID ", movie.id, " has already been fetched.");
       return res.status(200).json({
         message: "Liked movie OR Liked series has already been fetched.",
       });
-    } else {
-      // om redan finns?
     }
 
+    // Insert the movie or series into the appropriate table
     if (movieOrSeries === "movie") {
-      // maybe change to some sort of True/False variable instead...
-      fetchedMovies.push(movie); // UPDATE LATER TO SQL
-      console.log("Added movie ID ", movie.id, " to fetchedMovies");
+      await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added movie ID ", movie.id, " to fetched_movies");
     } else if (movieOrSeries === "series") {
-      fetchedSeries.push(movie); // UPDATE LATER TO SQL
-      console.log("Added series ID ", movie.id, " to fetchedSeries");
+      await query("INSERT INTO fetched_series (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added series ID ", movie.id, " to fetched_series");
     } else {
       console.log("Could not determine if movie or series");
+      return res.status(400).json({
+        error: "Could not determine if movie or series",
+      });
     }
 
     res.status(201).json({
-      message: "Movie/Series saved to fetchedMovies/fetchedSeries",
+      message: "Movie/Series saved to fetched_movies/fetched_series",
     });
   } catch (error) {
     console.error(
-      "1:Error adding movie/series to fetchedMovie/fetchedSeries:",
+      "1:Error adding movie/series to fetched_movies/fetched_series:",
       error
     );
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+////////////////////////////////////////////////////////
 
 // post the lists
 app.post("/me/likelists", async (req, res) => {
@@ -1007,7 +1033,10 @@ async function getWatchAndLikeList(token) {
 
     let sessionSearchResult;
     try {
-      sessionSearchResult = await query("SELECT * FROM sessions WHERE token = ?", [token]);
+      sessionSearchResult = await query(
+        "SELECT * FROM sessions WHERE token = ?",
+        [token]
+      );
     } catch (error) {
       console.error("2:Error finding session", error);
       return res.status(500).send("2:Error finding session");
@@ -1022,23 +1051,29 @@ async function getWatchAndLikeList(token) {
 
     let userLikedMoviesList = [];
     let userMoviesWatchList = [];
-    
+
     try {
-      const userLikedMoviesResult = await query("SELECT * FROM liked_movies WHERE user_id = ?", [userId]);
+      const userLikedMoviesResult = await query(
+        "SELECT * FROM liked_movies WHERE user_id = ?",
+        [userId]
+      );
       if (userLikedMoviesResult.length > 0) {
         userLikedMoviesList = userLikedMoviesResult;
       }
     } catch (error) {
-      console.error('Error fetching liked movies', error);
+      console.error("Error fetching liked movies", error);
     }
 
     try {
-      const userWatchListResult = await query("SELECT * FROM watchlist WHERE user_id = ?", [userId]);
+      const userWatchListResult = await query(
+        "SELECT * FROM watchlist WHERE user_id = ?",
+        [userId]
+      );
       if (userWatchListResult.length > 0) {
         userMoviesWatchList = userWatchListResult;
       }
     } catch (error) {
-      console.error('Error fetching watchlist', error);
+      console.error("Error fetching watchlist", error);
     }
 
     const data = {
@@ -1055,7 +1090,6 @@ async function getWatchAndLikeList(token) {
     console.log("Internal server error in getWatchAndLikeList()");
   }
 }
-
 
 // user-specific watchandlikelists
 app.post("/me/watchandlikelists", async (req, res) => {
@@ -1082,12 +1116,12 @@ app.post("/me/watchandlikelists", async (req, res) => {
     if (sessionSearchResult.length === 0) {
       return res.status(404).json({ error: "Session not found" });
     }
-   
+
     const currentSession = sessionSearchResult[0];
     const userId = currentSession.user_id;
 
     // before likedMoviesList is in mySQL:
-   /*  const userLikedMoviesList = likedMoviesList.find((list) => {
+    /*  const userLikedMoviesList = likedMoviesList.find((list) => {
       return list.userId === currentSession.user_id;
     });
 
@@ -1098,10 +1132,9 @@ app.post("/me/watchandlikelists", async (req, res) => {
       //continue code...
     } */
 
-    let userLikedMoviesList; 
+    let userLikedMoviesList;
     let hasMoviesInLikeList = false;
     try {
-      
       const userLikedMoviesResult = await query(
         "SELECT * FROM liked_movies WHERE user_id = ?",
         [userId]
@@ -1110,18 +1143,25 @@ app.post("/me/watchandlikelists", async (req, res) => {
       if (userLikedMoviesResult.length === 0) {
         //console.log("Movie id ", movieId, ", is not liked by user id ", userId);
         console.log("1:User has no liked movies or Failed to find: ", userId);
-        
-      }  else if (userLikedMoviesResult.length > 0) { // 
+      } else if (userLikedMoviesResult.length > 0) {
+        //
         //return true;
         hasMoviesInLikeList = true;
         //console.log("userLikedMoviesResult: ", userLikedMoviesResult);
         userLikedMoviesList = userLikedMoviesResult;
-      } 
+      }
 
       //const likedMoviesList = userLikedMoviesResult[0]
     } catch (error) {
-      console.error('Error trying to find if a movie is liked by user in checkIfLiked function ', error);
-      return res.status(500).send('Error trying to find if a movie is liked by user in checkIfLiked function');
+      console.error(
+        "Error trying to find if a movie is liked by user in checkIfLiked function ",
+        error
+      );
+      return res
+        .status(500)
+        .send(
+          "Error trying to find if a movie is liked by user in checkIfLiked function"
+        );
     }
 
     let hasMoviesInWatchlist = false;
@@ -1136,20 +1176,27 @@ app.post("/me/watchandlikelists", async (req, res) => {
       if (userWatchListResult.length === 0) {
         //console.log("Movie id ", movieId, ", is not liked by user id ", userId);
         console.log("1:User has no liked movies or Failed to find: ", userId);
-     //   return res.status(500).send("User has no liked movies or Failed to find");
-      }  else if (userWatchListResult.length > 0) { // 
+        //   return res.status(500).send("User has no liked movies or Failed to find");
+      } else if (userWatchListResult.length > 0) {
+        //
         //return true;
         hasMoviesInWatchlist = true;
         console.log("userMoviesWatchList: ", userWatchListResult);
         userMoviesWatchList = userWatchListResult;
-      } 
+      }
 
       //const likedMoviesList = userLikedMoviesResult[0]
     } catch (error) {
-      console.error('Error trying to find if a movie is liked by user in checkIfLiked function ', error);
-      return res.status(500).send('Error trying to find if a movie is liked by user in checkIfLiked function');
+      console.error(
+        "Error trying to find if a movie is liked by user in checkIfLiked function ",
+        error
+      );
+      return res
+        .status(500)
+        .send(
+          "Error trying to find if a movie is liked by user in checkIfLiked function"
+        );
     }
-
 
     /* const userMoviesWatchList = movieWatchList.find((list) => {
       return list.userId === currentSession.user_id;
@@ -1174,20 +1221,18 @@ app.post("/me/watchandlikelists", async (req, res) => {
     const data = {
       //likedMoviesList: userLikedMoviesList.myLikedMoviesList,
       likedMoviesList: userLikedMoviesList,
-     // movieWatchList: userMoviesWatchList.myMovieWatchList,
+      // movieWatchList: userMoviesWatchList.myMovieWatchList,
       movieWatchList: userMoviesWatchList,
     };
 
     if (userMoviesWatchList && userLikedMoviesList) {
-    //if (userMoviesWatchList && userLikedMoviesList) {
+      //if (userMoviesWatchList && userLikedMoviesList) {
       res.json(data);
     } else {
       console.log(
         "userMoviesWatchList and/or userLikedMoviesList not defined, can't send to frontend"
       );
     }
-
-    
   } catch (error) {
     res.status(500).json({
       error: "Internal server error when trying to run /me/watchandlikelists",
@@ -1229,12 +1274,10 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     }
     const currentSession = sessionSearchResult[0];
 
-    
-
     const userId = currentSession.user_id;
 
     // before likedMoviesList is in mySQL, when every user had its own 'likeList':
-   /*  const userLikedMoviesList = likedMoviesList.find((list) => {
+    /*  const userLikedMoviesList = likedMoviesList.find((list) => {
       return list.userId === currentSession.user_id;
     });
 
@@ -1252,12 +1295,15 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     
     */
 
-     try {
+    try {
       // Check if the movie is already liked by the user
-      const checkResults = await query ('SELECT * FROM liked_movies WHERE user_id = ? AND movie_id = ?', [userId, movieId]); // movieid
+      const checkResults = await query(
+        "SELECT * FROM liked_movies WHERE user_id = ? AND movie_id = ?",
+        [userId, movieId]
+      ); // movieid
 
       //console.log();
-      
+
       // if already exist we exit the code
       if (checkResults.length > 0) {
         console.log("movie/series ID ", movieId, " is already liked.");
@@ -1265,12 +1311,13 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
           .status(409)
           .json({ message: `Movie ${movieId} is already liked.` });
       }
-  
+
       // If no we Insert the movieId and userId into liked_movies table
 
-      const insertQuery = await query ("INSERT INTO liked_movies (user_id, movie_id, movie_title) VALUES (?, ?, ?)",
-      [userId, movieId, title]);
-  
+      const insertQuery = await query(
+        "INSERT INTO liked_movies (user_id, movie_id, movie_title) VALUES (?, ?, ?)",
+        [userId, movieId, title]
+      );
 
       console.log(
         "Added movie ID ",
@@ -1280,10 +1327,9 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
         "to likedMoviesList"
       );
       return res.status(201).send(`Movie ${movieId} liked successfully`);
-      
     } catch (error) {
-      console.error('Error liking movie', error);
-      res.status(500).send('Error liking movie');
+      console.error("Error liking movie", error);
+      res.status(500).send("Error liking movie");
     }
 
     /* const idExistsInMovies = userLikedMoviesList.myLikedMoviesList.some(
@@ -1327,7 +1373,7 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
 // TODO: fix so it removes from the user's likelist
 app.post("/me/likelists/removefromlikelist", async (req, res) => {
   //console.log("halla");
-  
+
   try {
     const { movieId, movieOrSeries, title, token } = req.body;
 
@@ -1366,10 +1412,14 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
 
       // If it does not exist, we exit the code
       if (checkResults.length === 0) {
-        console.log("Can't delete movie ID ", movieId, ", it is not in the like list?.");
-        return res
-          .status(404)
-          .json({ message: `Can't delete movie ID ${movieId}, it is not in the like list?.` });
+        console.log(
+          "Can't delete movie ID ",
+          movieId,
+          ", it is not in the like list?."
+        );
+        return res.status(404).json({
+          message: `Can't delete movie ID ${movieId}, it is not in the like list?.`,
+        });
       }
 
       // If yes, delete the movieId and userId from liked_movies table
@@ -1388,8 +1438,8 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
 
       return res.status(200).send(`Movie ${movieId} removed successfully`);
     } catch (error) {
-      console.error('Error removing movie', error);
-      return res.status(500).send('Error removing movie');
+      console.error("Error removing movie", error);
+      return res.status(500).send("Error removing movie");
     }
   } catch (error) {
     console.error("1:Error removing like:", error);
@@ -1510,15 +1560,17 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
     }
     const currentSession = sessionSearchResult[0];
 
-    
     const userId = currentSession.user_id;
 
     try {
       // Check if the movie is already liked by the user
-      const checkResults = await query ('SELECT * FROM watchlist WHERE user_id = ? AND movie_id = ?', [userId, movieId]); // movieid
+      const checkResults = await query(
+        "SELECT * FROM watchlist WHERE user_id = ? AND movie_id = ?",
+        [userId, movieId]
+      ); // movieid
 
       //console.log();
-      
+
       // if already exist we exit the code
       if (checkResults.length > 0) {
         console.log("movie/series ID ", movieId, " is already in watchlist.");
@@ -1526,26 +1578,24 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
           .status(409)
           .json({ message: `Movie ${movieId} is already in watchlist.` });
       }
-  
+
       // If no we Insert the movieId and userId into liked_movies table
 
-      const insertQuery = await query ("INSERT INTO watchlist (user_id, movie_id, movie_title) VALUES (?, ?, ?)",
-      [userId, movieId, title]);
-  
-
-      console.log(
-        "Added movie ID ",
-        movieId,
-        " to watchlist"
+      const insertQuery = await query(
+        "INSERT INTO watchlist (user_id, movie_id, movie_title) VALUES (?, ?, ?)",
+        [userId, movieId, title]
       );
-      return res.status(201).send(`Movie ${movieId} added to watchlist successfully`);
-      
+
+      console.log("Added movie ID ", movieId, " to watchlist");
+      return res
+        .status(201)
+        .send(`Movie ${movieId} added to watchlist successfully`);
     } catch (error) {
-      console.error('Error adding movie to watchlist', error);
-      res.status(500).send('Error adding movie to watchlist');
+      console.error("Error adding movie to watchlist", error);
+      res.status(500).send("Error adding movie to watchlist");
     }
-    
-/* 
+
+    /* 
     const userMoviesWatchList = movieWatchList.find((list) => {
       return list.userId === currentSession.user_id;
     });
@@ -1582,7 +1632,7 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
       console.log("Added series ID ", id, " to seriesWatchList");
     } */
 
-  /*   res.status(201).json({
+    /*   res.status(201).json({
       message: "Movie/Series saved to watch list succesfully",
     }); */
   } catch (error) {
@@ -1590,8 +1640,6 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
 
 // function parseTMDBId(response) {
 //   //Regex för att få TMDB ID baserat på "TMDB ID: {number}"
@@ -2003,35 +2051,34 @@ app.post("/generatedailymix2", async (req, res) => {
   /* const userQuery = req.body.query;
     console.log("Received user query:", userQuery); */
 
-    const {token} = req.body;
+  const { token } = req.body;
 
-    if (!token) {
-      return res.status(400).json({ error: "No token received to /generatedailymix2" });
-    }
+  if (!token) {
+    return res
+      .status(400)
+      .json({ error: "No token received to /generatedailymix2" });
+  }
 
-    
-    let sessionSearchResult;
-    try {
-      // use the token to find the current session (user_id that is logged in)
-      sessionSearchResult = await query(
-        "SELECT * FROM sessions WHERE token = ?",
-        [token]
-      );
-    } catch (error) {
-      console.error("2:Error finding session", error);
-      return res.status(500).send("2:Error finding session");
-    }
+  let sessionSearchResult;
+  try {
+    // use the token to find the current session (user_id that is logged in)
+    sessionSearchResult = await query(
+      "SELECT * FROM sessions WHERE token = ?",
+      [token]
+    );
+  } catch (error) {
+    console.error("2:Error finding session", error);
+    return res.status(500).send("2:Error finding session");
+  }
 
-    if (sessionSearchResult.length === 0) {
-      return res.status(404).json({ error: "Session not found" });
-    }
-    const currentSession = sessionSearchResult[0];
+  if (sessionSearchResult.length === 0) {
+    return res.status(404).json({ error: "Session not found" });
+  }
+  const currentSession = sessionSearchResult[0];
 
-    const userId = currentSession.user_id;
+  const userId = currentSession.user_id;
 
   dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes... // TODO: med mysql, ska vi spara alla mixes eller alltid ta bort den gamla innan vi generar en ny?
-
-
 
   const watchAndLikeList = await getWatchAndLikeList(token);
   let userLikedMoviesList;
@@ -2043,7 +2090,6 @@ app.post("/generatedailymix2", async (req, res) => {
         "You need to like some movies before I can generate a Mix for you!",
     });
   }
-   
 
   /* if (likedMoviesList.length === 0) {
     return res.json({
@@ -2202,9 +2248,7 @@ app.post("/generatedailymix2", async (req, res) => {
       // console.log("movieObject: ", movieObject);
       //setLoading(false);
 
-
-
-     /*  let isLiked = false;
+      /*  let isLiked = false;
       let isInWatchList = false;
       async function checkIfLikedAndWatchListed() {
 
@@ -2213,7 +2257,6 @@ app.post("/generatedailymix2", async (req, res) => {
       }
       checkIfLikedAndWatchListed(); */
 
-      
       if (movieObjectOurDatabase) {
         mixMovieObjects.push(movieObjectOurDatabase);
       } else {
@@ -2513,7 +2556,7 @@ app.get("/me/lists", (req, res) => {
 });
 
 app.get("/me/lists/:listId", (req, res) => {
-  const { listId } = req.params; 
+  const { listId } = req.params;
 
   const list = lists.find((l) => l.id === parseInt(listId));
 
@@ -2530,12 +2573,8 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-
-
-
 // Temporarily storing seen movies
 let seenMoviesList = [];
-
 
 // Endpoint to add a movie to the seen list
 

@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
@@ -199,6 +199,7 @@ export default function MoviePage() {
             "data.movidetails.videokey is:",
             data.movieDetails.videoKey
           );
+          console.log("movieDetails are", movieDetails);
           setSimilar(data.movieDetails.similarMovies);
           console.log("similar movies are:", similar);
           console.log("actorImages:", actorImages);
@@ -225,15 +226,13 @@ export default function MoviePage() {
   useEffect(() => {
     const fetchLikeList = async () => {
       try {
-       const movies = await fetchWatchAndLikeList();
+        const movies = await fetchWatchAndLikeList();
 
-       console.log(movies[0].movie_id);
+        console.log(movies[0].movie_id);
 
-       setLikedMovies(movies);
+        setLikedMovies(movies);
 
-      
-        
-      /*  if (movieId !== undefined) {
+        /*  if (movieId !== undefined) {
         // Check if the movie is in the liked list
         const isLiked = movies.some((movie) => movie.movie_id === movieId);
         console.log("Movie ID:", movieId, "Is Liked:", isLiked);
@@ -243,31 +242,28 @@ export default function MoviePage() {
       } else {
         console.warn("movieId is not defined");
       } */
-        
-        
       } catch (error) {
         console.error("Failed to fetch liked movies list");
-      } 
+      }
     };
 
     fetchLikeList();
   }, [movieId]);
 
-  //console.log(likeButtonClicked); 
+  //console.log(likeButtonClicked);
 
   useEffect(() => {
     console.log("likedmovies: ", likedMovies);
     if (likedMovies.length > 0) {
-
       likedMovies.map((movie) => {
         if (movie.movie_id === movieId) {
           setLikes(isLiked);
         }
-     })
+      });
     }
-  }, [likedMovies])
+  }, [likedMovies]);
 
- /*  useEffect(() => {
+  /*  useEffect(() => {
 
     if (likedMovies.some((movie) => movie.movie_id === movieId)) {
       setLikeButtonClicked(true);
@@ -278,7 +274,7 @@ export default function MoviePage() {
 
   useEffect(() => {
     fetchUserLists();
-  },[]);
+  }, []);
 
   /* const isMovieLiked = likedMovies.some(
     (movie) => movie.movie_id === movieDetails?.id
@@ -294,7 +290,7 @@ export default function MoviePage() {
     );
   }
 
-  if (!movieDetails || likedMovies.length === 0) {
+  if (!movieDetails || likedMovies.length > 0) {
     return (
       <div className="h-lvh flex justify-center items-center">
         <LoadingIndicator />
@@ -303,7 +299,7 @@ export default function MoviePage() {
   }
 
   if (likeButtonClicked === false) {
-    <div>Loading...</div>
+    <div>Loading...</div>;
   }
 
   console.log("similar object", similar);
@@ -400,6 +396,8 @@ export default function MoviePage() {
   //   }
   //   handleCloseModal();
   // };
+
+  console.log("moviedetails:", movieDetails);
 
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -571,6 +569,9 @@ export default function MoviePage() {
                             </span>
                           </p>
                         )}
+                      </button>
+                      <button onClick={handleToggleDropdown}>
+                        handle toggle
                       </button>
 
                       {/* <div
@@ -749,13 +750,13 @@ export default function MoviePage() {
               placeholder="List Name"
             ></input>
             <button
-              onClick={handleCreateNewList}
+              onClick={handleCreateNewList()}
               className="w-full p-2 bg-blue-500 text-white rounded"
             >
               Create
             </button>
             <button
-              onClick={handleCloseModal}
+              onClick={handleCloseModal()}
               className="w-full p-2 mt-2 text-gray-600"
             >
               Cancel
