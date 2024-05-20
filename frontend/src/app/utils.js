@@ -124,7 +124,7 @@ export async function fetchMovieObject(id) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      movieID: id,
+      movieId: id,
       movieOrSeries: "movie",
     }),
   });
@@ -136,7 +136,7 @@ export async function fetchMovieObject(id) {
   const data = await response.json();
   console.log("data.searchResult: ", data.searchResult);
 
-  return data.searchResult; // RETURNERAR MOVIE-OBJEKTET
+  return data.movieObject; // RETURNERAR MOVIE-OBJEKTET
 }
 
 // api.js

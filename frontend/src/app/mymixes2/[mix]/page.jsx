@@ -145,7 +145,7 @@ export default function Mix() {
       const response = await fetch(`${host}/generatedailymix2`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           token: token,
         }),
       });
@@ -186,29 +186,25 @@ export default function Mix() {
   return (
     <div className="bg-[#29274C] h-screen p-8">
       {/* <Navbar></Navbar> */}
-      
+
       <div className="h-full flex flex-col items-center pt-8">
-
-      <div className="bg-[#110A19] rounded-3xl p-6 w-3/4 flex justify-between items-center">
-  <div className="flex flex-col justify-center items-center">
-    <h1 className="text-white font-light text-xl mb-2">{mixTitle} mix</h1>
-    <button
-      className="bg-slate-100 w-40 h-10 rounded-full font-semibold border-none mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer"
-      onClick={getGenerateDailyMixFromGPT}
-    >
-      Generate with AI
-    </button>
-  </div>
-  <img className="h-64 -mt-16 -mr-4 z-10" src="/image.png" alt="AI" />
-</div>
-
-
-
-
+        <div className="bg-[#110A19] rounded-3xl p-6 w-3/4 flex justify-between items-center">
+          <div className="flex flex-col justify-center items-center">
+            <h1 className="text-white font-light text-xl mb-2">
+              {mixTitle} mix
+            </h1>
+            <button
+              className="bg-slate-100 w-40 h-10 rounded-full font-semibold border-none mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer"
+              onClick={getGenerateDailyMixFromGPT}
+            >
+              Generate with AI
+            </button>
+          </div>
+          <img className="h-64 -mt-16 -mr-4 z-10" src="/image.png" alt="AI" />
+        </div>
 
         <div className="bg-[#110A19] rounded-3xl min-h-full pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0 mt-8 w-full">
-          
-        {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
+          {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
           {/* <div className="flex w-full justify-end items-center">
           
             <button className="text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-inherit rounded-lg border-2 border-solid border-[#FF506C] hover:border-white">
@@ -229,7 +225,6 @@ export default function Mix() {
                 <p>{messageNoLikedMovies}</p>
               </div>
             )}
-
 
             {loading === true ? (
               <h2 className="text-white">

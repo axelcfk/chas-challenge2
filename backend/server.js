@@ -31,7 +31,10 @@ const pool = mysql.createPool({
   database: "movie-app-sql",
   // port: 3306,
   //port: 3306,
-  port: 8889 || 3306,
+  //port: 8889 || 3306,
+
+  port: process.env.DB_PORT
+  
 });
 
 let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
@@ -177,7 +180,7 @@ async function fetchMovieIdFromTMDB(movieNameFromGPT) {
       //movieIds.push(movieId); // TODO: should this ID be deleted later on when we have fetched the whole movie object? to preserve storage?
       return movieId;
     } else {
-      console.error("Error fetching movie ID:", error);
+      console.error("Error fetching movie ID in fetchMovieIdFromTMDB() function");
       return null;
     }
   } catch (error) {
@@ -320,7 +323,7 @@ async function fetchMovieProvidersObjectTMDB(id) {
 
     // ändra så att vi skickar alla data till addProvidersOfMovieToDatabase funktionen
 
-    addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
+    await addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
 
     if (data.results.SE) {
       return data.results.SE;
@@ -366,10 +369,7 @@ async function fetchMovieObjectTMDB(id) {
     return data;
   } catch (error) {
     console.error("Error fetching movie details:", error);
-  } finally {
-    //setLoading(false);
-    //setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
-  }
+  } 
 }
 
 async function addMovieToDatabase(movie, movieOrSeries) {
@@ -443,7 +443,7 @@ app.get("/fetchedProvidersOfMovie", (req, res) => {
   res.json(data);
 });
 
-app.post("/addmovieproviderstodatabase", (req, res) => {
+app.post("/addmovieproviderstodatabase", async (req, res) => {
   try {
     const { movieProvidersObject } = req.body;
 
@@ -453,7 +453,7 @@ app.post("/addmovieproviderstodatabase", (req, res) => {
         .json({ error: "No object of providers or movie ID provided" });
     }
 
-    addProvidersOfMovieToDatabase(movieProvidersObject);
+    await addProvidersOfMovieToDatabase(movieProvidersObject);
   } catch (error) {
     console.error(
       "1:Error attempting to use endpoint /addmovieproviderstodatabase: ",
@@ -468,7 +468,7 @@ app.post("/addmovieproviderstodatabase", (req, res) => {
 
 // WHEN USING THIS FUNCTION, set movieProvidersObject = 0 if SE has no provider...
 // e.g. addProvidersOfMovieToDatabase(0, id)
-function addProvidersOfMovieToDatabase(movieProvidersObject) {
+/* function addProvidersOfMovieToDatabase(movieProvidersObject) {
   if (!movieProvidersObject) {
     console.log(
       "movie providers object or id not provided when attempting to add to our database."
@@ -479,9 +479,9 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
   const idExistsAlready = fetchedProvidersOfMovie.some(
     (fetchedMovie) => fetchedMovie.id === movieProvidersObject.id
   );
-  /*  const idExistsInSeries = fetchedSeries.some(
-    (fetchedSerie) => fetchedSerie.id === movieObject.id
-  ); */
+  //  const idExistsInSeries = fetchedSeries.some(
+  //  (fetchedSerie) => fetchedSerie.id === movieObject.id
+  //); 
 
   if (idExistsAlready) {
     console.log(
@@ -493,20 +493,7 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
   } else {
     // fortsätt kod...
   }
-
-  /* if (data.results.SE) {
-      addProvidersOfMovieToDatabase(data.results.SE, id);
-
-      return data.results.SE;
-    } else if (!data.results.SE) {
-      console.log("No providers in sweden for movie id ", id);
-      addProvidersOfMovieToDatabase(0, id);
-
-      return { noProviders: "no providers in sweden", id };
-    } else {
-      console.log("failed to fetch providers of movie from TMDB");
-    } */
-  //
+  
   if (!movieProvidersObject.results?.SE) {
     // TODO: check
     fetchedProvidersOfMovie.push({
@@ -527,6 +514,60 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
       movieProvidersObject.id,
       " into array fetchedProvidersOfMovie"
     );
+  }
+} */
+
+
+async function addProvidersOfMovieToDatabase(movieProvidersObject) {
+  if (!movieProvidersObject) {
+    console.log(
+      "Movie providers object or id not provided when attempting to add to our database."
+    );
+    return { error: "Movie providers object or id not provided." };
+  }
+  try {
+    const movieId = movieProvidersObject.id;
+    // Check if providers for this movie ID already exist in the database
+    const result = await query(
+      "SELECT id FROM fetched_movie_providers WHERE  id = ?",
+      [movieId]
+    );
+    if (result.length > 0) {
+      console.log(
+        "Providers of movie ID",
+        movieId,
+        "have already been fetched."
+      );
+      return { message: "Providers already exist." };
+    }
+    let movieProvidersData;
+    if (!movieProvidersObject.results?.SE) {
+      // No providers in Sweden
+      movieProvidersData = JSON.stringify({
+        noProviders: "no providers in Sweden",
+        id: movieId,
+      });
+    } else {
+      // Providers in Sweden
+      movieProvidersData = JSON.stringify({
+        ...movieProvidersObject.results.SE,
+        id: movieId,
+      });
+    }
+    // Update the providers column for the specific movie ID
+    await query(
+      "INSERT INTO fetched_movie_providers (id, data) VALUES (?, ?)",
+      [movieId, movieProvidersData]
+    );
+    console.log(
+      "Added providers of movie ID",
+      movieId,
+      "into fetched_movies table"
+    );
+    return { message: "Providers added to the database." };
+  } catch (error) {
+    console.error("Error adding providers to database:", error);
+    return { error: "Internal server error" };
   }
 }
 
@@ -701,10 +742,10 @@ app.post("/popularmovies", async (req, res) => {
             .json({ error: "No movie id found in popular movie?" });
         }
 
-        addMovieToDatabase(movie, "movie"); // doesnt add if already added
+        await addMovieToDatabase(movie, "movie"); // doesnt add if already added
 
         // first check if movieproviders exists in our database
-        let movieProvidersObject = getProvidersOfMOvieObjectOurDatabase(
+        let movieProvidersObject = await getProvidersOfMOvieObjectOurDatabase(
           movie.id
         );
 
@@ -809,7 +850,7 @@ app.get("/allfetchedmoviesorseries", async (req, res) => {
     fetchedSeries: fetchedSeries,
   });
 });
-
+/* 
 function getMovieObjectOurDatabase(id, movieOrSeries) {
   let searchResult;
   try {
@@ -832,9 +873,48 @@ function getMovieObjectOurDatabase(id, movieOrSeries) {
   }
 
   return searchResult;
+} */
+
+async function getMovieObjectOurDatabase(id, movieOrSeries) {
+  let searchResult;
+  try {
+    if (movieOrSeries === "movie") {
+      searchResult = await query(
+        "SELECT data FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [id]
+      );
+    } else if (movieOrSeries === "series") {
+      searchResult = await query(
+        "SELECT data FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [id]
+      );
+    } else {
+      console.log("movieOrSeries is not 'movie' or 'series'?");
+    }
+  } catch (error) {
+    console.error("2:Error finding movie/series", error);
+    return; // exit code
+  }
+
+  if (searchResult.length > 0) {
+    //const movieObject = JSON.parse(searchResult[0].data);
+    let movieObject = searchResult[0].data;
+
+    // If data is a string, parse it into a JavaScript object
+    if (typeof movieObject === 'string') {
+      movieObject = JSON.parse(movieObject);
+    }
+    //console.log(movieObject);
+
+    return movieObject;
+  } else {
+    console.log("Movie not found");
+  }
+
+ // return searchResult;
 }
 
-// GET
+/* 
 app.post("/movieobject", async (req, res) => {
   try {
     console.log("/movieobject req.body: ", req.body);
@@ -876,29 +956,99 @@ app.post("/movieobject", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+ */
 
-function getProvidersOfMOvieObjectOurDatabase(id) {
+// get movie object from our database
+app.post("/movieobject", async (req, res) => {
+  try {
+    console.log("/movieobject req.body: ", req.body);
+    const { movieId, movieOrSeries } = req.body;
+
+    if (!movieId || !movieOrSeries) {
+      return res.status(400).json({
+        error:
+          "movieID not received, and/or need to define if movie or series.",
+      }); // exit code
+    }
+
+    //console.log("Current fetchedMovies: ", fetchedMovies);
+    let searchResult;
+    try {
+      if (movieOrSeries === "movie") {
+        searchResult = await query(
+          "SELECT data FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+          [movieId]
+        );
+      } else if (movieOrSeries === "series") {
+        searchResult = await query(
+          "SELECT data FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+          [movieId]
+        );
+      } else {
+        console.log("movieOrSeries is not 'movie' or 'series'?");
+      }
+    } catch (error) {
+      console.error("2:Error finding movie/series in /movieobject", error);
+      return res.status(500).send("2:Error finding movie/series in /movieobject"); // exit code
+    }
+
+    if (searchResult.length > 0) {
+      //const movieObject = JSON.parse(searchResult[0].data);
+      let movieObject = searchResult[0].data;
+
+      // If data is a string, parse it into a JavaScript object
+        if (typeof movieObject === 'string') {
+          movieObject = JSON.parse(movieObject);
+        }
+     // console.log(movieObject);
+
+      return res
+      .status(200)
+      .json({ message: "GET data for movie/series: ", movieObject });
+    } else {
+      console.log("Movie not found");
+    }
+
+    
+  } catch (error) {
+    console.error("1:Error attempting to GET movie/series object", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+async function getProvidersOfMOvieObjectOurDatabase(movieId) {
   let searchResult;
   try {
-    searchResult = fetchedProvidersOfMovie.find((movie) => {
-      return id === movie.id;
-    });
-    //console.log("Movie-Search result: ", searchResult);
 
-    if (searchResult == null) {
-      console.log("providers not found in our database, returning null");
-      return null;
-    }
+    searchResult = await query(
+      "SELECT data FROM fetched_movie_providers WHERE id = ?",
+      [movieId]
+    );  // JSON EXTRACT isnt need here because id is outside of the providers-object in a seperate column
+
+    //console.log("Movie-Search result: ", searchResult);
 
     //console.log("Series-Search result: ", searchResult);
   } catch (error) {
     console.error("Error finding providers of movie from our database", error);
-    return res
-      .status(500)
-      .send("Error finding providers of movie from our database"); // exit code
+    return;
   }
 
-  return searchResult;
+  if (searchResult.length > 0) {
+    //const movieObject = JSON.parse(searchResult[0].data);
+    let providersObject = searchResult[0].data;
+
+    // If data is a string, parse it into a JavaScript object
+    if (typeof providersObject === 'string') {
+      providersObject = JSON.parse(providersObject);
+    }
+    //console.log(movieObject);
+
+    return providersObject;
+  } else {
+    console.log("Movie not found");
+  }
 }
 
 //////////////////////ADD MOVIE TO DATABASE //////////////////////////////////
@@ -1204,7 +1354,7 @@ app.post("/me/watchandlikelists", async (req, res) => {
         //
         //return true;
         hasMoviesInWatchlist = true;
-        console.log("userMoviesWatchList: ", userWatchListResult);
+       // console.log("userMoviesWatchList: ", userWatchListResult);
         userMoviesWatchList = userWatchListResult;
       }
 
@@ -1909,8 +2059,10 @@ app.get("/me/dailymixbasedonlikes", async (req, res) => {
   const mixMovieObjectsProviders = [];
 
   if (mixOnlyIdsAndTitles.length > 0) {
-    mixOnlyIdsAndTitles.map((movie) => {
-      const movieObjectOurDatabase = getMovieObjectOurDatabase(
+    console.log("found a saved dailymix, mapping through it and running getMovieObjectOurDatabase() for each movie");
+    for (const movie of mixOnlyIdsAndTitles) {
+    //mixOnlyIdsAndTitles.map(async (movie) => {
+      const movieObjectOurDatabase = await getMovieObjectOurDatabase(
         movie.id,
         "movie"
       );
@@ -1924,14 +2076,15 @@ app.get("/me/dailymixbasedonlikes", async (req, res) => {
       }
 
       const movieObjectProvidersOurDatabase =
-        getProvidersOfMOvieObjectOurDatabase(movie.id);
+        await getProvidersOfMOvieObjectOurDatabase(movie.id);
 
       if (movieObjectProvidersOurDatabase) {
         mixMovieObjectsProviders.push(movieObjectProvidersOurDatabase);
       } else {
         console.log("providers failed to fetch from our own database?");
       }
-    });
+    };
+    // );
   } else {
     return res.json({ message: "No mix generated yet." });
   }
@@ -2069,6 +2222,10 @@ app.get("/generatedailymix", async (req, res) => {
   }
 });
 
+
+// TODO: dailymix på SQL borde ha kolumnerna: id för själva mixen, id för userid, och movieid. 
+// dvs en rad har id, userid, movieid
+// måste vi då hämta de 6 senaste genererade filmerna eller deletar vi ALLA filmer som finns i dailymix innan vi sparar nya? Den enda anledningen att vi har detta på sql är för att vi vill kunna ladda om sidan / logga ut och hämta senaste genererade mixen...
 app.post("/generatedailymix2", async (req, res) => {
   // no user query needed, will be based on existing like list
   /* const userQuery = req.body.query;
@@ -2169,7 +2326,7 @@ app.post("/generatedailymix2", async (req, res) => {
     let movieIds = [];
 
     // TODO: HÄR SKA VI LÄGGA IN ALLA END-POINTS SOM HANTERAR TMDB FETCHES OCH LAGRA I DATABASEN GREJER, därefter skickar vi det vi behöver till frontend?
-    if (movieNames && movieNames.length === 6) {
+    if (movieNames && movieNames.length === 6) { // even if a movie name becomes 'null' apparently
       //fetchMovieIds();
       const fetchedMovieIds = await fetchAllMovieIdsFromTMDB(movieNames);
       movieIds = fetchedMovieIds; // TODO: kanske bättre att mappa igenom fetchedmovieids och sen pusha in i movieIds...?
@@ -2190,7 +2347,7 @@ app.post("/generatedailymix2", async (req, res) => {
           const movieObject = await fetchMovieObjectTMDB(movieId); // fetches from TMDB and stores into our database
 
           if (movieObject) {
-            console.log("id of movieobject fetched: ", movieObject.id);
+            console.log("fetched movie object from TMDB of movie id: ", movieObject.id);
             movieObjects.push(movieObject);
           } else {
             console.log("failed fetching movie object and providers from tmdb");
@@ -2210,7 +2367,7 @@ app.post("/generatedailymix2", async (req, res) => {
       movieObjects.length === movieNames.length &&
       movieObjects.length > 0
     ) {
-      console.log("all movie ids received from api: ", movieIds);
+      console.log("Starting to fetch object providers, all movie ids received from api: ", movieIds);
 
       try {
         for (const movieId of movieIds) {
@@ -2263,30 +2420,22 @@ app.post("/generatedailymix2", async (req, res) => {
     //const mixLikedAndWatchListed = []
 
     // Here we fetch the movie object again, but from our own database (just to test), maybe some day we can remove the fetch TMDB above?
-    movieObjects.map((movie) => {
-      const movieObjectOurDatabase = getMovieObjectOurDatabase(
+    //console.log("movieObjects: ", movieObjects);
+    //movieObjects.map(async (movie) => {
+    for (const movie of movieObjects) {
+      const movieObjectOurDatabase = await getMovieObjectOurDatabase(
         movie.id,
         "movie"
       );
-      // console.log("movieObject: ", movieObject);
-      //setLoading(false);
-
-      /*  let isLiked = false;
-      let isInWatchList = false;
-      async function checkIfLikedAndWatchListed() {
-
-        isLiked = await checkIfLiked(movie.id, userId);
-        isInWatchList = await checkIfWatchListed(movie.id, userId);
-      }
-      checkIfLikedAndWatchListed(); */
 
       if (movieObjectOurDatabase) {
+        //console.log("movieObjectOurDatabase: ", movieObjectOurDatabase);
         mixMovieObjects.push(movieObjectOurDatabase);
       } else {
         console.log("movieObjectOurDatabase not populated?");
       }
 
-      const providersObjectOurDatabase = getProvidersOfMOvieObjectOurDatabase(
+      const providersObjectOurDatabase = await getProvidersOfMOvieObjectOurDatabase(
         movie.id
       );
 
@@ -2295,10 +2444,12 @@ app.post("/generatedailymix2", async (req, res) => {
       } else {
         console.log("providersObjectOurDatabase not populated?");
       }
-    });
+    };
 
     //if (movieNames && reasoning) {
     if (mixMovieObjects && mixMovieObjectsProviders) {
+      console.log("mixMovieObjects: ", mixMovieObjects);
+      console.log("mixMovieObjectsProviders: ", mixMovieObjectsProviders);
       // res.json({ movieNames, reasoning });
       res.json({ mixMovieObjects, mixMovieObjectsProviders }); // SENDING ARRAY OF MOVIE OBJECTS
     } else {
@@ -2393,7 +2544,7 @@ const fetchCompleteMovieDetails = async (movieId) => {
       movieImagesResponse.json(),
     ]);
 
-    addMovieToDatabase(movieData, "movie");
+    await addMovieToDatabase(movieData, "movie");
 
     const director = creditsData.crew.find(
       (person) => person.job === "Director"
