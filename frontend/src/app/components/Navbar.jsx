@@ -3,12 +3,19 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import MovieSearch from "../searchtest/page";
 import { FaDotCircle } from "react-icons/fa";
+import InputField from "../chatpage2/inputField";
+import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
+import { useSearch } from "../context/SearchContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
   const [userId, setUserId] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { input, setInput } = useSearch();
+  const { handleQuerySubmit } = useHandleQuerySubmit();
+
+  const handleInputChange = (e) => setInput(e.target.value);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -18,6 +25,13 @@ export default function Navbar() {
       setUserId(savedUserId);
     }
   }, []);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleQuerySubmit();
+    }
+  };
 
   useEffect(() => {
     if (isOpen || isSearchOpen) {
@@ -55,6 +69,7 @@ export default function Navbar() {
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-lighter-purple focus:outline-none border border-solid focus:bg-lighter-purple focus:text-white bg-deep-purple ml-4"
+                aria-label="Burger Menu"
               >
                 <svg
                   className="h-6 w-6"
@@ -174,6 +189,12 @@ export default function Navbar() {
             )}
           </div>
         </div>
+        <InputField
+          handleInputChange={handleInputChange}
+          handleQuerySubmit={handleQuerySubmit}
+          heightDiv={"h-10"}
+          placeholder={"AI SEARCH"}
+        />
       </div>
     </nav>
   );
