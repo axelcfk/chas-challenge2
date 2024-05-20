@@ -66,9 +66,12 @@ export default function MovieCardWatchAndLike({
                 className="h-full rounded-t-2xl w-40 box-border"
                 src={poster}
                 alt="Movie Poster"
+                aria-label={title}
               />
             </Link>
             <div
+              tabIndex={0}
+              aria-label="Like button"
               style={{
                 border: "0.9px solid grey",
                 backdropFilter: "blur(4px)",

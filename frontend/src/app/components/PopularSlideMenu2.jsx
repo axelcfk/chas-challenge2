@@ -1,17 +1,16 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import { host } from "../utils";
 import SlideMenu from "./SlideMenu";
 import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 
 export default function PopularSlideMenu2() {
-
   const [popularMoviesData, setPopularMoviesData] = useState(null);
   const [popularListDetails, setPopularListDetails] = useState([]);
 
   useEffect(() => {
     fetchPopularMoviesAndDetailsFromTMDB();
-  }, [])
+  }, []);
 
   async function fetchPopularMoviesAndDetailsFromTMDB() {
     try {
@@ -34,13 +33,10 @@ export default function PopularSlideMenu2() {
           //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
         }),
       });
-  
-      
+
       const data = await response.json();
 
-      setPopularMoviesData(data);   
-      
-     
+      setPopularMoviesData(data);
     } catch (error) {
       console.error("Error:", error);
     } /* finally {
@@ -92,34 +88,34 @@ export default function PopularSlideMenu2() {
 
   useEffect(() => {
     if (popularMoviesData && popularMoviesData.length > 0) {
-      
-      setPopularListDetails(prevDetails => {
-        return popularMoviesData.map(movieData => ({
+      setPopularListDetails((prevDetails) => {
+        return popularMoviesData.map((movieData) => ({
           id: movieData.movie.id,
           title: movieData.movie.title,
           voteAverage: movieData.movie.vote_average,
           release: movieData.movie.release_date,
           backdrop: `https://image.tmdb.org/t/p/w500${movieData.movie.backdrop_path}`,
           poster: `https://image.tmdb.org/t/p/w500${movieData.movie.poster_path}`,
-          isLiked: movieData.isLiked, 
-          isInWatchList: movieData.isInWatchList, 
+          isLiked: movieData.isLiked,
+          isInWatchList: movieData.isInWatchList,
           flatrate: movieData.movieProvidersObject.flatrate, // skips this if flatrate doesnt exist
         }));
       });
     }
   }, [popularMoviesData]);
 
-
   if (popularListDetails.length === 20) {
-
     console.log(popularListDetails);
   }
 
   if (popularListDetails.length === 0) {
     return (
       <>
-        <div className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20  bg-slate-950 text-slate-100">
-          Loading popular movies...
+        <div
+          className="flex flex-col justify-center items-center md:items-start pb-10  px-8 md:px-20  bg-slate-950 text-slate-100"
+          tabIndex={0}
+        >
+          <p>Loading popular movies...</p>
         </div>
       </>
     );
@@ -144,10 +140,11 @@ export default function PopularSlideMenu2() {
           ))}
         </SlideMenu>
       ) : (
-        <div className="inline-block w-full h-80 md:h-96 mx-4">
-          <p>No movies in watchlist yet</p>  {/*  TODO: detta visas i en millisekund när man refreshar... */}
+        <div className="inline-block w-full h-80 md:h-96 mx-4" tabIndex={0}>
+          <p>No movies in watchlist yet</p>{" "}
+          {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
       )}
     </>
-  )
+  );
 }

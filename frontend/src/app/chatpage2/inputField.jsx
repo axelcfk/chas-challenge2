@@ -5,10 +5,11 @@ export default function InputField({
   handleInputChange,
   input,
   placeholder,
+  heightDiv,
 }) {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      event.preventDefault(); // Prevent the form from submitting if it's inside a form
+      event.preventDefault();
       performSearch();
     }
   };
@@ -24,7 +25,7 @@ export default function InputField({
         backdropFilter: "blur(20px)",
         backgroundColor: "rgba(0, 0, 0, 0.2)",
       }}
-      className="h-14 flex justify-center items-center rounded-full z-10"
+      className={`${heightDiv} flex justify-center items-center rounded-full z-10`}
     >
       <input
         className="h-14 bg-transparent w-full md:w-1/3 rounded-full text-lg text-center text-slate-50 md:mr-3 border-none"
@@ -36,6 +37,7 @@ export default function InputField({
       />
       <button
         className="flex justify-center items-center border-none bg-transparent"
+        onChange={handleInputChange}
         onClick={handleQuerySubmit}
         disabled={!input}
       >
