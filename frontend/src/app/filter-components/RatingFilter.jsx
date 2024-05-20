@@ -5,7 +5,7 @@ function RatingFilter({ ratingFilter, setRatingFilter }) {
     const ratings = ["All", "9", "8", "7", "6", "5", "4", "3", "2", "1"];
     return (
       <select
-        className="text-gray-500 rounded-s bg-deep-purple px-0 py-1.5 hover:bg-lighter-purple cursor-pointer border border-solid border-gray-500 focus:border-gray-500 focus:outline-none"
+        className="text-gray-500 rounded-s bg-deep-purple px-0 py-1.5 hover:bg-lighter-purple cursor-pointer border border-solid border-gray-500 focus:border-gray-500"
         onChange={(e) => setRatingFilter(e.target.value)}
         value={ratingFilter}
       >
