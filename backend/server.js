@@ -1886,10 +1886,11 @@ app.post("/moviesuggest2", async (req, res) => {
   const currentSession = sessionSearchResult[0];
   const currentUserId = currentSession.user_id;
 
-  let likedMovies;
+ // let likedMovies;
+  let likedMovieTitleObjects;
   try {
-    likedMovies = await query(
-      "SELECT movie_id FROM liked_movies WHERE user_id = ?",
+    likedMovieTitleObjects = await query(
+      "SELECT movie_title FROM liked_movies WHERE user_id = ?",
       [currentUserId]
     );
   } catch (error) {
@@ -1897,7 +1898,7 @@ app.post("/moviesuggest2", async (req, res) => {
     return res.status(500).send("Error fetching liked movies");
   }
 
-  const likedMovieTitles = likedMovies.map((movie) => movie.title);
+  const likedMovieTitles = likedMovieTitleObjects.map((movie) => movie.movie_title);
 
   console.log("likedMovieTitles: ", likedMovieTitles);
 
