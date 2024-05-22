@@ -2,7 +2,15 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar, FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  FaPlus,
+  FaRegHeart,
+  FaHeart,
+  FaCheck,
+  FaStar,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
@@ -86,7 +94,7 @@ export default function MoviePage() {
   }
 
   const handleOpenModal = () => {
-    setModalOpen(!isModalOpen);
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -225,15 +233,13 @@ export default function MoviePage() {
   useEffect(() => {
     const fetchLikeList = async () => {
       try {
-       const movies = await fetchWatchAndLikeList();
+        const movies = await fetchWatchAndLikeList();
 
-       console.log(movies[0].movie_id);
+        console.log(movies[0].movie_id);
 
-       setLikedMovies(movies);
+        setLikedMovies(movies);
 
-      
-        
-      /*  if (movieId !== undefined) {
+        /*  if (movieId !== undefined) {
         // Check if the movie is in the liked list
         const isLiked = movies.some((movie) => movie.movie_id === movieId);
         console.log("Movie ID:", movieId, "Is Liked:", isLiked);
@@ -243,31 +249,28 @@ export default function MoviePage() {
       } else {
         console.warn("movieId is not defined");
       } */
-        
-        
       } catch (error) {
         console.error("Failed to fetch liked movies list");
-      } 
+      }
     };
 
     fetchLikeList();
   }, [movieId]);
 
-  //console.log(likeButtonClicked); 
+  //console.log(likeButtonClicked);
 
   useEffect(() => {
     console.log("likedmovies: ", likedMovies);
     if (likedMovies.length > 0) {
-
       likedMovies.map((movie) => {
         if (movie.movie_id === movieId) {
           setLikes(isLiked);
         }
-     })
+      });
     }
-  }, [likedMovies])
+  }, [likedMovies]);
 
- /*  useEffect(() => {
+  /*  useEffect(() => {
 
     if (likedMovies.some((movie) => movie.movie_id === movieId)) {
       setLikeButtonClicked(true);
@@ -278,7 +281,7 @@ export default function MoviePage() {
 
   useEffect(() => {
     fetchUserLists();
-  },[]);
+  }, []);
 
   /* const isMovieLiked = likedMovies.some(
     (movie) => movie.movie_id === movieDetails?.id
@@ -294,7 +297,7 @@ export default function MoviePage() {
     );
   }
 
-  if (!movieDetails || likedMovies.length === 0) {
+  if (!movieDetails || likedMovies.length === 1) {
     return (
       <div className="h-lvh flex justify-center items-center">
         <LoadingIndicator />
@@ -303,7 +306,7 @@ export default function MoviePage() {
   }
 
   if (likeButtonClicked === false) {
-    <div>Loading...</div>
+    <div>Loading...</div>;
   }
 
   console.log("similar object", similar);
@@ -517,67 +520,59 @@ export default function MoviePage() {
                         )}
                       </div>
                     </div>
-                    <div className="w-full flex flex-col justify-center items-center gap-4 ">
-                      <button
-                        onClick={() => {
-                          handleButtonClicked(movieDetails.id); // Toggles like state
-                          if (!watches[movieDetails.id]) {
-                            postAddToWatchList(
-                              movieDetails.id,
-                              "movie",
-                              movieDetails.title
-                            ); // Adds to like list if not liked
-                          } else {
-                            postRemoveFromWatchList(
-                              movieDetails.id,
-                              "movie",
-                              movieDetails.title
-                            ); // Removes from like list if liked
-                          }
-                        }}
-                        className={`w-full h-10 ${
-                          !watches[movieDetails.id]
-                            ? "bg-[#3D3B8E]"
-                            : "bg-green-600"
-                        } flex justify-center items-center rounded-full px-3 border-none`}
-                      >
-                        {!watches[movieDetails.id] ? (
-                          <FaPlus className="text-2xl text-gray-200" />
-                        ) : (
-                          <FaCheck className="text-2xl text-gray-200" />
-                        )}
-                        {!watches[movieDetails.id] ? (
-                          <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
-                            <span className="pr-4">ADD TO WATCHLIST</span>
-                            <span className="pl-4 border-l-2 border-slate-200 flex items-center">
-                              <button
-                                onClick={handleToggleDropdown}
-                                className="bg-transparent border-none text-white"
+                    <div className="w-full flex flex-col justify-center items-center gap-4">
+                      <div className="relative w-full">
+                        <button
+                          onClick={() => handleButtonClicked(movieDetails.id)}
+                          className={`w-full h-10 ${
+                            !watches[movieDetails.id]
+                              ? "bg-[#3D3B8E]"
+                              : "bg-green-600"
+                          } flex justify-center items-center rounded-full px-3 border-none`}
+                        >
+                          {!watches[movieDetails.id] ? (
+                            <FaPlus className="text-2xl text-gray-200" />
+                          ) : (
+                            <FaCheck className="text-2xl text-gray-200" />
+                          )}
+                          {!watches[movieDetails.id] ? (
+                            <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
+                              <span className="pr-4">ADD TO WATCHLIST</span>
+                            </p>
+                          ) : (
+                            <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
+                              <span className="pr-4">ADDED</span>
+                            </p>
+                          )}
+                        </button>
+                        <button
+                          onClick={handleToggleDropdown}
+                          className="absolute right-0 top-0 h-10 flex items-center justify-center bg-transparent text-white border-none cursor-pointer px-3"
+                        >
+                          <SlArrowDown />
+                        </button>
+                        {dropdownOpen && (
+                          <div className="absolute top-12 right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
+                            <ul>
+                              {userLists.map((list) => (
+                                <li
+                                  key={list.id}
+                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                                  onClick={() => handleAddMovieToList(list.id)}
+                                >
+                                  {list.name}
+                                </li>
+                              ))}
+                              <li
+                                className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                                onClick={handleOpenModal}
                               >
-                                <SlArrowDown />
-                              </button>
-                            </span>
-                          </p>
-                        ) : (
-                          <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
-                            <span className="pr-4">ADDED</span>
-                            <span
-                              onClick={handleToggleDropdown}
-                              className="pl-4 border-l-2 border-slate-200 flex items-center"
-                            >
-                              <button className="bg-transparent border-none text-white">
-                                <SlArrowDown />
-                              </button>
-                            </span>
-                          </p>
+                                Create New List
+                              </li>
+                            </ul>
+                          </div>
                         )}
-                      </button>
-
-                      {/* <div
-                        className={`w-40 -mt-5  bg-[#3D3B8E] flex justify-center items-center rounded-b-xl border-none  ${
-                          isModalOpen ? "h-40" : "h-0"
-                        }`}
-                      ></div> */}
+                      </div>
                     </div>
                   </div>
                 </div>
