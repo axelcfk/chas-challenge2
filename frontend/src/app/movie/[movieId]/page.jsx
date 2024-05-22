@@ -2,15 +2,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import {
-  FaPlus,
-  FaRegHeart,
-  FaHeart,
-  FaCheck,
-  FaStar,
-  FaEye,
-  FaEyeSlash,
-} from "react-icons/fa";
+import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
 
 import { useEffect, useState, useRef } from "react";
@@ -207,6 +199,7 @@ export default function MoviePage() {
             "data.movidetails.videokey is:",
             data.movieDetails.videoKey
           );
+          console.log("movieDetails are", movieDetails);
           setSimilar(data.movieDetails.similarMovies);
           console.log("similar movies are:", similar);
           console.log("actorImages:", actorImages);
@@ -297,7 +290,7 @@ export default function MoviePage() {
     );
   }
 
-  if (!movieDetails || likedMovies.length === 1) {
+  if (!movieDetails || likedMovies.length > 0) {
     return (
       <div className="h-lvh flex justify-center items-center">
         <LoadingIndicator />
@@ -403,6 +396,8 @@ export default function MoviePage() {
   //   }
   //   handleCloseModal();
   // };
+
+  console.log("moviedetails:", movieDetails);
 
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
@@ -744,13 +739,13 @@ export default function MoviePage() {
               placeholder="List Name"
             ></input>
             <button
-              onClick={handleCreateNewList}
+              onClick={handleCreateNewList()}
               className="w-full p-2 bg-blue-500 text-white rounded"
             >
               Create
             </button>
             <button
-              onClick={handleCloseModal}
+              onClick={handleCloseModal()}
               className="w-full p-2 mt-2 text-gray-600"
             >
               Cancel

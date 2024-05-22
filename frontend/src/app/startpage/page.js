@@ -90,7 +90,10 @@ export default function Startpage() {
           </div>
         </main>
         <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase">
+          <h2
+            className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase"
+            tabIndex={0}
+          >
             Popular today
             {/* (isLiked=false, isInWatchList=false) */}
           </h2>
@@ -100,7 +103,9 @@ export default function Startpage() {
         </div>
 
         <div className="w-full md:px-24 ">
-          <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase">Movie mixes</h2>
+          <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase" tabIndex={0}>
+            Movie mixes
+          </h2>
           <div className="pl-4 md:pl-0">
             <SlideMenu>
               <SlideMenuMixCard mixName={"Weekly"} imgSrc={"/mix-img.png"} />
@@ -119,7 +124,9 @@ export default function Startpage() {
             <WatchListSlideMenu2></WatchListSlideMenu2>
           </div> */}
         <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 mb-8  pl-4 md:pl-0 uppercase">Search history</h2>
+          <h2 className="mt-14 mb-8  pl-4 md:pl-0 uppercase" tabIndex={0}>
+            Search history
+          </h2>
           <div className=" pl-4 md:pl-0">
             <SlideMenu>
               <SlideMenuSearchHistoryCard
@@ -143,7 +150,10 @@ export default function Startpage() {
         </div>
 
         <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase">
+          <h2
+            className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase"
+            tabIndex={0}
+          >
             Watchlist
             {/* (isLiked=false, isInWatchList=false) */}
           </h2>
@@ -153,11 +163,8 @@ export default function Startpage() {
         </div>
 
         <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase">
-            Likelist (REMOVE, just testing)
-            {/* (isLiked=false, isInWatchList=false) */}
-          </h2>
-          <div className="pl-4 md:pl-0">
+          <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase"> LIKELIST (remove in final product)</h2>
+          <div className="w-full pl-4 md:pl-0 ">
             <LikeListSlideMenu2 />
           </div>
         </div>

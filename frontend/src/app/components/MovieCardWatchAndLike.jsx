@@ -63,12 +63,15 @@ export default function MovieCardWatchAndLike({
           <div className="relative h-full">
             <Link href={`/movie/${encodeURIComponent(id)}`}>
               <img
-                className="h-full rounded-t-lg w-40 box-border"
+                className="h-full rounded-t-2xl w-40 box-border"
                 src={poster}
                 alt="Movie Poster"
+                aria-label={title}
               />
             </Link>
             <div
+              tabIndex={0}
+              aria-label="Like button"
               style={{
                 border: "0.9px solid grey",
                 backdropFilter: "blur(4px)",
@@ -82,7 +85,7 @@ export default function MovieCardWatchAndLike({
                   postRemoveFromLikeList(id, "movie", title);
                 }
               }}
-              className="box-border absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
+              className="box-border absolute top-0 right-0 rounded-tr-2xl rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
             >
               {!liked ? (
                 <div className="flex flex-col justify-center items-center">

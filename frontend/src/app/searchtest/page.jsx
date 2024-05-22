@@ -6,13 +6,13 @@ import RatingFilter from "../filter-components/RatingFilter";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosClose } from "react-icons/io";
 
-function MovieSearch() {
+function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   const [inputValue, setInputValue] = useState(""); // State to hold input value
   const [movies, setMovies] = useState([]); // State to hold movies fetched from the API
   const [isSearching, setIsSearching] = useState(false); // State to toggle search input visibility
   const [ratingFilter, setRatingFilter] = useState("All"); // State to handle the rating filter
-  const [movieProviders, setMovieProviders] = useState([]); // State to handle
-  const [fetchStreamService, setFetchStreamService] = useState(false);
+  const [movieProviders, setMovieProviders] = useState([]); // State to handle movie providers
+  const [fetchStreamService, setFetchStreamService] = useState(false); // State to fetch stream services
 
   const inputRef = useRef(null); // Reference for the input field
 
@@ -36,19 +36,16 @@ function MovieSearch() {
     }
   }, [inputValue]);
 
-  //fetchar streamingtjänster från backend
+  // Function to fetch movie providers from the backend
   async function fetchMovieProviders(id) {
     try {
       const response = await fetch(`${host}/fetchmovieprovidersTMDB`, {
-        // users sidan på backend! dvs inte riktiga sidan!
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: id,
-
-          //token: tokenStorage, // "backend får in detta som en "request" i "body"... se server.js när vi skriver t.ex. const data = req.body "
         }),
       });
 
@@ -63,13 +60,12 @@ function MovieSearch() {
       ]);
     } catch (error) {
       console.error("Error:", error);
-    } finally {
     }
   }
-  //fetchar streamingtjänster från backend
 
   const handleIconClick = () => {
     setIsSearching(true); // Show the input field when icon is clicked
+    setIsSearchOpen(true); // Set the navbar state to open
     if (inputRef.current) {
       inputRef.current.focus(); // Focus the input field after it appears
     }
@@ -89,12 +85,14 @@ function MovieSearch() {
     event.preventDefault();
     if (inputValue.trim()) {
       setIsSearching(false); // Optionally hide the input field on submit
+      setIsSearchOpen(false); // Set the navbar state to closed
     }
   };
 
   const handleBlur = () => {
-    if (!inputValue) {
+    if (!inputValue && !isSearching) {
       setIsSearching(false); // Hide the input field when it loses focus and is empty
+      setIsSearchOpen(false); // Set the navbar state to closed
     }
   };
 
@@ -102,10 +100,17 @@ function MovieSearch() {
     setInputValue(""); // Clear input value
     setIsSearching(false); // Close the search field
     setMovies([]);
+    setIsSearchOpen(false); // Set the navbar state to closed
   };
 
   const handleCloseLinkClick = () => {
     handleClose(); // Call the handleClose function to close the search list
+  };
+
+  const handleIconKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleIconClick();
+    }
   };
 
   // Filter movies based on rating
@@ -132,40 +137,20 @@ function MovieSearch() {
       // Reset fetchStreamService to false after fetching providers
       setFetchStreamService(false);
     }
-  }, [fetchStreamService, filteredMovies]); // ÄNDRA TILL NÅGON ANNAN TRIGGER, annars fetchas varje gång du skriver en bokstav... måNGa fetches
-  // }, [inputValue]);
-
-  //console.log(movieProviders);
-
-  if (movieProviders.length === 20) {
-    movieProviders.map((movie) => {
-      if (movie.providers.flatrate) {
-        console.log(
-          "flatrates of movie ID ",
-          movie.movieId,
-          ": ",
-          movie.providers.flatrate
-        );
-      } else if (!movie.providers.flatrate) {
-        console.log(
-          "no providers for movie ID ",
-          movie.movieId,
-          ": ",
-          movie.providers.noProviders
-        );
-      }
-    });
-  }
+  }, [fetchStreamService, filteredMovies]);
 
   return (
-    <div className="relative ">
-      <form onSubmit={handleSubmit} className="flex items-center space-x-2">
-        <div className="flex items-center space-x-2">
-          {isSearching ? (
-            <div className="relative">
+    <div className={`relative ${isSearchOpen ? "w-full" : "w-auto"}`}>
+      <form
+        onSubmit={handleSubmit}
+        className={`flex items-center space-x-2 ${isSearchOpen ? "w-full" : "w-auto"}`}
+      >
+        <div className={`flex items-center space-x-2 ${isSearchOpen ? "w-full" : "w-auto"} relative`}>
+          {isSearching || isSearchOpen ? (
+            <div className="relative w-full flex items-center">
               <input
                 ref={inputRef}
-                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-16" // Pr-10 for close button space
+                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-40 w-full box-border" // Adjusted pr to make space for all icons
                 type="text"
                 value={inputValue}
                 onChange={handleChange}
@@ -175,46 +160,48 @@ function MovieSearch() {
                     handleClose();
                   }
                 }}
-                placeholder="Search for a movie..."
+                placeholder="Search Movie"
                 autoComplete="off"
               />
-              <IoIosClose // Close button icon
-                className="absolute top-0.5 right-2 transform -translate-y-1/2 cursor-pointer text-gray-400 text-3xl" // Text-xl for larger size of X
-                onClick={handleClose}
-              />
+              <div className="absolute right-0 flex items-center pr-2">
+                <div className="mr-1"> 
+                  <RatingFilter
+                    ratingFilter={ratingFilter}
+                    setRatingFilter={setRatingFilter}
+                    className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2" // Matching the stream button style
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
+                  onClick={() => setFetchStreamService(true)}
+                >
+                  Stream
+                </button>
+                <IoIosClose
+                  className="cursor-pointer text-gray-400 text-3xl "
+                  onClick={handleClose}
+                />
+              </div>
             </div>
           ) : (
             <FaMagnifyingGlass
+              role="button"
+              tabIndex={0}
               className="text-2xl cursor-pointer"
               onClick={handleIconClick}
+              onKeyPress={handleIconKeyPress}
+              aria-label="search button"
             />
-          )}
-
-          {isSearching && (
-            <>
-              <RatingFilter // Rating filter component
-                ratingFilter={ratingFilter}
-                setRatingFilter={setRatingFilter}
-              />
-              <button
-                type="button"
-                className="text-gray-500 rounded-s bg-deep-purple px-1 py-1.5 hover:bg-lighter-purple cursor-pointer border border-solid border-gray-500 focus:border-gray-500 focus:outline-none"
-                onClick={() => (
-                  setMovieProviders([]), setFetchStreamService(true)
-                )}
-              >
-                stream
-              </button>
-            </>
           )}
         </div>
       </form>
       {movies.length > 0 && (
-        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full max-h-[500px] overflow-y-scroll">
+        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full max-w-full max-h-[500px] overflow-y-scroll">
           {filteredMovies.map((movie) => (
             <li className="list-none p-2 hover:bg-gray-200" key={movie.id}>
               <Link
-                className="text-black no-underline hover:underline"
+                className="text-black no-underline hover:underline flex items-center"
                 href={`/movie/${encodeURIComponent(movie.id)}`}
                 onClick={handleCloseLinkClick} /* Add onClick handler */
               >
@@ -222,29 +209,25 @@ function MovieSearch() {
                   src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                   alt={movie.title}
                   className="w-10 h-10 mr-2"
+                  aria-hidden="true"
                 />
+                {movie.title}
                 {movieProviders &&
                   movieProviders.map((movieProviderObj) => {
-                    return (
-                      <div>
-                        {movieProviderObj.movieId === movie.id &&
-                          movieProviderObj.providers.noProviders && (
+                    if (movieProviderObj.movieId === movie.id) {
+                      return (
+                        <div key={movieProviderObj.movieId}>
+                          {movieProviderObj.providers.noProviders && (
                             <p>{movieProviderObj.providers.noProviders}</p>
                           )}
-
-                        {movieProviderObj.movieId === movie.id &&
-                          movieProviderObj.providers.flatrate && (
-                            <p>
-                              {
-                                movieProviderObj.providers.flatrate[0]
-                                  .provider_name
-                              }
-                            </p>
+                          {movieProviderObj.providers.flatrate && (
+                            <p>{movieProviderObj.providers.flatrate[0].provider_name}</p>
                           )}
-                      </div>
-                    );
+                        </div>
+                      );
+                    }
+                    return null;
                   })}
-                {movie.title}
               </Link>
             </li>
           ))}

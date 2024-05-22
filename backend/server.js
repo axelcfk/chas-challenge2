@@ -33,6 +33,9 @@ const pool = mysql.createPool({
   port: 8889,
   // port: 3306,
   //port: 8889 || 3306,
+
+  port: process.env.DB_PORT
+  
 });
 
 let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
@@ -96,6 +99,7 @@ app.post("/users", async (req, res) => {
       movieWatchListId: movieWatchListId++,
       userId: userId,
       myMovieWatchList: [],
+    });
     });
 
     res
@@ -178,7 +182,7 @@ async function fetchMovieIdFromTMDB(movieNameFromGPT) {
       //movieIds.push(movieId); // TODO: should this ID be deleted later on when we have fetched the whole movie object? to preserve storage?
       return movieId;
     } else {
-      console.error("Error fetching movie ID:", error);
+      console.error("Error fetching movie ID in fetchMovieIdFromTMDB() function");
       return null;
     }
   } catch (error) {
@@ -321,17 +325,19 @@ async function fetchMovieProvidersObjectTMDB(id) {
 
     // ändra så att vi skickar alla data till addProvidersOfMovieToDatabase funktionen
 
-    addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
+    await addProvidersOfMovieToDatabase(data); // lägger endast till om Sverige finns med
 
     if (data.results.SE) {
       return data.results.SE;
     } else if (!data.results.SE) {
       console.log("No providers in sweden for movie id ", id);
 
+
       return { noProviders: "no providers in sweden", id };
     } else {
       console.log("failed to fetch providers of movie from TMDB");
     }
+
 
     //await postMovieToDatabase(data);
     // await postAddToMixOnBackend(data.id, data.title);
@@ -359,7 +365,7 @@ async function fetchMovieObjectTMDB(id) {
     //await postMovieToDatabase(data);
     // await postAddToMixOnBackend(data.id, data.title);
     if (data.title) {
-      addMovieToDatabase(data, "movie"); // STORES FETCHED MOVIE OBJECT TO DATABASE
+      await addMovieToDatabase(data, "movie"); // STORES FETCHED MOVIE OBJECT TO DATABASE
     } else {
       console.log("failed to fetch movie object from TMDB");
     }
@@ -367,46 +373,67 @@ async function fetchMovieObjectTMDB(id) {
     return data;
   } catch (error) {
     console.error("Error fetching movie details:", error);
-  } finally {
-    //setLoading(false);
-    //setFetchedAndSavedDetailsFromAPI(!fetchedAndSavedDetailsFromAPI);
-  }
+  } 
 }
 
-function addMovieToDatabase(movieObject, movieOrSeries) {
-  if (!movieObject.id || !movieOrSeries) {
-    console.log(
-      "Received movie does not contain an id, and/or need to define if movie or series."
+async function addMovieToDatabase(movie, movieOrSeries) {
+  try {
+    if (!movie.id || !movieOrSeries) {
+      console.log(
+        "Received movie does not contain an id, and/or need to define if movie or series."
+      );
+      return;
+    }
+
+    // Check if the movie or series already exists in the fetched_movies or fetched_series tables
+    let idExistsInMovies;
+    let idExistsInSeries;
+
+    if (movieOrSeries === "movie") {
+      idExistsInMovies = await query(
+        "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    } else if (movieOrSeries === "series") {
+      idExistsInSeries = await query(
+        "SELECT id FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    }
+
+    if (
+      (idExistsInMovies && idExistsInMovies.length > 0) ||
+      (idExistsInSeries && idExistsInSeries.length > 0)
+    ) {
+      console.log("movie/series ID ", movie.id, " has already been fetched.");
+      return;
+    }
+
+    // Insert the movie or series into the appropriate table
+    if (movieOrSeries === "movie") {
+      await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added movie ID ", movie.id, " to fetched_movies");
+    } else if (movieOrSeries === "series") {
+      await query("INSERT INTO fetched_series (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added series ID ", movie.id, " to fetched_series");
+    } else {
+      console.log("Could not determine if movie or series");
+    }
+
+    /*   res.status(201).json({
+      message: "Movie/Series saved to fetched_movies/fetched_series",
+    });
+ */
+    console.log("Movie/Series saved to fetched_movies/fetched_series");
+  } catch (error) {
+    console.error(
+      "1:Error adding movie/series to fetched_movies/fetched_series:",
+      error
     );
-  }
-
-  const idExistsInMovies = fetchedMovies.some(
-    (fetchedMovie) => fetchedMovie.id === movieObject.id
-  );
-  const idExistsInSeries = fetchedSeries.some(
-    (fetchedSerie) => fetchedSerie.id === movieObject.id
-  );
-
-  if (idExistsInMovies || idExistsInSeries) {
-    console.log(
-      "movie/series ID ",
-      movieObject.id,
-      " has already been fetched."
-    );
-    return; // TODO: return nothing?
-  } else {
-    // om redan finns?
-  }
-
-  if (movieOrSeries === "movie") {
-    // maybe change to some sort of True/False variable instead...
-    fetchedMovies.push(movieObject); // UPDATE LATER TO SQL
-    console.log("Added movie ID ", movieObject.id, " to fetchedMovies");
-  } else if (movieOrSeries === "series") {
-    fetchedSeries.push(movieObject); // UPDATE LATER TO SQL
-    console.log("Added series ID ", movieObject.id, " to fetchedSeries");
-  } else {
-    console.log("Could not determine if movie or series");
   }
 }
 
@@ -421,7 +448,7 @@ app.get("/fetchedProvidersOfMovie", (req, res) => {
   res.json(data);
 });
 
-app.post("/addmovieproviderstodatabase", (req, res) => {
+app.post("/addmovieproviderstodatabase", async (req, res) => {
   try {
     const { movieProvidersObject } = req.body;
 
@@ -431,7 +458,7 @@ app.post("/addmovieproviderstodatabase", (req, res) => {
         .json({ error: "No object of providers or movie ID provided" });
     }
 
-    addProvidersOfMovieToDatabase(movieProvidersObject);
+    await addProvidersOfMovieToDatabase(movieProvidersObject);
   } catch (error) {
     console.error(
       "1:Error attempting to use endpoint /addmovieproviderstodatabase: ",
@@ -446,7 +473,7 @@ app.post("/addmovieproviderstodatabase", (req, res) => {
 
 // WHEN USING THIS FUNCTION, set movieProvidersObject = 0 if SE has no provider...
 // e.g. addProvidersOfMovieToDatabase(0, id)
-function addProvidersOfMovieToDatabase(movieProvidersObject) {
+/* function addProvidersOfMovieToDatabase(movieProvidersObject) {
   if (!movieProvidersObject) {
     console.log(
       "movie providers object or id not provided when attempting to add to our database."
@@ -457,9 +484,9 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
   const idExistsAlready = fetchedProvidersOfMovie.some(
     (fetchedMovie) => fetchedMovie.id === movieProvidersObject.id
   );
-  /*  const idExistsInSeries = fetchedSeries.some(
-    (fetchedSerie) => fetchedSerie.id === movieObject.id
-  ); */
+  //  const idExistsInSeries = fetchedSeries.some(
+  //  (fetchedSerie) => fetchedSerie.id === movieObject.id
+  //); 
 
   if (idExistsAlready) {
     console.log(
@@ -471,20 +498,7 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
   } else {
     // fortsätt kod...
   }
-
-  /* if (data.results.SE) {
-      addProvidersOfMovieToDatabase(data.results.SE, id);
-
-      return data.results.SE;
-    } else if (!data.results.SE) {
-      console.log("No providers in sweden for movie id ", id);
-      addProvidersOfMovieToDatabase(0, id);
-
-      return { noProviders: "no providers in sweden", id };
-    } else {
-      console.log("failed to fetch providers of movie from TMDB");
-    } */
-  //
+  
   if (!movieProvidersObject.results?.SE) {
     // TODO: check
     fetchedProvidersOfMovie.push({
@@ -506,6 +520,60 @@ function addProvidersOfMovieToDatabase(movieProvidersObject) {
       " into array fetchedProvidersOfMovie"
     );
   }
+} */
+
+
+async function addProvidersOfMovieToDatabase(movieProvidersObject) {
+  if (!movieProvidersObject) {
+    console.log(
+      "Movie providers object or id not provided when attempting to add to our database."
+    );
+    return { error: "Movie providers object or id not provided." };
+  }
+  try {
+    const movieId = movieProvidersObject.id;
+    // Check if providers for this movie ID already exist in the database
+    const result = await query(
+      "SELECT id FROM fetched_movie_providers WHERE  id = ?",
+      [movieId]
+    );
+    if (result.length > 0) {
+      console.log(
+        "Providers of movie ID",
+        movieId,
+        "have already been fetched."
+      );
+      return { message: "Providers already exist." };
+    }
+    let movieProvidersData;
+    if (!movieProvidersObject.results?.SE) {
+      // No providers in Sweden
+      movieProvidersData = JSON.stringify({
+        noProviders: "no providers in Sweden",
+        id: movieId,
+      });
+    } else {
+      // Providers in Sweden
+      movieProvidersData = JSON.stringify({
+        ...movieProvidersObject.results.SE,
+        id: movieId,
+      });
+    }
+    // Update the providers column for the specific movie ID
+    await query(
+      "INSERT INTO fetched_movie_providers (movie_id, data) VALUES (?, ?)",
+      [movieId, movieProvidersData]
+    );
+    console.log(
+      "Added providers of movie ID",
+      movieId,
+      "into fetched_movies table"
+    );
+    return { message: "Providers added to the database." };
+  } catch (error) {
+    console.error("Error adding providers to database:", error);
+    return { error: "Internal server error" };
+  }
 }
 
 const fetchPopularMovies = async () => {
@@ -522,6 +590,12 @@ const fetchPopularMovies = async () => {
 async function checkIfLiked(movieId, userId) {
   //  let isLiked = false;
 
+  try {
+    // Check if the movie is in the user's like list
+    const checkResults = await query(
+      "SELECT * FROM liked_movies WHERE user_id = ? AND movie_id = ?",
+      [userId, movieId]
+    );
   try {
     // Check if the movie is in the user's like list
     const checkResults = await query(
@@ -547,7 +621,27 @@ async function checkIfLiked(movieId, userId) {
         "checkIfLiked: Error trying to find if a movie is liked by user in checkIfLiked function"
       );
   }
+    if (checkResults.length === 0) {
+      //console.log("Movie id ", movieId, ", is not liked by user id ", userId);
+      return false;
+    } else if (checkResults.length > 0) {
+      // maybe should have more precise check?
+      return true;
+    }
+  } catch (error) {
+    console.error(
+      "checkIfLiked: Error trying to find if a movie is liked by user in checkIfLiked function ",
+      error
+    );
+    return res
+      .status(500)
+      .send(
+        "checkIfLiked: Error trying to find if a movie is liked by user in checkIfLiked function"
+      );
+  }
 
+  // before likedMoviesList is in mySQL:
+  /*  const userLikedMoviesList = likedMoviesList.find((list) => { // go through the lists (one likelist per user)
   // before likedMoviesList is in mySQL:
   /*  const userLikedMoviesList = likedMoviesList.find((list) => { // go through the lists (one likelist per user)
       return list.userId === currentUserId;
@@ -588,6 +682,8 @@ async function checkIfWatchListed(movieId, userId) {
       return false;
     } else if (checkResults.length > 0) {
       // maybe should have more precise check?
+    } else if (checkResults.length > 0) {
+      // maybe should have more precise check?
       return true;
     }
   } catch (error) {
@@ -600,7 +696,17 @@ async function checkIfWatchListed(movieId, userId) {
       .send(
         "checkIfWatchListed: Error trying to find if a movie is in watchlist in checkIfWatchListed function"
       );
+    console.error(
+      "checkIfWatchListed: Error trying to find if a movie is in watchlist in checkIfWatchListed function ",
+      error
+    );
+    return res
+      .status(500)
+      .send(
+        "checkIfWatchListed: Error trying to find if a movie is in watchlist in checkIfWatchListed function"
+      );
   }
+  /* 
   /* 
 
   const userMoviesWatchList = movieWatchList.find((list) => {
@@ -635,6 +741,7 @@ async function checkIfWatchListed(movieId, userId) {
 app.post("/popularmovies", async (req, res) => {
   try {
     const { token } = req.body;
+    const { token } = req.body;
 
     console.log("token: ", token);
 
@@ -659,8 +766,11 @@ app.post("/popularmovies", async (req, res) => {
       loggedIn = false;
     } else {
       currentSession = sessionSearchResult[0];
+    } else {
+      currentSession = sessionSearchResult[0];
       currentUserId = currentSession.user_id;
       loggedIn = true;
+      // loggedIn = false;
       // loggedIn = false;
     }
     //return res.status(500).send("2:Error finding session");
@@ -679,10 +789,10 @@ app.post("/popularmovies", async (req, res) => {
             .json({ error: "No movie id found in popular movie?" });
         }
 
-        addMovieToDatabase(movie, "movie"); // doesnt add if already added
+        await addMovieToDatabase(movie, "movie"); // doesnt add if already added
 
         // first check if movieproviders exists in our database
-        let movieProvidersObject = getProvidersOfMOvieObjectOurDatabase(
+        let movieProvidersObject = await getProvidersOfMOvieObjectOurDatabase(
           movie.id
         );
 
@@ -708,11 +818,14 @@ app.post("/popularmovies", async (req, res) => {
         if (loggedIn) {
           isLiked = await checkIfLiked(movie.id, currentUserId);
           isInWatchList = await checkIfWatchListed(movie.id, currentUserId); // TODO: check currentUserId !!!
+          isLiked = await checkIfLiked(movie.id, currentUserId);
+          isInWatchList = await checkIfWatchListed(movie.id, currentUserId); // TODO: check currentUserId !!!
         } else {
           console.log("Not online so will NOT check like and watchlist ");
           isLiked = false;
           isInWatchList = false;
         }
+
 
         if (movieProvidersObject) {
           popularMoviesAndProviders.push({
@@ -787,7 +900,7 @@ app.get("/allfetchedmoviesorseries", async (req, res) => {
     fetchedSeries: fetchedSeries,
   });
 });
-
+/* 
 function getMovieObjectOurDatabase(id, movieOrSeries) {
   let searchResult;
   try {
@@ -810,9 +923,48 @@ function getMovieObjectOurDatabase(id, movieOrSeries) {
   }
 
   return searchResult;
+} */
+
+async function getMovieObjectOurDatabase(id, movieOrSeries) {
+  let searchResult;
+  try {
+    if (movieOrSeries === "movie") {
+      searchResult = await query(
+        "SELECT data FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [id]
+      );
+    } else if (movieOrSeries === "series") {
+      searchResult = await query(
+        "SELECT data FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [id]
+      );
+    } else {
+      console.log("movieOrSeries is not 'movie' or 'series'?");
+    }
+  } catch (error) {
+    console.error("2:Error finding movie/series", error);
+    return; // exit code
+  }
+
+  if (searchResult.length > 0) {
+    //const movieObject = JSON.parse(searchResult[0].data);
+    let movieObject = searchResult[0].data;
+
+    // If data is a string, parse it into a JavaScript object
+    if (typeof movieObject === 'string') {
+      movieObject = JSON.parse(movieObject);
+    }
+    //console.log(movieObject);
+
+    return movieObject;
+  } else {
+    console.log("Movie not found");
+  }
+
+ // return searchResult;
 }
 
-// GET
+/* 
 app.post("/movieobject", async (req, res) => {
   try {
     console.log("/movieobject req.body: ", req.body);
@@ -854,36 +1006,109 @@ app.post("/movieobject", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+ */
 
-function getProvidersOfMOvieObjectOurDatabase(id) {
+// get movie object from our database
+app.post("/movieobject", async (req, res) => {
+  try {
+    console.log("/movieobject req.body: ", req.body);
+    const { movieId, movieOrSeries } = req.body;
+
+    if (!movieId || !movieOrSeries) {
+      return res.status(400).json({
+        error:
+          "movieID not received, and/or need to define if movie or series.",
+      }); // exit code
+    }
+
+    //console.log("Current fetchedMovies: ", fetchedMovies);
+    let searchResult;
+    try {
+      if (movieOrSeries === "movie") {
+        searchResult = await query(
+          "SELECT data FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+          [movieId]
+        );
+      } else if (movieOrSeries === "series") {
+        searchResult = await query(
+          "SELECT data FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+          [movieId]
+        );
+      } else {
+        console.log("movieOrSeries is not 'movie' or 'series'?");
+      }
+    } catch (error) {
+      console.error("2:Error finding movie/series in /movieobject", error);
+      return res.status(500).send("2:Error finding movie/series in /movieobject"); // exit code
+    }
+
+    if (searchResult.length > 0) {
+      //const movieObject = JSON.parse(searchResult[0].data);
+      let movieObject = searchResult[0].data;
+
+      // If data is a string, parse it into a JavaScript object
+        if (typeof movieObject === 'string') {
+          movieObject = JSON.parse(movieObject);
+        }
+     // console.log(movieObject);
+
+      return res
+      .status(200)
+      .json({ message: "GET data for movie/series: ", movieObject });
+    } else {
+      console.log("Movie not found");
+    }
+
+    
+  } catch (error) {
+    console.error("1:Error attempting to GET movie/series object", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+async function getProvidersOfMOvieObjectOurDatabase(movieId) {
   let searchResult;
   try {
-    searchResult = fetchedProvidersOfMovie.find((movie) => {
-      return id === movie.id;
-    });
-    //console.log("Movie-Search result: ", searchResult);
 
-    if (searchResult == null) {
-      console.log("providers not found in our database, returning null");
-      return null;
-    }
+    searchResult = await query(
+      "SELECT data FROM fetched_movie_providers WHERE movie_id = ?",
+      [movieId]
+    );  // JSON EXTRACT isnt need here because id is outside of the providers-object in a seperate column
+
+    //console.log("Movie-Search result: ", searchResult);
 
     //console.log("Series-Search result: ", searchResult);
   } catch (error) {
     console.error("Error finding providers of movie from our database", error);
-    return res
-      .status(500)
-      .send("Error finding providers of movie from our database"); // exit code
+    return null;
   }
 
-  return searchResult;
+  if (searchResult.length > 0) {
+    //const movieObject = JSON.parse(searchResult[0].data);
+    let providersObject = searchResult[0].data;
+
+    // If data is a string, parse it into a JavaScript object
+    if (typeof providersObject === 'string') {
+      providersObject = JSON.parse(providersObject);
+    }
+    //console.log(movieObject);
+
+    return providersObject;
+  } else {
+
+    console.log("Movie providers not found in our database");
+    return null;
+  }
 }
 
-app.post("/addmovietodatabase", async (req, res) => {
-  try {
-    //console.log("/addmovietodatabase req.body: ", req.body);
-    const { movie, movieOrSeries } = req.body;
+//////////////////////ADD MOVIE TO DATABASE //////////////////////////////////
 
+app.post("/addmovietodatabase", async (req, res) => {
+  const { movie, movieOrSeries } = req.body;
+
+  try {
     if (!movie.id || !movieOrSeries) {
       return res.status(400).json({
         error:
@@ -891,44 +1116,63 @@ app.post("/addmovietodatabase", async (req, res) => {
       });
     }
 
-    const idExistsInMovies = fetchedMovies.some(
-      (fetchedMovie) => fetchedMovie.id === movie.id
-    );
-    const idExistsInSeries = fetchedSeries.some(
-      (fetchedSerie) => fetchedSerie.id === movie.id
-    );
+    // Check if the movie or series already exists in the fetched_movies or fetched_series tables
+    let idExistsInMovies;
+    let idExistsInSeries;
 
-    if (idExistsInMovies || idExistsInSeries) {
+    if (movieOrSeries === "movie") {
+      idExistsInMovies = await query(
+        "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    } else if (movieOrSeries === "series") {
+      idExistsInSeries = await query(
+        "SELECT id FROM fetched_series WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      );
+    }
+
+    if (
+      (idExistsInMovies && idExistsInMovies.length > 0) ||
+      (idExistsInSeries && idExistsInSeries.length > 0)
+    ) {
       console.log("movie/series ID ", movie.id, " has already been fetched.");
       return res.status(200).json({
         message: "Liked movie OR Liked series has already been fetched.",
       });
-    } else {
-      // om redan finns?
     }
 
+    // Insert the movie or series into the appropriate table
     if (movieOrSeries === "movie") {
-      // maybe change to some sort of True/False variable instead...
-      fetchedMovies.push(movie); // UPDATE LATER TO SQL
-      console.log("Added movie ID ", movie.id, " to fetchedMovies");
+      await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added movie ID ", movie.id, " to fetched_movies");
     } else if (movieOrSeries === "series") {
-      fetchedSeries.push(movie); // UPDATE LATER TO SQL
-      console.log("Added series ID ", movie.id, " to fetchedSeries");
+      await query("INSERT INTO fetched_series (data) VALUES (?)", [
+        JSON.stringify(movie),
+      ]);
+      console.log("Added series ID ", movie.id, " to fetched_series");
     } else {
       console.log("Could not determine if movie or series");
+      return res.status(400).json({
+        error: "Could not determine if movie or series",
+      });
     }
 
     res.status(201).json({
-      message: "Movie/Series saved to fetchedMovies/fetchedSeries",
+      message: "Movie/Series saved to fetched_movies/fetched_series",
     });
   } catch (error) {
     console.error(
-      "1:Error adding movie/series to fetchedMovie/fetchedSeries:",
+      "1:Error adding movie/series to fetched_movies/fetched_series:",
       error
     );
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+////////////////////////////////////////////////////////
 
 // post the lists
 app.post("/me/likelists", async (req, res) => {
@@ -1018,6 +1262,10 @@ async function getWatchAndLikeList(token) {
         "SELECT * FROM sessions WHERE token = ?",
         [token]
       );
+      sessionSearchResult = await query(
+        "SELECT * FROM sessions WHERE token = ?",
+        [token]
+      );
     } catch (error) {
       console.error("2:Error finding session", error);
       return res.status(500).send("2:Error finding session");
@@ -1033,7 +1281,12 @@ async function getWatchAndLikeList(token) {
     let userLikedMoviesList = [];
     let userMoviesWatchList = [];
 
+
     try {
+      const userLikedMoviesResult = await query(
+        "SELECT * FROM liked_movies WHERE user_id = ?",
+        [userId]
+      );
       const userLikedMoviesResult = await query(
         "SELECT * FROM liked_movies WHERE user_id = ?",
         [userId]
@@ -1043,9 +1296,14 @@ async function getWatchAndLikeList(token) {
       }
     } catch (error) {
       console.error("Error fetching liked movies", error);
+      console.error("Error fetching liked movies", error);
     }
 
     try {
+      const userWatchListResult = await query(
+        "SELECT * FROM watchlist WHERE user_id = ?",
+        [userId]
+      );
       const userWatchListResult = await query(
         "SELECT * FROM watchlist WHERE user_id = ?",
         [userId]
@@ -1054,6 +1312,7 @@ async function getWatchAndLikeList(token) {
         userMoviesWatchList = userWatchListResult;
       }
     } catch (error) {
+      console.error("Error fetching watchlist", error);
       console.error("Error fetching watchlist", error);
     }
 
@@ -1098,10 +1357,12 @@ app.post("/me/watchandlikelists", async (req, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
 
+
     const currentSession = sessionSearchResult[0];
     const userId = currentSession.user_id;
 
     // before likedMoviesList is in mySQL:
+    /*  const userLikedMoviesList = likedMoviesList.find((list) => {
     /*  const userLikedMoviesList = likedMoviesList.find((list) => {
       return list.userId === currentSession.user_id;
     });
@@ -1113,6 +1374,7 @@ app.post("/me/watchandlikelists", async (req, res) => {
       //continue code...
     } */
 
+    let userLikedMoviesList;
     let userLikedMoviesList;
     let hasMoviesInLikeList = false;
     try {
@@ -1126,14 +1388,26 @@ app.post("/me/watchandlikelists", async (req, res) => {
         console.log("1:User has no liked movies or Failed to find: ", userId);
       } else if (userLikedMoviesResult.length > 0) {
         //
+      } else if (userLikedMoviesResult.length > 0) {
+        //
         //return true;
         hasMoviesInLikeList = true;
         //console.log("userLikedMoviesResult: ", userLikedMoviesResult);
         userLikedMoviesList = userLikedMoviesResult;
       }
+      }
 
       //const likedMoviesList = userLikedMoviesResult[0]
     } catch (error) {
+      console.error(
+        "Error trying to find if a movie is liked by user in checkIfLiked function ",
+        error
+      );
+      return res
+        .status(500)
+        .send(
+          "Error trying to find if a movie is liked by user in checkIfLiked function"
+        );
       console.error(
         "Error trying to find if a movie is liked by user in checkIfLiked function ",
         error
@@ -1160,14 +1434,27 @@ app.post("/me/watchandlikelists", async (req, res) => {
         //   return res.status(500).send("User has no liked movies or Failed to find");
       } else if (userWatchListResult.length > 0) {
         //
+        //   return res.status(500).send("User has no liked movies or Failed to find");
+      } else if (userWatchListResult.length > 0) {
+        //
         //return true;
         hasMoviesInWatchlist = true;
-        console.log("userMoviesWatchList: ", userWatchListResult);
+       // console.log("userMoviesWatchList: ", userWatchListResult);
         userMoviesWatchList = userWatchListResult;
+      }
       }
 
       //const likedMoviesList = userLikedMoviesResult[0]
     } catch (error) {
+      console.error(
+        "Error trying to find if a movie is liked by user in checkIfLiked function ",
+        error
+      );
+      return res
+        .status(500)
+        .send(
+          "Error trying to find if a movie is liked by user in checkIfLiked function"
+        );
       console.error(
         "Error trying to find if a movie is liked by user in checkIfLiked function ",
         error
@@ -1203,10 +1490,12 @@ app.post("/me/watchandlikelists", async (req, res) => {
       //likedMoviesList: userLikedMoviesList.myLikedMoviesList,
       likedMoviesList: userLikedMoviesList,
       // movieWatchList: userMoviesWatchList.myMovieWatchList,
+      // movieWatchList: userMoviesWatchList.myMovieWatchList,
       movieWatchList: userMoviesWatchList,
     };
 
     if (userMoviesWatchList && userLikedMoviesList) {
+      //if (userMoviesWatchList && userLikedMoviesList) {
       //if (userMoviesWatchList && userLikedMoviesList) {
       res.json(data);
     } else {
@@ -1215,6 +1504,9 @@ app.post("/me/watchandlikelists", async (req, res) => {
       );
     }
   } catch (error) {
+    res.status(500).json({
+      error: "Internal server error when trying to run /me/watchandlikelists",
+    });
     res.status(500).json({
       error: "Internal server error when trying to run /me/watchandlikelists",
     });
@@ -1259,6 +1551,7 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
 
     // before likedMoviesList is in mySQL, when every user had its own 'likeList':
     /*  const userLikedMoviesList = likedMoviesList.find((list) => {
+    /*  const userLikedMoviesList = likedMoviesList.find((list) => {
       return list.userId === currentSession.user_id;
     });
 
@@ -1276,6 +1569,7 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
     
     */
 
+    try {
     try {
       // Check if the movie is already liked by the user
       const checkResults = await query(
@@ -1398,11 +1692,9 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
           movieId,
           ", it is not in the like list?."
         );
-        return res
-          .status(404)
-          .json({
-            message: `Can't delete movie ID ${movieId}, it is not in the like list?.`,
-          });
+        return res.status(404).json({
+          message: `Can't delete movie ID ${movieId}, it is not in the like list?.`,
+        });
       }
 
       // If yes, delete the movieId and userId from liked_movies table
@@ -1668,18 +1960,52 @@ const latestSuggestions = [];
 const latestUserQuery = [];
 
 app.post("/moviesuggest2", async (req, res) => {
-  const likedMovieTitles = likedMoviesList.map((movie) => {
-    return movie.title;
-  });
+  const { token, query: userQuery } = req.body;
+
+  if (!token || !userQuery) {
+    return res.status(400).json({ error: "Token and query are required" });
+  }
+
+  let sessionSearchResult;
+  try {
+    // Use the token to find the current session (user_id that is logged in)
+    sessionSearchResult = await query(
+      "SELECT * FROM sessions WHERE token = ?",
+      [token]
+    );
+  } catch (error) {
+    console.error("Error finding session", error);
+    return res.status(500).send("Error finding session");
+  }
+
+  if (sessionSearchResult.length === 0) {
+    return res.status(401).json({ error: "Invalid session token" });
+  }
+
+  const currentSession = sessionSearchResult[0];
+  const currentUserId = currentSession.user_id;
+
+ // let likedMovies;
+  let likedMovieTitleObjects;
+  try {
+    likedMovieTitleObjects = await query(
+      "SELECT movie_title FROM liked_movies WHERE user_id = ?",
+      [currentUserId]
+    );
+  } catch (error) {
+    console.error("Error fetching liked movies:", error);
+    return res.status(500).send("Error fetching liked movies");
+  }
+
+  const likedMovieTitles = likedMovieTitleObjects.map((movie) => movie.movie_title);
 
   console.log("likedMovieTitles: ", likedMovieTitles);
 
   const likedMovieTitlesString = likedMovieTitles.join(", ");
   console.log("likedMovieTitlesString: ", likedMovieTitlesString);
-  const userQuery = req.body.query;
   latestUserQuery.push(userQuery);
   if (latestUserQuery.length > 15) {
-    latestSuggestions.pop(); // tar bort den sista
+    latestUserQuery.pop(); // Remove the oldest one if the length exceeds 15
   }
   console.log("Received user query:", userQuery);
 
@@ -1694,22 +2020,26 @@ It will provide Movie Names for those movies in the format of:
 MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
 MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
 It will not answer any other queries. It will only suggest movies and TV series. 
-If the query is inappropriate (i.e., foul language or anything else), respond in a funny way. 
+
 Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
 MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
 MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
 Never add any additional numbers.
 
 When making suggestions, follow these steps:
-1. Review the latest user query: ${latestUserQuery}.
-2. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
-3. Avoid suggesting movies that are already in the latest suggestions.
-4. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
-5. Consider the genres, themes, or keywords from the latest user query to refine the search.
-6. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
-7. If no suitable suggestions are available, explain why and provide alternative options.
+1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), dont suggest any movies but respond in a funny way. Also ignore any queries in ${latestUserQuery} if foul is present language.
 
+2. Review the latest user query: ${latestUserQuery}.
+3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+4. Avoid suggesting movies that are already in the latest suggestions.
+5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+6. Consider the genres, themes, or keywords from the latest user query to refine the search.
+7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+8. If no suitable suggestions are available, explain why and provide alternative options.
 For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
+
+
+
 
 If you have no suggestions, explain in your response. Also, look inside ${latestSuggestions.join(
             ", "
@@ -1727,7 +2057,19 @@ If you have no suggestions, explain in your response. Also, look inside ${latest
 
     const suggestion = completion.choices[0].message.content;
 
-    // TODO: spara ner userQuery och suggestion i backend?
+    // Save the query and suggestions to the database
+    try {
+      await query(
+        "INSERT INTO chatgpt (user_id, user_query, ai_response) VALUES (?, ?, ?)",
+        [currentUserId, userQuery, suggestion]
+      );
+      console.log("Search query and suggestions saved to database");
+    } catch (dbError) {
+      console.error(
+        "Error saving search query and suggestions to database:",
+        dbError
+      );
+    }
 
     console.log("Suggestion structure:", suggestion);
     console.log("suggested movie list:", latestSuggestions);
@@ -1738,8 +2080,9 @@ If you have no suggestions, explain in your response. Also, look inside ${latest
     if (movieNames.length === 6) {
       latestSuggestions.unshift(movieNames);
       if (latestSuggestions.length > 36) {
-        latestSuggestions.pop(); // tar bort den sista
+        latestSuggestions.pop(); // Remove the oldest one if the length exceeds 36
       }
+
       res.json({ movieNames });
     } else {
       res.json({ suggestion });
@@ -1747,13 +2090,9 @@ If you have no suggestions, explain in your response. Also, look inside ${latest
         "Failed to extract Movie Names from AI response:",
         suggestion
       );
-
-      // res.status(500).json({
-      //   error: "Failed to extract Movie Names from AI response",
-      // });
     }
   } catch (error) {
-    console.error("Error in /moviesuggest endpoint:", error);
+    console.error("Error in /moviesuggest2 endpoint:", error);
     res.status(500).json({
       error: "Unable to process the movie suggestion at this time.",
       details: error.message,
@@ -1848,16 +2187,50 @@ app.get("/dailymixbasedonlikes", async (req, res) => {
 });
 
 // made this an endpoint so we can simply load in the daily mix based on likes if it has already been generated earlier
-app.get("/me/dailymixbasedonlikes", async (req, res) => {
-  const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
+app.post("/me/dailymixbasedonlikes", async (req, res) => {
+  //const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
+
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({
+      error:
+        "token is required to retrieve /me/dailymixbasedonlikes",
+    });
+  }
+
+  let sessionSearchResult;
+    try {
+      // use the token to find the current session (user_id that is logged in)
+      sessionSearchResult = await query(
+        "SELECT * FROM sessions WHERE token = ?",
+        [token]
+      );
+    } catch (error) {
+      console.error("2:Error finding session", error);
+      return res.status(500).send("2:Error finding session");
+    }
+    if (sessionSearchResult.length === 0) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+    const currentSession = sessionSearchResult[0];
+
+    const userId = currentSession.user_id;
+
+    console.log("userId: ", userId);
+
+  const mixOnlyIdsAndTitles = await query("SELECT * FROM mix WHERE user_id = ?", [userId]);
 
   const mixMovieObjects = [];
   const mixMovieObjectsProviders = [];
 
   if (mixOnlyIdsAndTitles.length > 0) {
-    mixOnlyIdsAndTitles.map((movie) => {
-      const movieObjectOurDatabase = getMovieObjectOurDatabase(
-        movie.id,
+    console.log("found a saved dailymix, mapping through it and running getMovieObjectOurDatabase() for each movie");
+    for (const movie of mixOnlyIdsAndTitles) {
+    //mixOnlyIdsAndTitles.map(async (movie) => {
+      //console.log("searching for object of movie id ", movie.id);
+      const movieObjectOurDatabase = await getMovieObjectOurDatabase(
+        movie.movie_id,
         "movie"
       );
       // console.log("movieObject: ", movieObject);
@@ -1869,15 +2242,15 @@ app.get("/me/dailymixbasedonlikes", async (req, res) => {
         console.log("movie objects failed to fetch from our own database?");
       }
 
-      const movieObjectProvidersOurDatabase =
-        getProvidersOfMOvieObjectOurDatabase(movie.id);
+      const movieObjectProvidersOurDatabase = await getProvidersOfMOvieObjectOurDatabase(movie.movie_id);
 
       if (movieObjectProvidersOurDatabase) {
         mixMovieObjectsProviders.push(movieObjectProvidersOurDatabase);
       } else {
         console.log("providers failed to fetch from our own database?");
       }
-    });
+    };
+    // );
   } else {
     return res.json({ message: "No mix generated yet." });
   }
@@ -2015,6 +2388,10 @@ app.get("/generatedailymix", async (req, res) => {
   }
 });
 
+
+// TODO: dailymix på SQL borde ha kolumnerna: id för själva mixen, id för userid, och movieid. 
+// dvs en rad har id, userid, movieid
+// måste vi då hämta de 6 senaste genererade filmerna eller deletar vi ALLA filmer som finns i dailymix innan vi sparar nya? Den enda anledningen att vi har detta på sql är för att vi vill kunna ladda om sidan / logga ut och hämta senaste genererade mixen...
 app.post("/generatedailymix2", async (req, res) => {
   // no user query needed, will be based on existing like list
   /* const userQuery = req.body.query;
@@ -2047,7 +2424,20 @@ app.post("/generatedailymix2", async (req, res) => {
 
   const userId = currentSession.user_id;
 
-  dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes... // TODO: med mysql, ska vi spara alla mixes eller alltid ta bort den gamla innan vi generar en ny?
+
+
+  //dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes... // TODO: med mysql, ska vi spara alla mixes eller alltid ta bort den gamla innan vi generar en ny?
+
+  try {
+    const result = await query(
+      "DELETE FROM mix WHERE user_id = ?",
+      [userId]
+    );
+    console.log(`Deleted ${result.affectedRows} rows (from mix)`);
+  } catch (error) {
+    console.error("Error deleting user's mix:", error);
+  }
+
 
   const watchAndLikeList = await getWatchAndLikeList(token);
   let userLikedMoviesList;
@@ -2092,7 +2482,7 @@ app.post("/generatedailymix2", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies.",
+            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'",
         },
         {
           role: "user",
@@ -2115,7 +2505,7 @@ app.post("/generatedailymix2", async (req, res) => {
     let movieIds = [];
 
     // TODO: HÄR SKA VI LÄGGA IN ALLA END-POINTS SOM HANTERAR TMDB FETCHES OCH LAGRA I DATABASEN GREJER, därefter skickar vi det vi behöver till frontend?
-    if (movieNames && movieNames.length === 6) {
+    if (movieNames && movieNames.length === 6) { // even if a movie name becomes 'null' apparently
       //fetchMovieIds();
       const fetchedMovieIds = await fetchAllMovieIdsFromTMDB(movieNames);
       movieIds = fetchedMovieIds; // TODO: kanske bättre att mappa igenom fetchedmovieids och sen pusha in i movieIds...?
@@ -2136,7 +2526,7 @@ app.post("/generatedailymix2", async (req, res) => {
           const movieObject = await fetchMovieObjectTMDB(movieId); // fetches from TMDB and stores into our database
 
           if (movieObject) {
-            console.log("id of movieobject fetched: ", movieObject.id);
+            console.log("fetched movie object from TMDB of movie id: ", movieObject.id);
             movieObjects.push(movieObject);
           } else {
             console.log("failed fetching movie object and providers from tmdb");
@@ -2156,7 +2546,7 @@ app.post("/generatedailymix2", async (req, res) => {
       movieObjects.length === movieNames.length &&
       movieObjects.length > 0
     ) {
-      console.log("all movie ids received from api: ", movieIds);
+      console.log("Starting to fetch object providers, all movie ids received from api: ", movieIds);
 
       try {
         for (const movieId of movieIds) {
@@ -2186,11 +2576,22 @@ app.post("/generatedailymix2", async (req, res) => {
       arrayMovieObjectsProviders.length > 0
     ) {
       /* console.log("movieObjects: ", movieObjects); */
-      movieObjects.map((movie) => {
-        dailyMixes.dailyMixBasedOnLikes.push({
+      //movieObjects.map((movie) => {
+      for (const movie of movieObjects) {
+
+        try {
+          const insertQuery = await query(
+            "INSERT INTO mix (user_id, movie_id, movie_title) VALUES (?, ?, ?)",
+            [userId, movie.id, movie.title]
+          );
+          console.log('Inserting movie to user mix successful:', insertQuery);
+        } catch (error) {
+          console.error('Error during database insertion into mix:', error);
+        }
+        /* dailyMixes.dailyMixBasedOnLikes.push({
           id: movie.id,
           title: movie.title,
-        }); // TODO: ändra till INSERT in i dailymixen i MySQL databasen (typ INSERT INTO dailymixes where user_id är userId...) s
+        });  */// TODO: ändra till INSERT in i dailymixen i MySQL databasen (typ INSERT INTO dailymixes where user_id är userId...) s
 
         console.log(
           "Added movie ID ",
@@ -2199,7 +2600,7 @@ app.post("/generatedailymix2", async (req, res) => {
           movie.title,
           " to dailyMixBasedOnLikes"
         );
-      });
+      };
     } else {
       console.log("Failed pushing to dailymixbasedonlikes ");
     }
@@ -2209,30 +2610,22 @@ app.post("/generatedailymix2", async (req, res) => {
     //const mixLikedAndWatchListed = []
 
     // Here we fetch the movie object again, but from our own database (just to test), maybe some day we can remove the fetch TMDB above?
-    movieObjects.map((movie) => {
-      const movieObjectOurDatabase = getMovieObjectOurDatabase(
+    //console.log("movieObjects: ", movieObjects);
+    //movieObjects.map(async (movie) => {
+    for (const movie of movieObjects) {
+      const movieObjectOurDatabase = await getMovieObjectOurDatabase(
         movie.id,
         "movie"
       );
-      // console.log("movieObject: ", movieObject);
-      //setLoading(false);
-
-      /*  let isLiked = false;
-      let isInWatchList = false;
-      async function checkIfLikedAndWatchListed() {
-
-        isLiked = await checkIfLiked(movie.id, userId);
-        isInWatchList = await checkIfWatchListed(movie.id, userId);
-      }
-      checkIfLikedAndWatchListed(); */
 
       if (movieObjectOurDatabase) {
+        //console.log("movieObjectOurDatabase: ", movieObjectOurDatabase);
         mixMovieObjects.push(movieObjectOurDatabase);
       } else {
         console.log("movieObjectOurDatabase not populated?");
       }
 
-      const providersObjectOurDatabase = getProvidersOfMOvieObjectOurDatabase(
+      const providersObjectOurDatabase = await getProvidersOfMOvieObjectOurDatabase(
         movie.id
       );
 
@@ -2241,10 +2634,12 @@ app.post("/generatedailymix2", async (req, res) => {
       } else {
         console.log("providersObjectOurDatabase not populated?");
       }
-    });
+    };
 
     //if (movieNames && reasoning) {
     if (mixMovieObjects && mixMovieObjectsProviders) {
+      console.log("mixMovieObjects: ", mixMovieObjects);
+      console.log("mixMovieObjectsProviders: ", mixMovieObjectsProviders);
       // res.json({ movieNames, reasoning });
       res.json({ mixMovieObjects, mixMovieObjectsProviders }); // SENDING ARRAY OF MOVIE OBJECTS
     } else {
@@ -2339,7 +2734,7 @@ const fetchCompleteMovieDetails = async (movieId) => {
       movieImagesResponse.json(),
     ]);
 
-    addMovieToDatabase(movieData, "movie");
+    await addMovieToDatabase(movieData, "movie");
 
     const director = creditsData.crew.find(
       (person) => person.job === "Director"

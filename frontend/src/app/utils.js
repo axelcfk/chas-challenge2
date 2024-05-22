@@ -124,7 +124,7 @@ export async function fetchMovieObject(id) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      movieID: id,
+      movieId: id,
       movieOrSeries: "movie",
     }),
   });
@@ -136,7 +136,7 @@ export async function fetchMovieObject(id) {
   const data = await response.json();
   console.log("data.searchResult: ", data.searchResult);
 
-  return data.searchResult; // RETURNERAR MOVIE-OBJEKTET
+  return data.movieObject; // RETURNERAR MOVIE-OBJEKTET
 }
 
 // api.js
@@ -268,3 +268,68 @@ export async function fetchTMDBMovieDetails(movieId) {
   const data = await response.json();
   return data;
 }
+
+export const handleQuerySubmit = async () => {
+  setLoading(true);
+  setMovies([]);
+  setShowVideo(true);
+  changeSpeed(5);
+
+  // Check localStorage for cached data
+  const cachedData = JSON.parse(localStorage.getItem("latestSearch"));
+  const token = localStorage.getItem("token");
+
+  console.log("Cached Data from localStorage:", cachedData);
+
+  if (cachedData && cachedData.input === input) {
+    setMovies(cachedData.movies);
+    console.log("Using cached movies:", cachedData.movies);
+    setLoading(false);
+    setShowVideo(false);
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:3010/moviesuggest2", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: input, token: token }),
+    });
+    const data = await response.json();
+
+    if (data.movieNames && data.movieNames.length > 0) {
+      // Store the movie names in localStorage without extra quotes
+      const sanitizedMovieNames = data.movieNames.map((name) =>
+        name.replace(/^"|"$/g, "")
+      );
+      localStorage.setItem(
+        "latestSearch",
+        JSON.stringify({ movies: sanitizedMovieNames, input })
+      );
+      console.log("Saving to localStorage:", {
+        movies: sanitizedMovieNames,
+        input,
+      });
+
+      setTimeout(() => {
+        setMovies(sanitizedMovieNames);
+        console.log("Fetched movie names:", sanitizedMovieNames);
+        setLoading(false);
+        setErrorMessage("");
+        setShowVideo(false);
+      }, 10);
+    } else {
+      setErrorMessage(data.suggestion);
+      console.log("Error Message Set:", data.suggestion);
+      setNoResult(true);
+      setLoading(false);
+      setShowVideo(false);
+    }
+  } catch (error) {
+    console.error("Failed to fetch AI suggestion:", error);
+    setNoResult(true);
+    setLoading(false);
+    setShowVideo(false);
+    changeSpeed(1);
+  }
+};

@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { SearchProvider } from "./context/SearchContext";
 
 export const metadata = {
   title: "Chas Challenge",
@@ -10,8 +11,10 @@ export default function RootLayout({ children }) {
   return (
     <html className="font-manrope bg-[#110A1A] text-white" lang="en">
       <body>
-        <Navbar />
-        {children}
+        <SearchProvider>
+          <Navbar />
+          {children}
+        </SearchProvider>
       </body>
     </html>
   );
