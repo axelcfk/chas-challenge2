@@ -3,9 +3,10 @@
 import "./profile.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { fetchTMDBMovieDetails } from "@/app/utils";
 import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
 import WatchListForProfile from "@/app/components/WatchListForProfile";
-import { fetchTMDBMovieDetails } from "@/app/utils";
+import Link from "next/link";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
@@ -14,31 +15,40 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("Profile");
   const [loadingLists, setLoadingLists] = useState(true);
   const router = useRouter();
-
   const tabNames = ["Profile", "Watchlist", "My lists"];
   const tabIndex = tabNames.indexOf(activeTab);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-    const userId = localStorage.getItem("userId");
+  const removeCustomList = () => {};
 
-    fetch(`http://localhost:3010/users/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
+  const removeMovieFromCustomList = () => {};
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+      const userId = localStorage.getItem("userId");
+
+      try {
+        const response = await fetch(`http://localhost:3010/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error(`HTTP status ${response.status}`);
         }
-        return response.json();
-      })
-      .then((data) => setUserData(data))
-      .catch((error) => console.error("Failed to fetch user data", error));
+
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
+    fetchUserData();
   }, [router]);
 
   useEffect(() => {
@@ -106,7 +116,11 @@ export default function Profile() {
         {userData ? (
           <div className="flex items-center flex-col space-y-5 mt-12">
             <button className="bg-transparent border-none hover:cursor-pointer">
-              <img src="/profile-user.svg" className="h-28" alt="User Profile" />
+              <img
+                src="/profile-user.svg"
+                className="h-28"
+                alt="User Profile"
+              />
             </button>
             <h1>{userData.username}</h1>
           </div>
@@ -192,7 +206,12 @@ export default function Profile() {
                 ) : (
                   userLists.map((list) => (
                     <div key={list.id} className="my-4">
-                      <h4 className="text-lg font-bold">{list.name}</h4>
+                      <Link href={`/my-customlist/${list.id}`}>
+                        <h4 className="text-lg font-bold hover:underline">
+                          {list.name}
+                        </h4>
+                      </Link>
+                      <button>ta bort lista</button>
                       {list.movies.length === 0 ? (
                         <p>No movies in this list</p>
                       ) : (
