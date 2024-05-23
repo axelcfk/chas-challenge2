@@ -228,7 +228,7 @@ export default function MoviePage() {
       try {
         const movies = await fetchWatchAndLikeList();
 
-        console.log(movies[0].movie_id);
+        //console.log(movies[0].movie_id);
 
         setLikedMovies(movies);
 
@@ -397,7 +397,7 @@ export default function MoviePage() {
   //   handleCloseModal();
   // };
 
-  console.log("moviedetails:", movieDetails);
+  //console.log("moviedetails:", movieDetails);
 
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">

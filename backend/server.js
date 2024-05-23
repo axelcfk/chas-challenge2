@@ -530,7 +530,7 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
     const movieId = movieProvidersObject.id;
     // Check if providers for this movie ID already exist in the database
     const result = await query(
-      "SELECT id FROM fetched_movie_providers WHERE  id = ?",
+      "SELECT id FROM fetched_movie_providers WHERE JSON_EXTRACT(data, '$.id') = ?",
       [movieId]
     );
     if (result.length > 0) {
@@ -563,7 +563,7 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
     console.log(
       "Added providers of movie ID",
       movieId,
-      "into fetched_movies table"
+      "into fetched_movie_providers table"
     );
     return { message: "Providers added to the database." };
   } catch (error) {
@@ -1088,7 +1088,7 @@ app.post("/addmovietodatabase", async (req, res) => {
       (idExistsInSeries && idExistsInSeries.length > 0)
     ) {
       console.log("movie/series ID ", movie.id, " has already been fetched.");
-      return res.status(200).json({
+      return res.status(200).json({ // exit code
         message: "Liked movie OR Liked series has already been fetched.",
       });
     }
@@ -2637,6 +2637,9 @@ const fetchCompleteMovieDetails = async (movieId) => {
 
     await addMovieToDatabase(movieData, "movie");
 
+    // TODO: funkar addProvidersOfMovieToDatabase() felfritt?
+    await addProvidersOfMovieToDatabase(movieProviderData);
+
     const director = creditsData.crew.find(
       (person) => person.job === "Director"
     )?.name;
@@ -2698,7 +2701,7 @@ const fetchCompleteMovieDetails = async (movieId) => {
 
     const movieImages = movieImagesData;
 
-    console.log("providers are:", providers);
+    //console.log("providers are:", providers);
 
     const movieDetails = {
       id: movieData.id,

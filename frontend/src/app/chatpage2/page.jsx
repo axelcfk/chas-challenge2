@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearch } from "../context/SearchContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 
-import { postMovieToDatabase } from "../utils";
+import { postMovieProvidersToDatabase, postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
 import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
@@ -110,6 +110,8 @@ export default function ChatPage2() {
         `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
       );
       const data = await response.json();
+      //await postMovieProvidersToDatabase(data); // backend hänger sig 
+
       return data.results;
     } catch (error) {
       console.error("Error fetching streaming services:", error);

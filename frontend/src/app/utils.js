@@ -134,7 +134,7 @@ export async function fetchMovieObject(id) {
   } */
 
   const data = await response.json();
-  console.log("data.searchResult: ", data.searchResult);
+  //console.log("data.movieObject: ", data.movieObject);
 
   return data.movieObject; // RETURNERAR MOVIE-OBJEKTET
 }
@@ -165,8 +165,7 @@ export async function postMovieToDatabase(movieObject) {
 }
 
 export async function postMovieProvidersToDatabase(
-  movieProvidersObject,
-  movieId
+  movieProvidersObject
 ) {
   try {
     const responseBackend = await fetch(`${host}/addmovieproviderstodatabase`, {
@@ -176,7 +175,6 @@ export async function postMovieProvidersToDatabase(
       },
       body: JSON.stringify({
         movieProvidersObject: movieProvidersObject,
-        movieId: movieId,
       }),
     });
 
@@ -184,10 +182,10 @@ export async function postMovieProvidersToDatabase(
       throw new Error("Failed to fetch 'addmovieproviderstodatabase' POST");
     }
 
-    return true; // Indicate success if the request was successful
+    //return true; // Indicate success if the request was successful
   } catch (error) {
     console.error("Error posting movie-providers object to database: ", error);
-    return false; // Indicate failure if an error occurred,  not used atm???
+   // return false; // Indicate failure if an error occurred,  not used atm???
   }
 }
 
