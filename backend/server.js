@@ -2326,12 +2326,39 @@ app.post("/generatedailymix2", async (req, res) => {
 
   //dailyMixes.dailyMixBasedOnLikes = []; // remove the previous dailyMixBasedOnLikes... // TODO: med mysql, ska vi spara alla mixes eller alltid ta bort den gamla innan vi generar en ny?
 
+  let previousMixResult;
   try {
-    const result = await query("DELETE FROM mix WHERE user_id = ?", [userId]);
-    console.log(`Deleted ${result.affectedRows} rows (from mix)`);
+    previousMixResult = await query(
+      "SELECT * FROM mix WHERE user_id = ?",
+      [userId]
+    );
+
+    console.log("previousMixResult: ", previousMixResult);
+
   } catch (error) {
-    console.error("Error deleting user's mix:", error);
+    console.error("Error searching for previous mix from user_id", error);
+    return res.status(500).send("Error searching for previous mix from user_id");
   }
+
+  
+  let previousMixTitles = [];
+  if (previousMixResult.length > 0) {
+
+    for (const movie of previousMixResult) {
+      if (movie.movie_title) {
+        previousMixTitles.push(movie.movie_title)
+      } else {
+        console.log("Found no movie_title in movie object from previous mix?");
+      }
+    }
+  } else {
+    console.log("No previous mix, continuing code");
+  }
+
+  //console.log("likedMovieTitles: ", likedMovieTitles);
+
+  const previousMixTitlesString = previousMixTitles.join(", "); // empty string if no previous mix
+
 
   const watchAndLikeList = await getWatchAndLikeList(token);
   let userLikedMoviesList;
@@ -2364,6 +2391,8 @@ app.post("/generatedailymix2", async (req, res) => {
   //console.log("likedMovieTitles: ", likedMovieTitles);
 
   const likedMovieTitlesString = likedMovieTitles.join(", ");
+
+  //const previousMixAndLikedTitles = likedMovieTitlesString + previousMixTitlesString;
   // console.log("likedMovieTitlesString: ", likedMovieTitlesString);
 
   //   "This assistant will suggest 6 movies based on user's liked movies provided by content, and after that it will also provide a short reasoning why it suggested these specific movies. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string], and then fill in reasoning in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string], REASONING: [string]. It will not answer any other queries. It will only suggest movies.",
@@ -2376,14 +2405,22 @@ app.post("/generatedailymix2", async (req, res) => {
         {
           role: "system",
           content:
-            "This assistant will suggest 6 movies based on user's liked movies provided by content. Never suggest a movie that is already in content. The response from the assistant will ALWAYS be in the following structure (fill in the respective movie name in [string]): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'",
+            `This assistant will suggest 6 movies based on user's liked movies: ${likedMovieTitlesString}. Never suggest any of the user's liked movies, and also never suggest any of the following movies (might be empty): ${previousMixTitlesString}. The response from the assistant will ALWAYS be in the following structure (): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. The suggested movie names should be positioned at respective [string]. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'`,
         },
         {
           role: "user",
-          content: likedMovieTitlesString,
+          content: "Give me 6 movies based on my likes!",
         },
       ],
     });
+
+    // delete previously stored mixes, or do we want to save always? lots of data?
+    try {
+      const result = await query("DELETE FROM mix WHERE user_id = ?", [userId]);
+      console.log(`Deleted ${result.affectedRows} rows (from mix)`);
+    } catch (error) {
+      console.error("Error deleting user's mix:", error);
+    }
 
     // Entire AI response
     console.log("AI response:", JSON.stringify(completion, null, 2));
@@ -2484,7 +2521,8 @@ app.post("/generatedailymix2", async (req, res) => {
             "INSERT INTO mix (user_id, movie_id, movie_title) VALUES (?, ?, ?)",
             [userId, movie.id, movie.title]
           );
-          console.log("Inserting movie to user mix successful:", insertQuery);
+          //console.log("Inserting movie to user mix successful:", insertQuery);
+          console.log("Inserting movie to user mix successful");
         } catch (error) {
           console.error("Error during database insertion into mix:", error);
         }
@@ -2537,8 +2575,8 @@ app.post("/generatedailymix2", async (req, res) => {
 
     //if (movieNames && reasoning) {
     if (mixMovieObjects && mixMovieObjectsProviders) {
-      console.log("mixMovieObjects: ", mixMovieObjects);
-      console.log("mixMovieObjectsProviders: ", mixMovieObjectsProviders);
+     /*  console.log("mixMovieObjects: ", mixMovieObjects);
+      console.log("mixMovieObjectsProviders: ", mixMovieObjectsProviders); */
       // res.json({ movieNames, reasoning });
       res.json({ mixMovieObjects, mixMovieObjectsProviders }); // SENDING ARRAY OF MOVIE OBJECTS
     } else {
