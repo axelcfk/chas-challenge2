@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MovieSearch from "../searchtest/page";
@@ -6,25 +7,18 @@ import { FaDotCircle } from "react-icons/fa";
 import InputField from "../chatpage2/inputField";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
-  const [userId, setUserId] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, user, logout, checkAuth } = useAuth();
   const { input, setInput } = useSearch();
   const { handleQuerySubmit } = useHandleQuerySubmit();
+  const router = useRouter();
 
   const handleInputChange = (e) => setInput(e.target.value);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const savedUserId = localStorage.getItem("userId");
-    setIsLoggedIn(!!token);
-    if (token) {
-      setUserId(savedUserId);
-    }
-  }, []);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -41,6 +35,21 @@ export default function Navbar() {
     }
   }, [isOpen, isSearchOpen]);
 
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    console.log("User object:", user);
+    console.log("isLoggedIn:", isLoggedIn);
+  }, [user, isLoggedIn]);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsOpen(false);
+    router.push("/");
+  };
+
   return (
     <nav className="bg-[#110A1A] text-white w-full sticky top-0 z-50">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,7 +62,7 @@ export default function Navbar() {
                     <span className="text-xl">
                       <FaDotCircle />
                     </span>
-                    <span className="font-bebas no-underline">MovieAI</span>
+                    <span className="font-bebas no-underline">BAMMS</span>
                   </span>
                 </Link>
               </div>
@@ -104,61 +113,58 @@ export default function Navbar() {
             } flex-col md:hidden z-10 absolute w-full left-0 right-0`}
           >
             <div className="mt-16">
-              {!isLoggedIn ? (
-                <Link href="/login" style={{ textDecoration: "none" }}>
-                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
-                    Log in
-                  </span>
-                </Link>
-              ) : (
+              {isLoggedIn ? (
                 <>
-                  {userId && (
+                  <Link href="/about" style={{ textDecoration: "none" }}>
+                    <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                      About
+                    </span>
+                  </Link>
+                  {user && user.id && (
                     <Link
-                      href={`/profile/${userId}`}
+                      href={`/profile/${user.id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <span className=" px-3 py-2 rounded-md text-3xl font-semibold cursor-pointer block text-center text-white">
+                      <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                         Profile
                       </span>
                     </Link>
                   )}
-                  <Link
-                    href="/"
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      localStorage.removeItem("userId");
-                      setIsLoggedIn(false);
-                      setUserId(null);
-                    }}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <span className="px-3 py-8 rounded-md text-3xl font-semibold cursor-pointer block text-center text-white">
+                  <Link href="/" onClick={handleLogout} style={{ textDecoration: "none" }}>
+                    <span className="px-3 py-8 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>
                 </>
+              ) : (
+                <>
+                  <Link href="/about" style={{ textDecoration: "none" }}>
+                    <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                      About
+                    </span>
+                  </Link>
+                  <Link href="/login" style={{ textDecoration: "none" }}>
+                    <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                      Log in
+                    </span>
+                  </Link>
+                </>
               )}
-              <Link href="/about" style={{ textDecoration: "none" }}>
-                <span className=" px-3 py-2 rounded-md text-3xl font-semibold cursor-pointer block text-center text-white">
-                  About
-                </span>
-              </Link>
             </div>
           </div>
 
           {/* Ordinary Navbar for larger screens */}
           <div className="hidden md:flex items-center">
-            {!isLoggedIn ? (
-              <Link href="/login" style={{ textDecoration: "none" }}>
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
-                  Log in
-                </span>
-              </Link>
-            ) : (
+            <Link href="/about" style={{ textDecoration: "none" }}>
+              <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                About
+              </span>
+            </Link>
+            {isLoggedIn ? (
               <>
-                {userId && (
+                {user && user.id && (
                   <Link
-                    href={`/profile/${userId}`}
+                    href={`/profile/${user.id}`}
                     style={{ textDecoration: "none" }}
                   >
                     <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
@@ -166,19 +172,9 @@ export default function Navbar() {
                     </span>
                   </Link>
                 )}
-                <Link href="/services" style={{ textDecoration: "none" }}>
-                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
-                    About
-                  </span>
-                </Link>
                 <Link
                   href="/"
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("userId");
-                    setIsLoggedIn(false);
-                    setUserId(null);
-                  }}
+                  onClick={handleLogout}
                   style={{ textDecoration: "none" }}
                 >
                   <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
@@ -186,11 +182,17 @@ export default function Navbar() {
                   </span>
                 </Link>
               </>
+            ) : (
+              <Link href="/login" style={{ textDecoration: "none" }}>
+                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                  Log in
+                </span>
+              </Link>
             )}
           </div>
         </div>
         <InputField
-          handleInputChange={handleInputChange}
+          handleInputChange={(e) => setInput(e.target.value)}
           handleQuerySubmit={handleQuerySubmit}
           heightDiv={"h-10"}
           placeholder={"AI SEARCH"}
@@ -199,3 +201,8 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
+
+
+

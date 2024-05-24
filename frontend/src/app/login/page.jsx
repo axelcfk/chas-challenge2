@@ -3,41 +3,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { host } from "../utils";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
   const router = useRouter();
 
   async function handleSignIn(e) {
     e.preventDefault();
-
-    try {
-      const response = await fetch(`${host}/sessions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to sign in");
-      }
-
-      const data = await response.json();
-
-      if (data.token && data.userId) {
-        // Kolla så  att både token och userId finns
-        localStorage.setItem("token", data.token); // Lägg till token i local storage
-        localStorage.setItem("userId", data.userId); // Lägg till userId i local storage
-        router.push("/startpage"); // Gå till new user page
-      } else {
-        throw new Error("Authentication failed, no token or userId received.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
+    const result = await login(username, password);
+    if (result.success) {
+      router.push("/startpage");
+    } else {
+      alert(result.message);
     }
   }
 

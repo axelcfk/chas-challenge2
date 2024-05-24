@@ -1,26 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { host } from "../utils";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function CreateAccount() {
+  const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { login } = useAuth();
+
+  useEffect(() => {
+    let timeout;
+    if (successMessage !== "") {
+      timeout = setTimeout(() => {
+        // omdirigera till new-user sidan
+        router.push("/new-user");
+      }, 2000); // 2 sekunder timeout innan man omdirigeras
+
+      return () => clearTimeout(timeout);
+    }
+  }, [successMessage, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setErrorMessage(""); // Clear previous error messages
 
     try {
-      const response = await fetch(`${host}/users`, {
+      const response = await fetch("/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -38,7 +54,16 @@ export default function CreateAccount() {
 
       console.log("Success:", data);
       setSuccessMessage("You've successfully created an account!");
-      router.push("/new-user"); // Gå till new user page
+
+      // Logga även in användaren vid registrering:
+      const loginResponse = await login(username, password);
+       if (!loginResponse.success) {
+        throw new Error(loginResponse.message);
+       }
+
+      setTimeout(() => {
+        setSuccessMessage("Congrats! You will now be redirected!");
+      }, 3000); // Texten kommer fram efter 3 sek. 
     } catch (error) {
       console.error(error);
       setErrorMessage(error.message);
@@ -66,8 +91,8 @@ export default function CreateAccount() {
         </h2>
 
         {successMessage === "" ? (
-          <div className="flex flex-col ">
-            <p className="mb-2 text-slate-100">Email</p>
+          <div className="flex flex-col">
+            <p className="mb-2 text-slate-100">Username</p>
             <input
               type="email"
               onChange={(e) => setUsername(e.target.value)}
@@ -145,13 +170,11 @@ export default function CreateAccount() {
           <div className="px-5  h-full flex flex-col justify-center">
             <div className="rounded-lg px-10 text-slate-950 flex flex-col justify-center items-center mb-10 text-2xl font-semibold  hover:cursor-pointer">
               <h2 className="text-center leading-snug text-slate-100">
-                Congrats
+                Congrats!
               </h2>
               <p className="text-2xl text-slate-100 mt-4 text-center">
-                You can now{" "}
-                <Link className="no-underline text-blue-400" href="/login">
-                  log in!
-                </Link>
+                You will now be
+                <p className="no-underline text-slate-100">redirected!</p>
               </p>
             </div>
           </div>

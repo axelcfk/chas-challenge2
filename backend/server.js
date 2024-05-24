@@ -13,6 +13,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -20,49 +21,46 @@ const app = express();
 const port = 3010;
 const host = "http://localhost:3010";
 
+app.use(cookieParser());
+
+// CORS-konfiguration
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+
+// Middleware för att sätta CORS-rubriker korrekt
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
 // connect to DB
 const pool = mysql.createPool({
-  // host: "mysql",
-  host: "localhost",
   user: "root",
   password: "root",
   database: "movie-app-sql",
-  // port: 3306,
-  //port: 3306,
-  //port: 8889 || 3306,
-
   port: process.env.DB_PORT,
+  // port: 3306 || 8889,
 });
 
-let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
-let likedMoviesListId = 1;
-let likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
-let movieWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
-let movieWatchListId = 1;
-let seriesWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
-//let dailyMixBasedOnLikes = [];
-
 function generateOTP() {
-  return crypto.randomBytes(16).toString("hex"); // Generera ett OTP med crypto
+  return crypto.randomBytes(16).toString("hex");
 }
 
 // help function to make code look nicer
 async function query(sql, params) {
-  const [results] = await pool.execute(sql, params); // får en array, så måste vara [results]...?
+  const [results] = await pool.execute(sql, params);
   return results;
 }
 
-//Middleware
-
-app.use(cors());
-app.use(bodyParser.json());
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-// const apiKey = process.env.movieAPI_KEY;
-
-//CREATE ACCOUNT
+// CREATE ACCOUNT
 app.post("/users", async (req, res) => {
   const { username, password } = req.body;
   const saltRounds = 10;
@@ -85,20 +83,6 @@ app.post("/users", async (req, res) => {
     );
     const userId = insertResult.insertId;
 
-    // TODO: TA BORT NÄR MYSQL ÄR REDO (behöver inte skapa tomma listor med mysql):
-    likedMoviesList.push({
-      likedMoviesListId: likedMoviesListId++,
-      userId: userId,
-      myLikedMoviesList: [],
-    });
-
-    // create empty watchlist for new user
-    movieWatchList.push({
-      movieWatchListId: movieWatchListId++,
-      userId: userId,
-      myMovieWatchList: [],
-    });
-
     res
       .status(201)
       .json({ message: "User created successfully", userId: userId });
@@ -108,8 +92,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
-//SESSION
-
+// SESSION
 app.post("/sessions", async (req, res) => {
   console.log("Login attempt:", req.body);
 
@@ -134,7 +117,21 @@ app.post("/sessions", async (req, res) => {
           userData.id,
           token,
         ]);
-        res.json({ message: "Login successful", token, userId: userData.id });
+        console.log("Session saved in database with token:", token);
+
+        // Sätt token i cookies
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "Lax",
+        });
+        console.log("Cookie set with token:", token);
+
+        res.json({
+          message: "Login successful",
+          token,
+          user: { userId: userData.id, username: userData.username }
+        });
       } else {
         console.log("Invalid password");
         res.status(401).json({ message: "Invalid credentials" });
@@ -146,6 +143,68 @@ app.post("/sessions", async (req, res) => {
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).send("Error logging in user");
+  }
+});
+
+app.post("/logout", async (req, res) => {
+  const token = req.cookies.token;
+  console.log("Logout attempt, receiced token:", token);
+
+  if (!token) {
+    return res.status(400).json({ message: "No token found" });
+  }
+
+  try {
+    // Remove session from database
+    await query("DELETE FROM sessions WHERE token = ?", [token]);
+    console.log("Sessions deleted for token:", token);
+
+    // Clear cookie
+    res.clearCookie("token");
+    console.log("Cookie cleared for token:", token);
+
+    res.json({ message: "Logout succesful" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ message: "Error during logout" });
+  }
+});
+
+// Endpoint for authentication
+app.get("/session-status", async (req, res) => {
+  const token = req.cookies.token;
+  console.log("Checking session status, received token:", token);
+
+  if (!token) {
+    console.log("No token found in cookies");
+    return res.status(401).json({ loggedIn: false });
+  }
+
+  try {
+    const session = await query(
+      "SELECT user_id FROM sessions WHERE token = ?",
+      [token]
+    );
+    console.log("Session fetch result:", session);
+
+    if (session.length > 0) {
+      const user = await query("SELECT * FROM users WHERE id = ?", [session[0].user_id]);
+      console.log("User fetch result:", user);
+
+      if (user.length > 0) {
+        console.log("Session found for token:", token);
+        return res.json({ loggedIn: true, user: user[0] });
+      } else {
+        console.log("No user found for session");
+        return res.status(401).json({ loggedIn: false });
+      }
+    } else {
+      console.log("No session found for token:", token);
+      return res.status(401).json({ loggedIn: false });
+    }
+  } catch (error) {
+    console.error("Error checking session status:", error);
+    res.status(500).json({ loggedIn: false });
   }
 });
 
@@ -1084,7 +1143,8 @@ app.post("/addmovietodatabase", async (req, res) => {
       (idExistsInSeries && idExistsInSeries.length > 0)
     ) {
       console.log("movie/series ID ", movie.id, " has already been fetched.");
-      return res.status(200).json({ // exit code
+      return res.status(200).json({
+        // exit code
         message: "Liked movie OR Liked series has already been fetched.",
       });
     }
@@ -2328,25 +2388,23 @@ app.post("/generatedailymix2", async (req, res) => {
 
   let previousMixResult;
   try {
-    previousMixResult = await query(
-      "SELECT * FROM mix WHERE user_id = ?",
-      [userId]
-    );
+    previousMixResult = await query("SELECT * FROM mix WHERE user_id = ?", [
+      userId,
+    ]);
 
     console.log("previousMixResult: ", previousMixResult);
-
   } catch (error) {
     console.error("Error searching for previous mix from user_id", error);
-    return res.status(500).send("Error searching for previous mix from user_id");
+    return res
+      .status(500)
+      .send("Error searching for previous mix from user_id");
   }
 
-  
   let previousMixTitles = [];
   if (previousMixResult.length > 0) {
-
     for (const movie of previousMixResult) {
       if (movie.movie_title) {
-        previousMixTitles.push(movie.movie_title)
+        previousMixTitles.push(movie.movie_title);
       } else {
         console.log("Found no movie_title in movie object from previous mix?");
       }
@@ -2358,7 +2416,6 @@ app.post("/generatedailymix2", async (req, res) => {
   //console.log("likedMovieTitles: ", likedMovieTitles);
 
   const previousMixTitlesString = previousMixTitles.join(", "); // empty string if no previous mix
-
 
   const watchAndLikeList = await getWatchAndLikeList(token);
   let userLikedMoviesList;
@@ -2404,8 +2461,7 @@ app.post("/generatedailymix2", async (req, res) => {
       messages: [
         {
           role: "system",
-          content:
-            `This assistant will suggest 6 movies based on user's liked movies: ${likedMovieTitlesString}. Never suggest any of the user's liked movies, and also never suggest any of the following movies (might be empty): ${previousMixTitlesString}. The response from the assistant will ALWAYS be in the following structure (): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. The suggested movie names should be positioned at respective [string]. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'`,
+          content: `This assistant will suggest 6 movies based on user's liked movies: ${likedMovieTitlesString}. Never suggest any of the user's liked movies, and also never suggest any of the following movies (might be empty): ${previousMixTitlesString}. The response from the assistant will ALWAYS be in the following structure (): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. The suggested movie names should be positioned at respective [string]. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'`,
         },
         {
           role: "user",
@@ -2575,7 +2631,7 @@ app.post("/generatedailymix2", async (req, res) => {
 
     //if (movieNames && reasoning) {
     if (mixMovieObjects && mixMovieObjectsProviders) {
-     /*  console.log("mixMovieObjects: ", mixMovieObjects);
+      /*  console.log("mixMovieObjects: ", mixMovieObjects);
       console.log("mixMovieObjectsProviders: ", mixMovieObjectsProviders); */
       // res.json({ movieNames, reasoning });
       res.json({ mixMovieObjects, mixMovieObjectsProviders }); // SENDING ARRAY OF MOVIE OBJECTS
