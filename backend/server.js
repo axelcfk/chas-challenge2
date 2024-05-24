@@ -51,20 +51,37 @@ const pool = mysql.createPool({
 });
 
 function generateOTP() {
-  return crypto.randomBytes(16).toString("hex");
+  return crypto.randomBytes(16).toString("hex"); // Generera ett OTP med crypto
 }
 
 // help function to make code look nicer
 async function query(sql, params) {
-  const [results] = await pool.execute(sql, params);
+  const [results] = await pool.execute(sql, params); // får en array, så måste vara [results]...?
   return results;
 }
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // CREATE ACCOUNT
 app.post("/users", async (req, res) => {
   const { username, password } = req.body;
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+
+  // TODO: TA BORT NÄR MYSQL ÄR REDO (behöver inte skapa tomma listor med mysql):
+  likedMoviesList.push({
+    likedMoviesListId: likedMoviesListId++,
+    userId: userId,
+    myLikedMoviesList: [],
+  });
+
+  // create empty watchlist for new user
+  movieWatchList.push({
+    movieWatchListId: movieWatchListId++,
+    userId: userId,
+    myMovieWatchList: [],
+  });
 
   try {
     const userExists = await query("SELECT * FROM users WHERE username = ?", [
