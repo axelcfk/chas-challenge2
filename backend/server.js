@@ -50,6 +50,14 @@ const pool = mysql.createPool({
   // port: 3306 || 8889,
 });
 
+let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+let likedMoviesListId = 1;
+let likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+let movieWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+let movieWatchListId = 1;
+let seriesWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+//let dailyMixBasedOnLikes = [];
+
 function generateOTP() {
   return crypto.randomBytes(16).toString("hex"); // Generera ett OTP med crypto
 }
@@ -69,6 +77,24 @@ app.post("/users", async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
 
+
+  try {
+    const userExists = await query("SELECT * FROM users WHERE username = ?", [
+      username,
+    ]);
+
+    if (userExists.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "This username is already taken" });
+    }
+
+
+    const insertResult = await query(
+      "INSERT INTO users (username, password) VALUES (?, ?)",
+      [username, hashedPassword]
+    );
+    const userId = insertResult.insertId;
   // TODO: TA BORT NÄR MYSQL ÄR REDO (behöver inte skapa tomma listor med mysql):
   likedMoviesList.push({
     likedMoviesListId: likedMoviesListId++,
@@ -82,24 +108,6 @@ app.post("/users", async (req, res) => {
     userId: userId,
     myMovieWatchList: [],
   });
-
-  try {
-    const userExists = await query("SELECT * FROM users WHERE username = ?", [
-      username,
-    ]);
-
-    if (userExists.length > 0) {
-      return res
-        .status(400)
-        .json({ message: "This username is already taken" });
-    }
-
-    const insertResult = await query(
-      "INSERT INTO users (username, password) VALUES (?, ?)",
-      [username, hashedPassword]
-    );
-    const userId = insertResult.insertId;
-
     res
       .status(201)
       .json({ message: "User created successfully", userId: userId });
