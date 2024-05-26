@@ -18,12 +18,11 @@ export const AuthProvider = ({ children }) => {
         { username, password },
         { withCredentials: true }
       );
-      console.log("Login response:", response.data);
       setIsLoggedIn(true);
       setUser(response.data.user);
+      localStorage.setItem("token", response.data.token); // Store token in local storage
       return { success: true };
     } catch (error) {
-      console.error("Login error", error);
       return {
         success: false,
         message: error.response?.data?.message || "Login failed",
@@ -40,6 +39,7 @@ export const AuthProvider = ({ children }) => {
       );
       setIsLoggedIn(false);
       setUser(null);
+      localStorage.removeItem("token"); // Remove token from local storage
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -47,10 +47,16 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = useCallback(async () => {
     try {
+      const token = localStorage.getItem("token"); // Get token from local storage
+      if (!token) {
+        setIsLoggedIn(false);
+        setUser(null);
+        return;
+      }
       const response = await axios.get("http://localhost:3010/session-status", {
+        headers: { Authorization: `Bearer ${token}` }, // Use token in Authorization header
         withCredentials: true,
       });
-      console.log("Check auth response:", response.data);
       if (response.data.loggedIn) {
         setIsLoggedIn(true);
         setUser(response.data.user);
@@ -59,7 +65,6 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
       }
     } catch (error) {
-      console.error("Check auth error:", error);
       setIsLoggedIn(false);
       setUser(null);
     }

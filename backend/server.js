@@ -76,8 +76,6 @@ app.post("/users", async (req, res) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-
-
   try {
     const userExists = await query("SELECT * FROM users WHERE username = ?", [
       username,
@@ -89,25 +87,24 @@ app.post("/users", async (req, res) => {
         .json({ message: "This username is already taken" });
     }
 
-
     const insertResult = await query(
       "INSERT INTO users (username, password) VALUES (?, ?)",
       [username, hashedPassword]
     );
     const userId = insertResult.insertId;
-  // TODO: TA BORT NÄR MYSQL ÄR REDO (behöver inte skapa tomma listor med mysql):
-  likedMoviesList.push({
-    likedMoviesListId: likedMoviesListId++,
-    userId: userId,
-    myLikedMoviesList: [],
-  });
+    // TODO: TA BORT NÄR MYSQL ÄR REDO (behöver inte skapa tomma listor med mysql):
+    likedMoviesList.push({
+      likedMoviesListId: likedMoviesListId++,
+      userId: userId,
+      myLikedMoviesList: [],
+    });
 
-  // create empty watchlist for new user
-  movieWatchList.push({
-    movieWatchListId: movieWatchListId++,
-    userId: userId,
-    myMovieWatchList: [],
-  });
+    // create empty watchlist for new user
+    movieWatchList.push({
+      movieWatchListId: movieWatchListId++,
+      userId: userId,
+      myMovieWatchList: [],
+    });
     res
       .status(201)
       .json({ message: "User created successfully", userId: userId });
@@ -155,7 +152,7 @@ app.post("/sessions", async (req, res) => {
         res.json({
           message: "Login successful",
           token,
-          user: { userId: userData.id, username: userData.username }
+          user: { userId: userData.id, username: userData.username },
         });
       } else {
         console.log("Invalid password");
@@ -197,11 +194,9 @@ app.post("/logout", async (req, res) => {
 
 // Endpoint for authentication
 app.get("/session-status", async (req, res) => {
-  const token = req.cookies.token;
-  console.log("Checking session status, received token:", token);
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    console.log("No token found in cookies");
     return res.status(401).json({ loggedIn: false });
   }
 
@@ -210,25 +205,21 @@ app.get("/session-status", async (req, res) => {
       "SELECT user_id FROM sessions WHERE token = ?",
       [token]
     );
-    console.log("Session fetch result:", session);
 
     if (session.length > 0) {
-      const user = await query("SELECT * FROM users WHERE id = ?", [session[0].user_id]);
-      console.log("User fetch result:", user);
+      const user = await query("SELECT * FROM users WHERE id = ?", [
+        session[0].user_id,
+      ]);
 
       if (user.length > 0) {
-        console.log("Session found for token:", token);
         return res.json({ loggedIn: true, user: user[0] });
       } else {
-        console.log("No user found for session");
         return res.status(401).json({ loggedIn: false });
       }
     } else {
-      console.log("No session found for token:", token);
       return res.status(401).json({ loggedIn: false });
     }
   } catch (error) {
-    console.error("Error checking session status:", error);
     res.status(500).json({ loggedIn: false });
   }
 });
