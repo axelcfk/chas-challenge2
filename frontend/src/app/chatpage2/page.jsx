@@ -110,7 +110,7 @@ export default function ChatPage2() {
         `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${movieAPI_KEY}`
       );
       const data = await response.json();
-      //await postMovieProvidersToDatabase(data); // backend hänger sig 
+      //await postMovieProvidersToDatabase(data); // backend hänger sig
 
       return data.results;
     } catch (error) {
@@ -162,16 +162,14 @@ export default function ChatPage2() {
     console.log("Initial localStorage:", localStorage);
   }, []);
   return (
-    <div className="flex flex-col justify-center items-center md:items-start px-5 md:px-20 text-slate-100 z-0 pb-5">
+    <div className="flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0 pb-5 min-h-full">
       {errorMessage && !loading && (
         <div className="h-full flex justify-center items-center">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
       {showVideo && movies.length < 2 && (
-        <div
-          className={`md:w-full flex flex-col justify-center items-center h-full`}
-        >
+        <div className={`md:w-full flex flex-col justify-center items-center`}>
           <div className="relative h-96 flex justify-center items-center">
             <video
               className="md:w-1/3 w-2/3 transform rounded-full z-10"
@@ -192,7 +190,7 @@ export default function ChatPage2() {
               </span>
             </p>
           ) : (
-            <div className="h-full flex justify-center items-center">
+            <div className=" flex justify-center items-center">
               <p className="px-5 text-xl flex flex-col items-center h-24">
                 <span className="mb-4 text-2xl font-semibold text-center">
                   Finding the best match for you...
@@ -205,7 +203,7 @@ export default function ChatPage2() {
 
       {movies.length === 6 && (
         <div className="h-full w-full">
-          <div className="sticky inset-x-0 top-4 w-full z-10">
+          <div className=" inset-x-0 top-4 w-full z-10 absolute">
             <InputField
               input={input}
               handleQuerySubmit={handleQuerySubmit}
@@ -225,11 +223,11 @@ export default function ChatPage2() {
       )}
 
       {!loading && movies.length < 2 ? (
-        <>
-          <div className="sticky inset-x-0 bottom-20 w-full">
+        <div className="">
+          <div className="absolute inset-x-0 bottom-24 w-full">
             <AutoQuery input={input} setInput={setInput} />
           </div>
-          <div className="sticky inset-x-0 bottom-8 w-full">
+          <div className=" absolute inset-x-0 bottom-8 w-full">
             <InputField
               input={input}
               handleQuerySubmit={handleQuerySubmit}
@@ -237,7 +235,7 @@ export default function ChatPage2() {
               placeholder={"What's your vibe today?"}
             />
           </div>
-        </>
+        </div>
       ) : null}
     </div>
   );

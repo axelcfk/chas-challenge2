@@ -10,7 +10,6 @@ import Link from "next/link";
 import InputField from "../chatpage2/inputField";
 import MovieSearch from "../searchtest/page";
 
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
@@ -42,7 +41,6 @@ export default function Navbar() {
     console.log("User object:", user);
     console.log("isLoggedIn:", isLoggedIn);
   }, [user, isLoggedIn]);
-
 
   const handleLogout = async () => {
     await logout();
