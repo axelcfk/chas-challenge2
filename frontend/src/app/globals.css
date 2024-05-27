@@ -3,9 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* html {
-  background-color: #110A19;
-} */
+/* globals.css or a similar global stylesheet */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+}
 
 h1 {
   font-size: 2.5rem;

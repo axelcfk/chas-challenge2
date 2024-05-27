@@ -2,7 +2,7 @@ import FirstPage from "./firstpage/page";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center ">
+    <main className="flex items-center justify-center h-screen align-center content-center m-0 p-0">
       <FirstPage />
     </main>
   );

@@ -10,7 +10,6 @@ import Link from "next/link";
 import InputField from "../chatpage2/inputField";
 import MovieSearch from "../searchtest/page";
 
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
@@ -43,7 +42,6 @@ export default function Navbar() {
     console.log("isLoggedIn:", isLoggedIn);
   }, [user, isLoggedIn]);
 
-
   const handleLogout = async () => {
     await logout();
     setIsOpen(false);
@@ -68,11 +66,16 @@ export default function Navbar() {
               </div>
             </div>
           )}
+          {isLoggedIn && (
+            <InputField
+            input={input}
+            handleInputChange={(e) => setInput(e.target.value)}
+            handleQuerySubmit={handleQuerySubmit}
+            heightDiv={"h-10"}
+            placeholder={"AI SEARCH"}
+          />
+          )}
           <div className="flex items-center md:hidden w-full justify-end">
-            <MovieSearch
-              isSearchOpen={isSearchOpen}
-              setIsSearchOpen={setIsSearchOpen}
-            />
             {!isSearchOpen && (
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -104,7 +107,6 @@ export default function Navbar() {
               </button>
             )}
           </div>
-
           {/* Menu items for smaller screens */}
           <div
             className={`menu-modal ${
@@ -155,16 +157,19 @@ export default function Navbar() {
               )}
             </div>
           </div>
-
           {/* Ordinary Navbar for larger screens */}
           <div className="hidden md:flex items-center">
-            <Link href="/about" style={{ textDecoration: "none" }}>
-              <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
-                About
-              </span>
-            </Link>
             {isLoggedIn ? (
               <>
+                <MovieSearch
+                  isSearchOpen={isSearchOpen}
+                  setIsSearchOpen={setIsSearchOpen}
+                />
+                <Link href="/about" style={{ textDecoration: "none" }}>
+                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                    About
+                  </span>
+                </Link>
                 {user && user.id && (
                   <Link
                     href={`/profile/${user.id}`}
@@ -194,12 +199,6 @@ export default function Navbar() {
             )}
           </div>
         </div>
-        <InputField
-          handleInputChange={(e) => setInput(e.target.value)}
-          handleQuerySubmit={handleQuerySubmit}
-          heightDiv={"h-10"}
-          placeholder={"AI SEARCH"}
-        />
       </div>
     </nav>
   );
