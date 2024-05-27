@@ -31,6 +31,8 @@ export default function Profile() {
         return;
       }
       const userId = localStorage.getItem("userId");
+      console.log("userId:", localStorage.getItem("userId"));
+      console.log("token:", localStorage.getItem("token"));
 
       try {
         const response = await fetch(`http://localhost:3010/users/${userId}`, {

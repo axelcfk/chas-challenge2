@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import Link from "next/link";
+
 
 export default function Login() {
   const [username, setUsername] = useState("");

@@ -105,9 +105,10 @@ app.post("/users", async (req, res) => {
       userId: userId,
       myMovieWatchList: [],
     });
+
     res
       .status(201)
-      .json({ message: "User created successfully", userId: userId });
+      .json({ message: "User created successfully", userId: userId, username: username });
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({ message: "Error creating user" });
@@ -152,7 +153,8 @@ app.post("/sessions", async (req, res) => {
         res.json({
           message: "Login successful",
           token,
-          user: { userId: userData.id, username: userData.username },
+          user: { id: userData.id, username: userData.username },
+          // user: { userId: userData.id, username: userData.username },
         });
       } else {
         console.log("Invalid password");

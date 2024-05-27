@@ -1,14 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import MovieSearch from "../searchtest/page";
-import { FaDotCircle } from "react-icons/fa";
-import InputField from "../chatpage2/inputField";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
-import { useAuth } from "../context/AuthContext";
-import { useRouter } from "next/navigation";
+import { FaDotCircle } from "react-icons/fa";
+import Link from "next/link";
+import InputField from "../chatpage2/inputField";
+import MovieSearch from "../searchtest/page";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,8 +18,6 @@ export default function Navbar() {
   const { input, setInput } = useSearch();
   const { handleQuerySubmit } = useHandleQuerySubmit();
   const router = useRouter();
-
-  const handleInputChange = (e) => setInput(e.target.value);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -44,6 +43,7 @@ export default function Navbar() {
     console.log("isLoggedIn:", isLoggedIn);
   }, [user, isLoggedIn]);
 
+
   const handleLogout = async () => {
     await logout();
     setIsOpen(false);
@@ -68,7 +68,6 @@ export default function Navbar() {
               </div>
             </div>
           )}
-
           <div className="flex items-center md:hidden w-full justify-end">
             <MovieSearch
               isSearchOpen={isSearchOpen}

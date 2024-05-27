@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import axios from "axios";
 
 const AuthContext = createContext();
@@ -20,7 +26,11 @@ export const AuthProvider = ({ children }) => {
       );
       setIsLoggedIn(true);
       setUser(response.data.user);
-      localStorage.setItem("token", response.data.token); // Store token in local storage
+      //* Store token in local storage
+      //* Don't remove thus the fetches wont work.
+      localStorage.setItem("token", response.data.token);
+      //* Profile-page uses userId
+      localStorage.setItem("userId", response.data.user.id);
       return { success: true };
     } catch (error) {
       return {
@@ -39,7 +49,9 @@ export const AuthProvider = ({ children }) => {
       );
       setIsLoggedIn(false);
       setUser(null);
-      localStorage.removeItem("token"); // Remove token from local storage
+      // Remove token and userId from local storage when log out
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -82,4 +94,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
