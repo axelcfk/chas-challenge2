@@ -116,7 +116,7 @@ export default function Profile() {
   return (
     <ProtectedRoute>
       <main>
-        <div className="bg-[#110A19] flex items-center flex-col pb-12">
+        <div className="flex items-center flex-col pb-12">
           {userData ? (
             <div className="flex items-center flex-col space-y-5 mt-12">
               <button className="bg-transparent border-none hover:cursor-pointer">
@@ -132,13 +132,15 @@ export default function Profile() {
             <p>Loading user data...</p>
           )}
         </div>
-        <div className="menu bg-[#110A19] flex flex-row justify-between items-center">
+        <div className="menu bg-[#110A19] flex flex-row justify-between px-8 items-center">
           {tabNames.map((tab) => (
             <button
               key={tab}
               onClick={() => handleTabClick(tab)}
-              className={`text-white border-none hover:cursor-pointer h-16 w-28 ${
-                activeTab === tab ? "active-tab" : "bg-transparent"
+              className={`  hover:cursor-pointer h-16 w-28 rounded-full text-lg font-semibold  ${
+                activeTab === tab
+                  ? "bg-slate-100 text-slate-950 border-none"
+                  : "bg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E]"
               }`}
             >
               <h4>{tab}</h4>
@@ -197,7 +199,7 @@ export default function Profile() {
             <div className="py-8">
               <button
                 onClick={handleCreateNewList}
-                className="py-2 px-4 bg-blue-500 text-white rounded"
+                className="py-2 px-4 bg-slate-100 border-none text-slate-900 font-semibold h-12 rounded-full text-lg"
               >
                 Create new list
               </button>
@@ -206,7 +208,7 @@ export default function Profile() {
               ) : (
                 <div className="mt-4">
                   {userLists.length === 0 ? (
-                    <p>No lists created</p>
+                    <p className="text-2xl">No lists created</p>
                   ) : (
                     userLists.map((list) => (
                       <div key={list.id} className="my-4">
@@ -217,7 +219,7 @@ export default function Profile() {
                         </Link>
                         <button>ta bort lista</button>
                         {list.movies.length === 0 ? (
-                          <p>No movies in this list</p>
+                          <p className="text-2xl">No movies in this list</p>
                         ) : (
                           <SlideMenu>
                             {list.movies.map((movie) => (

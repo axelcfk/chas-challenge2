@@ -6,7 +6,6 @@ import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 export default function WatchListForProfile({ profilePage }) {
   //const [token, setToken] = useState(tokenStorage)
 
-
   const [movieWatchList, setMovieWatchList] = useState([]);
   const [listsFetched, setListsFetched] = useState(false);
   // const [likedSeriesList, setLikedSeriesList] = useState(null);
@@ -119,7 +118,9 @@ export default function WatchListForProfile({ profilePage }) {
         // now fetching movie object from our database
         const movieObject = await fetchMovieObject(watchListedMovie.movie_id);
 
-        const movieProviders = await fetchMovieProviders(watchListedMovie.movie_id);
+        const movieProviders = await fetchMovieProviders(
+          watchListedMovie.movie_id
+        );
 
         console.log("movieObject: ", movieObject);
 
@@ -161,7 +162,6 @@ export default function WatchListForProfile({ profilePage }) {
     );
   }
 
-
   return (
     <>
       {listsFetched &&
@@ -187,7 +187,7 @@ export default function WatchListForProfile({ profilePage }) {
         </div>
       ) : (
         <div className="inline-block w-full h-80 md:h-96 mx-4">
-          <p>No movies in watchlist yet</p>
+          <p className="text-2xl">No movies in watchlist yet</p>
         </div>
       )}
     </>

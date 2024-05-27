@@ -129,7 +129,11 @@ export default function Navbar() {
                       </span>
                     </Link>
                   )}
-                  <Link href="/" onClick={handleLogout} style={{ textDecoration: "none" }}>
+                  <Link
+                    href="/"
+                    onClick={handleLogout}
+                    style={{ textDecoration: "none" }}
+                  >
                     <span className="px-3 py-8 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                       Log Out
                     </span>
@@ -200,8 +204,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-
-
-
-
