@@ -1,10 +1,12 @@
 .gradient-border-top {
-  border-top: 3px solid rgba(255, 80, 108, 1);
-  border-radius: 70px;
+  border-top: 3px solid rgb(255, 255, 255);
+  border-top-left-radius: 70px;
+  border-top-right-radius: 70px;
 }
 
 .active-tab {
   background-color: rgba(255, 80, 108, 0.64);
+  border-radius: 50px;
   border: 2px solid rgb(224, 80, 108, 1);
 }
 
@@ -14,6 +16,7 @@
   border: none;
   height: 30px;
   font-size: 10px;
+  border-radius: 50px;
 }
 
 .movie-card {
@@ -26,4 +29,3 @@
   grid-template-columns: repeat(auto-fill, minmax(150px, 3fr));
   gap: 16px;
 }
-

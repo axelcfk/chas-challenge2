@@ -46,8 +46,8 @@ const pool = mysql.createPool({
   user: "root",
   password: "root",
   database: "movie-app-sql",
-  port: process.env.DB_PORT,
-  // port: 3306 || 8889,
+  // port: process.env.DB_PORT,
+  port: 8889,
 });
 
 let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL

@@ -46,21 +46,18 @@ export default function Mix() {
   // First time entering page or Refreshing page, check if we already have a dailymixbasedonlikes on backend
 
   useEffect(() => {
-   
-
     async function getStoredMix() {
       /* setMixDetails([]);
       setMixFromBackendObjects([]);
       setMixFromBackendProvidersObjects([]); */
       setLoading(true);
       try {
-
         const token = localStorage.getItem("token");
 
         const response = await fetch(`${host}/me/dailymixbasedonlikes`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             token: token,
           }),
         });
@@ -81,7 +78,7 @@ export default function Mix() {
         }
       } catch (error) {
         console.error("Failed to fetch stored mix:", error);
-      } 
+      }
     }
     getStoredMix();
   }, []);
@@ -186,20 +183,18 @@ export default function Mix() {
   console.log("mixFromBackendProvidersObjects", mixFromBackendProvidersObjects);
 
   return (
-    <div className="bg-[#29274C] min-h-screen p-8 pt-0">
+    <div className="bg-[#110A19] min-h-screen p-8 pt-0">
       {/* <Navbar></Navbar> */}
 
       <div className="h-full flex flex-col items-center pt-8">
-        <div className="bg-[#110A19] box-border rounded-3xl p-12 w-full flex justify-between items-center my-8 h-72">
+        <div className="bg-[#29274C] box-border rounded-3xl p-12 w-full flex justify-between items-center my-8 h-72">
           <div className="w-full flex flex-col justify-center items-center h-full">
-            <h1 className="text-white font-light mb-2">
-              {mixTitle} Mix by AI
-            </h1>
+            <h1 className="text-white font-light mb-2">{mixTitle} Mix by AI</h1>
             <button
               className="bg-slate-100 w-40 h-12 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black"
               onClick={getGenerateDailyMixFromGPT}
             >
-               Generate
+              Generate
             </button>
           </div>
           <img className="h-full w-auto z-10" src="/image.png" alt="AI" />
@@ -230,7 +225,7 @@ export default function Mix() {
             )}
 
             {loading === true ? (
-              <h2 className="text-white">
+              <h2 className="text-slate-100 text-2xl">
                 AI Generating a mix based on your likes...
               </h2>
             ) : (
