@@ -14,7 +14,7 @@ export default function FirstPage() {
             <h1 className="font-bebas no-underline text-7xl">BAMMS</h1>
           </span>
         </Link>
-        <p className="text-slate-100 mt-2">Best AI Movie App Sweden</p>
+        <p className="text-slate-100 mt-2">Best AI Movie Matcher Sweden</p>
       </div>
 
       <div className="flex flex-col items-center w-full">

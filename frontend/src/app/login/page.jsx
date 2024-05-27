@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import { FaDotCircle } from "react-icons/fa";
 import Link from "next/link";
-
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -23,37 +23,31 @@ export default function Login() {
   }
 
   return (
-    <div
-      className="py-10 px-5 h-screen w-screen flex flex-col justify-between"
-      style={{
-        backgroundImage: "url('/front-img.jpg')",
-        backgroundPosition: "bottom",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <div className="h-screen bg-[#110A1A] flex flex-col px-5">
       <div>
-        <h2 className="text-3xl font-semibold text-center mb-16 text-slate-100">
-          LO
-          <br />
-          GO
+        {/* <div className="flex justify-center">
+          <span className="text-6xl">
+            <FaDotCircle />
+          </span>
+          <h1 className="font-bebas no-underline text-7xl">BAMMS</h1>
+        </div> */}
+
+        <h2 className="text-3xl font-semibold text-center mb-8 mt-6 text-slate-100">
+          Sign in
         </h2>
-        <h2 className="text-2xl font-semibold text-center mb-10 text-slate-100 ">
-          Login
-        </h2>
-        <div className="flex flex-col ">
-          <p className="mb-2 text-slate-100">Email</p>
-          <input
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
-            type="email"
-            required
-            autoFocus
-            placeholder="Enter your email address"
-            style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-lg h-12 w-full bg-slate-200 rounded-xl font-semibold mb-2 px-5"
-          />
-          <p className="mb-2 text-slate-100">Password</p>
+        <div className="flex flex-col mt-20">
+            <p className="mb-2 text-slate-100">Email</p>
+            <input
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              type="email"
+              required
+              autoFocus
+              placeholder="Enter your email address"
+              style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
+              className="text-lg h-12 bg-slate-200 rounded-xl font-semibold mb-2 px-5"
+            />
+          <p className="mb-2 mt-4 text-slate-100">Password</p>
           <input
             onChange={(e) => setPassword(e.target.value)}
             value={password}
@@ -61,27 +55,27 @@ export default function Login() {
             type="password"
             placeholder="Enter your password"
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-lg h-12 w-full bg-slate-200 rounded-xl font-semibold mb-5 px-5"
-          />
+            className="text-lg h-12 bg-slate-200 rounded-xl font-semibold mb-2 px-5"
+          />          <p className="underline text-sm text-slate-100 text-right">
+            Forgot password?
+          </p>
           <button
             onClick={handleSignIn}
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-xl h-14 w-full bg-slate-50 rounded-full font-semibold"
+            className="text-xl h-14 w-full bg-slate-50 rounded-full font-semibold mt-14"
           >
             Log in
-          </button>{" "}
-          <p className="underline text-sm  mt-2 text-slate-100">
-            Forgot password?
-          </p>
+          </button>
+
         </div>
         <div className="flex mt-10 text-slate-100 justify-center items-center">
           <p> Don't have an account?</p>
           <p className="underline ml-2 text-slate-100 ">
-            <Link href={"/create-account"}>Create one here </Link>
+            <Link href={"/create-account"} className="text-[#a57cda]">Create one here </Link>
           </p>
         </div>
       </div>
-      <div className=" ">
+      <div className="text-sm mt-6">
         <div className="flex justify-center items-center mt-20 mb-5 text-slate-100">
           <p className="mr-3 font-semibold">Terms of use</p>
           <p className="ml-3 font-semibold">Privacy Policy</p>
