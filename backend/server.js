@@ -2467,6 +2467,8 @@ app.post("/generatedailymix2", async (req, res) => {
 
   const likedMovieTitlesString = likedMovieTitles.join(", ");
 
+  console.log("likedMovieTitlesString: ", likedMovieTitlesString);
+
   //const previousMixAndLikedTitles = likedMovieTitlesString + previousMixTitlesString;
   // console.log("likedMovieTitlesString: ", likedMovieTitlesString);
 
@@ -2479,11 +2481,11 @@ app.post("/generatedailymix2", async (req, res) => {
       messages: [
         {
           role: "system",
-          content: `This assistant will suggest 6 movies based on user's liked movies: ${likedMovieTitlesString}. Never suggest any of the user's liked movies, and also never suggest any of the following movies (might be empty): ${previousMixTitlesString}. The response from the assistant will ALWAYS be in the following structure (): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. It will not answer any other queries. The suggested movie names should be positioned at respective [string]. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'`,
+          content: `This assistant will suggest 6 movies based on the movies the user provided. Do not suggest one of the already provided movies. Additionaly, it will not suggest any of these movies either (might be empty): ${previousMixTitlesString}. The response from the assistant will ALWAYS be in the following structure (DO NOT ADD ANYTHING ELSE): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. The suggested movie names should be positioned inside respective [string]. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'. It will not answer any other queries. `,
         },
         {
           role: "user",
-          content: "Give me 6 movies based on my likes!",
+          content: `Give me 6 movies based on my likes: ${likedMovieTitlesString}`,
         },
       ],
     });
