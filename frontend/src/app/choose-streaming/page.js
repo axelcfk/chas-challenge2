@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 
-//TODO: ta bort konstig margin/scroll på sidan? (efter tailwind base?)
-
 export default function ChooseStreaming() {
   // här sparas dom valda streamingtjänsterna
   const [selectedServices, setSelectedServices] = useState([]);

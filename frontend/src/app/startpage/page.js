@@ -105,7 +105,7 @@ export default function Startpage() {
 
         <div className="w-full md:px-24 ">
           <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase" tabIndex={0}>
-            Mix
+            My Mix
           </h2>
 
           <Link href={`/mymixes2/${"your-mix"}`} className="no-underline">

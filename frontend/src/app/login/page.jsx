@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
-import { FaDotCircle } from "react-icons/fa";
 import Link from "next/link";
 
 export default function Login() {
@@ -32,31 +31,32 @@ export default function Login() {
           <h1 className="font-bebas no-underline text-7xl">BAMMS</h1>
         </div> */}
 
-        <h2 className="text-3xl font-semibold text-center mb-8 mt-6 text-slate-100">
+        <h2 className="text-3xl font-semibold text-center mb-8 mt-28 text-slate-100">
           Sign in
         </h2>
         <div className="flex flex-col mt-20">
-            <p className="mb-2 text-slate-100">Email</p>
-            <input
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
-              type="email"
-              required
-              autoFocus
-              placeholder="Enter your email address"
-              style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-lg h-12 bg-slate-200 rounded-xl font-semibold mb-2 px-5"
-            />
+          <p className="mb-2 text-slate-100">Username</p>
+          <input
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            type="text"
+            required
+            autoFocus
+            placeholder="Enter username..."
+            style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
+            className="text-lg h-12 bg-slate-200 rounded-xl font-semibold mb-2 px-5"
+          />
           <p className="mb-2 mt-4 text-slate-100">Password</p>
           <input
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
             type="password"
-            placeholder="Enter your password"
+            placeholder="Enter password..."
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
             className="text-lg h-12 bg-slate-200 rounded-xl font-semibold mb-2 px-5"
-          />          <p className="underline text-sm text-slate-100 text-right">
+          />
+          <p className="underline text-sm text-slate-100 text-right">
             Forgot password?
           </p>
           <button
@@ -66,17 +66,18 @@ export default function Login() {
           >
             Log in
           </button>
-
         </div>
         <div className="flex mt-10 text-slate-100 justify-center items-center">
           <p> Don't have an account?</p>
           <p className="underline ml-2 text-slate-100 ">
-            <Link href={"/create-account"} className="text-[#a57cda]">Create one here </Link>
+            <Link href={"/create-account"} className="text-[#a57cda]">
+              Create one here{" "}
+            </Link>
           </p>
         </div>
       </div>
-      <div className="text-sm mt-6">
-        <div className="flex justify-center items-center mt-20 mb-5 text-slate-100">
+      <div className="text-sm mt-2">
+        <div className="flex justify-center items-center mt-16 mb-5 text-slate-100">
           <p className="mr-3 font-semibold">Terms of use</p>
           <p className="ml-3 font-semibold">Privacy Policy</p>
         </div>

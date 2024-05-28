@@ -663,17 +663,17 @@ export default function MoviePage() {
         {credits.actors.map((actor, index) => (
           <div
             key={index}
-            className="w-full flex flex-col justify-between items-center "
+            className="w-full flex flex-col justify-between items-center"
           >
             {actorImages[actor.personId] ? (
               <Link href={`/actor/${encodeURIComponent(actor.personId)}`}>
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300 hover:border-4 hover:border-blue-500 transition-all duration-300">
                   <img
                     src={`https://image.tmdb.org/t/p/w500${
                       actorImages[actor.personId]
                     }`}
                     alt={actor.name}
-                    className="w-full h-full object-cover "
+                    className="w-full h-full object-cover"
                     onError={(e) => {
                       e.target.onerror = null; // Prevent looping
                       e.target.src = "path_to_default_image.jpg"; // Fallback image

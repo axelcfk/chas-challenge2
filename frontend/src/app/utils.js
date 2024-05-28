@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 export const host = "http://localhost:3010";
 
 export async function postAddToLikeList(id, movieOrSeries, title) {
