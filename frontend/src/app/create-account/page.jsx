@@ -57,13 +57,13 @@ export default function CreateAccount() {
 
       // Logga även in användaren vid registrering:
       const loginResponse = await login(username, password);
-       if (!loginResponse.success) {
+      if (!loginResponse.success) {
         throw new Error(loginResponse.message);
-       }
+      }
 
       setTimeout(() => {
         setSuccessMessage("Congrats! You will now be redirected!");
-      }, 3000); // Texten kommer fram efter 3 sek. 
+      }, 3000); // Texten kommer fram efter 3 sek.
     } catch (error) {
       console.error(error);
       setErrorMessage(error.message);
@@ -72,7 +72,7 @@ export default function CreateAccount() {
 
   return (
     <div
-      className="py-10 px-5 h-screen w-screen flex flex-col justify-between bg-[#110A1A]"
+      className="py-10 px-5 flex flex-col justify-between bg-[#110A1A]"
       style={{
         backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",
@@ -80,18 +80,19 @@ export default function CreateAccount() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div>
-        <h2 className="text-3xl font-semibold  text-center text-slate-100 mb-16">
+      <div className=" ">
+        {/* <h2 className="text-3xl font-semibold  text-center text-slate-100 mb-16">
           LO
           <br />
           GO
-        </h2>
-        <h2 className="text-2xl font-semibold text-center text-slate-100 mb-10">
+        </h2> */}
+
+        <h2 className="text-2xl font-semibold text-center text-slate-100 mt-40 mb-10">
           {successMessage === "" ? "Create an account" : ""}
         </h2>
 
         {successMessage === "" ? (
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
             <p className="mb-2 text-slate-100">Username</p>
             <input
               type="email"
@@ -101,7 +102,7 @@ export default function CreateAccount() {
               autoFocus
               placeholder="Enter email address"
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-lg h-12 w-full bg-slate-200 rounded-xl font-semibold mb-2 px-5"
+              className="text-lg h-12  bg-slate-200 rounded-xl font-semibold mb-2 px-5"
             />
             <p className="mb-2 text-slate-100">Password</p>
             <input
@@ -111,7 +112,7 @@ export default function CreateAccount() {
               required
               placeholder="Enter password"
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-lg h-12 w-full bg-slate-200 rounded-xl font-semibold mb-5 px-5"
+              className="text-lg h-12  bg-slate-200 rounded-xl font-semibold mb-5 px-5"
             />
             {errorMessage !== "" ? (
               <p className="text-red-800 h-2">{errorMessage}</p>
@@ -180,8 +181,8 @@ export default function CreateAccount() {
           </div>
         )}
       </div>
-      <div className=" ">
-        <div className="flex justify-center items-center mt-20 mb-5 text-slate-100">
+      <div className="absolute bottom-20 right-20 left-20">
+        <div className="flex justify-center items-center  text-slate-100">
           <p className="mr-3 font-semibold text-slate-100">Terms of use</p>
           <p className="ml-3 font-semibold text-slate-100">Privacy Policy</p>
         </div>

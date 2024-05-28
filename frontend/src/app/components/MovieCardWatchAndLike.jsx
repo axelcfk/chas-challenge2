@@ -113,9 +113,9 @@ export default function MovieCardWatchAndLike({
             </p>
           )}
           <div className="w-full ">
-            <h2 className="px-2 h-14 text-wrap">{title}</h2>
+            <h2 className="px-2 h-12 text-wrap">{title}</h2>
           </div>
-          <div className="h-8 flex px-2">
+          {/* <div className="h-8 flex px-2">
             {streamingServices &&
               streamingServices.map((streamingService, index) => {
                 return (
@@ -127,7 +127,7 @@ export default function MovieCardWatchAndLike({
                   </div>
                 );
               })}
-          </div>
+          </div> */}
           <div className="mt-4 px-4 ">
             <button
               onClick={() => {
@@ -143,7 +143,7 @@ export default function MovieCardWatchAndLike({
                   ? "border-[#3D3B8E]"
                   : profilePage
                   ? "border-profile-page"
-                  : "border-green-600"
+                  : "border-[#cfff5e]"
               } hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
                 !watched
                   ? ""

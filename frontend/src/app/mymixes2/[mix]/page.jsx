@@ -183,7 +183,7 @@ export default function Mix() {
   console.log("mixFromBackendProvidersObjects", mixFromBackendProvidersObjects);
 
   return (
-    <div className="bg-[#110A19] min-h-screen p-8 pt-0">
+    <div className="bg-[#110A19] min-h-screen p-8 pt-20">
       {/* <Navbar></Navbar> */}
 
       <div className="h-full flex flex-col items-center pt-8">
@@ -201,7 +201,7 @@ export default function Mix() {
         </div>
 
         {/* min-h-full  */}
-        <div className="bg-[#110A19] rounded-3xl min-h-[1000px] pt-4 pb-8 pl-4 pr-8 border border-solid border-[#FF506C] border-l-0 border-r-0 border-b-0 mt-8 w-full">
+        <div className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 pl-4 pr-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full">
           {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
           {/* <div className="flex w-full justify-end items-center">
           

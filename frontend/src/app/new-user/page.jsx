@@ -86,7 +86,7 @@ export default function MovieSelection() {
   };
 
   return (
-    <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50 h-min-screen w-min-screen">
+    <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50 h-min-screen w-min-screen pt-20">
       <h1 className="text-2xl font-bold text-center my-5 flex flex-col">
         <span className="mb-4">Help us help you!</span>
         <span className="text-base font-light">
@@ -140,17 +140,17 @@ export default function MovieSelection() {
       <div className="w-full flex justify-center items-center pt-5 ">
         {movies.length > currentStartIndex + 9 && (
           <button
-            className="text-xl py-2 px-4 rounded-full  hover:text-slate-300 "
+            className="flex justify-center items-center text-slate-950 rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
             onClick={handleLoadMore}
             style={{ border: "1px solid grey" }}
           >
-            More options
+            <span className="px-2 text-xl">More options</span>{" "}
           </button>
         )}
 
         <button
-          className="flex justify-center items-center text-slate-50 rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
-          onClick={() => router.push("/choose-streaming")}
+          className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E] items-center  rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
+          onClick={() => router.push("/startpage")}
         >
           <span className="px-2 text-xl">Continue</span> <FaArrowRight />
         </button>

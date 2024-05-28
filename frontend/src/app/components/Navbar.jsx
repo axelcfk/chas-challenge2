@@ -49,9 +49,9 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-[#110A1A] text-white w-full sticky top-0 z-50">
+    <nav className="bg-[#110A1A] text-white w-full absolute top-0 z-50">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16">
+        <div className="relative flex items-center justify-between h-16 ">
           {!isSearchOpen && (
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -67,13 +67,15 @@ export default function Navbar() {
             </div>
           )}
           {isLoggedIn && (
-            <InputField
-            input={input}
-            handleInputChange={(e) => setInput(e.target.value)}
-            handleQuerySubmit={handleQuerySubmit}
-            heightDiv={"h-10"}
-            placeholder={"AI SEARCH"}
-          />
+            <div className="w-full ">
+              <InputField
+                input={input}
+                handleInputChange={(e) => setInput(e.target.value)}
+                handleQuerySubmit={handleQuerySubmit}
+                heightDiv={"h-10"}
+                placeholder={"AI SEARCH"}
+              />
+            </div>
           )}
           <div className="flex items-center md:hidden w-full justify-end">
             {!isSearchOpen && (

@@ -1,14 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@200..800&family=Staatliches&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
 
 /* globals.css or a similar global stylesheet */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
-
 }
 
 h1 {
@@ -351,4 +352,26 @@ input:focus {
   opacity: 1;
   border-radius: 90%;
   z-index: 20;
+}
+
+.card-shadow {
+  background-color: rgba(141, 126, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(141, 126, 255, 0.2),
+    0 3px 6px rgba(141, 126, 255, 0.3), 0 4px 8px rgba(141, 126, 255, 0.4);
+  transition: transform 0.4s;
+}
+
+.card-shadow:hover {
+  transform: translateY(-10px);
+}
+
+.card-shadow2 {
+  background-color: #cfff5e;
+  box-shadow: 0 2px 4px rgba(207, 255, 94, 0.2),
+    0 3px 6px rgba(207, 255, 94, 0.3), 0 4px 8px rgba(207, 255, 94, 0.4);
+  transition: transform 0.4s;
+}
+
+.card-shadow2:hover {
+  transform: translateY(-10px);
 }

@@ -46,6 +46,7 @@ module.exports = {
       fontFamily: {
         manrope: ["Manrope", "sans-serif"],
         bebas: ["Bebas Neue", "sans-serif"],
+        anton: ["Anton", "sans-serif"],
       },
     },
   },
