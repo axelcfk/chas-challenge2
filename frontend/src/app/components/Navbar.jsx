@@ -68,7 +68,8 @@ export default function Navbar() {
             </div>
           )}
           {/* Dölj AI-sökfältet om man redan är på AI-sidan */}
-          {isLoggedIn && pathname !== '/chatpage2' && ( 
+          {/* {isLoggedIn && pathname !== '/chatpage2' && ( */}
+            {isLoggedIn && (  
             <div className="w-full ">
               <InputField
                 input={input}
