@@ -55,7 +55,7 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className={`inline-block mx-1 rounded-2xl ${className}`}
+      className={`inline-block mr-2 rounded-2xl ${className}`}
       style={{
         border: profilePage ? "none" : "0.5px solid grey",
         backgroundColor: "rgba(141, 126, 255, 0.1)",
