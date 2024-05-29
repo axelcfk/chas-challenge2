@@ -193,7 +193,7 @@ export default function Mix() {
               Your {mixTitle} mix by AI
             </h1>
             <button
-              className="bg-slate-100 w-40 h-12 text-sm rounded-full font-bold border border-solid border-white  transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black "
+              className="bg-slate-100 w-40 h-12 text-lg rounded-full font-extrabold font-archivo border border-solid border-white  transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black "
               onClick={getGenerateDailyMixFromGPT}
               style={{ border: "0.5px solid grey" }}
             >

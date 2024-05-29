@@ -79,7 +79,7 @@ export default function Startpage() {
                 </h2>
                 <div className=" h-full flex justify-center items-center">
                   <Link href={"/chatpage2"}>
-                    <button className="hover:cursor-pointer border-none text-xl bg-[#CFFF5E] hover:bg-[#CFFF5E] w-72 h-16 rounded-full font-bold">
+                    <button className="hover:cursor-pointer border-none text-xl bg-[#CFFF5E] hover:bg-[#CFFF5E] w-72 h-16 rounded-full font-extrabold font-archivo">
                       AI SEARCH
                     </button>
                   </Link>
