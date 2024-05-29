@@ -343,7 +343,7 @@ input:focus {
   overflow: hidden;
 }
 
-.video-gradient-overlay {
+/* .video-gradient-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -353,7 +353,7 @@ input:focus {
   opacity: 1;
   border-radius: 90%;
   z-index: 20;
-}
+} */
 
 .card-shadow {
   background-color: rgba(141, 126, 255, 0.2);

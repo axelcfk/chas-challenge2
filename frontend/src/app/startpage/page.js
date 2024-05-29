@@ -67,19 +67,19 @@ export default function Startpage() {
             <div className="w-full">
               {/* <h2 className="mb-10 md:text-left">AI-SEARCH</h2> */}
               <div
-                className="bg-slate-900 rounded-3xl p-8 h-40 flex flex-col justify-center items-start card-shadow"
+                className="bg-slate-900 rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
                 style={{
                   // border: "1px solid grey",
                   backgroundColor: "rgba(141, 126, 255, 0.2)",
                 }}
                 ref={parallaxRef}
               >
-                <h2 className=" text-3xl w-full font-anton ">
-                  Let our AI blow your mind!
+                <h2 className=" text-5xl w-full font-archivo font-extrabold uppercase">
+                  Use AI to find a movie!
                 </h2>
-                <div className=" h-full flex justify-between items-center">
+                <div className=" h-full flex justify-center items-center">
                   <Link href={"/chatpage2"}>
-                    <button className="hover:cursor-pointer border-none text-xl bg-[#CFFF5E] hover:bg-[#CFFF5E] w-48 h-16 rounded-full font-bold">
+                    <button className="hover:cursor-pointer border-none text-xl bg-[#CFFF5E] hover:bg-[#CFFF5E] w-72 h-16 rounded-full font-bold">
                       AI SEARCH
                     </button>
                   </Link>
@@ -111,10 +111,7 @@ export default function Startpage() {
             </h2>
 
             <Link href={`/mymixes2/${"your-mix"}`} className="no-underline">
-              <div
-                className="flex justify-center items-center pl-4 md:pl-0 h-40   bg-[#CFFF5E] rounded-3xl card-shadow2"
-                onClick={`/mymixes2/${"mix"}`}
-              >
+              <div className="flex justify-center items-center pl-4 md:pl-0 h-40   bg-[#CFFF5E] rounded-3xl card-shadow2">
                 <div className="  text-slate-950   flex flex-col justify-center items-start  ">
                   <h2 className=" text-5xl font-archivo font-extrabold uppercase">
                     Weekly

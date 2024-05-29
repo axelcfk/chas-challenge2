@@ -129,7 +129,9 @@ export default function FetchedMovies({
   return (
     <>
       <div className="flex flex-col w-full justify-center items-start pb-10 pt-28">
-        <h2 className="text-2xl font-semibold pb-3">Lights, Camera, Action!</h2>
+        <h2 className="text-2xl font-semibold pt-20 pb-3">
+          Lights, Camera, Action!
+        </h2>
         <p className="font-semibold">
           See something you like? Liking it helps the AI deliver even better
           recommendations tailored just for you.
