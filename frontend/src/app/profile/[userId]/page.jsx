@@ -114,7 +114,6 @@ export default function Profile() {
   };
 
   return (
-    <ProtectedRoute>
       <main>
         <div className="flex items-center flex-col pb-12">
           {userData ? (
@@ -242,6 +241,5 @@ export default function Profile() {
           </div>
         )}
       </main>
-    </ProtectedRoute>
   );
 }

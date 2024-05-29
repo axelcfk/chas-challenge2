@@ -60,7 +60,6 @@ export default function Startpage() {
   }, []) */
 
   return (
-    <ProtectedRoute>
       <div className="px-4 pt-14">
         <div className=" pb-8 h-full w-full md:w-1/2">
           <main className="w-full flex flex-col text-slate-100 py-20 justify-center  md:items-start  md:px-24">
@@ -70,7 +69,7 @@ export default function Startpage() {
                 className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
                 style={{
                   // border: "1px solid grey",
-                  backgroundColor: "rgba(141, 126, 255, 0.2)",
+                  backgroundColor: "rgba(141, 126, 255, 0.1)",
                 }}
                 ref={parallaxRef}
               >
@@ -175,7 +174,6 @@ export default function Startpage() {
           </div> */}
         </div>
       </div>
-    </ProtectedRoute>
   );
 }
 
