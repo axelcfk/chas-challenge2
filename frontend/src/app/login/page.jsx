@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import { FaDotCircle } from "react-icons/fa";
 import Link from "next/link";
 
 export default function Login() {
@@ -23,15 +24,18 @@ export default function Login() {
 
   return (
     <div className="h-screen bg-[#110A1A] flex flex-col px-5">
-      <div>
-        {/* <div className="flex justify-center">
-          <span className="text-6xl">
-            <FaDotCircle />
+      <div className="mt-3">
+        <Link className="no-underline" href="/startpage">
+          <span className="font-bebas hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+            <span className="text-xl">
+              <FaDotCircle />
+            </span>
+            <span className="font-archivo font-extrabold no-underline">
+              BAMMS
+            </span>
           </span>
-          <h1 className="font-bebas no-underline text-7xl">BAMMS</h1>
-        </div> */}
-
-        <h2 className="text-3xl font-semibold text-center mb-8 mt-28 text-slate-100">
+        </Link>
+        <h2 className="text-3xl font-semibold text-center mb-8 mt-20 text-slate-100">
           Sign in
         </h2>
         <div className="flex flex-col mt-20">
@@ -77,11 +81,11 @@ export default function Login() {
         </div>
       </div>
       <div className="text-sm mt-2">
-        <div className="flex justify-center items-center mt-16 mb-5 text-slate-100">
+        <div className="flex justify-center items-center mt-14 mb-4 text-slate-100">
           <p className="mr-3 font-semibold">Terms of use</p>
           <p className="ml-3 font-semibold">Privacy Policy</p>
         </div>
-        <p className="text-center text-slate-100">2024 All rights reserved</p>
+        <p className="text-center text-slate-100 pb-2">2024 All rights reserved</p>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
+import { FaDotCircle } from "react-icons/fa";
 
 export default function CreateAccount() {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function CreateAccount() {
 
   return (
     <div
-      className="py-10 px-5 flex flex-col justify-between bg-[#110A1A]"
+      className="mt-3 px-5 flex flex-col justify-between bg-[#110A1A]"
       style={{
         backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",
@@ -80,14 +81,18 @@ export default function CreateAccount() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className=" ">
-        {/* <h2 className="text-3xl font-semibold  text-center text-slate-100 mb-16">
-          LO
-          <br />
-          GO
-        </h2> */}
-
-        <h2 className="text-3xl font-semibold text-center mb-8 mt-28 text-slate-100">
+        <Link className="no-underline" href="/startpage">
+          <span className="font-bebas hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+            <span className="text-xl">
+              <FaDotCircle />
+            </span>
+            <span className="font-archivo font-extrabold no-underline">
+              BAMMS
+            </span>
+          </span>
+        </Link>
+      <div>
+        <h2 className="text-3xl font-semibold text-center mb-8 mt-16 text-slate-100">
           {successMessage === "" ? "Create an account" : ""}
         </h2>
 
@@ -168,7 +173,7 @@ export default function CreateAccount() {
             </div>
           </div>
         ) : (
-          <div className="px-5  h-full flex flex-col justify-center">
+          <div className="px-5 h-full flex flex-col justify-center">
             <div className="rounded-lg px-10 text-slate-950 flex flex-col justify-center items-center mb-10 text-2xl font-semibold  hover:cursor-pointer">
               <h2 className="text-center leading-snug text-slate-100">
                 Congrats!
@@ -182,7 +187,7 @@ export default function CreateAccount() {
         )}
       </div>
       <div className="text-sm mt-6">
-        <div className="flex justify-center items-center  text-slate-100">
+        <div className="flex justify-center items-center text-slate-100">
           <p className="mr-3 font-semibold text-slate-100">Terms of use</p>
           <p className="ml-3 font-semibold text-slate-100">Privacy Policy</p>
         </div>
