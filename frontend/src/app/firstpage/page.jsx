@@ -2,13 +2,24 @@
 import { useRef } from "react";
 import Link from "next/link";
 import "./firstpage.css";
+import { FaDotCircle } from "react-icons/fa";
 
 export default function FirstPage() {
   const videoRef = useRef(null);
 
   return (
-    <div className=" h-screen bg-black flex flex-col px-5">
-      <div className="flex flex-col items-center py-40">
+    <div className="h-screen bg-black flex flex-col px-5">
+      <Link className="no-underline mt-3" href="/startpage">
+        <span className="font-bebas hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+          <span className="text-xl">
+            <FaDotCircle />
+          </span>
+          <span className="font-archivo font-extrabold no-underline">
+            BAMMS
+          </span>
+        </span>
+      </Link>
+      <div className="flex flex-col items-center py-32">
         <video
           className="md:w-1/3 w-2/3 transform rounded-full z-10"
           ref={videoRef}
