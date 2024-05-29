@@ -187,7 +187,7 @@ export default function Mix() {
       {/* <Navbar></Navbar> */}
 
       <div className="h-full flex flex-col items-center pt-8">
-        <div className="bg-[#CFFF5E] box-border rounded-3xl p-12 w-full flex justify-between items-center my-8 ">
+        <div className="bg-[#CFFF5E] box-border rounded-3xl p-8 w-full flex justify-between items-center my-8 card-shadow2 ">
           <div className="w-full flex flex-col justify-center items-start h-full">
             <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
               Your {mixTitle} mix by AI

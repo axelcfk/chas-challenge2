@@ -111,7 +111,7 @@ export default function Startpage() {
             </h2>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center pl-4 md:pl-0 h-40   bg-[#CFFF5E] rounded-3xl card-shadow2">
+              <div className="flex justify-center items-center pl-4 md:pl-0 h-40   bg-[#CFFF5E] rounded-3xl card-shadow2 p-8">
                 <div className="  text-slate-950   flex flex-col justify-center items-start">
                   <h2 className=" text-5xl font-archivo font-extrabold uppercase">
                     Weekly
