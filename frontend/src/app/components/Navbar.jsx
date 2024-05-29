@@ -49,6 +49,10 @@ export default function Navbar() {
     router.push("/");
   };
 
+  if (!isLoggedIn || ['/firstpage', '/login', '/create-account'].includes(pathname)) {
+    return null;
+  }
+
   return (
     <nav className="bg-[#110A1A] text-white w-full fixed top-0 z-50">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -69,19 +73,15 @@ export default function Navbar() {
               </div>
             </div>
           )}
-          {/* Dölj AI-sökfältet om man redan är på AI-sidan */}
-          {/* {isLoggedIn && pathname !== '/chatpage2' && ( */}
-          {isLoggedIn && (
-            <div className="w-full ">
-              <InputField
-                input={input}
-                handleInputChange={(e) => setInput(e.target.value)}
-                handleQuerySubmit={handleQuerySubmit}
-                heightDiv={"h-10"}
-                placeholder={"AI SEARCH"}
-              />
-            </div>
-          )}
+          <div className="w-full">
+            <InputField
+              input={input}
+              handleInputChange={(e) => setInput(e.target.value)}
+              handleQuerySubmit={handleQuerySubmit}
+              heightDiv={"h-10"}
+              placeholder={"AI SEARCH"}
+            />
+          </div>
           <div className="flex items-center md:hidden w-full justify-end">
             {!isSearchOpen && (
               <button
@@ -114,7 +114,6 @@ export default function Navbar() {
               </button>
             )}
           </div>
-          {/* Menu items for smaller screens */}
           <div
             className={`menu-modal ${
               isOpen ? "open" : "close"
@@ -123,30 +122,7 @@ export default function Navbar() {
             <div className="mt-16">
               {isLoggedIn ? (
                 <>
-                  <Link
-                    onClick={() => setIsOpen(false)}
-                    href="/chatpage2"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
-                      AI-Search
-                    </span>
-                  </Link>
-
-                  <Link
-                    onClick={() => setIsOpen(false)}
-                    href="/startpage"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
-                      Start
-                    </span>
-                  </Link>
-                  <Link
-                    onClick={() => setIsOpen(false)}
-                    href="/about"
-                    style={{ textDecoration: "none" }}
-                  >
+                  <Link href="/about" style={{ textDecoration: "none" }}>
                     <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       About
                     </span>
@@ -157,7 +133,7 @@ export default function Navbar() {
                       href={`/profile/${user.id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <span className="px-3 py-8 rounded-md text-4xl font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      <span className="px-3 py-8 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                         Profile
                       </span>
                     </Link>
@@ -167,7 +143,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 pt-24 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 pt-24 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>
@@ -180,7 +156,7 @@ export default function Navbar() {
                     </span>
                   </Link>
                   <Link href="/login" style={{ textDecoration: "none" }}>
-                    <span className="px-3 py-8 rounded-md text-5xl font-bold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                       Log in
                     </span>
                   </Link>
@@ -188,7 +164,6 @@ export default function Navbar() {
               )}
             </div>
           </div>
-          {/* Ordinary Navbar for larger screens */}
           <div className="hidden md:flex items-center">
             {isLoggedIn ? (
               <>
