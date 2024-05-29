@@ -144,12 +144,10 @@ export default function Mix() {
   }, [mixFromBackendObjects]);
 
   useEffect(() => {
-
     if (messageNoStoredMix !== "") {
       getGenerateDailyMixFromGPT();
     }
-    
-  }, [messageNoStoredMix])
+  }, [messageNoStoredMix]);
 
   // --------------------- onClick generate new mix, will suggested movies and their movie objects from TMDB ---------------------
 
@@ -228,7 +226,7 @@ export default function Mix() {
         {/* min-h-full  */}
         <div
           className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 pl-4 pr-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full"
-          style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
+          style={{ backgroundColor: "rgba(141, 126, 255, 0.1)" }}
         >
           {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
           {/* <div className="flex w-full justify-end items-center">
@@ -240,7 +238,7 @@ export default function Mix() {
           </div> */}
 
           <div className="pt-8">
-           {/*  
+            {/*  
             // använder inte längre, användes när vi hade Generate knappen
            {loading === false && messageNoStoredMix !== "" && (
               <div>
@@ -253,9 +251,15 @@ export default function Mix() {
                 <p>{messageNoLikedMovies}</p>{" "}
                 {/* You need to like some movies before I can generate a Mix for you! */}
                 <div className="flex items-center">
-                  <Link className="justify-center items-center flex p-4 text-center text-black no-underline bg-slate-100 w-40 h-12 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black" href={{ pathname:"/new-user", query: { isFromMixPage: true }}}>
+                  <Link
+                    className="justify-center items-center flex p-4 text-center text-black no-underline bg-slate-100 w-40 h-12 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black"
+                    href={{
+                      pathname: "/new-user",
+                      query: { isFromMixPage: true },
+                    }}
+                  >
                     Start Liking Movies
-                     <FaArrowRight color="rgb(2 6 23)" size={"40px"} />
+                    <FaArrowRight color="rgb(2 6 23)" size={"40px"} />
                   </Link>
                 </div>
               </div>

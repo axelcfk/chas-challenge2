@@ -62,7 +62,7 @@ export default function Startpage() {
   return (
     <ProtectedRoute>
       <div className="px-4 pt-14">
-        <div className=" pb-8 h-full w-full md:w-1/2">
+        <div className=" pb-8 h-full w-full ">
           <main className="w-full flex flex-col text-slate-100 py-20 justify-center  md:items-start  md:px-24">
             <div className="w-full">
               {/* <h2 className="mb-10 md:text-left">AI-SEARCH</h2> */}
@@ -152,13 +152,6 @@ export default function Startpage() {
         </div> */}
 
           <div className="w-full  md:px-24 ">
-            <h2
-              className="mt-14 md:mt-4 mb-8  md:pl-0 uppercase text-xl  font-archivo font-bold"
-              tabIndex={0}
-            >
-              Watchlist
-              {/* (isLiked=false, isInWatchList=false) */}
-            </h2>
             <div className="md:pl-0">
               <WatchListSlideMenu2 />
             </div>

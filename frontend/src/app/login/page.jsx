@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import { FaDotCircle } from "react-icons/fa";
+
 import Link from "next/link";
 
 export default function Login() {
@@ -22,8 +24,18 @@ export default function Login() {
   }
 
   return (
-    <div className="h-screen bg-[#110A1A] flex flex-col px-5">
-      <div>
+    <div className="h-full bg-black flex flex-col justify-between items-center px-5">
+      <Link className="no-underline mt-3" href="/startpage">
+        <span className="font-bebas hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+          <span className="text-xl">
+            <FaDotCircle />
+          </span>
+          <span className="font-archivo font-extrabold no-underline">
+            BAMMS
+          </span>
+        </span>
+      </Link>
+      <div className="absolute bottom-20">
         {/* <div className="flex justify-center">
           <span className="text-6xl">
             <FaDotCircle />
@@ -62,7 +74,7 @@ export default function Login() {
           <button
             onClick={handleSignIn}
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-xl h-14 w-full bg-slate-50 rounded-full font-semibold mt-14"
+            className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-semibold mt-14"
           >
             Log in
           </button>
@@ -70,19 +82,19 @@ export default function Login() {
         <div className="flex mt-10 text-slate-100 justify-center items-center">
           <p> Don't have an account?</p>
           <p className="underline ml-2 text-slate-100 ">
-            <Link href={"/create-account"} className="text-[#a57cda]">
+            <Link href={"/create-account"} className="text-slate-50">
               Create one here{" "}
             </Link>
           </p>
         </div>
       </div>
-      <div className="text-sm mt-2">
+      {/* <div className="text-sm mt-2 absolute bottom-2">
         <div className="flex justify-center items-center mt-16 mb-5 text-slate-100">
           <p className="mr-3 font-semibold">Terms of use</p>
           <p className="ml-3 font-semibold">Privacy Policy</p>
         </div>
         <p className="text-center text-slate-100">2024 All rights reserved</p>
-      </div>
+      </div> */}
     </div>
   );
 }

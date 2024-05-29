@@ -8,7 +8,7 @@ export default function FirstPage() {
   const videoRef = useRef(null);
 
   return (
-    <div className="h-screen bg-black flex flex-col px-5">
+    <div className="h-full bg-black flex flex-col px-5 justify-start items-center">
       <Link className="no-underline mt-3" href="/startpage">
         <span className="font-bebas hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
           <span className="text-xl">
@@ -19,7 +19,7 @@ export default function FirstPage() {
           </span>
         </span>
       </Link>
-      <div className="flex flex-col items-center py-32">
+      <div className="flex flex-col items-center justify-center md:mt-24 mt-52">
         <video
           className="md:w-1/3 w-2/3 transform rounded-full z-10"
           ref={videoRef}
@@ -32,8 +32,8 @@ export default function FirstPage() {
         </video>
       </div>
 
-      <div className="flex flex-col items-center w-full">
-        <button className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg">
+      <div className="flex flex-col justify-center items-center w-full absolute bottom-0">
+        <button className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full border-none font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg">
           <Link href="create-account" className="no-underline text-slate-900">
             Create an account
           </Link>
@@ -48,12 +48,12 @@ export default function FirstPage() {
         </button>
         <div className="w-full flex justify-end mt-8 mr">
           <button className="bg-black border-none">
-            <Link
+            {/* <Link
               className="text-white text-lg no-underline about-btn"
               href={"about"}
             >
               About
-            </Link>
+            </Link> */}
           </button>
         </div>
       </div>

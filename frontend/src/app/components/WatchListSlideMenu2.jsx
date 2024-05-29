@@ -5,9 +5,7 @@ import SlideMenu from "./SlideMenu";
 import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 
 export default function WatchListSlideMenu2() {
-
   //const [token, setToken] = useState(tokenStorage)
-
 
   const [movieWatchList, setMovieWatchList] = useState([]);
   const [listsFetched, setListsFetched] = useState(false);
@@ -121,7 +119,9 @@ export default function WatchListSlideMenu2() {
         // now fetching movie object from our database
         const movieObject = await fetchMovieObject(watchListedMovie.movie_id);
 
-        const movieProviders = await fetchMovieProviders(watchListedMovie.movie_id);
+        const movieProviders = await fetchMovieProviders(
+          watchListedMovie.movie_id
+        );
 
         console.log("movieObject: ", movieObject);
 
@@ -168,25 +168,34 @@ export default function WatchListSlideMenu2() {
       {listsFetched &&
       movieWatchListDetails &&
       movieWatchListDetails.length > 0 ? (
-        <SlideMenu>
-          {movieWatchListDetails.map((movie, index) => (
-            <MovieCardWatchAndLike
-              key={index}
-              //isLiked={true} // såklart är filmen liked eftersom den är i likelistan.... :)
-              voteAverage={movie.voteAverage}
-              isLiked={movie.isLiked}
-              isInWatchList={true}
-              id={movie.id}
-              title={movie.title}
-              poster={movie.poster}
-              overview={movie.overview}
-              streamingServices={movie.flatrate}
-            />
-          ))}
-        </SlideMenu>
+        <div>
+          <h2
+            className="mt-14 md:mt-4 mb-8  md:pl-0 uppercase text-xl  font-archivo font-bold"
+            tabIndex={0}
+          >
+            Watchlist
+            {/* (isLiked=false, isInWatchList=false) */}
+          </h2>
+          <SlideMenu>
+            {movieWatchListDetails.map((movie, index) => (
+              <MovieCardWatchAndLike
+                key={index}
+                //isLiked={true} // såklart är filmen liked eftersom den är i likelistan.... :)
+                voteAverage={movie.voteAverage}
+                isLiked={movie.isLiked}
+                isInWatchList={true}
+                id={movie.id}
+                title={movie.title}
+                poster={movie.poster}
+                overview={movie.overview}
+                streamingServices={movie.flatrate}
+              />
+            ))}
+          </SlideMenu>
+        </div>
       ) : (
-        <div className="inline-block w-full h-80 md:h-96">
-          <p>No movies in watchlist yet</p>{" "}
+        <div className="inline-block w-full  md:h-96">
+          <p></p>
           {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
       )}

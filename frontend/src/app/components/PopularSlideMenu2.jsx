@@ -140,8 +140,8 @@ export default function PopularSlideMenu2() {
           ))}
         </SlideMenu>
       ) : (
-        <div className="inline-block w-full h-80 md:h-96 mx-4" tabIndex={0}>
-          <p>No movies in watchlist yet</p>{" "}
+        <div className="inline-block w-full h-80 md:h-96 mx-4">
+          <p></p>
           {/*  TODO: detta visas i en millisekund när man refreshar... */}
         </div>
       )}
