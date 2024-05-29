@@ -700,7 +700,7 @@ export default function MoviePage() {
       <div className="bg-[#1B1725] w-full py-16 ">
         <div className=" w-full ">
           <h2 className="px-8 text-xl uppercase font-normal">
-            SIMILAR TO {movieDetails.title}
+            You may also like
           </h2>
         </div>
         <div className=" flex justify-center items-center ">

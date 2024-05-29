@@ -166,7 +166,7 @@ export default function ChatPage2() {
   
   return (
     <ProtectedRoute>
-      <div className="flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0 pb-5 min-h-full">
+      <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0 pb-5 min-h-full">
         {errorMessage && !loading && (
           <div className="h-full flex justify-center items-center">
             <p className="text-3xl font-semibold text-center">{errorMessage}</p>
@@ -178,7 +178,7 @@ export default function ChatPage2() {
           >
             <div className="relative h-96 flex justify-center items-center">
               <video
-                className="md:w-1/3 w-2/3 transform rounded-full z-10"
+                className="md:w-1/3 w-3/4 transform rounded-full z-10"
                 ref={videoRef}
                 autoPlay
                 loop
@@ -209,7 +209,7 @@ export default function ChatPage2() {
 
         {movies.length === 6 && (
           <div className="h-full w-full">
-            <div className=" inset-x-0 top-4 w-full z-10 absolute">
+            <div className=" inset-x-0 top-4 w-full z-10 absolute mt-20">
               <InputField
                 input={input}
                 handleQuerySubmit={handleQuerySubmit}
