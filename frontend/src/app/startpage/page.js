@@ -67,7 +67,7 @@ export default function Startpage() {
             <div className="w-full">
               {/* <h2 className="mb-10 md:text-left">AI-SEARCH</h2> */}
               <div
-                className="bg-slate-900 rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
+                className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
                 style={{
                   // border: "1px solid grey",
                   backgroundColor: "rgba(141, 126, 255, 0.2)",
@@ -110,9 +110,9 @@ export default function Startpage() {
               My Mix
             </h2>
 
-            <Link href={`/mymixes2/${"your-mix"}`} className="no-underline">
+            <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
               <div className="flex justify-center items-center pl-4 md:pl-0 h-40   bg-[#CFFF5E] rounded-3xl card-shadow2">
-                <div className="  text-slate-950   flex flex-col justify-center items-start  ">
+                <div className="  text-slate-950   flex flex-col justify-center items-start">
                   <h2 className=" text-5xl font-archivo font-extrabold uppercase">
                     Weekly
                   </h2>

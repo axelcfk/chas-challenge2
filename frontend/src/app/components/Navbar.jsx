@@ -84,7 +84,7 @@ export default function Navbar() {
             {!isSearchOpen && (
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-lighter-purple focus:outline-none border border-solid focus:bg-lighter-purple focus:text-white bg-deep-purple ml-4"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:cursor-pointer  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
                 aria-label="Burger Menu"
               >
                 <svg
