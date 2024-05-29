@@ -9,10 +9,13 @@ import { FaDotCircle } from "react-icons/fa";
 import Link from "next/link";
 import InputField from "../chatpage2/inputField";
 import MovieSearch from "../searchtest/page";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown menu
+  const [searchType, setSearchType] = useState(""); // State to track selected search type
   const { isLoggedIn, user, logout, checkAuth } = useAuth();
   const { input, setInput } = useSearch();
   const { handleQuerySubmit } = useHandleQuerySubmit();
@@ -24,6 +27,12 @@ export default function Navbar() {
       event.preventDefault();
       handleQuerySubmit();
     }
+  };
+
+  const handleSearchTypeSelect = (type) => {
+    setSearchType(type);
+    setIsSearchOpen(true);
+    setDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -49,7 +58,10 @@ export default function Navbar() {
     router.push("/");
   };
 
-  if (!isLoggedIn || ['/firstpage', '/login', '/create-account'].includes(pathname)) {
+  if (
+    !isLoggedIn ||
+    ["/firstpage", "/login", "/create-account"].includes(pathname)
+  ) {
     return null;
   }
 
@@ -73,20 +85,59 @@ export default function Navbar() {
               </div>
             </div>
           )}
-          <div className="w-full">
-            <InputField
-              input={input}
-              handleInputChange={(e) => setInput(e.target.value)}
-              handleQuerySubmit={handleQuerySubmit}
-              heightDiv={"h-10"}
-              placeholder={"AI SEARCH"}
-            />
-          </div>
+
           <div className="flex items-center md:hidden w-full justify-end">
-            {!isSearchOpen && (
+            <div className="relative">
+              {!isSearchOpen && (
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                  aria-label="Search Menu"
+                >
+                  <FaMagnifyingGlass className="h-6 w-6" />
+                </button>
+              )}
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                  <button
+                    onClick={() => handleSearchTypeSelect("ai")}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    AI Search
+                  </button>
+                  <button
+                    onClick={() => handleSearchTypeSelect("movie")}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    Movie Search
+                  </button>
+                </div>
+              )}
+            </div>
+            {isSearchOpen && searchType === "movie" && (
+              <MovieSearch
+                isSearchOpen={isSearchOpen}
+                setIsSearchOpen={setIsSearchOpen}
+              />
+            )}
+            {isSearchOpen && searchType === "ai" && (
+              <div className="mt-2 w-full">
+                <InputField
+                  handleInputChange={(e) => setInput(e.target.value)}
+                  handleQuerySubmit={handleQuerySubmit}
+                  heightDiv={"h-10"}
+                  placeholder={"AI SEARCH"}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Burger menu button only for small screens */}
+          {!isSearchOpen && (
+            <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:cursor-pointer  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
                 aria-label="Burger Menu"
               >
                 <svg
@@ -112,8 +163,10 @@ export default function Navbar() {
                   )}
                 </svg>
               </button>
-            )}
-          </div>
+            </div>
+          )}
+
+          {/* Menu items for smaller screens */}
           <div
             className={`menu-modal ${
               isOpen ? "open" : "close"
@@ -164,45 +217,92 @@ export default function Navbar() {
               )}
             </div>
           </div>
-          <div className="hidden md:flex items-center">
-            {isLoggedIn ? (
-              <>
-                <MovieSearch
-                  isSearchOpen={isSearchOpen}
-                  setIsSearchOpen={setIsSearchOpen}
-                />
-                <Link href="/about" style={{ textDecoration: "none" }}>
-                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
-                    About
+
+          {/* Ordinary Navbar for larger screens */}
+          <div className="hidden md:flex items-center justify-between w-full">
+            <div className="flex items-center">
+              <Link className="no-underline" href="/startpage">
+                <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center">
+                  <span className="text-xl">
+                    <FaDotCircle />
                   </span>
-                </Link>
-                {user && user.id && (
-                  <Link
-                    href={`/profile/${user.id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
-                      Profile
-                    </span>
-                  </Link>
-                )}
-                <Link
-                  href="/"
-                  onClick={handleLogout}
-                  style={{ textDecoration: "none" }}
-                >
-                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
-                    Log Out
+                  <span className="font-archivo font-extrabold no-underline">
+                    BAMMS
                   </span>
-                </Link>
-              </>
-            ) : (
-              <Link href="/login" style={{ textDecoration: "none" }}>
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-archivo cursor-pointer block text-center text-white">
-                  Log in
                 </span>
               </Link>
-            )}
+            </div>
+            <div className="flex items-center">
+              {isLoggedIn && (
+                <>
+                  <div className="relative">
+                    <button
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                      aria-label="Search Menu"
+                    >
+                      <FaMagnifyingGlass className="h-6 w-6" />
+                    </button>
+                    {dropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                        <button
+                          onClick={() => handleSearchTypeSelect("ai")}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                        >
+                          AI Search
+                        </button>
+                        <button
+                          onClick={() => handleSearchTypeSelect("movie")}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                        >
+                          Movie Search
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  {isSearchOpen && searchType === "movie" && (
+                    <MovieSearch
+                      isSearchOpen={isSearchOpen}
+                      setIsSearchOpen={setIsSearchOpen}
+                    />
+                  )}
+                  {isSearchOpen && searchType === "ai" && (
+                    <div className="mt-2 w-full">
+                      <InputField
+                        handleInputChange={(e) => setInput(e.target.value)}
+                        handleQuerySubmit={handleQuerySubmit}
+                        heightDiv={"h-10"}
+                        placeholder={"AI SEARCH"}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+              <Link href="/about" style={{ textDecoration: "none" }}>
+                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
+                  About
+                </span>
+              </Link>
+              {user && user.id && (
+                <Link
+                  href={`/profile/${user.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                    Profile
+                  </span>
+                </Link>
+              )}
+              <Link
+                href="/"
+                onClick={handleLogout}
+                style={{ textDecoration: "none" }}
+              >
+                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
+                  Log Out
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
