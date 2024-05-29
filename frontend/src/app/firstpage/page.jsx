@@ -3,9 +3,13 @@ import { useRef } from "react";
 import Link from "next/link";
 import "./firstpage.css";
 import { FaDotCircle } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function FirstPage() {
   const videoRef = useRef(null);
+
+  const router = useRouter();
+
 
   return (
     <div className="h-screen bg-black flex flex-col px-5">
@@ -33,18 +37,23 @@ export default function FirstPage() {
       </div>
 
       <div className="flex flex-col items-center w-full">
-        <button className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg">
-          <Link href="create-account" className="no-underline text-slate-900">
+        <button onClick={() => {
+          router.push("/create-account")
+        }} className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg">
+          {/* <Link href="create-account" className="w-full h-full no-underline text-slate-900"> */}
+          {/* moved "link" to button's onclick, otherwise you have to click on the text 'Create an account'  */}
             Create an account
-          </Link>
+        {/*   </Link> */}
         </button>
-        <button
+        <button onClick={() => {
+          router.push("/login")
+        }}
           style={{ border: "1px solid white" }}
           className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold shadow-lg"
         >
-          <Link href="login" className="no-underline text-slate-100">
+        {/*   <Link href="login" className="no-underline text-slate-100"> */}
             Log in
-          </Link>
+          {/* </Link> */}
         </button>
         <div className="w-full flex justify-end mt-8 mr">
           <button className="bg-black border-none">

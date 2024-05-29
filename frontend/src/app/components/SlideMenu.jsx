@@ -32,7 +32,7 @@ export default function SlideMenu({ children, placeholder = false }) {
           />
           <div className="w-full text-center absolute inset-0 flex items-center justify-center">
             <div className="flex justify-center items-center w-[50%]">
-              <h2 className="text-xl font-archivo font-extrabold uppercase">Start adding movies to your Watchlist</h2>
+              <h2 className="text-xl font-archivo font-extrabold uppercase">Your Watchlist is empty</h2>
             </div>
           </div>
         </div>
