@@ -11,6 +11,8 @@ import InputField from "../chatpage2/inputField";
 import MovieSearch from "../searchtest/page";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
+import { FaChevronUp } from "react-icons/fa6";
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
@@ -128,6 +130,13 @@ export default function Navbar() {
                   heightDiv={"h-10"}
                   placeholder={"AI SEARCH"}
                 />
+                <button
+                  onClick={() => setIsSearchOpen(false)}
+                  className="absolute top-2 left-2 flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
+                  aria-label="Close Search"
+                >
+                  <FaChevronUp className="h-6 w-6" />
+                </button>
               </div>
             )}
           </div>
@@ -263,6 +272,13 @@ export default function Navbar() {
                         heightDiv={"h-10"}
                         placeholder={"AI SEARCH"}
                       />
+                      <button
+                        onClick={() => setIsSearchOpen(false)}
+                        className="flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
+                        aria-label="Close Search"
+                      >
+                        <FaChevronUp className="h-6 w-6" />
+                      </button>
                     </div>
                   )}
                 </>
