@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import RatingFilter from "../filter-components/RatingFilter";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { IoIosClose } from "react-icons/io";
+import { FaChevronUp } from "react-icons/fa6";
 
 function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   const [inputValue, setInputValue] = useState(""); // State to hold input value
@@ -147,43 +147,44 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
       >
         <div className={`flex items-center space-x-2 ${isSearchOpen ? "w-full" : "w-auto"} relative`}>
           {isSearching || isSearchOpen ? (
-            <div className="relative w-full flex items-center">
-              <input
-                ref={inputRef}
-                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-40 w-full box-border" // Adjusted pr to make space for all icons
-                type="text"
-                value={inputValue}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    handleClose();
-                  }
-                }}
-                placeholder="Search Movie"
-                autoComplete="off"
-              />
-              <div className="absolute right-0 flex items-center pr-2">
-                <div className="mr-1"> 
-                  <RatingFilter
-                    ratingFilter={ratingFilter}
-                    setRatingFilter={setRatingFilter}
-                    className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2" // Matching the stream button style
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
-                  onClick={() => setFetchStreamService(true)}
-                >
-                  Stream
-                </button>
-                <IoIosClose
-                  className="cursor-pointer text-gray-400 text-3xl "
-                  onClick={handleClose}
-                />
-              </div>
-            </div>
+           <div className="relative w-full flex items-center">
+           <FaChevronUp
+             className="cursor-pointer text-gray-400 text-2xl absolute left-1.5"
+             onClick={handleClose}
+           />
+           <input
+             ref={inputRef}
+             className="p-2 border pl-9 text-white border-solid bg-deep-purple rounded shadow appearance-none pr-40 w-full box-border"
+             type="text"
+             value={inputValue}
+             onChange={handleChange}
+             onBlur={handleBlur}
+             onKeyDown={(event) => {
+               if (event.key === "Enter") {
+                 handleClose();
+               }
+             }}
+             placeholder="Search Movie"
+             autoComplete="off"
+           />
+           <div className="absolute right-0 flex items-center pr-2">
+             <div className="mr-1"> 
+               <RatingFilter
+                 ratingFilter={ratingFilter}
+                 setRatingFilter={setRatingFilter}
+                 className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
+               />
+             </div>
+             <button
+               type="button"
+               className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
+               onClick={() => setFetchStreamService(true)}
+             >
+               Stream
+             </button>
+           </div>
+         </div>
+         
           ) : (
             <FaMagnifyingGlass
               role="button"

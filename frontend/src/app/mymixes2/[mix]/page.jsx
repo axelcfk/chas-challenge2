@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchMovieObject, fetchWatchAndLikeList, host } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
@@ -9,6 +9,7 @@ import { MovieCardMix } from "./MovieCardMix";
 import Navbar from "../../components/Navbar";
 import { FaArrowRight, FaPlus } from "react-icons/fa";
 import Link from "next/link";
+import { SlArrowLeft } from "react-icons/sl";
 
 export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
@@ -35,6 +36,19 @@ export default function Mix() {
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [isGettingStoredMix, setIsGettingStoredMix] = useState(false);
 
+  const router = useRouter();
+
+  const handleNavigation = () => {
+    //router.back();
+    router.push("/startpage");
+  };
+
+  const handleNavigationNewUser = () => {
+    resetState();
+    const url = `/new-user?isFromMixPage=true`;
+    router.push(url);
+  };
+
   //const [disabledButton, setDisabledButton] = useState(false);
 
   // TODO: just nu om du klickar på generate daily mix igen så kommer movienamesfromgpt.length och movieIdsFromAPI.length vara annorlunda och därmed inte trigga andra useEffecten! Måste kanske deleta dailymixen på backend innan man klickar generate igen?
@@ -44,7 +58,7 @@ export default function Mix() {
     setMixFromBackendObjects([]);
     setMixDetails([]);
     setShowDetails(false);
-    setLoading(true);
+    //setLoading(true);
     setMessageNoStoredMix("");
     setMessageNoLikedMovies("");
     // setChatGPTFetched(false);
@@ -54,11 +68,12 @@ export default function Mix() {
 
   useEffect(() => {
     async function getStoredMix() {
+      //resetState();
       /* setMixDetails([]);
       setMixFromBackendObjects([]);
       setMixFromBackendProvidersObjects([]); */
-      setLoading(true);
       try {
+        setLoading(true);
         setIsGettingStoredMix(true);
         const token = localStorage.getItem("token");
 
@@ -80,10 +95,9 @@ export default function Mix() {
           //setReasoningFromGPT(data.reasoning)
         } else if (data.message) {
           setMessageNoStoredMix(data.message);
-          setLoading(false);
+          //setLoading(false);
         } else {
           setLoading(false);
-          console.error("Failed to fetch stored mix");
         }
       } catch (error) {
         console.error("Failed to fetch stored mix:", error);
@@ -96,6 +110,7 @@ export default function Mix() {
   useEffect(() => {
     const fetchDetails = async () => {
       const details = [];
+      //setLoading(true);
 
       for (const movieObject of mixFromBackendObjects) {
         const watchAndLikeData = await fetchWatchAndLikeList();
@@ -133,29 +148,37 @@ export default function Mix() {
       }
 
       setMixDetails(details);
-      setIsGettingStoredMix(false);
-      setIsAiGenerating(false);
-      setLoading(false);
     };
 
     if (mixFromBackendObjects.length > 0) {
-      fetchDetails();
+      try {
+        fetchDetails();
+      } catch (error) {
+        console.error(
+          "Failed fetchDetails function (fetching watchAndLikeList and/or populating mixDetails)"
+        );
+      } finally {
+        setIsGettingStoredMix(false);
+        setIsAiGenerating(false);
+        setLoading(false);
+      }
     }
   }, [mixFromBackendObjects]);
 
+  // if no stored mix is found on backend we start generating a new one
   useEffect(() => {
-    if (messageNoStoredMix !== "") {
+    // isAiGenerating === false because it might run twice by accident sometimes
+    if (messageNoStoredMix !== "" && isAiGenerating === false) {
       getGenerateDailyMixFromGPT();
     }
-  }, [messageNoStoredMix]);
+  }, [messageNoStoredMix]); // messageNoStoredMix gets populated if no stored mix is found...
 
-  // --------------------- onClick generate new mix, will suggested movies and their movie objects from TMDB ---------------------
+  // --------------------- generate new mix through ChatGpt, will suggested movies and then fetch movie objects from TMDB ---------------------
 
   const getGenerateDailyMixFromGPT = async () => {
-    resetState();
-    // setLoading(true);
-
     try {
+      resetState();
+      setLoading(true);
       setIsGettingStoredMix(false);
       setIsAiGenerating(true);
       const token = localStorage.getItem("token");
@@ -178,6 +201,7 @@ export default function Mix() {
         //setReasoningFromGPT(data.reasoning)
       } else if (data.messageNoLikedMovies) {
         setMessageNoLikedMovies(data.messageNoLikedMovies);
+        setIsAiGenerating(false);
         setLoading(false);
         console.log("No movies liked yet");
       } else {
@@ -201,11 +225,21 @@ export default function Mix() {
 
   console.log("mixFromBackendProvidersObjects", mixFromBackendProvidersObjects);
 
+  console.log("loading: ", loading);
+  console.log("isAiGenerating: ", isAiGenerating);
+  console.log("mixDetails.length :", mixDetails.length);
+
   return (
     <div className="bg-[#110A19] min-h-screen p-8 pt-20">
       {/* <Navbar></Navbar> */}
 
-      <div className="h-full flex flex-col items-center pt-8">
+      <div className="h-full w-full flex flex-col items-center pt-8">
+        <button
+          className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
+          onClick={handleNavigation}
+        >
+          <SlArrowLeft />
+        </button>
         <div className="bg-[#CFFF5E] box-border rounded-3xl p-8 w-full flex justify-between items-center my-8 card-shadow2 ">
           <div className="w-full flex flex-col justify-center items-start h-full">
             <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
@@ -225,10 +259,9 @@ export default function Mix() {
 
         {/* min-h-full  */}
         <div
-          className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 pl-4 pr-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full"
-          style={{ backgroundColor: "rgba(141, 126, 255, 0.1)" }}
+          className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 px-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full"
+          style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
         >
-          {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
           {/* <div className="flex w-full justify-end items-center">
           
             <button className="text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-inherit rounded-lg border-2 border-solid border-[#FF506C] hover:border-white">
@@ -237,7 +270,7 @@ export default function Mix() {
            
           </div> */}
 
-          <div className="pt-8">
+          <div className="flex pt-8 w-full">
             {/*  
             // använder inte längre, användes när vi hade Generate knappen
            {loading === false && messageNoStoredMix !== "" && (
@@ -246,24 +279,47 @@ export default function Mix() {
               </div>
             )} */}
 
-            {loading === false && messageNoLikedMovies !== "" && (
-              <div>
-                <p>{messageNoLikedMovies}</p>{" "}
-                {/* You need to like some movies before I can generate a Mix for you! */}
-                <div className="flex items-center">
-                  <Link
-                    className="justify-center items-center flex p-4 text-center text-black no-underline bg-slate-100 w-40 h-12 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black"
-                    href={{
-                      pathname: "/new-user",
-                      query: { isFromMixPage: true },
-                    }}
-                  >
-                    Start Liking Movies
-                    <FaArrowRight color="rgb(2 6 23)" size={"40px"} />
-                  </Link>
+            {loading === false &&
+              messageNoLikedMovies !== "" &&
+              isAiGenerating === false && (
+                <div className="flex flex-col gap-8">
+                  {/* <p>{messageNoLikedMovies}</p>{" "} */}
+                  <h2 className="text-3xl font-bold">
+                    No mix provided, please like some movies first!
+                  </h2>
+                  <div className="flex items-center">
+                    {/*  <Link className="justify-center items-center flex p-4 text-center text-black no-underline bg-slate-100 w-48 h-8 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black" href={{ pathname:"/new-user", query: { isFromMixPage: true }}}>
+                   <p className="px-4">Start Here</p> 
+                     <FaArrowRight color="rgb(2 6 23)" size={"40px"} />
+                  </Link> */}
+
+                    {/* Link does not reset state appropriately? */}
+                    {/* <Link className="justify-center no-underline text-black  items-center flex  hover:cursor-pointer border-none text-xl bg-[#CFFF5E] hover:bg-[#CFFF5E] p-4 mt-4 w-48 h-8 rounded-full font-extrabold font-archivo " href={{ pathname:"/new-user", query: { isFromMixPage: true }}}>
+                  <p className="px-4">Start Here</p> 
+                     <FaArrowRight color="rgb(2 6 23)" size={"40px"} />
+                    </Link> */}
+
+                    {/* router.push which resets state better! Avoids useEffects running twice! */}
+                    <button
+                      className="justify-between text-black items-center flex  hover:cursor-pointer border-none text-xl bg-[#CFFF5E] hover:bg-[#CFFF5E] py-9 px-4 mt-4 w-48 h-8 rounded-full font-extrabold font-archivo "
+                      onClick={handleNavigationNewUser}
+                    >
+                      <p className="">Start Here</p>
+                      <FaArrowRight color="rgb(2 6 23)" size={"40px"} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+
+            {loading === true &&
+              !isGettingStoredMix &&
+              !isAiGenerating &&
+              mixDetails.length === 0 &&
+              mixFromBackendObjects.length === 0 && (
+                <div>
+                  <p>Loading...</p>
+                </div>
+              )}
 
             {loading === true && isGettingStoredMix && (
               <div>
@@ -272,8 +328,8 @@ export default function Mix() {
             )}
 
             {loading && isAiGenerating && mixDetails.length === 0 ? (
-              <h2 className="text-slate-100 text-2xl">
-                AI Generating a mix based on your likes...
+              <h2 className="text-white  text-2xl">
+                AI is generating a mix based on your likes...
               </h2>
             ) : (
               <>

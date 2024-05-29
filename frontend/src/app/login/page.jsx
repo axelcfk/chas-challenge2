@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { FaDotCircle } from "react-icons/fa";
-
 import Link from "next/link";
 
 export default function Login() {
@@ -40,10 +39,8 @@ export default function Login() {
           <span className="text-6xl">
             <FaDotCircle />
           </span>
-          <h1 className="font-bebas no-underline text-7xl">BAMMS</h1>
-        </div> */}
-
-        <h2 className="text-3xl font-semibold text-center mb-8 mt-28 text-slate-100">
+        </Link>
+        <h2 className="text-3xl font-semibold text-center mb-8 mt-20 text-slate-100">
           Sign in
         </h2>
         <div className="flex flex-col mt-20">

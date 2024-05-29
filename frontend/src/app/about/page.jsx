@@ -4,7 +4,7 @@ const About = () => {
   return (
     <div className="px-6 sm:px-12 lg:px-24 py-8 font-sans max-w-7xl mx-auto">
       <div className="flex flex-col items-center justify-center mb-8">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-center pb-8">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-center pb-8 pt-12"> {/* TODO: pt-12 due to navbar.. */}
           Here to Revolutionize Your Movie Experience
         </h1>
         <div
@@ -40,14 +40,27 @@ const About = () => {
         The Team
       </h2>
       <p className="text-base sm:text-lg lg:text-xl mb-8">
-        We are a group of dedicated students specializing in frontend web
-        development. Our passion for technology and innovation has driven us to
+        We are a group of dedicated fullstack students specializing in frontend development. Our passion for technology and innovation has driven us to
         create AI Movie Suggestions, a platform designed to revolutionize the
         way you discover movies. By combining our web development skills with an
         interest in artificial intelligence, we provide accurate and
         personalized movie recommendations using existing machine learning
         libraries.
       </p>
+
+      <div className="flex flex-col w-full">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6">TMDB API</h2>
+        <div className="flex flex-col gap-4">
+
+        <div className="flex w-16 ">
+
+        <img src="/tmdb_logo.svg">
+        </img>
+        </div>
+        <p className="text-base sm:text-lg lg:text-xl mb-8">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+        </div>
+        
+      </div>
     </div>
   );
 };
