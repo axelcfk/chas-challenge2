@@ -1741,14 +1741,86 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
 
 // TODO: fix so it removes from the user's watchlist
 app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
-  try {
-    const { id, movieOrSeries } = req.body;
+  
+
+    try {
+      const { movieId, movieOrSeries, title, token } = req.body;
+  
+      if (!movieId || !token) {
+        return res.status(400).json({
+          error: "token and id (of movie) are required in /me/watchlists/removefromwatchlist",
+        });
+      }
+      //console.log("hej");
+  
+      let sessionSearchResult;
+      try {
+        // Use the token to find the current session (user_id that is logged in)
+        sessionSearchResult = await query(
+          "SELECT * FROM sessions WHERE token = ?",
+          [token]
+        );
+      } catch (error) {
+        console.error("2:Error finding session", error);
+        return res.status(500).send("2:Error finding session");
+      }
+  
+      if (sessionSearchResult.length === 0) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+  
+      const currentSession = sessionSearchResult[0];
+      const userId = currentSession.user_id;
+  
+      try {
+        // Check if the movie is in the user's like list
+        const checkResults = await query(
+          "SELECT * FROM watchlist WHERE user_id = ? AND movie_id = ?",
+          [userId, movieId]
+        );
+  
+        // If it does not exist, we exit the code
+        if (checkResults.length === 0) {
+          console.log(
+            "Can't delete movie ID ",
+            movieId,
+            ", it is not in the watch list?."
+          );
+          return res.status(404).json({
+            message: `Can't delete movie ID ${movieId}, it is not in the watchlist?.`,
+          });
+        }
+  
+        // If yes, delete the movieId and userId from liked_movies table
+        await query(
+          "DELETE FROM watchlist WHERE user_id = ? AND movie_id = ?",
+          [userId, movieId]
+        );
+  
+        console.log(
+          "Removed movie ID ",
+          movieId,
+          "from user ID ",
+          userId,
+          " watchlist"
+        );
+  
+        return res.status(200).send(`Movie ${movieId} removed successfully`);
+      } catch (error) {
+        console.error("Error removing movie", error);
+        return res.status(500).send("Error removing movie");
+      }
+
+
+   /*  const { id, movieOrSeries } = req.body;
 
     if (!id || !movieOrSeries) {
       return res
         .status(400)
         .json({ error: "Watched movie OR watched series is required." });
     }
+
+    
 
     // const idExistsInMovies = likedMoviesList.some(
     //   (likedMovie) => likedMovie.id === id
@@ -1776,9 +1848,9 @@ app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
 
     res.status(201).json({
       message: "Movie/Series removed from like list succesfully",
-    });
+    }); */
   } catch (error) {
-    console.error("1:Error removing like:", error);
+    console.error("1:Error removing watchlisted movie:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -1790,7 +1862,7 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
     if (!movieId || !movieOrSeries || !token || !title) {
       return res
         .status(400)
-        .json({ error: "Token missing andor Liked movie/series is required." });
+        .json({ error: "Token missing and/or Liked movie/series is required." });
     }
 
     let sessionSearchResult;

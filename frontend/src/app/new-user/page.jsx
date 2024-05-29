@@ -124,7 +124,8 @@ export default function MovieSelection() {
             ) : (
               <div className="overlay">
                 <FaCheckCircle
-                  className="text-green-500"
+                  //className="text-green-500"
+                  className="text-[#CFFF5E]"
                   style={{
                     fontSize: "40px",
                     position: "absolute",
@@ -148,10 +149,10 @@ export default function MovieSelection() {
           </div>
         ))}
       </div>
-      <div className="w-full flex justify-center items-center pt-5 ">
+      <div className="w-full flex justify-center items-center pt-5 gap-8 ">
         {movies.length > currentStartIndex + 9 && (
           <button
-            className="flex justify-center items-center text-slate-950 rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
+            className="font-extrabold font-archivo bg-[#CFFF5E] flex justify-center items-center text-slate-950 rounded-full py-3 px-6 transition-all mx-auto"
             onClick={handleLoadMore}
             style={{ border: "1px solid grey" }}
           >
@@ -159,12 +160,12 @@ export default function MovieSelection() {
           </button>
         )}
         {isFromMixPage ?  (<button
-          className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E] items-center  rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
+          className="font-archivo bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
           onClick={() => router.push("/mymixes2/Weekly")}
         >
           <span className="px-2 text-xl">Back to Mix Page</span> <FaArrowRight />
         </button> ) : ( <button
-          className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E] items-center  rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
+          className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
           onClick={() => router.push("/startpage")}
         >
           <span className="px-2 text-xl">Continue</span> <FaArrowRight />

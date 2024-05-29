@@ -156,7 +156,7 @@ export default function WatchListSlideMenu2() {
   if (likedMoviesList == null) {
     return (
       <>
-        <div className="flex flex-col justify-center items-center md:items-start pb-10 px-8  md:px-20  bg-slate-950 text-slate-100">
+        <div className="flex flex-col justify-center items-center md:items-start pb-10 px-8 h-80 md:px-20  bg-slate-950 text-slate-100">
           Loading Watchlist...
         </div>
       </>
@@ -185,10 +185,11 @@ export default function WatchListSlideMenu2() {
           ))}
         </SlideMenu>
       ) : (
-        <div className="inline-block w-full h-80 md:h-96">
-          <p>No movies in watchlist yet</p>{" "}
-          {/*  TODO: detta visas i en millisekund när man refreshar... */}
-        </div>
+       
+          <SlideMenu placeholder={true}>
+             
+          </SlideMenu>
+        
       )}
     </>
   );
