@@ -87,30 +87,30 @@ export default function CreateAccount() {
           GO
         </h2> */}
 
-        <h2 className="text-2xl font-semibold text-center text-slate-100 mt-40 mb-10">
+        <h2 className="text-3xl font-semibold text-center mb-8 mt-28 text-slate-100">
           {successMessage === "" ? "Create an account" : ""}
         </h2>
 
         {successMessage === "" ? (
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full mt-20">
             <p className="mb-2 text-slate-100">Username</p>
             <input
-              type="email"
+              type="text"
               onChange={(e) => setUsername(e.target.value)}
               value={username}
               required
               autoFocus
-              placeholder="Enter email address"
+              placeholder="Enter username..."
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
               className="text-lg h-12  bg-slate-200 rounded-xl font-semibold mb-2 px-5"
             />
-            <p className="mb-2 text-slate-100">Password</p>
+            <p className="mb-2 mt-4 text-slate-100">Password</p>
             <input
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               value={password}
               required
-              placeholder="Enter password"
+              placeholder="Enter password..."
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
               className="text-lg h-12  bg-slate-200 rounded-xl font-semibold mb-5 px-5"
             />
@@ -122,7 +122,7 @@ export default function CreateAccount() {
             <button
               onClick={handleSubmit}
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-xl h-14 w-full bg-slate-50 rounded-full font-semibold  text-slate-900 hover:bg-slate-200"
+              className="text-xl h-14 w-full bg-slate-50 rounded-full font-semibold text-slate-900 hover:bg-slate-200 mt-8"
             >
               Create account
             </button>{" "}
@@ -160,9 +160,9 @@ export default function CreateAccount() {
                 </span>
               </div>
             </button>{" "}
-            <div className="flex mt-10 justify-center">
+            <div className="flex mt-4 justify-center">
               <p className="text-slate-100">Do you already have an account?</p>
-              <Link href={"/login"} className="underline ml-2 text-slate-100">
+              <Link href={"/login"} className="underline ml-2 text-[#a57cda]">
                 Log in here
               </Link>
             </div>
@@ -181,12 +181,12 @@ export default function CreateAccount() {
           </div>
         )}
       </div>
-      <div className="absolute bottom-20 right-20 left-20">
+      <div className="text-sm mt-6">
         <div className="flex justify-center items-center  text-slate-100">
           <p className="mr-3 font-semibold text-slate-100">Terms of use</p>
           <p className="ml-3 font-semibold text-slate-100">Privacy Policy</p>
         </div>
-        <p className="text-center text-slate-100">2024 All rights reserved</p>
+        <p className="text-center text-slate-100 mt-4">2024 All rights reserved</p>
       </div>
     </div>
   );

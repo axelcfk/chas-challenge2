@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 const About = () => {
   return (
     <div className="px-6 sm:px-12 lg:px-24 py-8 font-sans max-w-7xl mx-auto">

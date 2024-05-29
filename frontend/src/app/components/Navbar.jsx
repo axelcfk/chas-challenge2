@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
@@ -17,6 +17,7 @@ export default function Navbar() {
   const { input, setInput } = useSearch();
   const { handleQuerySubmit } = useHandleQuerySubmit();
   const router = useRouter();
+  const pathname = usePathname(); // Hämtar den aktuella sökvägen/url:en
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -68,7 +69,9 @@ export default function Navbar() {
               </div>
             </div>
           )}
-          {isLoggedIn && (
+          {/* Dölj AI-sökfältet om man redan är på AI-sidan */}
+          {/* {isLoggedIn && pathname !== '/chatpage2' && ( */}
+            {isLoggedIn && (  
             <div className="w-full ">
               <InputField
                 input={input}
