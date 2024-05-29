@@ -203,7 +203,7 @@ export default function ChatPage2() {
 
       {movies.length === 6 && (
         <div className="h-full w-full">
-          <div className=" inset-x-0 top-4 w-full z-10 absolute">
+          <div className=" inset-x-0 top-4 w-full z-10 absolute mt-20">
             <InputField
               input={input}
               handleQuerySubmit={handleQuerySubmit}

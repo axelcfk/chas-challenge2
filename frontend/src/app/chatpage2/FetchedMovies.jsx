@@ -192,7 +192,7 @@ export default function FetchedMovies({
                 <h2 className="text-base h-14 font-semibold  px-2">
                   {movie.title}
                 </h2>
-                {movie.streaming?.flatrate?.some((provider) =>
+                {/* {movie.streaming?.flatrate?.some((provider) =>
                   supportedServices.includes(provider.provider_name)
                 ) ? (
                   <>
@@ -230,7 +230,7 @@ export default function FetchedMovies({
                       Not available in your area
                     </div>
                   </>
-                )}
+                )} */}
                 <div className="w-auto flex justify-center items-center pt-5 px-2 ">
                   <button
                     onClick={() => {
@@ -242,7 +242,9 @@ export default function FetchedMovies({
                       }
                     }}
                     className={`w-full h-10 ${
-                      !watches[movie.id] ? "bg-[#3D3B8E]" : "bg-green-600"
+                      !watches[movie.id]
+                        ? "bg-[#3D3B8E]"
+                        : "bg-[#CFFF5E] text-slate-950"
                     } flex justify-center items-center rounded-full px-3 border-none`}
                   >
                     {!watches[movie.id] ? (
@@ -251,8 +253,8 @@ export default function FetchedMovies({
                       <FaCheck className="text-2xl text-gray-200" />
                     )}
                     {!watches[movie.id] ? (
-                      <span className="pl-2 w-full text-sm font-light text-gray-200">
-                        ADD TO WATCHLIST
+                      <span className="pl-2 w-full text-sm  text-slate-200 font-semibold">
+                        WATCHLIST
                       </span>
                     ) : (
                       <span className="pl-2 w-full text-sm font-light text-gray-200">

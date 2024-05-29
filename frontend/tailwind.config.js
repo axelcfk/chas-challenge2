@@ -47,6 +47,7 @@ module.exports = {
         manrope: ["Manrope", "sans-serif"],
         bebas: ["Bebas Neue", "sans-serif"],
         anton: ["Anton", "sans-serif"],
+        archivo: ["Archivo", "sans-serif"],
       },
     },
   },
