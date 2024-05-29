@@ -128,16 +128,17 @@ export default function Navbar() {
                     href="/chatpage2"
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 py-8 text-5xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       AI-Search
                     </span>
                   </Link>
+
                   <Link
                     onClick={() => setIsOpen(false)}
                     href="/startpage"
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 py-8 text-5xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Start
                     </span>
                   </Link>
@@ -146,7 +147,7 @@ export default function Navbar() {
                     href="/about"
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 py-8 text-5xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       About
                     </span>
                   </Link>
@@ -156,7 +157,7 @@ export default function Navbar() {
                       href={`/profile/${user.id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <span className="px-3 py-8 rounded-md text-5xl font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      <span className="px-3 py-8 rounded-md text-4xl font-extrabold font-archivo cursor-pointer block text-center text-white">
                         Profile
                       </span>
                     </Link>
@@ -166,7 +167,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 py-8 text-5xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 pt-24 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>

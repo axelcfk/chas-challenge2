@@ -321,7 +321,7 @@ input:focus {
   width: 100%;
   height: calc(100% - 64px); /* Adjust to match the height of your navbar */
   z-index: 90; /* Ensure it is above other elements */
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(30px);
   background-color: rgba(0, 0, 0, 0);
 }
 
