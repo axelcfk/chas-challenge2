@@ -58,12 +58,10 @@ export default function Navbar() {
               <div className="flex-shrink-0">
                 <Link className="no-underline" href="/startpage">
                   <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center">
-                    <span className="text-lg">
+                    <span className="text-xl">
                       <FaDotCircle />
                     </span>
-                    <span className="font-archivo font-extrabold no-underline text-xl">
-                      BAMMS
-                    </span>
+                    <span className="font-archivo font-extrabold no-underline">BAMMS</span>
                   </span>
                 </Link>
               </div>
@@ -71,7 +69,7 @@ export default function Navbar() {
           )}
           {/* Dölj AI-sökfältet om man redan är på AI-sidan */}
           {/* {isLoggedIn && pathname !== '/chatpage2' && ( */}
-          {isLoggedIn && (
+            {isLoggedIn && (  
             <div className="w-full ">
               <InputField
                 input={input}
@@ -123,40 +121,18 @@ export default function Navbar() {
             <div className="mt-16">
               {isLoggedIn ? (
                 <>
-                  <Link
-                    onClick={() => setIsOpen(false)}
-                    href="/chatpage2"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <span className="px-3 py-8 rounded-md  font-archivo cursor-pointer block text-5xl text-center text-white font-bold">
-                      AI-Search
-                    </span>
-                  </Link>
-                  <Link
-                    onClick={() => setIsOpen(false)}
-                    href="/startpage"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <span className="px-3 py-8 rounded-md  font-archivo cursor-pointer block text-5xl text-center text-white font-bold">
-                      Start
-                    </span>
-                  </Link>
-                  <Link
-                    onClick={() => setIsOpen(false)}
-                    href="/about"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <span className="px-3 py-8 rounded-md  font-archivo cursor-pointer block text-5xl text-center text-white font-bold">
+                  <Link href="/about" style={{ textDecoration: "none" }}>
+                    <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                       About
                     </span>
                   </Link>
                   {user && user.id && (
                     <Link
-                      onClick={() => setIsOpen(false)}
+                    onClick={() => setIsOpen(false)}
                       href={`/profile/${user.id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <span className="px-3 py-8 rounded-md text-5xl font-bold font-archivo cursor-pointer block text-center text-white">
+                      <span className="px-3 py-2 rounded-md text-5xl font-archivo cursor-pointer block text-center text-white">
                         Profile
                       </span>
                     </Link>
@@ -166,7 +142,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 py-8 rounded-md text-5xl font-archivo cursor-pointer block text-center text-white font-bold">
+                    <span className="px-3 py-8 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>
@@ -174,7 +150,7 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href="/about" style={{ textDecoration: "none" }}>
-                    <span className="px-3 py-8 rounded-md text-base font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                       About
                     </span>
                   </Link>
@@ -205,7 +181,7 @@ export default function Navbar() {
                     href={`/profile/${user.id}`}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
+                    <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
                       Profile
                     </span>
                   </Link>
@@ -222,7 +198,7 @@ export default function Navbar() {
               </>
             ) : (
               <Link href="/login" style={{ textDecoration: "none" }}>
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
+                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-archivo cursor-pointer block text-center text-white">
                   Log in
                 </span>
               </Link>
