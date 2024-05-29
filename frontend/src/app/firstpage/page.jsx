@@ -35,7 +35,7 @@ export default function FirstPage() {
         </video>
       </div>
 
-      <div className="flex flex-col items-center w-full">
+      <div className="flex flex-col items-center w-full absolute bottom-2">
         <button
           onClick={() => {
             router.push("/create-account");
