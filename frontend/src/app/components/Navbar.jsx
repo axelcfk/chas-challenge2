@@ -220,18 +220,7 @@ export default function Navbar() {
 
           {/* Ordinary Navbar for larger screens */}
           <div className="hidden md:flex items-center justify-between w-full">
-            <div className="flex items-center">
-              <Link className="no-underline" href="/startpage">
-                <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center">
-                  <span className="text-xl">
-                    <FaDotCircle />
-                  </span>
-                  <span className="font-archivo font-extrabold no-underline">
-                    BAMMS
-                  </span>
-                </span>
-              </Link>
-            </div>
+            <div className="flex items-center"></div>
             <div className="flex items-center">
               {isLoggedIn && (
                 <>
