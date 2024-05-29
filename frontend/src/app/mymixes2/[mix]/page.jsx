@@ -208,23 +208,28 @@ export default function Mix() {
       {/* <Navbar></Navbar> */}
 
       <div className="h-full flex flex-col items-center pt-8">
-        <div className="bg-[#29274C] box-border rounded-3xl p-12 w-full flex justify-between items-center my-8 h-72">
-          <div className="w-full flex flex-col justify-center items-center h-full">
-            <h1 className="text-white font-light mb-2">{mixTitle} Mix by AI</h1>
+        <div className="bg-[#CFFF5E] box-border rounded-3xl p-8 w-full flex justify-between items-center my-8 card-shadow2 ">
+          <div className="w-full flex flex-col justify-center items-start h-full">
+            <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
+              Your {mixTitle} mix by AI
+            </h1>
             <button
-              className="bg-slate-100 w-40 h-12 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black"
+              className="bg-slate-100 w-40 h-12 text-lg rounded-full font-extrabold font-archivo border border-solid border-white  transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black "
               onClick={() => {
                 getGenerateDailyMixFromGPT();
               }}
+              style={{ border: "0.5px solid grey" }}
             >
-              Generate
+              Generate mix
             </button>
           </div>
-          <img className="h-full w-auto z-10" src="/image.png" alt="AI" />
         </div>
 
         {/* min-h-full  */}
-        <div className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 pl-4 pr-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full">
+        <div
+          className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 pl-4 pr-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full"
+          style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
+        >
           {/* TODO: save into a new list on backend, not postAddToMixOnBackend again, or use that function but save to a new list...! we still want to keep the other list after fetching so it stays when you reload the page!  */}
           {/* <div className="flex w-full justify-end items-center">
           
@@ -269,7 +274,7 @@ export default function Mix() {
             ) : (
               <>
                 {mixDetails && mixDetails.length > 0 ? (
-                  <div className="flex w-full flex-col gap-8">
+                  <div className="flex w-full flex-col gap-8 justify-center items-center">
                     {mixDetails.map((movie, index) => (
                       <MovieCardMix
                         key={index}
