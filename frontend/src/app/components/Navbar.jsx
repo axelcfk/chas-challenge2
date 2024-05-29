@@ -121,7 +121,7 @@ export default function Navbar() {
                   {isLoggedIn ? (
                     <>
                       <Link href="/about" style={{ textDecoration: "none" }}>
-                        <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                        <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                           About
                         </span>
                       </Link>
@@ -131,7 +131,7 @@ export default function Navbar() {
                           href={`/profile/${user.id}`}
                           style={{ textDecoration: "none" }}
                         >
-                          <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                          <span className="px-3 py-8 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                             Profile
                           </span>
                         </Link>
@@ -141,7 +141,7 @@ export default function Navbar() {
                         onClick={handleLogout}
                         style={{ textDecoration: "none" }}
                       >
-                        <span className="px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                        <span className="px-3 pt-24 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                           Log Out
                         </span>
                       </Link>

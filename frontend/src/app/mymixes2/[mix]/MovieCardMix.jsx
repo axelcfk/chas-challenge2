@@ -53,7 +53,7 @@ export function MovieCardMix({
 
   return (
     <div
-      className="flex h-36 w-80 gap-4 rounded-md bg-[#8D7EFF]"
+      className="flex h-36 w-80 gap-4 rounded-md bg-[#110A19]"
       style={{ border: "0.5px solid grey" }}
     >
       {/* <Link href={`/movie/${encodeURIComponent(id)}`}>
@@ -105,14 +105,14 @@ export function MovieCardMix({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 ">
-        <p>{title}</p>
-        <div className="flex gap-2 justify-start items-center">
+      <div className="flex flex-col  pt-2">
+        <p className="text-base font-semibold ">{title}</p>
+        <div className="flex gap-2 justify-start items-center my-2">
           <FaStar color="yellow" />
           <p>{voteAverage.toFixed(1)}</p>
         </div>
-        <div className="h-6 flex pr-2">
-          {/* {streamingServices && streamingServices.map((streamingService, index) => {
+        {/* <div className="h-6 flex pr-2"> */}
+        {/* {streamingServices && streamingServices.map((streamingService, index) => {
               return (
                 <div key={index} className="bg-slate-50 rounded-xl ml-2 p-1">
                  
@@ -123,7 +123,7 @@ export function MovieCardMix({
                   </div>
               )
             })} */}
-        </div>
+        {/* </div> */}
 
         <button
           onClick={() => {
@@ -137,7 +137,7 @@ export function MovieCardMix({
           /*  className={`w-full h-auto ${
               !watched ? "bg-[#3D3B8E]" : "bg-green-600"
             } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`} */
-          className={`w-32 h-12 bg-inherit border border-solid hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
+          className={`w-32 h-8  bg-inherit border border-solid hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
             !watched ? "border-[#3D3B8E]" : "border-green-600"
           }`}
         >
@@ -148,7 +148,7 @@ export function MovieCardMix({
               <p className="leading-none ">WATCHLIST</p>
             </div>
           ) : (
-            <div className="w-full flex justify-center gap-2   items-center font-light text-gray-200">
+            <div className="w-full flex justify-center  gap-2 items-center font-light text-gray-200">
               <FaCheck className=" leading-none text-gray-200" />
 
               <p className=" leading-none ">ADDED</p>
