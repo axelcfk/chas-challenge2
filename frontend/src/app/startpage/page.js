@@ -69,7 +69,7 @@ export default function Startpage() {
                 className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
                 style={{
                   // border: "1px solid grey",
-                  backgroundColor: "rgba(141, 126, 255, 0.2)",
+                  backgroundColor: "rgba(141, 126, 255, 0.1)",
                 }}
                 ref={parallaxRef}
               >
@@ -91,21 +91,24 @@ export default function Startpage() {
               </div>
             </div>
           </main>
-          <div className="w-full  md:px-24 ">
+          <div className="w-full md:px-24 ">
             <h2
-              className=" md:mt-4 mb-8 pl-4  md:pl-0 uppercase font-semibold"
+              className="md:mt-4 mb-8 md:pl-0 uppercase text-xl font-archivo font-bold"
               tabIndex={0}
             >
               Popular today
               {/* (isLiked=false, isInWatchList=false) */}
             </h2>
-            <div className="pl-4 md:pl-0">
+            <div className="md:pl-0">
               <PopularSlideMenu2 />
             </div>
           </div>
 
           <div className="w-full md:px-24 ">
-            <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase" tabIndex={0}>
+            <h2
+              className="mt-14 mb-8 md:pl-0 uppercase text-xl  font-archivo font-bold"
+              tabIndex={0}
+            >
               My Mix
             </h2>
 
@@ -149,23 +152,23 @@ export default function Startpage() {
 
           <div className="w-full  md:px-24 ">
             <h2
-              className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase"
+              className="mt-14 md:mt-4 mb-8  md:pl-0 uppercase text-xl  font-archivo font-bold"
               tabIndex={0}
             >
               Watchlist
               {/* (isLiked=false, isInWatchList=false) */}
             </h2>
-            <div className="pl-4 md:pl-0">
+            <div className="md:pl-0">
               <WatchListSlideMenu2 />
             </div>
           </div>
 
-          <div className="w-full  md:px-24 ">
-            <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase">
+          <div className="w-full md:px-24 ">
+            <h2 className="mt-14 mb-8 md:pl-0 uppercase">
               {" "}
               LIKELIST (remove in final product)
             </h2>
-            <div className="w-full pl-4 md:pl-0 ">
+            <div className="w-full md:pl-0 ">
               <LikeListSlideMenu2 />
             </div>
           </div>

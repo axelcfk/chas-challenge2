@@ -53,7 +53,7 @@ export function MovieCardMix({
 
   return (
     <div
-      className="flex h-36 w-80 gap-4 rounded-md bg-[#110A19]"
+      className="flex h-36 w-80 gap-4 rounded-2xl bg-[#110A19]"
       style={{ border: "0.5px solid grey" }}
     >
       {/* <Link href={`/movie/${encodeURIComponent(id)}`}>
@@ -69,7 +69,7 @@ export function MovieCardMix({
         <div className="relative h-full">
           <Link href={`/movie/${encodeURIComponent(id)}`}>
             <img
-              className="h-full w-auto box-border rounded-tl-md rounded-bl-md"
+              className="h-full w-auto box-border rounded-tl-2xl rounded-bl-2xl"
               src={poster}
               alt="Movie Poster"
               // style={{ border: "0.5px solid grey" }}

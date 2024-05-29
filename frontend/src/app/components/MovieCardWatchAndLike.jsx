@@ -55,8 +55,11 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className={`inline-block mx-1 rounded-2xl ${className}`}
-      style={{ border: profilePage ? "none" : "0.5px solid grey" }}
+      className={`inline-block mr-2 rounded-2xl ${className}`}
+      style={{
+        border: profilePage ? "none" : "0.5px solid grey",
+        backgroundColor: "rgba(141, 126, 255, 0.1)",
+      }}
     >
       <div className=" h-full w-full flex flex-col justify-center">
         <div className="h-60 w-full flex justify-center m-0">
@@ -104,31 +107,18 @@ export default function MovieCardWatchAndLike({
         <div className="h-full w-40 flex flex-col justify-start">
           {" "}
           {/* gap-4 */}
+          <div className="w-full ">
+            <h2 className="px-2 pt-2 h-12 text-wrap font-semibold">{title}</h2>
+          </div>
           {showRating && (
-            <p className="flex pb-4  justify-start items-center px-2 pt-2">
+            <p className="flex justify-start items-center px-2 pt-2">
               <span>
                 <FaStar color="yellow" />
               </span>
               <span className="pl-1"> {voteAverage.toFixed(1)}</span>
             </p>
           )}
-          <div className="w-full ">
-            <h2 className="px-2 h-12 text-wrap">{title}</h2>
-          </div>
-          {/* <div className="h-8 flex px-2">
-            {streamingServices &&
-              streamingServices.map((streamingService, index) => {
-                return (
-                  <div key={index} className="bg-slate-50 rounded-xl ml-2 p-1">
-                    <img
-                      className="h-full"
-                      src={serviceLogos[streamingService.provider_name]}
-                    />
-                  </div>
-                );
-              })}
-          </div> */}
-          <div className="mt-4 px-4 ">
+          <div className="mt-4 px-6 ">
             <button
               onClick={() => {
                 handleButtonClicked(id); // Toggles like state
@@ -140,7 +130,7 @@ export default function MovieCardWatchAndLike({
               }}
               className={`w-full h-8 bg-inherit border border-solid mb-4 ${
                 !watched
-                  ? "border-[#3D3B8E]"
+                  ? "border-white"
                   : profilePage
                   ? "border-profile-page"
                   : "border-[#cfff5e]"
@@ -162,8 +152,10 @@ export default function MovieCardWatchAndLike({
                 </div>
               ) : (
                 <div className="w-full flex justify-center gap-2 items-center font-light text-gray-200">
-                  <FaCheck className="text-base leading-none text-gray-200" />
-                  <p className="leading-none  font-semibold">ADDED</p>
+                  <FaCheck className="text-base leading-none text-[#cfff5e]" />
+                  <p className="leading-none text-[#cfff5e] font-semibold">
+                    ADDED
+                  </p>
                 </div>
               )}
             </button>
@@ -173,9 +165,3 @@ export default function MovieCardWatchAndLike({
     </div>
   );
 }
-
-// setProviderName(data.movie.flatrate[0])
-
-// providerNamer.map((provider)=> {
-//   provider.provider
-// })

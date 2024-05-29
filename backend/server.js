@@ -2437,9 +2437,10 @@ app.post("/generatedailymix2", async (req, res) => {
 
   const watchAndLikeList = await getWatchAndLikeList(token);
   let userLikedMoviesList;
-  if (watchAndLikeList.likedMoviesList.length > 0) {
+  if (watchAndLikeList && watchAndLikeList.likedMoviesList.length > 0) {
     userLikedMoviesList = watchAndLikeList.likedMoviesList;
   } else {
+    console.log("Exiting code, you need to like some movies before I can generate a Mix for you!");
     return res.json({
       messageNoLikedMovies:
         "You need to like some movies before I can generate a Mix for you!",
@@ -2477,11 +2478,11 @@ app.post("/generatedailymix2", async (req, res) => {
   // TODO: lägg till REASONING igen så att det funkar...
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4",
       messages: [
         {
           role: "system",
-          content: `This assistant will suggest 6 movies based on the movies the user provided. Do not suggest one of the already provided movies. Additionaly, it will not suggest any of these movies either (might be empty): ${previousMixTitlesString}. The response from the assistant will ALWAYS be in the following structure (DO NOT ADD ANYTHING ELSE): MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string],  MOVIE NAME4: [string],  MOVIE NAME5: [string],  MOVIE NAME6: [string]. The suggested movie names should be positioned inside respective [string]. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'. It will not answer any other queries. `,
+          content: `This assistant will suggest 6 movies based on the movies the user provided. Do not suggest one of the already provided movies. Additionaly, it will not suggest any of these movies either (might be empty): ${previousMixTitlesString}. The response from the assistant will ALWAYS be in the following structure (DO NOT ADD ANYTHING ELSE): MOVIE NAME1: [], MOVIE NAME2: [], MOVIE NAME3: [],  MOVIE NAME4: [],  MOVIE NAME5: [],  MOVIE NAME6: []. The suggested movie names should be positioned inside respective brackets []. It will only suggest movies. ALSO, never suggest the movie 'The Ideal Father'. It will not answer any other queries. `,
         },
         {
           role: "user",

@@ -7,7 +7,8 @@ import { SlideMenuMovieCard } from "../../components/SlideMenu";
 import { postMovieToDatabase } from "../../utils";
 import { MovieCardMix } from "./MovieCardMix";
 import Navbar from "../../components/Navbar";
-import { FaPlus } from "react-icons/fa";
+import { FaArrowRight, FaPlus } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
@@ -31,9 +32,15 @@ export default function Mix() {
 
   const [showDetails, setShowDetails] = useState(false);
 
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
+  const [isGettingStoredMix, setIsGettingStoredMix] = useState(false);
+
+  //const [disabledButton, setDisabledButton] = useState(false);
+
   // TODO: just nu om du klickar på generate daily mix igen så kommer movienamesfromgpt.length och movieIdsFromAPI.length vara annorlunda och därmed inte trigga andra useEffecten! Måste kanske deleta dailymixen på backend innan man klickar generate igen?
 
   const resetState = () => {
+    //setIsAiGenerating(false);
     setMixFromBackendObjects([]);
     setMixDetails([]);
     setShowDetails(false);
@@ -52,6 +59,7 @@ export default function Mix() {
       setMixFromBackendProvidersObjects([]); */
       setLoading(true);
       try {
+        setIsGettingStoredMix(true);
         const token = localStorage.getItem("token");
 
         const response = await fetch(`${host}/me/dailymixbasedonlikes`, {
@@ -72,6 +80,7 @@ export default function Mix() {
           //setReasoningFromGPT(data.reasoning)
         } else if (data.message) {
           setMessageNoStoredMix(data.message);
+          setLoading(false);
         } else {
           setLoading(false);
           console.error("Failed to fetch stored mix");
@@ -124,6 +133,8 @@ export default function Mix() {
       }
 
       setMixDetails(details);
+      setIsGettingStoredMix(false);
+      setIsAiGenerating(false);
       setLoading(false);
     };
 
@@ -132,6 +143,14 @@ export default function Mix() {
     }
   }, [mixFromBackendObjects]);
 
+  useEffect(() => {
+
+    if (messageNoStoredMix !== "") {
+      getGenerateDailyMixFromGPT();
+    }
+    
+  }, [messageNoStoredMix])
+
   // --------------------- onClick generate new mix, will suggested movies and their movie objects from TMDB ---------------------
 
   const getGenerateDailyMixFromGPT = async () => {
@@ -139,6 +158,8 @@ export default function Mix() {
     // setLoading(true);
 
     try {
+      setIsGettingStoredMix(false);
+      setIsAiGenerating(true);
       const token = localStorage.getItem("token");
 
       const response = await fetch(`${host}/generatedailymix2`, {
@@ -192,13 +213,15 @@ export default function Mix() {
             <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
               Your {mixTitle} mix by AI
             </h1>
-            <button
+            {/* <button
               className="bg-slate-100 w-40 h-12 text-lg rounded-full font-extrabold font-archivo border border-solid border-white  transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black "
-              onClick={getGenerateDailyMixFromGPT}
+              onClick={() => {
+                getGenerateDailyMixFromGPT();
+              }}
               style={{ border: "0.5px solid grey" }}
             >
               Generate mix
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -217,19 +240,34 @@ export default function Mix() {
           </div> */}
 
           <div className="pt-8">
-            {loading === false && messageNoStoredMix !== "" && (
+           {/*  
+            // använder inte längre, användes när vi hade Generate knappen
+           {loading === false && messageNoStoredMix !== "" && (
               <div>
                 <p>{messageNoStoredMix}</p>
               </div>
-            )}
+            )} */}
 
             {loading === false && messageNoLikedMovies !== "" && (
               <div>
-                <p>{messageNoLikedMovies}</p>
+                <p>{messageNoLikedMovies}</p>{" "}
+                {/* You need to like some movies before I can generate a Mix for you! */}
+                <div className="flex items-center">
+                  <Link className="justify-center items-center flex p-4 text-center text-black no-underline bg-slate-100 w-40 h-12 text-xl rounded-full font-bold border border-solid border-white mt-4 transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black" href={{ pathname:"/new-user", query: { isFromMixPage: true }}}>
+                    Start Liking Movies
+                     <FaArrowRight color="rgb(2 6 23)" size={"40px"} />
+                  </Link>
+                </div>
               </div>
             )}
 
-            {loading === true ? (
+            {loading === true && isGettingStoredMix && (
+              <div>
+                <p>Finding stored mix...</p>
+              </div>
+            )}
+
+            {loading && isAiGenerating && mixDetails.length === 0 ? (
               <h2 className="text-slate-100 text-2xl">
                 AI Generating a mix based on your likes...
               </h2>

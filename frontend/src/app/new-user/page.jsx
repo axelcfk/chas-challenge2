@@ -7,8 +7,9 @@ import { useState, useEffect } from "react";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
 import { FaCheckCircle, FaArrowRight } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { postMovieToDatabase } from "../utils";
+
 
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
@@ -18,6 +19,14 @@ export default function MovieSelection() {
 
   const apiKey = "71a2109e9f6fadaf14036ae6c29ac5b7";
   const router = useRouter();
+
+  const [fromMixPage, setFromMixPage] = useState(false); // Initialize state for the parameter
+
+  const searchParams = useSearchParams();
+ 
+  const isFromMixPage = searchParams.get('isFromMixPage')
+
+  //const { isFromMixPage } = router.query;
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -85,6 +94,8 @@ export default function MovieSelection() {
     }
   };
 
+  console.log("isFromMixPage:" , fromMixPage);
+
   return (
     <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50 h-min-screen w-min-screen pt-20">
       <h1 className="text-2xl font-bold text-center my-5 flex flex-col">
@@ -147,13 +158,18 @@ export default function MovieSelection() {
             <span className="px-2 text-xl">More options</span>{" "}
           </button>
         )}
-
-        <button
+        {isFromMixPage ?  (<button
+          className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E] items-center  rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
+          onClick={() => router.push("/mymixes2/Weekly")}
+        >
+          <span className="px-2 text-xl">Back to Mix Page</span> <FaArrowRight />
+        </button> ) : ( <button
           className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E] items-center  rounded-full py-3 px-6 hover:text-2xl transition-all mx-auto"
           onClick={() => router.push("/startpage")}
         >
           <span className="px-2 text-xl">Continue</span> <FaArrowRight />
-        </button>
+        </button>)}
+       
       </div>
     </div>
   );
