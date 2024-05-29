@@ -94,7 +94,7 @@ export default function Startpage() {
           </main>
           <div className="w-full  md:px-24 ">
             <h2
-              className=" md:mt-4 mb-8 pl-4  md:pl-0 uppercase font-semibold"
+              className=" md:mt-4 mb-8 pl-4  md:pl-0 uppercase text-xl  font-archivo font-bold"
               tabIndex={0}
             >
               Popular today
@@ -106,7 +106,10 @@ export default function Startpage() {
           </div>
 
           <div className="w-full md:px-24 ">
-            <h2 className="mt-14 mb-8 pl-4 md:pl-0 uppercase" tabIndex={0}>
+            <h2
+              className="mt-14 mb-8 pl-4 md:pl-0 uppercase text-xl  font-archivo font-bold"
+              tabIndex={0}
+            >
               My Mix
             </h2>
 
@@ -150,7 +153,7 @@ export default function Startpage() {
 
           <div className="w-full  md:px-24 ">
             <h2
-              className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase"
+              className="mt-14 md:mt-4 mb-8 pl-4  md:pl-0 uppercase text-xl  font-archivo font-bold"
               tabIndex={0}
             >
               Watchlist
