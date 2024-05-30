@@ -13,7 +13,7 @@ export default function FirstPage() {
   return (
     <div className="h-full bg-black flex flex-col px-5 justify-start items-center">
       <Link className="no-underline mt-3" href="/startpage">
-        <span className="font-bebas hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+        <span className="absolute top-2 left-4 hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
           <span className="text-xl">
             <FaDotCircle />
           </span>
@@ -22,9 +22,9 @@ export default function FirstPage() {
           </span>
         </span>
       </Link>
-      <div className="flex flex-col items-center justify-center md:mt-24 mt-52">
+      <div className="flex flex-col items-center justify-center md:mt-24 mt-32">
         <video
-          className="md:w-1/3 w-2/3 transform rounded-full z-10"
+          className="md:w-1/3 w-96 transform rounded-full z-10"
           ref={videoRef}
           autoPlay
           loop
@@ -34,13 +34,18 @@ export default function FirstPage() {
           Your browser does not support the video tag.
         </video>
       </div>
+      <div className="flex justify-center items-center w-2/3 ">
+        <h2 className="text-center font-archivo font-extrabold text-4xl uppercase">
+          Say Hello To Your <br /> AI Movie matcher
+        </h2>
+      </div>
 
       <div className="flex flex-col items-center w-full absolute bottom-2">
         <button
           onClick={() => {
             router.push("/create-account");
           }}
-          className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg"
+          className="border-none text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg"
         >
           {/* <Link href="create-account" className="w-full h-full no-underline text-slate-900"> */}
           {/* moved "link" to button's onclick, otherwise you have to click on the text 'Create an account'  */}

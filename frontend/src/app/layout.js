@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
           <SearchProvider>
-            <Navbar />
+            {/* <Navbar /> */}
             {children}
           </SearchProvider>
         </AuthProvider>
