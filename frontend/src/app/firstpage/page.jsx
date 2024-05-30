@@ -24,6 +24,12 @@ export default function FirstPage() {
             </span>
           </span>
         </Link>
+        <Link
+        className="absolute top-2 right-4 mt-3  text-white text-lg no-underline about-btn"
+        href={"about"}
+      >
+        About
+      </Link>
         <div className="flex flex-col items-center justify-center md:mt-24 mt-20">
           <video
             className="md:w-1/3 w-96 transform rounded-full z-10"

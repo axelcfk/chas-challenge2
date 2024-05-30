@@ -16,44 +16,38 @@ const About = () => {
       </div>
       <h2 className="text-2xl pb-5 sm:text-3xl lg:text-4xl font-semibold flex">
         <span className="inline-block">
-          A unique{" "}
-          <span className="inline-block text-[#CFFF5E]">AI-driven</span> movie
-          recommendation platform
+          A unique
+          <span className="inline-block font-archivo font-extrabold ml-2 mr-1 text-3xl text-[#CFFF5E]">
+            AI-driven
+          </span>{" "}
+          movie recommendation platform
         </span>
       </h2>
 
       <p className="text-base sm:text-lg lg:text-xl mb-8">
-        Welcome to Movie AI Suggestions, an innovative platform designed to
-        provide movie enthusiasts with accurate and personalized
-        recommendations. By combining our web development skills with an
-        interest in artificial intelligence, we leverage latest predictive
-        models and machine learning libraries to transform the way you discover
-        and enjoy movies.
+        Discover movies you'll love with Movie AI Suggestions, an innovative
+        platform that uses AI to provide personalized recommendations. We
+        combine web development expertise with cutting-edge predictive models to
+        transform your movie-watching experience.
       </p>
       <h2 className="text-2xl pb-2 sm:text-3xl lg:text-4xl font-semibold mb-4">
         Our Mission
       </h2>
       <p className="text-base sm:text-lg lg:text-xl mb-8">
-        Our mission is to enhance your movie-watching experience by making it
-        easy to find films you'll love without wasting time. By analyzing your
-        preferences and viewing history, our AI provides personalized
-        recommendations tailored to your taste. We believe everyone should have
-        access to advanced recommendation systems to effortlessly discover new
-        favorites. Harnessing AI, we aim to redefine movie discovery and help
-        you build lasting memories with the perfect film.
+        Our mission is to enhance your movie-watching experience by offering
+        tailored recommendations based on your preferences and viewing history.
+        We leverage AI to help you effortlessly discover new favorites and
+        create lasting memories with the perfect films.
       </p>
 
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6">
-        Meet the team!
+        Meet the team
       </h2>
       <p className="text-base sm:text-lg lg:text-xl mb-8">
-        We are a group of dedicated fullstack students specializing in frontend
-        development. Our passion for technology and innovation has driven us to
-        create AI Movie Suggestions, a platform designed to revolutionize the
-        way you discover movies. By combining our web development skills with an
-        interest in artificial intelligence, we provide accurate and
-        personalized movie recommendations using existing machine learning
-        libraries.
+        We are a team of dedicated full-stack and UX students specializing in
+        frontend development. Our passion for technology and innovation drives
+        us to revolutionize movie discovery, providing accurate recommendations
+        using OpenAI.
       </p>
       <div class="grid-container space-y-10">
         <div class="grid-item text-center mt-10">

@@ -7,9 +7,10 @@ import { SlideMenuMovieCard } from "../../components/SlideMenu";
 import { postMovieToDatabase } from "../../utils";
 import { MovieCardMix } from "./MovieCardMix";
 import Navbar from "../../components/Navbar";
-import { FaArrowRight, FaPlus } from "react-icons/fa";
+import { FaArrowRight, FaHeart, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 import { SlArrowLeft } from "react-icons/sl";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
@@ -244,6 +245,7 @@ export default function Mix() {
             <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
               Your {mixTitle} mix by AI
             </h1>
+            <p className="text-slate-950 whitespace-nowrap">Based on your liked <FaHeart className="h-3 w-3" ></FaHeart> movies</p>
             {/* <button
               className="bg-slate-100 w-40 h-12 text-lg rounded-full font-extrabold font-archivo border border-solid border-white  transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black "
               onClick={() => {
@@ -321,15 +323,45 @@ export default function Mix() {
               )}
 
             {loading === true && isGettingStoredMix && (
-              <div>
-                <p>Finding stored mix...</p>
-              </div>
+            <>
+              {console.log("Finding stored mix...")}
+              {/* <div className="flex min-h-[1000px]  w-full flex-col gap-8 justify-center items-center">
+
+                 <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={160} width={320}>
+
+                <Skeleton containerClassName="flex-1"></Skeleton>
+                <Skeleton containerClassName="flex-1" ></Skeleton>
+                <Skeleton containerClassName="flex-1"></Skeleton>
+                <Skeleton containerClassName="flex-1"></Skeleton>
+                <Skeleton containerClassName="flex-1"></Skeleton>
+                <Skeleton containerClassName="flex-1"></Skeleton>
+                </SkeletonTheme> 
+                <Skeleton containerClassName="flex-1" baseColor="#535157" highlightColor="#7b8085" height={1000}></Skeleton>
+                </div> */}
+                </>
+               
             )}
 
             {loading && isAiGenerating && mixDetails.length === 0 ? (
-              <h2 className="text-white  text-2xl">
-                AI is generating a mix based on your likes...
+              
+              <div className="relative flex w-full flex-col gap-8 justify-center items-center text-center">
+             <h2 className="absolute top-0 z-50 font-archivo text-white text-2xl font-extrabold">
+                AI is generating your Mix...
               </h2>
+
+              <div className="flex flex-col gap-8 z-20">
+
+              <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={160} width={320}>
+
+             <Skeleton containerClassName="flex-1"></Skeleton>
+             <Skeleton containerClassName="flex-1" ></Skeleton>
+             <Skeleton containerClassName="flex-1"></Skeleton>
+             <Skeleton containerClassName="flex-1"></Skeleton>
+             <Skeleton containerClassName="flex-1"></Skeleton>
+             <Skeleton containerClassName="flex-1"></Skeleton>
+             </SkeletonTheme> 
+              </div>
+             </div>
             ) : (
               <>
                 {mixDetails && mixDetails.length > 0 ? (

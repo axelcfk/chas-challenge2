@@ -40,6 +40,7 @@ export default function MovieCardWatchAndLike({
     return <div>Loading...</div>;
   }
 
+
   const serviceLogos = {
     Netflix: "/Netflix1.svg",
     "HBO Max": "/HBO1.svg",
@@ -88,7 +89,7 @@ export default function MovieCardWatchAndLike({
                   postRemoveFromLikeList(id, "movie", title);
                 }
               }}
-              className="box-border absolute top-0 right-0 rounded-tr-2xl rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
+              className="box-border absolute top-0 left-0 rounded-tl-2xl //rounded-tr-2xl rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
             >
               {!liked ? (
                 <div className="flex flex-col justify-center items-center">
@@ -97,8 +98,8 @@ export default function MovieCardWatchAndLike({
                 </div>
               ) : (
                 <div className="flex flex-col justify-center items-center">
-                  <FaHeart className="h-5 w-5 text-red-600 mb-1" />
-                  <p className="text-red-600 mb-1 text-sm">Liked</p>
+                  <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
+                  <p className="text-[#EA3546] mb-1 text-sm">Liked</p>
                 </div>
               )}
             </div>

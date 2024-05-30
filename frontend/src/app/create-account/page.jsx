@@ -120,7 +120,7 @@ export default function CreateAccount() {
               className="text-lg h-12  bg-slate-200 rounded-full font-semibold mb-5 px-5"
             />
             {errorMessage !== "" ? (
-              <p className="text-red-800 h-2">{errorMessage}</p>
+              <p className="text-[#EA3546] h-2">{errorMessage}</p>
             ) : (
               <p className="h-1"></p>
             )}
