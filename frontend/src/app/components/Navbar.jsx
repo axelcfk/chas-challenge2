@@ -24,6 +24,8 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname(); // Hämtar den aktuella sökvägen/url:en
 
+  const { resetState } = useSearch();
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -75,7 +77,10 @@ export default function Navbar() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Link className="no-underline" href="/startpage">
-                  <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center">
+                  <span
+                    onClick={() => resetState()}
+                    className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
+                  >
                     <span className="text-xl">
                       <FaDotCircle />
                     </span>
@@ -100,7 +105,7 @@ export default function Navbar() {
                 </button>
               )}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2  bg-transparent rounded-2xl z-20  w-44">
+                <div className="absolute right-0 mt-4  bg-transparent rounded-2xl z-20  w-44">
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
                     className="flex justify-center items-center text-base bg-[#CFFF5E] rounded-full  border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"
@@ -192,17 +197,29 @@ export default function Navbar() {
             <div className="mt-16">
               {isLoggedIn ? (
                 <>
-                  <Link href="/chatpage2" style={{ textDecoration: "none" }}>
+                  <Link
+                    onClick={() => resetState()}
+                    href="/chatpage2"
+                    style={{ textDecoration: "none" }}
+                  >
                     <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       AI-SEARCH
                     </span>
                   </Link>
-                  <Link href="/startpage" style={{ textDecoration: "none" }}>
+                  <Link
+                    onClick={() => resetState()}
+                    href="/startpage"
+                    style={{ textDecoration: "none" }}
+                  >
                     <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Start{" "}
                     </span>
                   </Link>
-                  <Link href="/about" style={{ textDecoration: "none" }}>
+                  <Link
+                    onClick={() => resetState()}
+                    href="/about"
+                    style={{ textDecoration: "none" }}
+                  >
                     <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       About
                     </span>

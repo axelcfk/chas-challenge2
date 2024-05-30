@@ -7,6 +7,7 @@ import { FaStar, FaHeart, FaRegHeart, FaPlus, FaCheck } from "react-icons/fa";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
 import { postAddToWatchList, postRemoveFromWatchList } from "../utils";
+import { useSearch } from "../context/SearchContext";
 
 //! Dessa måste stavas exakt som dom gör på TMDB från api:et
 // Annars blir det "unavailable"
@@ -56,6 +57,8 @@ export default function FetchedMovies({
   isAvailableOnSupportedServices,
   streamingServiceLinks,
 }) {
+  const { explanation } = useSearch();
+
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
   const [showToast, setShowToast] = useState(false);
@@ -132,9 +135,7 @@ export default function FetchedMovies({
         {/* <h2 className="text-2xl text-center font-semibold  pb-3">
           Lights, Camera, Action!
         </h2> */}
-        <p className="font-semibold text-center">
-          See something you like? Like it to get AI recommendations.
-        </p>
+        <p className="font-semibold text-center text-xl">{explanation}</p>
       </div>
       <div className="grid grid-cols-2 gap-4 w-full ">
         {movieDetails.map((movie) => (

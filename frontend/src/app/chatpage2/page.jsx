@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useSearch } from "../context/SearchContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
+import { TbEdit } from "react-icons/tb";
 
 import { postMovieProvidersToDatabase, postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
@@ -37,9 +38,16 @@ const isAvailableOnSupportedServices = (streaming) => {
 };
 
 export default function ChatPage2() {
-  const { input, setInput, movies, loading, showVideo, errorMessage } =
-    useSearch();
-  // const [input, setInput] = useState("");
+  const {
+    input,
+    setInput,
+    movies,
+    loading,
+    showVideo,
+    errorMessage,
+    resetState,
+    explanation,
+  } = useSearch();
   const [movieDetails, setMovieDetails] = useState([]);
   const [movieCredits, setMovieCredits] = useState({});
   const { handleQuerySubmit } = useHandleQuerySubmit();
@@ -155,14 +163,18 @@ export default function ChatPage2() {
   }, [movieDetails.idFromAPI]);
 
   useEffect(() => {
-    if (pathname === "/startpage") {
-      localStorage.removeItem("latestSearch");
+    if (
+      pathname === "/startpage" ||
+      pathname === "/about" ||
+      pathname === "/profile"
+    ) {
+      resetState();
     }
   }, [pathname]);
 
-  useEffect(() => {
-    console.log("Initial localStorage:", localStorage);
-  }, []);
+  // useEffect(() => {
+  //   console.log("Initial sessionstorage:", sessionStorage);
+  // }, []);
 
   return (
     <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
@@ -208,7 +220,14 @@ export default function ChatPage2() {
       {movies.length === 6 && (
         <div className=" ">
           <div className="mt-20">
-            <h2>Refine your search</h2>
+            <div className="flex flex-col justify-end items-end">
+              <button
+                onClick={() => resetState()}
+                className="pb-4  bg-transparent border-none hover:cursor-pointer"
+              >
+                <TbEdit size={35} color="rgb(148 163 184)" />
+              </button>
+            </div>
             <InputField
               setInput={setInput}
               input={input}

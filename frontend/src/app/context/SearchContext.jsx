@@ -10,6 +10,15 @@ export const SearchProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [explanation, setExplanation] = useState("");
+
+  const resetState = () => {
+    setInput("");
+    setMovies([]);
+    setLoading(false);
+    setShowVideo(true);
+    setErrorMessage("");
+  };
 
   return (
     <SearchContext.Provider
@@ -18,12 +27,15 @@ export const SearchProvider = ({ children }) => {
         setInput,
         movies,
         setMovies,
+        explanation,
+        setExplanation,
         loading,
         setLoading,
         showVideo,
         setShowVideo,
         errorMessage,
         setErrorMessage,
+        resetState,
       }}
     >
       {children}
