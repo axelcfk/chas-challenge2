@@ -98,8 +98,8 @@ export function MovieCardMix({
               </div>
             ) : (
               <div className="flex flex-col justify-center items-center">
-                <FaHeart className="h-6 w-6 text-red-600" />
-                <p className="text-red-600 mb-1 text-xs"></p>
+                <FaHeart className="h-6 w-6 text-[#EA3546]" />
+                <p className="text-[#EA3546] mb-1 text-xs"></p>
               </div>
             )}
           </div>

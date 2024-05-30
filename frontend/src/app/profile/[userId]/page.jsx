@@ -116,7 +116,7 @@ export default function Profile() {
 
   return (
     <main>
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div className="flex items-center flex-col pb-12">
         {userData ? (

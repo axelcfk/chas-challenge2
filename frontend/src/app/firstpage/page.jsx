@@ -12,8 +12,11 @@ export default function FirstPage() {
 
   return (
     <div className="h-full bg-black flex flex-col px-5 justify-start items-center">
-      <Link className="no-underline mt-3" href="/startpage">
-        <span className="absolute top-2 left-4 hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+      <Link
+        className="absolute top-2 left-4 no-underline mt-3"
+        href="/startpage"
+      >
+        <span className=" hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
           <span className="text-xl">
             <FaDotCircle />
           </span>
@@ -22,6 +25,13 @@ export default function FirstPage() {
           </span>
         </span>
       </Link>
+      <Link
+        className="absolute top-2 right-4 mt-3  text-white text-lg no-underline about-btn"
+        href={"about"}
+      >
+        About
+      </Link>
+
       <div className="flex flex-col items-center justify-center md:mt-24 mt-32">
         <video
           className="md:w-1/3 w-96 transform rounded-full z-10"
@@ -64,14 +74,7 @@ export default function FirstPage() {
           {/* </Link> */}
         </button>
         <div className="w-full flex justify-end mt-8 mr">
-          <button className="bg-black border-none">
-            {/* <Link
-              className="text-white text-lg no-underline about-btn"
-              href={"about"}
-            >
-              About
-            </Link> */}
-          </button>
+          <button className="bg-black border-none"></button>
         </div>
       </div>
     </div>

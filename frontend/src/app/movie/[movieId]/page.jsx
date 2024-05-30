@@ -79,6 +79,7 @@ export default function MoviePage() {
     }));
   }
   function handleLikeButtonClicked(id) {
+    setLikeButtonClicked(!likeButtonClicked);
     setLikes((prevLikes) => ({
       ...prevLikes,
       [id]: !prevLikes[id],
@@ -399,9 +400,11 @@ export default function MoviePage() {
 
   //console.log("moviedetails:", movieDetails);
 
+  console.log("button clicked", likeButtonClicked);
+
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/* <BackButton /> */}
       <button
@@ -484,7 +487,7 @@ export default function MoviePage() {
                         style={{
                           border: "0.9px solid grey",
                           backdropFilter: "blur(4px)",
-                          backgroundColor: "rgba(0, 0, 0, 0.3)",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
                         }}
                         onClick={() => {
                           handleLikeButtonClicked(movieDetails.id);
@@ -511,8 +514,10 @@ export default function MoviePage() {
                           </div>
                         ) : (
                           <div className="flex flex-col justify-center items-center">
-                            <FaHeart className="h-5 w-5 text-red-600 mb-1" />
-                            <p className="text-red-600 mb-1 text-sm">Unlike</p>
+                            <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
+                            <p className="text-[#EA3546] mb-1 text-sm font-archivo font-semibold">
+                              Unlike
+                            </p>
                           </div>
                         )}
                       </div>

@@ -141,7 +141,7 @@ export default function FetchedMovies({
         {movieDetails.map((movie) => (
           <div
             key={movie.id}
-            className="w-full  flex justify-center items-center rounded-lg"
+            className="w-full  flex justify-center items-center rounded-2xl"
             style={{
               border: "0.8px solid grey",
               backgroundColor: "rgba(141, 126, 255, 0.1)",
@@ -157,7 +157,7 @@ export default function FetchedMovies({
                 <div className="relative">
                   <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
                     <img
-                      className="w-full rounded-t-lg"
+                      className="w-full rounded-t-2xl"
                       src={movie.poster}
                       alt="poster"
                     />
@@ -169,7 +169,7 @@ export default function FetchedMovies({
                       backgroundColor: "rgba(0, 0, 0, 0.3)",
                     }}
                     onClick={() => handleLikeButtonClicked(movie.id)}
-                    className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg h-16 w-12 flex justify-center items-center hover:cursor-pointer"
+                    className="absolute top-0 right-0 rounded-tr-2xl rounded-bl-lg h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                   >
                     {!likes[movie.id] ? (
                       <div className="flex flex-col justify-center items-center">
@@ -178,8 +178,8 @@ export default function FetchedMovies({
                       </div>
                     ) : (
                       <div className="flex flex-col justify-center items-center">
-                        <FaHeart className="h-5 w-5 text-red-600 mb-1" />
-                        <p className="text-red-600 mb-1 text-sm">Unlike</p>
+                        <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
+                        <p className="text-[#EA3546] mb-1 text-sm">Unlike</p>
                       </div>
                     )}
                   </div>

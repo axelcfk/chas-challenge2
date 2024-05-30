@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html className="font-manrope bg-[#110A1A]  text-white" lang="en">
+    <html className="font-manrope bg-black  text-white" lang="en">
       <body>
         <AuthProvider>
           <SearchProvider>

@@ -178,7 +178,7 @@ export default function ChatPage2() {
 
   return (
     <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
-      <Navbar />
+      {/* <Navbar /> */}
       {errorMessage && !loading && (
         <div className="h-full flex justify-center items-center">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>

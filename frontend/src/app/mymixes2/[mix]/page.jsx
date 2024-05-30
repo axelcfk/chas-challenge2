@@ -230,8 +230,8 @@ export default function Mix() {
   console.log("mixDetails.length :", mixDetails.length);
 
   return (
-    <div className="bg-[#110A19] min-h-screen p-8 pt-20">
-      <Navbar />
+    <div className="bg-[#110A1A]  min-h-screen p-8 pt-20">
+      {/* <Navbar /> */}
 
       <div className="h-full w-full flex flex-col items-center pt-8">
         <button
