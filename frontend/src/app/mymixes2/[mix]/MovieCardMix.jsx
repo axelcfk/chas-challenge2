@@ -89,7 +89,7 @@ export function MovieCardMix({
                 postRemoveFromLikeList(id, "movie", title);
               }
             }}
-            className="box-border absolute top-0 left-0 rounded-bl-md h-10 w-10 flex justify-center items-center hover:cursor-pointer"
+            className="box-border absolute top-0 left-0 rounded-tl-2xl rounded-br-md h-10 w-10 flex justify-center items-center hover:cursor-pointer"
           >
             {!liked ? (
               <div className="flex flex-col justify-center items-center">
