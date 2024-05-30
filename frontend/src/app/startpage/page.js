@@ -61,7 +61,7 @@ export default function Startpage() {
 
   return (
     <div className="px-4 pt-14">
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div className=" pb-8 h-full w-full ">
         <main className="w-full flex flex-col text-slate-100 py-20 justify-center  md:items-start  md:px-24">

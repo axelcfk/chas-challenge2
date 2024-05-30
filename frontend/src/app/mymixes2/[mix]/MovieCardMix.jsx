@@ -53,7 +53,7 @@ export function MovieCardMix({
 
   return (
     <div
-      className="flex h-40 w-80 gap-4 rounded-2xl bg-[#110A19]"
+      className="flex h-40 w-80 gap-4  pl-1 rounded-2xl bg-[#110A19]"
       style={{ border: "0.5px solid grey" }}
     >
       {/* <Link href={`/movie/${encodeURIComponent(id)}`}>
@@ -107,7 +107,6 @@ export function MovieCardMix({
       </div>
       <div className="flex  flex-col  justify-between py-4">
         <div className="flex flex-col">
-
           <p className="text-base font-semibold ">{title}</p>
           <div className="flex gap-2 justify-start items-center my-2">
             <FaStar color="yellow" />
