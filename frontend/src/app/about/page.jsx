@@ -16,8 +16,9 @@ const About = () => {
       </div>
       <h2 className="text-2xl pb-5 sm:text-3xl lg:text-4xl font-semibold flex">
         <span className="inline-block">
-          A unique <span className="inline-block text-[#CFFF5E]">AI-driven</span>{" "}
-          movie recommendation platform
+          A unique{" "}
+          <span className="inline-block text-[#CFFF5E]">AI-driven</span> movie
+          recommendation platform
         </span>
       </h2>
 
@@ -46,7 +47,8 @@ const About = () => {
         Meet the team!
       </h2>
       <p className="text-base sm:text-lg lg:text-xl mb-8">
-        We are a group of dedicated fullstack students specializing in frontend development. Our passion for technology and innovation has driven us to
+        We are a group of dedicated fullstack students specializing in frontend
+        development. Our passion for technology and innovation has driven us to
         create AI Movie Suggestions, a platform designed to revolutionize the
         way you discover movies. By combining our web development skills with an
         interest in artificial intelligence, we provide accurate and
@@ -87,19 +89,13 @@ const About = () => {
         </div>
       </div>
 
-      <div className="flex flex-col w-full">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6">TMDB API</h2>
-        <div className="flex flex-col gap-4">
-
-        <div className="flex w-16 ">
-
-        <img src="/tmdb_logo.svg">
-        </img>
-        </div>
-        <p className="text-base sm:text-lg lg:text-xl mb-8">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
-        </div>
-        
-      </div>
+          <div className="flex flex-row w-full mt-32 space-x-6">
+            <img src="/tmdb_logo.svg" className="tmbd-logo"></img>
+            <p className="text-base sm:text-lg lg:text-xl mb-8">
+              This product uses the TMDB API but is not endorsed or certified by
+              TMDB.
+            </p>
+          </div>
     </div>
   );
 };

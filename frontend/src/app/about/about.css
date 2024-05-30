@@ -17,12 +17,16 @@
   }
   
   .AI-image:hover {
-    transform: translateY(-20px); /* Flyttar upp elementet 20px när man hovrar */
+    transform: translateY(-20px); /* Flyttar upp bilderna 20px när man hovrar */
   }
   
   .grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+  }
+
+  .tmbd-logo {
+    height: 50px;
   }
   
