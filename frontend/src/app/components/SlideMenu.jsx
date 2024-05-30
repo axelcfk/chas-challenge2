@@ -1,13 +1,13 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 
-export default function SlideMenu({ children }) {
+export default function SlideMenu({ children, placeholder = false }) {
   return (
     <div className="flex max-w-full">
-      <div className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth removeScrollbar "
-      >
-        <style>
-      {`
+      {!placeholder ? (
+        <div className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth removeScrollbar ">
+          <style>
+            {`
         @media (min-width: 459px) {
           .removeScrollbar::-webkit-scrollbar {
             display: none; /* Safari and Chrome */
@@ -19,9 +19,24 @@ export default function SlideMenu({ children }) {
         }
       
       `}
-    </style>
-        {children}
-      </div>
+          </style>
+          {children}
+        </div>
+      ) : (
+        <div className="w-full h-full relative">
+          <img
+            className="h-80 w-full rounded-3xl"
+            style={{rotate: "180deg"}}
+            src="/black-background-grunge-texture-dark-wallpaper.jpg"
+            alt=""
+          />
+          <div className="w-full text-center absolute inset-0 flex items-center justify-center">
+            <div className="flex justify-center items-center w-[50%]">
+              <h2 className="text-xl font-archivo font-extrabold uppercase">Your Watchlist is empty</h2>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

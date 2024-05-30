@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import RatingFilter from "../filter-components/RatingFilter";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { IoIosClose } from "react-icons/io";
+import { FaChevronUp } from "react-icons/fa6";
 
 function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   const [inputValue, setInputValue] = useState(""); // State to hold input value
@@ -143,14 +143,24 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
     <div className={`relative ${isSearchOpen ? "w-full" : "w-auto"}`}>
       <form
         onSubmit={handleSubmit}
-        className={`flex items-center space-x-2 ${isSearchOpen ? "w-full" : "w-auto"}`}
+        className={`flex items-center space-x-2 ${
+          isSearchOpen ? "w-full" : "w-auto"
+        }`}
       >
-        <div className={`flex items-center space-x-2 ${isSearchOpen ? "w-full" : "w-auto"} relative`}>
+        <div
+          className={`flex items-center space-x-2 ${
+            isSearchOpen ? "w-full" : "w-auto"
+          } relative`}
+        >
           {isSearching || isSearchOpen ? (
             <div className="relative w-full flex items-center">
+              <FaChevronUp
+                className="cursor-pointer text-gray-400 text-2xl absolute ml-4"
+                onClick={handleClose}
+              />
               <input
                 ref={inputRef}
-                className="p-2 border text-white border-solid bg-deep-purple rounded shadow appearance-none pr-40 w-full box-border" // Adjusted pr to make space for all icons
+                className=" border pl-24 h-12 text-white border-solid bg-deep-purple rounded-full shadow appearance-none pr-40 w-full box-border"
                 type="text"
                 value={inputValue}
                 onChange={handleChange}
@@ -160,15 +170,15 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                     handleClose();
                   }
                 }}
-                placeholder="Search Movie"
+                placeholder="Search Movie..."
                 autoComplete="off"
               />
               <div className="absolute right-0 flex items-center pr-2">
-                <div className="mr-1"> 
+                <div className="mr-1">
                   <RatingFilter
                     ratingFilter={ratingFilter}
                     setRatingFilter={setRatingFilter}
-                    className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2" // Matching the stream button style
+                    className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
                   />
                 </div>
                 <button
@@ -178,10 +188,6 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                 >
                   Stream
                 </button>
-                <IoIosClose
-                  className="cursor-pointer text-gray-400 text-3xl "
-                  onClick={handleClose}
-                />
               </div>
             </div>
           ) : (
@@ -221,7 +227,12 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                             <p>{movieProviderObj.providers.noProviders}</p>
                           )}
                           {movieProviderObj.providers.flatrate && (
-                            <p>{movieProviderObj.providers.flatrate[0].provider_name}</p>
+                            <p>
+                              {
+                                movieProviderObj.providers.flatrate[0]
+                                  .provider_name
+                              }
+                            </p>
                           )}
                         </div>
                       );

@@ -7,6 +7,7 @@ import { FaStar, FaHeart, FaRegHeart, FaPlus, FaCheck } from "react-icons/fa";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
 import { postAddToWatchList, postRemoveFromWatchList } from "../utils";
+import { useSearch } from "../context/SearchContext";
 
 //! Dessa måste stavas exakt som dom gör på TMDB från api:et
 // Annars blir det "unavailable"
@@ -56,6 +57,8 @@ export default function FetchedMovies({
   isAvailableOnSupportedServices,
   streamingServiceLinks,
 }) {
+  const { explanation } = useSearch();
+
   const [watches, setWatches] = useState({});
   const [likes, setLikes] = useState({});
   const [showToast, setShowToast] = useState(false);
@@ -128,23 +131,28 @@ export default function FetchedMovies({
   console.log("fetched är", movieDetails);
   return (
     <>
-      <div className="flex flex-col w-full justify-center items-start pb-10 pt-28">
-        <h2 className="text-2xl font-semibold pt-20 pb-3">
+      <div className="flex flex-col w-full justify-center items-center pb-10 mt-8 ">
+        {/* <h2 className="text-2xl text-center font-semibold  pb-3">
           Lights, Camera, Action!
-        </h2>
-        <p className="font-semibold">
-          See something you like? Liking it helps the AI deliver even better
-          recommendations tailored just for you.
-        </p>
+        </h2> */}
+        <p className="font-semibold text-center text-xl">{explanation}</p>
       </div>
       <div className="grid grid-cols-2 gap-4 w-full ">
         {movieDetails.map((movie) => (
           <div
             key={movie.id}
-            className="w-full  flex justify-center items-center rounded-lg bg-slate-950"
-            style={{ border: "0.8px solid grey" }}
+            className="w-full  flex justify-center items-center rounded-lg"
+            style={{
+              border: "0.8px solid grey",
+              backgroundColor: "rgba(141, 126, 255, 0.1)",
+            }}
           >
-            <div className="flex flex-col justify-center items-center w-full z-0">
+            <div
+              className="flex flex-col justify-center items-center w-full z-0"
+              style={{
+                backgroundColor: "rgba(141, 126, 255, 0.1)",
+              }}
+            >
               <div className="flex flex-col justify-center items-center w-full relative">
                 <div className="relative">
                   <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
@@ -245,21 +253,21 @@ export default function FetchedMovies({
                     }}
                     className={`w-full h-10 ${
                       !watches[movie.id]
-                        ? "bg-[#3D3B8E]"
-                        : "bg-[#CFFF5E] text-slate-950"
-                    } flex justify-center items-center rounded-full px-3 border-none`}
+                        ? "bg-transparent border border-solid box-border border-[white] "
+                        : "border border-solid box-border border-[#CFFF5E] bg-transparent"
+                    } flex justify-center items-center rounded-full px-3 `}
                   >
                     {!watches[movie.id] ? (
-                      <FaPlus className="text-2xl text-gray-200" />
+                      <FaPlus className="text-2xl text-slate-50" />
                     ) : (
-                      <FaCheck className="text-2xl text-gray-200" />
+                      <FaCheck className="text-2xl text-[#CFFF5E]" />
                     )}
                     {!watches[movie.id] ? (
-                      <span className="pl-2 w-full text-sm  text-slate-200 font-semibold">
+                      <span className="pl-2 w-full text-md  text-slate-50 font-archivo font-bold">
                         WATCHLIST
                       </span>
                     ) : (
-                      <span className="pl-2 w-full text-sm font-light text-gray-200">
+                      <span className="pl-2 w-full text-md font-archivo font-bold text-[#CFFF5E] ">
                         ADDED
                       </span>
                     )}

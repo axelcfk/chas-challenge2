@@ -46,8 +46,7 @@ const About = () => {
         Meet the team!
       </h2>
       <p className="text-base sm:text-lg lg:text-xl mb-8">
-        We are a group of dedicated students specializing in frontend web
-        development. Our passion for technology and innovation has driven us to
+        We are a group of dedicated fullstack students specializing in frontend development. Our passion for technology and innovation has driven us to
         create AI Movie Suggestions, a platform designed to revolutionize the
         way you discover movies. By combining our web development skills with an
         interest in artificial intelligence, we provide accurate and
@@ -86,6 +85,20 @@ const About = () => {
           <h2 className="font-bold">Johanna</h2>
           <h3>UX-designer</h3>
         </div>
+      </div>
+
+      <div className="flex flex-col w-full">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6">TMDB API</h2>
+        <div className="flex flex-col gap-4">
+
+        <div className="flex w-16 ">
+
+        <img src="/tmdb_logo.svg">
+        </img>
+        </div>
+        <p className="text-base sm:text-lg lg:text-xl mb-8">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+        </div>
+        
       </div>
     </div>
   );

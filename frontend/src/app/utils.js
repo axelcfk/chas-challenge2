@@ -100,7 +100,7 @@ export async function postRemoveFromWatchList(id, movieOrSeries, title) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        movieId: id,
         movieOrSeries: movieOrSeries,
         title: title,
         token: token,

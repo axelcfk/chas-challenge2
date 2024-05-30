@@ -3,6 +3,7 @@ import { FaArrowCircleRight } from "react-icons/fa";
 export default function InputField({
   handleQuerySubmit,
   handleInputChange,
+  setInput,
   input,
   placeholder,
   heightDiv,
@@ -28,7 +29,7 @@ export default function InputField({
       className={`${heightDiv} flex justify-center items-center rounded-full z-10`}
     >
       <input
-        className="h-14 bg-transparent w-full md:w-1/3 rounded-full text-lg text-center text-slate-50 md:mr-3 border-none"
+        className="h-14 bg-transparent w-full md:w-1/3 rounded-full text-base text-center text-slate-50 md:mr-3 border-none"
         type="text"
         value={input}
         onChange={handleInputChange}
@@ -38,11 +39,11 @@ export default function InputField({
       <button
         className="flex justify-center items-center border-none bg-transparent"
         onChange={handleInputChange}
-        onClick={handleQuerySubmit}
+        onClick={() => handleQuerySubmit()}
         disabled={!input}
       >
         <FaArrowCircleRight
-          className={`h-8 w-8 mr-5    ${
+          className={`h-6 w-6 mr-5    ${
             input
               ? " hover:text-slate-300 text-slate-100 hover:cursor-pointer"
               : " text-slate-400"
