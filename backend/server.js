@@ -1988,7 +1988,9 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
 // }
 
 function parseResponse(response) {
-  const movieRegex = /MOVIE NAME\d+:\s*([^\n]+)/g;
+  // const movieRegex = /MOVIE NAME\d+:\s*([^,]+),?/g;
+  const movieRegex = /MOVIE NAME\d+:\s*([^\n,]+)/g;
+
   const motivationRegex = /MOTIVATION:\s*([^\n]+)/;
 
   let names = [];
@@ -2067,19 +2069,24 @@ app.post("/moviesuggest2", async (req, res) => {
           MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
           MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
           
-          Additionally, it will provide a motivation  of maximum 120 characters for why these movies were suggested, in the format:
+          Additionally, it will provide a motivation of maximum 120 characters for why these movies were suggested, in the format:
           MOTIVATION: [string]
           
           It will not answer any other queries. It will only suggest movies and TV series. 
                   
-          Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
-          MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
-          MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
+          Always use this structure exactly: 
+          MOVIE NAME1: [string], 
+          MOVIE NAME2: [string], 
+          MOVIE NAME3: [string], 
+          MOVIE NAME4: [string], 
+          MOVIE NAME5: [string], 
+          MOVIE NAME6: [string]. 
+          The suggested movie names should go inside [string]. 
           Never add any additional numbers.
           MOTIVATION: [string]
                   
           When making suggestions, follow these steps:
-          1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), dont suggest any movies but respond in a funny way. Also ignore any queries in ${latestUserQuery} if foul is present language.
+          1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a funny way. Also ignore any queries in ${latestUserQuery} if foul language is present.
                   
           2. Review the latest user query: ${latestUserQuery}.
           3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
