@@ -1,0 +1,17 @@
+
+.shadow-container {
+  position: relative;
+  box-shadow: #CFFF5E 0px 0px 40px 0px;
+}
+
+.shadow-container::after { /* removes the shadow at the bottom (was an 1px shadow that couldnt be removed) by adding a 1px "div" that covers it*/
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px; /* Adjust the height to cover the shadow */
+  background: #110A1A; /* Match the background color */
+  border-bottom-left-radius: 3xl; /* Match the border radius */
+  border-bottom-right-radius: 3xl; /* Match the border radius */
+}

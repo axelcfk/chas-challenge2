@@ -11,6 +11,8 @@ import { FaArrowRight, FaHeart, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 import { SlArrowLeft } from "react-icons/sl";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "./mixpage.css";
+
 
 export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
@@ -231,7 +233,7 @@ export default function Mix() {
   console.log("mixDetails.length :", mixDetails.length);
 
   return (
-    <div className="bg-[#110A1A]  min-h-screen p-8 pt-20">
+    <div className="bg-[#110A1A]  min-h-screen p-8 pb-0 pt-20">
       {/* <Navbar /> */}
 
       <div className="h-full w-full flex flex-col items-center pt-8">
@@ -261,8 +263,10 @@ export default function Mix() {
 
         {/* min-h-full  */}
         <div
-          className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 px-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full"
-          style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
+        //bg-[#1b1028]
+          className="//shadow-[rgba(0,0,15,0.5)_0px_0px_40px_0px] //shadow-[#CFFF5E] shadow-container shadow-container::after rounded-tr-3xl rounded-tl-3xl min-h-[1000px pt-4 pb-8 px-8 border border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8 w-full"
+         // style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
+         //style={{boxShadow: '#CFFF5E 0px 0px 40px 0px, #1b1028 0px -10px 20px -10px' }}
         >
           {/* <div className="flex w-full justify-end items-center">
           
