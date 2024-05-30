@@ -143,48 +143,53 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
     <div className={`relative ${isSearchOpen ? "w-full" : "w-auto"}`}>
       <form
         onSubmit={handleSubmit}
-        className={`flex items-center space-x-2 ${isSearchOpen ? "w-full" : "w-auto"}`}
+        className={`flex items-center space-x-2 ${
+          isSearchOpen ? "w-full" : "w-auto"
+        }`}
       >
-        <div className={`flex items-center space-x-2 ${isSearchOpen ? "w-full" : "w-auto"} relative`}>
+        <div
+          className={`flex items-center space-x-2 ${
+            isSearchOpen ? "w-full" : "w-auto"
+          } relative`}
+        >
           {isSearching || isSearchOpen ? (
-           <div className="relative w-full flex items-center">
-           <FaChevronUp
-             className="cursor-pointer text-gray-400 text-2xl absolute left-1.5"
-             onClick={handleClose}
-           />
-           <input
-             ref={inputRef}
-             className="p-2 border pl-9 text-white border-solid bg-deep-purple rounded shadow appearance-none pr-40 w-full box-border"
-             type="text"
-             value={inputValue}
-             onChange={handleChange}
-             onBlur={handleBlur}
-             onKeyDown={(event) => {
-               if (event.key === "Enter") {
-                 handleClose();
-               }
-             }}
-             placeholder="Search Movie"
-             autoComplete="off"
-           />
-           <div className="absolute right-0 flex items-center pr-2">
-             <div className="mr-1"> 
-               <RatingFilter
-                 ratingFilter={ratingFilter}
-                 setRatingFilter={setRatingFilter}
-                 className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
-               />
-             </div>
-             <button
-               type="button"
-               className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
-               onClick={() => setFetchStreamService(true)}
-             >
-               Stream
-             </button>
-           </div>
-         </div>
-         
+            <div className="relative w-full flex items-center">
+              <FaChevronUp
+                className="cursor-pointer text-gray-400 text-2xl absolute ml-4"
+                onClick={handleClose}
+              />
+              <input
+                ref={inputRef}
+                className=" border pl-24 h-12 text-white border-solid bg-deep-purple rounded-full shadow appearance-none pr-40 w-full box-border"
+                type="text"
+                value={inputValue}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleClose();
+                  }
+                }}
+                placeholder="Search Movie..."
+                autoComplete="off"
+              />
+              <div className="absolute right-0 flex items-center pr-2">
+                <div className="mr-1">
+                  <RatingFilter
+                    ratingFilter={ratingFilter}
+                    setRatingFilter={setRatingFilter}
+                    className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
+                  onClick={() => setFetchStreamService(true)}
+                >
+                  Stream
+                </button>
+              </div>
+            </div>
           ) : (
             <FaMagnifyingGlass
               role="button"
@@ -222,7 +227,12 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                             <p>{movieProviderObj.providers.noProviders}</p>
                           )}
                           {movieProviderObj.providers.flatrate && (
-                            <p>{movieProviderObj.providers.flatrate[0].provider_name}</p>
+                            <p>
+                              {
+                                movieProviderObj.providers.flatrate[0]
+                                  .provider_name
+                              }
+                            </p>
                           )}
                         </div>
                       );

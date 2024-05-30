@@ -43,7 +43,7 @@ export default function InputField({
         disabled={!input}
       >
         <FaArrowCircleRight
-          className={`h-8 w-8 mr-5    ${
+          className={`h-6 w-6 mr-5    ${
             input
               ? " hover:text-slate-300 text-slate-100 hover:cursor-pointer"
               : " text-slate-400"

@@ -100,18 +100,26 @@ export default function Navbar() {
                 </button>
               )}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                <div className="absolute right-0 mt-2  bg-transparent rounded-2xl z-20  w-44">
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    className="flex justify-center items-center text-base bg-[#CFFF5E] rounded-full  border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"
+                    style={{
+                      border: "0.9px solid grey",
+                      backdropFilter: "blur(10px)",
+                    }}
                   >
                     AI Search
                   </button>
                   <button
                     onClick={() => handleSearchTypeSelect("movie")}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    className="flex justify-center items-center text-base bg-[#CFFF5E] px-4 mt-2 py-2 font-archivo border-none font-bold h-12 rounded-full text-slate-950 hover:bg-gray-100 w-full text-left"
+                    style={{
+                      border: "0.9px solid grey",
+                      backdropFilter: "blur(10px)",
+                    }}
                   >
-                    Movie Search
+                    Database Search
                   </button>
                 </div>
               )}
@@ -184,6 +192,16 @@ export default function Navbar() {
             <div className="mt-16">
               {isLoggedIn ? (
                 <>
+                  <Link href="/chatpage2" style={{ textDecoration: "none" }}>
+                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      AI-SEARCH
+                    </span>
+                  </Link>
+                  <Link href="/startpage" style={{ textDecoration: "none" }}>
+                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      Start{" "}
+                    </span>
+                  </Link>
                   <Link href="/about" style={{ textDecoration: "none" }}>
                     <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       About
@@ -195,7 +213,7 @@ export default function Navbar() {
                       href={`/profile/${user.id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <span className="px-3 py-8 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                         Profile
                       </span>
                     </Link>
@@ -205,7 +223,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 pt-24 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 pt-24 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>

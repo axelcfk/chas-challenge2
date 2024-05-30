@@ -173,9 +173,7 @@ export default function ChatPage2() {
         </div>
       )}
       {showVideo && movies.length < 2 && (
-        <div
-          className={`md:w-full flex flex-col justify-center items-center mt-32`}
-        >
+        <div className={`md:w-full flex flex-col justify-center items-center`}>
           <div className="relative h-96 flex justify-center items-center">
             <video
               className="md:w-1/3  w-96 transform rounded-full z-10"
