@@ -89,7 +89,7 @@ export function MovieCardMix({
                 postRemoveFromLikeList(id, "movie", title);
               }
             }}
-            className="box-border absolute top-0 right-0 rounded-bl-md h-10 w-10 flex justify-center items-center hover:cursor-pointer"
+            className="box-border absolute top-0 left-0 rounded-tl-2xl rounded-br-md h-10 w-10 flex justify-center items-center hover:cursor-pointer"
           >
             {!liked ? (
               <div className="flex flex-col justify-center items-center">
@@ -140,7 +140,7 @@ export function MovieCardMix({
               !watched ? "bg-[#3D3B8E]" : "bg-green-600"
             } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`} */
           className={`w-32 h-8  bg-inherit border border-solid hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
-            !watched ? "border-[#3D3B8E]" : "border-green-600"
+            !watched ? "border-white" : "border-green-600"
           }`}
         >
           {!watched ? (

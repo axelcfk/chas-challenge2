@@ -83,20 +83,13 @@ const About = () => {
         </div>
       </div>
 
-      <div className="flex flex-col w-full">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6">
-          TMDB API
-        </h2>
-        <div className="flex flex-col gap-4">
-          <div className="flex w-16 ">
-            <img src="/tmdb_logo.svg"></img>
+          <div className="flex flex-row w-full mt-32 space-x-6">
+            <img src="/tmdb_logo.svg" className="tmbd-logo"></img>
+            <p className="text-base sm:text-lg lg:text-xl mb-8">
+              This product uses the TMDB API but is not endorsed or certified by
+              TMDB.
+            </p>
           </div>
-          <p className="text-base sm:text-lg lg:text-xl mb-8">
-            This product uses the TMDB API but is not endorsed or certified by
-            TMDB.
-          </p>
-        </div>
-      </div>
     </div>
   );
 };

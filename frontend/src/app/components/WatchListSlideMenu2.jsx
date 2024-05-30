@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchMovieObject, host } from "../utils";
 import SlideMenu from "./SlideMenu";
 import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 export default function WatchListSlideMenu2() {
   //const [token, setToken] = useState(tokenStorage)
@@ -156,12 +157,23 @@ export default function WatchListSlideMenu2() {
   if (likedMoviesList == null) {
     return (
       <>
-        <div className="flex flex-col justify-center items-center md:items-start pb-10 px-8 h-80 md:px-20  bg-slate-950 text-slate-100">
+        {/* <div className="flex flex-col justify-center items-center md:items-start h-80 bg-slate-950 text-slate-100">
           Loading Watchlist...
+        </div> */}
+        <div className="flex gap-2 w-full h-[391px]">
+
+        <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={391} width={160}>
+
+        <Skeleton containerClassName="flex-1"></Skeleton>
+        <Skeleton containerClassName="flex-1" ></Skeleton>
+        <Skeleton containerClassName="flex-1"></Skeleton>
+        </SkeletonTheme>
         </div>
       </>
     );
   }
+
+  
 
   return (
     <>
@@ -194,7 +206,7 @@ export default function WatchListSlideMenu2() {
           </SlideMenu>
         </div>
       ) : (
-        <SlideMenu placeholder={true}></SlideMenu>
+        <SlideMenu placeholder={true}> {/* empty watchlist */}</SlideMenu>
       )}
     </>
   );
