@@ -106,9 +106,11 @@ app.post("/users", async (req, res) => {
       myMovieWatchList: [],
     });
 
-    res
-      .status(201)
-      .json({ message: "User created successfully", userId: userId, username: username });
+    res.status(201).json({
+      message: "User created successfully",
+      userId: userId,
+      username: username,
+    });
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({ message: "Error creating user" });
@@ -1741,78 +1743,76 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
 
 // TODO: fix so it removes from the user's watchlist
 app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
-  
+  try {
+    const { movieId, movieOrSeries, title, token } = req.body;
+
+    if (!movieId || !token) {
+      return res.status(400).json({
+        error:
+          "token and id (of movie) are required in /me/watchlists/removefromwatchlist",
+      });
+    }
+    //console.log("hej");
+
+    let sessionSearchResult;
+    try {
+      // Use the token to find the current session (user_id that is logged in)
+      sessionSearchResult = await query(
+        "SELECT * FROM sessions WHERE token = ?",
+        [token]
+      );
+    } catch (error) {
+      console.error("2:Error finding session", error);
+      return res.status(500).send("2:Error finding session");
+    }
+
+    if (sessionSearchResult.length === 0) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    const currentSession = sessionSearchResult[0];
+    const userId = currentSession.user_id;
 
     try {
-      const { movieId, movieOrSeries, title, token } = req.body;
-  
-      if (!movieId || !token) {
-        return res.status(400).json({
-          error: "token and id (of movie) are required in /me/watchlists/removefromwatchlist",
+      // Check if the movie is in the user's like list
+      const checkResults = await query(
+        "SELECT * FROM watchlist WHERE user_id = ? AND movie_id = ?",
+        [userId, movieId]
+      );
+
+      // If it does not exist, we exit the code
+      if (checkResults.length === 0) {
+        console.log(
+          "Can't delete movie ID ",
+          movieId,
+          ", it is not in the watch list?."
+        );
+        return res.status(404).json({
+          message: `Can't delete movie ID ${movieId}, it is not in the watchlist?.`,
         });
       }
-      //console.log("hej");
-  
-      let sessionSearchResult;
-      try {
-        // Use the token to find the current session (user_id that is logged in)
-        sessionSearchResult = await query(
-          "SELECT * FROM sessions WHERE token = ?",
-          [token]
-        );
-      } catch (error) {
-        console.error("2:Error finding session", error);
-        return res.status(500).send("2:Error finding session");
-      }
-  
-      if (sessionSearchResult.length === 0) {
-        return res.status(404).json({ error: "Session not found" });
-      }
-  
-      const currentSession = sessionSearchResult[0];
-      const userId = currentSession.user_id;
-  
-      try {
-        // Check if the movie is in the user's like list
-        const checkResults = await query(
-          "SELECT * FROM watchlist WHERE user_id = ? AND movie_id = ?",
-          [userId, movieId]
-        );
-  
-        // If it does not exist, we exit the code
-        if (checkResults.length === 0) {
-          console.log(
-            "Can't delete movie ID ",
-            movieId,
-            ", it is not in the watch list?."
-          );
-          return res.status(404).json({
-            message: `Can't delete movie ID ${movieId}, it is not in the watchlist?.`,
-          });
-        }
-  
-        // If yes, delete the movieId and userId from liked_movies table
-        await query(
-          "DELETE FROM watchlist WHERE user_id = ? AND movie_id = ?",
-          [userId, movieId]
-        );
-  
-        console.log(
-          "Removed movie ID ",
-          movieId,
-          "from user ID ",
-          userId,
-          " watchlist"
-        );
-  
-        return res.status(200).send(`Movie ${movieId} removed successfully`);
-      } catch (error) {
-        console.error("Error removing movie", error);
-        return res.status(500).send("Error removing movie");
-      }
 
+      // If yes, delete the movieId and userId from liked_movies table
+      await query("DELETE FROM watchlist WHERE user_id = ? AND movie_id = ?", [
+        userId,
+        movieId,
+      ]);
 
-   /*  const { id, movieOrSeries } = req.body;
+      console.log(
+        "Removed movie ID ",
+        movieId,
+        "from user ID ",
+        userId,
+        " watchlist"
+      );
+
+      return res.status(200).send(`Movie ${movieId} removed successfully`);
+    } catch (error) {
+      console.error("Error removing movie", error);
+      return res.status(500).send("Error removing movie");
+    }
+
+    /*  const { id, movieOrSeries } = req.body;
 
     if (!id || !movieOrSeries) {
       return res
@@ -1860,9 +1860,9 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
     const { movieId, movieOrSeries, title, token } = req.body;
 
     if (!movieId || !movieOrSeries || !token || !title) {
-      return res
-        .status(400)
-        .json({ error: "Token missing and/or Liked movie/series is required." });
+      return res.status(400).json({
+        error: "Token missing and/or Liked movie/series is required.",
+      });
     }
 
     let sessionSearchResult;
@@ -1987,20 +1987,23 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
 //   return match ? match[1] : null;
 // }
 
-function parseMovieNames(response) {
-  // const regex = /MOVIE NAME\d+:\s*([^\n]+)\nTMDB ID:\s*\d+/g;
+function parseResponse(response) {
+  // const movieRegex = /MOVIE NAME\d+:\s*([^,]+),?/g;
+  const movieRegex = /MOVIE NAME\d+:\s*([^\n,]+)/g;
 
-  // const regex = /([^\n]+)/g;
-  const regex = /MOVIE NAME\d+:\s*([^,]+)/g;
+  const motivationRegex = /MOTIVATION:\s*([^\n]+)/;
 
   let names = [];
   let match;
 
-  while ((match = regex.exec(response))) {
+  while ((match = movieRegex.exec(response))) {
     names.push(match[1].trim()); // Ensuring to trim any extra spaces
   }
 
-  return names;
+  const motivationMatch = motivationRegex.exec(response);
+  const motivation = motivationMatch ? motivationMatch[1].trim() : "";
+
+  return { names, motivation };
 }
 
 const latestSuggestions = [];
@@ -2062,32 +2065,39 @@ app.post("/moviesuggest2", async (req, res) => {
         {
           role: "system",
           content: `This assistant will suggest 6 movies based on user descriptions. 
-It will provide Movie Names for those movies in the format of: 
-MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
-MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
-It will not answer any other queries. It will only suggest movies and TV series. 
-
-Always use this structure: MOVIE NAME1: [string], MOVIE NAME2: [string], 
-MOVIE NAME3: [string], MOVIE NAME4: [string], MOVIE NAME5: [string], 
-MOVIE NAME6: [string]. The suggested movie names should go inside [string]. 
-Never add any additional numbers.
-
-When making suggestions, follow these steps:
-1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), dont suggest any movies but respond in a funny way. Also ignore any queries in ${latestUserQuery} if foul is present language.
-
-2. Review the latest user query: ${latestUserQuery}.
-3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
-4. Avoid suggesting movies that are already in the latest suggestions.
-5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
-6. Consider the genres, themes, or keywords from the latest user query to refine the search.
-7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
-8. If no suitable suggestions are available, explain why and provide alternative options.
-For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
-
-
-
-
-If you have no suggestions, explain in your response. Also, look inside ${latestSuggestions.join(
+          It will provide Movie Names for those movies in the format of: 
+          MOVIE NAME1: [string], MOVIE NAME2: [string], MOVIE NAME3: [string], 
+          MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
+          
+          Additionally, it will provide a motivation of maximum 120 characters for why these movies were suggested, in the format:
+          MOTIVATION: [string]
+          
+          It will not answer any other queries. It will only suggest movies and TV series. 
+                  
+          Always use this structure exactly: 
+          MOVIE NAME1: [string], 
+          MOVIE NAME2: [string], 
+          MOVIE NAME3: [string], 
+          MOVIE NAME4: [string], 
+          MOVIE NAME5: [string], 
+          MOVIE NAME6: [string]. 
+          The suggested movie names should go inside [string]. 
+          Never add any additional numbers.
+          MOTIVATION: [string]
+                  
+          When making suggestions, follow these steps:
+          1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a funny way. Also ignore any queries in ${latestUserQuery} if foul language is present.
+                  
+          2. Review the latest user query: ${latestUserQuery}.
+          3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+          4. Avoid suggesting movies that are already in the latest suggestions.
+          5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+          6. Consider the genres, themes, or keywords from the latest user query to refine the search.
+          7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+          8. If no suitable suggestions are available, explain why and provide alternative options.
+          For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
+                  
+          If you have no suggestions, explain in your response. Also, look inside ${latestSuggestions.join(
             ", "
           )} and ${latestUserQuery} and suggest movies based on the queries.`,
         },
@@ -2120,16 +2130,18 @@ If you have no suggestions, explain in your response. Also, look inside ${latest
     console.log("Suggestion structure:", suggestion);
     console.log("suggested movie list:", latestSuggestions);
 
-    const movieNames = parseMovieNames(suggestion);
+    const { names: movieNames, motivation } = parseResponse(suggestion);
+
     console.log("Movie names parsed: ", movieNames);
+    console.log("Motivation parsed: ", motivation);
 
     if (movieNames.length === 6) {
-      latestSuggestions.unshift(movieNames);
+      latestSuggestions.unshift(movieNames.join(", "));
       if (latestSuggestions.length > 36) {
         latestSuggestions.pop(); // Remove the oldest one if the length exceeds 36
       }
 
-      res.json({ movieNames });
+      res.json({ movieNames, motivation });
     } else {
       res.json({ suggestion });
       console.error(
@@ -2512,7 +2524,9 @@ app.post("/generatedailymix2", async (req, res) => {
   if (watchAndLikeList && watchAndLikeList.likedMoviesList.length > 0) {
     userLikedMoviesList = watchAndLikeList.likedMoviesList;
   } else {
-    console.log("Exiting code, you need to like some movies before I can generate a Mix for you!");
+    console.log(
+      "Exiting code, you need to like some movies before I can generate a Mix for you!"
+    );
     return res.json({
       messageNoLikedMovies:
         "You need to like some movies before I can generate a Mix for you!",

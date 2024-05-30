@@ -16,7 +16,7 @@ import {
 } from "../../utils";
 import { checkLikeList } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
-
+import Navbar from "@/app/components/Navbar";
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -79,6 +79,7 @@ export default function MoviePage() {
     }));
   }
   function handleLikeButtonClicked(id) {
+    setLikeButtonClicked(!likeButtonClicked);
     setLikes((prevLikes) => ({
       ...prevLikes,
       [id]: !prevLikes[id],
@@ -399,8 +400,12 @@ export default function MoviePage() {
 
   //console.log("moviedetails:", movieDetails);
 
+  console.log("button clicked", likeButtonClicked);
+
   return (
     <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
+      {/* <Navbar /> */}
+
       {/* <BackButton /> */}
       <button
         className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
@@ -482,7 +487,7 @@ export default function MoviePage() {
                         style={{
                           border: "0.9px solid grey",
                           backdropFilter: "blur(4px)",
-                          backgroundColor: "rgba(0, 0, 0, 0.3)",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
                         }}
                         onClick={() => {
                           handleLikeButtonClicked(movieDetails.id);
@@ -509,8 +514,10 @@ export default function MoviePage() {
                           </div>
                         ) : (
                           <div className="flex flex-col justify-center items-center">
-                            <FaHeart className="h-5 w-5 text-red-600 mb-1" />
-                            <p className="text-red-600 mb-1 text-sm">Unlike</p>
+                            <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
+                            <p className="text-[#EA3546] mb-1 text-sm font-archivo font-semibold">
+                              Unlike
+                            </p>
                           </div>
                         )}
                       </div>
@@ -522,29 +529,33 @@ export default function MoviePage() {
                           className={`w-full h-10 ${
                             !watches[movieDetails.id]
                               ? "bg-[#3D3B8E]"
-                              : "bg-green-600"
+                              : "bg-[#CFFF5E]"
                           } flex justify-center items-center rounded-full px-3 border-none`}
                         >
                           {!watches[movieDetails.id] ? (
-                            <FaPlus className="text-2xl text-gray-200" />
+                            <FaPlus className="text-xl text-gray-200" />
                           ) : (
-                            <FaCheck className="text-2xl text-gray-200" />
+                            <FaCheck className="text-xl text-slate-950" />
                           )}
                           {!watches[movieDetails.id] ? (
                             <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
-                              <span className="pr-4">ADD TO WATCHLIST</span>
+                              <span className="pr-4 font-archivo font-bold">
+                                WATCHLIST
+                              </span>
                             </p>
                           ) : (
-                            <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
-                              <span className="pr-4">ADDED</span>
+                            <p className="pl-2 w-full text-sm font-light text-slate-950 flex justify-between items-center">
+                              <span className="pr-4 font-archivo font-bold">
+                                ADDED
+                              </span>
                             </p>
                           )}
                         </button>
                         <button
                           onClick={handleToggleDropdown}
-                          className="absolute right-0 top-0 h-10 flex items-center justify-center bg-transparent text-white border-none cursor-pointer px-3"
+                          className="absolute right-0 top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 border-none cursor-pointer px-3"
                         >
-                          <SlArrowDown />
+                          <SlArrowDown fontWeight={"bold"} />
                         </button>
                         {dropdownOpen && (
                           <div className="absolute top-12 right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">

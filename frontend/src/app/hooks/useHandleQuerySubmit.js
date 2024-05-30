@@ -2,32 +2,28 @@
 
 import { useRouter } from "next/navigation";
 import { useSearch } from "../context/SearchContext";
+import { useState } from "react";
 
 export const useHandleQuerySubmit = () => {
   const router = useRouter();
   const {
     input,
+    setExplanation,
     setMovies,
     setLoading,
     setShowVideo,
     setErrorMessage,
     setInput,
+    resetState,
   } = useSearch();
 
   const handleQuerySubmit = async () => {
+    setInput("");
     setLoading(true);
     setMovies([]);
     setShowVideo(true);
 
-    const cachedData = JSON.parse(localStorage.getItem("latestSearch"));
     const token = localStorage.getItem("token");
-
-    if (cachedData && cachedData.input === input) {
-      setMovies(cachedData.movies);
-      setLoading(false);
-      setShowVideo(false);
-      return;
-    }
 
     try {
       const response = await fetch("http://localhost:3010/moviesuggest2", {
@@ -38,15 +34,9 @@ export const useHandleQuerySubmit = () => {
       const data = await response.json();
 
       if (data.movieNames && data.movieNames.length > 0) {
-        const sanitizedMovieNames = data.movieNames.map((name) =>
-          name.replace(/^"|"$/g, "")
-        );
-        localStorage.setItem(
-          "latestSearch",
-          JSON.stringify({ movies: sanitizedMovieNames, input })
-        );
         setTimeout(() => {
-          setMovies(sanitizedMovieNames);
+          setMovies(data.movieNames);
+          setExplanation(data.motivation);
           setLoading(false);
           setErrorMessage("");
           setShowVideo(false);

@@ -24,6 +24,8 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname(); // Hämtar den aktuella sökvägen/url:en
 
+  const { resetState } = useSearch();
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -68,14 +70,17 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-[#110A1A] text-white w-full fixed top-0 z-50">
+    <nav className=" text-white fixed top-0 left-0 right-0 z-50 ">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16 ">
           {!isSearchOpen && (
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Link className="no-underline" href="/startpage">
-                  <span className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center">
+                  <span
+                    onClick={() => resetState()}
+                    className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
+                  >
                     <span className="text-xl">
                       <FaDotCircle />
                     </span>
@@ -100,18 +105,26 @@ export default function Navbar() {
                 </button>
               )}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                <div className="absolute right-0 mt-4  bg-transparent rounded-2xl z-20  w-44">
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    className="flex justify-center items-center text-base bg-[#CFFF5E] rounded-full  border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"
+                    style={{
+                      border: "0.9px solid grey",
+                      backdropFilter: "blur(10px)",
+                    }}
                   >
                     AI Search
                   </button>
                   <button
                     onClick={() => handleSearchTypeSelect("movie")}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    className="flex justify-center items-center text-base bg-[#CFFF5E] px-4 mt-2 py-2 font-archivo border-none font-bold h-12 rounded-full text-slate-950 hover:bg-gray-100 w-full text-left"
+                    style={{
+                      border: "0.9px solid grey",
+                      backdropFilter: "blur(10px)",
+                    }}
                   >
-                    Movie Search
+                    Database Search
                   </button>
                 </div>
               )}
@@ -184,7 +197,29 @@ export default function Navbar() {
             <div className="mt-16">
               {isLoggedIn ? (
                 <>
-                  <Link href="/about" style={{ textDecoration: "none" }}>
+                  <Link
+                    onClick={() => resetState()}
+                    href="/chatpage2"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      AI-SEARCH
+                    </span>
+                  </Link>
+                  <Link
+                    onClick={() => resetState()}
+                    href="/startpage"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      Start{" "}
+                    </span>
+                  </Link>
+                  <Link
+                    onClick={() => resetState()}
+                    href="/about"
+                    style={{ textDecoration: "none" }}
+                  >
                     <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       About
                     </span>
@@ -195,7 +230,7 @@ export default function Navbar() {
                       href={`/profile/${user.id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <span className="px-3 py-8 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                      <span className="px-3 py-8 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                         Profile
                       </span>
                     </Link>
@@ -205,7 +240,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 pt-24 rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 pt-24 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>

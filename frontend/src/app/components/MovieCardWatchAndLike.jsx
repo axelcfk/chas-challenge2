@@ -98,8 +98,8 @@ export default function MovieCardWatchAndLike({
                 </div>
               ) : (
                 <div className="flex flex-col justify-center items-center">
-                  <FaHeart className="h-5 w-5 text-red-600 mb-1" />
-                  <p className="text-red-600 mb-1 text-sm">Liked</p>
+                  <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
+                  <p className="text-[#EA3546] mb-1 text-sm">Liked</p>
                 </div>
               )}
             </div>

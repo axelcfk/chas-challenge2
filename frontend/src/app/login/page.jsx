@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { FaDotCircle } from "react-icons/fa";
+
 import Link from "next/link";
 
 export default function Login() {
@@ -23,22 +24,29 @@ export default function Login() {
   }
 
   return (
-    <div className="h-screen bg-[#110A1A] flex flex-col px-5">
-      <div className="mt-3">
-        <Link className="no-underline" href="/startpage">
-          <span className="font-bebas hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
-            <span className="text-xl">
-              <FaDotCircle />
-            </span>
-            <span className="font-archivo font-extrabold no-underline">
-              BAMMS
-            </span>
+    <div className="h-full bg-black flex flex-col justify-between items-center px-5 pt-40">
+      <Link className="no-underline " href="/startpage">
+        <span className="absolute top-2 left-4  hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+          <span className="text-xl">
+            <FaDotCircle />
           </span>
-        </Link>
-        <h2 className="text-3xl font-semibold text-center mb-8 mt-20 text-slate-100">
-          Sign in
+          <span className="font-archivo font-extrabold no-underline">
+            BAMMS
+          </span>
+        </span>
+      </Link>
+      <div className=" w-full">
+        {/* <div className="flex justify-center">
+          <span className="text-6xl">
+            <FaDotCircle />
+          </span>
+          <h1 className="font-bebas no-underline text-7xl">BAMMS</h1>
+        </div> */}
+
+        <h2 className="text-3xl font-archivo font-semibold text-center mb-8  text-slate-100">
+          Log in
         </h2>
-        <div className="flex flex-col mt-20">
+        <div className="flex flex-col ">
           <p className="mb-2 text-slate-100">Username</p>
           <input
             onChange={(e) => setUsername(e.target.value)}
@@ -48,7 +56,7 @@ export default function Login() {
             autoFocus
             placeholder="Enter username..."
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-lg h-12 bg-slate-200 rounded-xl font-semibold mb-2 px-5"
+            className="text-lg h-12 bg-slate-200 rounded-full font-semibold mb-2 px-5"
           />
           <p className="mb-2 mt-4 text-slate-100">Password</p>
           <input
@@ -58,34 +66,37 @@ export default function Login() {
             type="password"
             placeholder="Enter password..."
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-lg h-12 bg-slate-200 rounded-xl font-semibold mb-2 px-5"
+            className="text-lg h-12 bg-slate-200 rounded-full font-semibold mb-2 px-5"
           />
-          <p className="underline text-sm text-slate-100 text-right">
-            Forgot password?
-          </p>
+
           <button
             onClick={handleSignIn}
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-xl h-14 w-full bg-slate-50 rounded-full font-semibold mt-14"
+            className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-20"
           >
             Log in
           </button>
         </div>
         <div className="flex mt-10 text-slate-100 justify-center items-center">
           <p> Don't have an account?</p>
-          <p className="underline ml-2 text-slate-100 ">
-            <Link href={"/create-account"} className="text-[#a57cda]">
+          <p className=" font-archivo font-extrabold ml-2 text-slate-100 ">
+            <Link
+              href={"/create-account"}
+              className="text-slate-50 no-underline"
+            >
               Create one here{" "}
             </Link>
           </p>
         </div>
       </div>
-      <div className="text-sm mt-2">
-        <div className="flex justify-center items-center mt-14 mb-4 text-slate-100">
-          <p className="mr-3 font-semibold">Terms of use</p>
-          <p className="ml-3 font-semibold">Privacy Policy</p>
+      <div className="text-sm mt-6 absolute bottom-8 right-0 left-0">
+        <div className="flex justify-center items-center text-slate-100">
+          <p className="mr-3 font-semibold text-slate-100">Terms of use</p>
+          <p className="ml-3 font-semibold text-slate-100">Privacy Policy</p>
         </div>
-        <p className="text-center text-slate-100 pb-2">2024 All rights reserved</p>
+        <p className="text-center text-slate-100 mt-4">
+          2024 All rights reserved
+        </p>
       </div>
     </div>
   );
