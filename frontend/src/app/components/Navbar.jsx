@@ -81,11 +81,11 @@ export default function Navbar() {
                     onClick={() => resetState()}
                     className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
                   >
-                    <span className="text-xl">
+                    <span className="text-sm text-[#CFFF5E] mt-1">
                       <FaDotCircle />
                     </span>
                     <span className="font-archivo font-extrabold no-underline">
-                      BAMMS
+                      LUDI
                     </span>
                   </span>
                 </Link>
@@ -163,7 +163,7 @@ export default function Navbar() {
                 aria-label="Burger Menu"
               >
                 <svg
-                  className="h-6 w-6"
+                  className="h-8 w-8"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

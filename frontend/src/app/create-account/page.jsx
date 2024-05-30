@@ -81,16 +81,14 @@ export default function CreateAccount() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Link className="no-underline" href="/startpage">
-        <span className="absolute top-2 left-4  hover:cursor-pointer py-2 text-white rounded-md font-medium cursor-pointer text-3xl">
+      <div className=" ">
+        <span className="absolute top-2 left-4  py-2 text-white rounded-md font-medium  text-3xl">
           <span className="text-xl">
             <FaDotCircle />
           </span>
-          <span className="font-archivo font-extrabold no-underline">
-            BAMMS
-          </span>
+          <span className="font-archivo font-extrabold no-underline">LUDI</span>
         </span>
-      </Link>
+      </div>
       <div className="w-full">
         <h2 className="text-3xl font-archivo font-semibold text-center mb-8  text-slate-100">
           {successMessage === "" ? "Create an account" : ""}
