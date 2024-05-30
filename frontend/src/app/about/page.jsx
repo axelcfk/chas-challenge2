@@ -1,10 +1,12 @@
 "use client";
 
+import "./about.css";
+
 const About = () => {
   return (
     <div className="px-6 sm:px-12 lg:px-24 py-8 font-sans max-w-7xl mx-auto">
       <div className="flex flex-col items-center justify-center mb-8">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-center pb-8">
+        <h1 className="text-3xl mt-16 sm:text-4xl lg:text-5xl font-bold mb-6 text-center pb-8">
           Here to Revolutionize Your Movie Experience
         </h1>
         <div
@@ -12,9 +14,13 @@ const About = () => {
           style={{ backgroundImage: "url('/About_page.jpg')" }}
         ></div>
       </div>
-      <h2 className="text-2xl pb-5 sm:text-3xl lg:text-4xl font-semibold">
-        A unique AI-driven movie recommendation platform
+      <h2 className="text-2xl pb-5 sm:text-3xl lg:text-4xl font-semibold flex">
+        <span className="inline-block">
+          A unique <span className="inline-block text-[#CFFF5E]">AI-driven</span>{" "}
+          movie recommendation platform
+        </span>
       </h2>
+
       <p className="text-base sm:text-lg lg:text-xl mb-8">
         Welcome to Movie AI Suggestions, an innovative platform designed to
         provide movie enthusiasts with accurate and personalized
@@ -37,7 +43,7 @@ const About = () => {
       </p>
 
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-6">
-        The Team
+        Meet the team!
       </h2>
       <p className="text-base sm:text-lg lg:text-xl mb-8">
         We are a group of dedicated students specializing in frontend web
@@ -48,6 +54,39 @@ const About = () => {
         personalized movie recommendations using existing machine learning
         libraries.
       </p>
+      <div class="grid-container space-y-10">
+        <div class="grid-item text-center mt-10">
+          <img src="/shantiAI.webp" className="AI-image" />
+          <h2 className="font-bold">Shanti</h2>
+          <h3>Scrum Master</h3>
+          <h3>Software Developer</h3>
+        </div>
+        <div class="grid-item text-center">
+          <img src="/marcusAI.jpg" className="AI-image" />
+          <h2 className="font-bold">Marcus</h2>
+          <h3>Software Developer</h3>
+        </div>
+        <div class="grid-item text-center">
+          <img src="/axel.webp" className="AI-image" />
+          <h2 className="font-bold">Axel</h2>
+          <h3>Software Developer</h3>
+        </div>
+        <div class="grid-item text-center">
+          <img src="/mikael.webp" className="AI-image" />
+          <h2 className="font-bold">Mikael</h2>
+          <h3>Software Developer</h3>
+        </div>
+        <div class="grid-item text-center">
+          <img src="/behrozAI.webp" className="AI-image" />
+          <h2 className="font-bold">Behroz</h2>
+          <h3>Software Developer</h3>
+        </div>
+        <div class="grid-item text-center">
+          <img src="/johannaAI.webp" className="AI-image" />
+          <h2 className="font-bold">Johanna</h2>
+          <h3>UX-designer</h3>
+        </div>
+      </div>
     </div>
   );
 };
