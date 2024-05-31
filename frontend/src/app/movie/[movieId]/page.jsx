@@ -525,7 +525,25 @@ export default function MoviePage() {
                     <div className="w-full flex flex-col justify-center items-center gap-4">
                       <div className="relative w-full">
                         <button
-                          onClick={() => handleButtonClicked(movieDetails.id)}
+                          onClick={() => {
+                            handleButtonClicked(movieDetails.id)
+                            if (!watches[movieDetails.id]) {
+                              postAddToWatchList(
+                                movieDetails.id,
+                                "movie",
+                                movieDetails.title
+                              );
+                            } else {
+                              postRemoveFromWatchList(
+                                movieDetails.id,
+                                "movie",
+                                movieDetails.title
+                              );
+                            }
+                            
+                          }
+
+                          }
                           className={`w-full h-10 ${
                             !watches[movieDetails.id]
                               ? "bg-[#3D3B8E]"

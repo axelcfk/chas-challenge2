@@ -156,7 +156,7 @@ export default function Startpage() {
               className="mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
               tabIndex={0}
             >
-              Watchlist
+             Watchlist
               {/* (isLiked=false, isInWatchList=false) */}
             </h2>
             <div className="md:pl-0">
