@@ -121,27 +121,29 @@ export default function Navbar() {
               )}
               {dropdownOpen && (
                 <div
-                  className="absolute right-0 p-8 mt-2  bg-slate-50 rounded-2xl z-20  w-60"
+                  className="absolute right-0 p-8 mt-2 rounded-br-2xl rounded-bl-2xl   z-20  w-60"
                   style={{
                     border: "0.9px solid grey",
-                    backgroundColor: "rgba(141, 126, 255, 1)",
+                    borderTop: 0,
+                    background: "rgba(17, 10, 26, 0.8)"
+                    //backgroundColor: "rgba(141, 126, 255, 1)",
                   }}
                 >
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
-                    className="flex justify-center items-center text-base bg-[#CFFF5E] rounded-full  border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"
+                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] rounded-md border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"
                   >
-                    AI-Search
+                    <span className="text-lg font-archivo font-bold text-slate-950">AI-Search</span> <FaMagnifyingGlass className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleSearchTypeSelect("movie")}
-                    className="flex justify-center items-center text-base bg-[#CFFF5E] px-4 mt-1 py-2 font-archivo border-none font-bold h-12 rounded-full text-slate-950 hover:bg-gray-100 w-full text-left"
+                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] px-4 mt-4 py-2 font-archivo border-none font-bold h-12 rounded-md text-slate-950 hover:bg-gray-100 w-full text-left"
                     style={{
                       border: "0.9px solid grey",
                       backdropFilter: "blur(10px)",
                     }}
                   >
-                    Database Search
+                    <span className="text-lg font-archivo font-bold text-slate-950">Database Search </span><FaMagnifyingGlass className="h-4 w-4" />
                   </button>
                 </div>
               )}
