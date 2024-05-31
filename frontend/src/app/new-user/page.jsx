@@ -154,7 +154,7 @@ export default function MovieSelection() {
             onClick={handleLoadMore}
             style={{ border: "1px solid grey" }}
           >
-            <span className="px-2 text-xl">More options</span>{" "}
+            <span className="px-2 text-xl">New options</span>{" "}
           </button>
         )}
         {isFromMixPage ? (

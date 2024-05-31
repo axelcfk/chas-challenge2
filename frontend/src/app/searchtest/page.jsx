@@ -19,6 +19,19 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   // API key for fetching movies, replace with your actual API key
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
+  const serviceLogos = {
+    Netflix: "/Netflix1.svg",
+    Max: "/HBO1.svg",
+    Viaplay: "/Viaplay1.svg",
+    "Amazon Prime Video": "/Prime1.svg",
+    "Disney Plus": "/Disney1.svg",
+    "Tele2 Play": "/tele2play.png",
+    "Apple TV": "/AppleTv.svg",
+    SVT: "/SVTPlay.svg",
+    TV4Play: "/TV4Play.svg",
+    "Discovery+": "/Discovery+.svg",
+  };
+
   useEffect(() => {
     // Fetching movies based on the input value
     if (inputValue) {
@@ -217,7 +230,8 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                   className="w-10 h-10 mr-2"
                   aria-hidden="true"
                 />
-                {movie.title}
+                <span className="mr-2">{movie.title}</span>{" "}
+                {/* Add margin-right */}
                 {movieProviders &&
                   movieProviders.map((movieProviderObj) => {
                     if (movieProviderObj.movieId === movie.id) {
@@ -227,12 +241,14 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                             <p>{movieProviderObj.providers.noProviders}</p>
                           )}
                           {movieProviderObj.providers.flatrate && (
-                            <p>
-                              {
-                                movieProviderObj.providers.flatrate[0]
-                                  .provider_name
+                            <img
+                              src={
+                                serviceLogos[
+                                  movieProviderObj.providers.flatrate[0]
+                                    .provider_name
+                                ]
                               }
-                            </p>
+                            />
                           )}
                         </div>
                       );

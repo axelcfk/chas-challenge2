@@ -78,7 +78,7 @@ export default function Startpage() {
               </h2>
               <div className=" h-full flex justify-center items-center">
                 <Link href={"/chatpage2"}>
-                  <button className="hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-[#CFFF5E] w-72 h-16 rounded-full font-extrabold font-archivo">
+                  <button className="hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo">
                     AI SEARCH
                   </button>
                 </Link>
@@ -155,17 +155,18 @@ export default function Startpage() {
           </div>
         </div> */}
 
-        <div className="w-full md:px-24 mt-14 md:mt-4">
-          {/* <h2
-            className="mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
-            tabIndex={0}
-          >
-            Watchlist
-          </h2> */}
-          <div className="md:pl-0">
-            <WatchListSlideMenu2 />
+          <div className="w-full md:px-24 mt-14 md:mt-4">
+            <h2
+              className="mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
+              tabIndex={0}
+            >
+             Watchlist
+              {/* (isLiked=false, isInWatchList=false) */}
+            </h2>
+            <div className="md:pl-0">
+              <WatchListSlideMenu2 />
+            </div>
           </div>
-        </div>
 
         {/* <div className="w-full md:px-24 ">
             <h2 className="mb-8 md:pl-0 uppercase">
