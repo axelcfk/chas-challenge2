@@ -71,35 +71,37 @@ export default function Navbar() {
 
   return (
     <nav
-      className=" text-white fixed top-0 left-0 right-0 z-50 "
-      // style={{
-      //   backdropFilter: "blur(4px)",
-      //   backgroundColor: "rgba(0, 0, 0, 0.3)",
-      // }}
-    >
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16 ">
-          {!isSearchOpen && (
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <Link className="no-underline" href="/startpage">
-                  <span
-                    onClick={() => {
-                      resetState();
-                    }}
-                    className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
-                  >
-                    <span className="text-sm text-[#CFFF5E] mt-1">
-                      <FaDotCircle />
-                    </span>
-                    <span className="font-archivo font-extrabold no-underline">
-                      LUDI
-                    </span>
+    className="text-white fixed top-0 left-0 right-0 z-50"
+    // style={{
+    //   backdropFilter: "blur(4px)",
+    //   backgroundColor: "rgba(0, 0, 0, 0.3)",
+    // }}
+  >
+    <div className="bg-[rgba(0,0,0,0.8)] backdrop-blur-md w-full h-full absolute top-0 left-0 right-0 bottom-0"></div> {/* Added wrapper div for blur effect */}
+    <div className="relative mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative flex items-center justify-between h-16 ">
+        {!isSearchOpen && (
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <Link className="no-underline" href="/startpage">
+                <span
+                  onClick={() => {
+                    resetState();
+                  }}
+                  className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
+                >
+                  <span className="text-sm text-[#CFFF5E] mt-1">
+                    <FaDotCircle />
                   </span>
-                </Link>
-              </div>
+                  <span className="font-archivo font-extrabold no-underline">
+                    LUDI
+                  </span>
+                </span>
+              </Link>
             </div>
-          )}
+          </div>
+        )}
+  
 
           <div className="flex items-center md:hidden w-full justify-end">
             <div className="relative">
