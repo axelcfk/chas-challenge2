@@ -232,7 +232,7 @@ export default function Mix() {
   console.log("mixDetails.length :", mixDetails.length);
 
   return (
-    <div className="bg-[#110A19] min-h-screen p-8 pb-0 pt-20">
+    <div className="bg-[#110A1A] min-h-screen p-8 pb-0 pt-20">
      
       <div className="h-full w-full flex flex-col items-center pt-8">
         <button
@@ -246,7 +246,7 @@ export default function Mix() {
             <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
               Your {mixTitle} mix by AI
             </h1>
-            <p className="text-slate-950 whitespace-nowrap">
+            <p className="text-slate-950 whitespace-nowrap font-archivo">
               Based on your liked{" "}
               <FaHeart className=" h-3 w-3 mx-1 text-[#EA3546]"></FaHeart>{" "}
               movies

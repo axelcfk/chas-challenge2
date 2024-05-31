@@ -522,7 +522,7 @@ export default function MoviePage() {
                           <div className="flex flex-col justify-center items-center">
                             <FaHeart className="h-5 w-5 text-[#CFFF5E] mb-1" />
                             <p className="text-[#CFFF5E] mb-1 text-sm font-archivo font-semibold">
-                              Unlike
+                              Liked
                             </p>
                           </div>
                         )}
@@ -577,7 +577,7 @@ export default function MoviePage() {
                         </button>
                         <button
                           onClick={handleToggleDropdown}
-                          className="absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950  cursor-pointer px-3"
+                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${!watches[movieDetails.id] && "text-white"}  cursor-pointer px-3`}
                         >
                           <SlArrowDown fontFamily="archivo" fontWeight={600} />
                         </button>
