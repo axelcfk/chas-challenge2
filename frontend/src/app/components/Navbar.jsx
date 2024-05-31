@@ -10,34 +10,20 @@ import Link from "next/link";
 import InputField from "../chatpage2/inputField";
 import MovieSearch from "../searchtest/page";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-
 import { FaChevronUp } from "react-icons/fa6";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown menu
-  const [searchType, setSearchType] = useState(""); // State to track selected search type
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchType, setSearchType] = useState("");
   const { isLoggedIn, user, logout, checkAuth } = useAuth();
   const { input, setInput } = useSearch();
-  const { handleQuerySubmit } = useHandleQuerySubmit();
+  const { handleQuerySubmit: originalHandleQuerySubmit } =
+    useHandleQuerySubmit();
   const router = useRouter();
-  const pathname = usePathname(); // Hämtar den aktuella sökvägen/url:en
-
+  const pathname = usePathname();
   const { resetState } = useSearch();
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleQuerySubmit();
-    }
-  };
-
-  const handleSearchTypeSelect = (type) => {
-    setSearchType(type);
-    setIsSearchOpen(true);
-    setDropdownOpen(false);
-  };
 
   useEffect(() => {
     if (isOpen || isSearchOpen) {
@@ -60,6 +46,17 @@ export default function Navbar() {
     await logout();
     setIsOpen(false);
     router.push("/");
+  };
+
+  const handleSearchTypeSelect = (type) => {
+    setSearchType(type);
+    setIsSearchOpen(true);
+    setDropdownOpen(false);
+  };
+
+  const handleQuerySubmit = async (query) => {
+    await originalHandleQuerySubmit(query);
+    setIsSearchOpen(false); // Close the search bar after initiating the search
   };
 
   if (
@@ -113,7 +110,7 @@ export default function Navbar() {
               {!isSearchOpen && (
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent ml-4"
                   aria-label="Search Menu"
                 >
                   <FaMagnifyingGlass className="h-6 w-6" />
@@ -161,6 +158,8 @@ export default function Navbar() {
                   handleQuerySubmit={handleQuerySubmit}
                   heightDiv={"h-10"}
                   placeholder={"AI SEARCH"}
+                  input={input}
+                  setInput={setInput}
                 />
                 <button
                   onClick={() => setIsSearchOpen(false)}
@@ -173,12 +172,11 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Burger menu button only for small screens */}
           {!isSearchOpen && (
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent ml-4"
                 aria-label="Burger Menu"
               >
                 <svg
@@ -207,7 +205,6 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Menu items for smaller screens */}
           <div
             className={`menu-modal ${
               isOpen ? "open" : "close"
@@ -293,7 +290,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Ordinary Navbar for larger screens */}
           <div className="hidden md:flex items-center justify-between w-full">
             <div className="flex items-center"></div>
             <div className="flex items-center">
@@ -302,7 +298,7 @@ export default function Navbar() {
                   <div className="relative">
                     <button
                       onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                      className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent ml-4"
                       aria-label="Search Menu"
                     >
                       <FaMagnifyingGlass className="h-6 w-6" />
@@ -337,6 +333,8 @@ export default function Navbar() {
                         handleQuerySubmit={handleQuerySubmit}
                         heightDiv={"h-10"}
                         placeholder={"AI SEARCH"}
+                        input={input}
+                        setInput={setInput}
                       />
                       <button
                         onClick={() => setIsSearchOpen(false)}
