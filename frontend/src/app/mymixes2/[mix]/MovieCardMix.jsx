@@ -40,7 +40,7 @@ export function MovieCardMix({
 
   const serviceLogos = {
     Netflix: "/Netflix1.svg",
-    "HBO Max": "/HBO1.svg",
+    Max: "/HBO1.svg",
     Viaplay: "/Viaplay1.svg",
     "Amazon Prime Video": "/Prime1.svg",
     "Disney Plus": "/Disney1.svg",
