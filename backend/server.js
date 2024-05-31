@@ -1987,6 +1987,23 @@ app.post("/me/watchlists/addtowatchlist", async (req, res) => {
 //   return match ? match[1] : null;
 // }
 
+function parseMovieNames(response) {
+  // const regex = /MOVIE NAME\d+:\s*([^\n]+)\nTMDB ID:\s*\d+/g;
+
+  // const regex = /([^\n]+)/g;
+  const regex = /MOVIE NAME\d+:\s*([^,]+)/g;
+
+  let names = [];
+  let match;
+
+  while ((match = regex.exec(response))) {
+    names.push(match[1].trim()); // Ensuring to trim any extra spaces
+  }
+
+  return names;
+}
+
+
 function parseResponse(response) {
   // const movieRegex = /MOVIE NAME\d+:\s*([^,]+),?/g;
   const movieRegex = /MOVIE NAME\d+:\s*([^\n,]+)/g;
