@@ -125,7 +125,11 @@ export default function Startpage() {
                 <h2 className="text-5xl font-archivo font-extrabold uppercase">
                   Mix
                 </h2>
-                  <p className="whitespace-nowrap">Based on your liked <FaHeart className="h-3 w-3" ></FaHeart> movies</p>
+                <p className="whitespace-nowrap font-archivo font-extrabold">
+                  Based on your{" "}
+                  <FaHeart className="h-3 w-3 pt-6 mx-1 text-[#EA3546]"></FaHeart>{" "}
+                  movies
+                </p>
               </div>
               <div className="ml-20 ">
                 <FaArrowRight color="rgb(2 6 23)" size={"60px"} />

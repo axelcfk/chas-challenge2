@@ -161,19 +161,20 @@ export default function WatchListSlideMenu2() {
           Loading Watchlist...
         </div> */}
         <div className="flex gap-2 w-full h-[391px]">
-
-        <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={391} width={160}>
-
-        <Skeleton containerClassName="flex-1"></Skeleton>
-        <Skeleton containerClassName="flex-1" ></Skeleton>
-        <Skeleton containerClassName="flex-1"></Skeleton>
-        </SkeletonTheme>
+          <SkeletonTheme
+            baseColor="#535157"
+            highlightColor="#7b8085"
+            height={391}
+            width={160}
+          >
+            <Skeleton containerClassName="flex-1"></Skeleton>
+            <Skeleton containerClassName="flex-1"></Skeleton>
+            <Skeleton containerClassName="flex-1"></Skeleton>
+          </SkeletonTheme>
         </div>
       </>
     );
   }
-
-  
 
   return (
     <>

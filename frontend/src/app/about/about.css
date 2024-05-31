@@ -1,32 +1,32 @@
 .AI-image {
-    height: 180px;
-    border: 1px solid;
-    border-color: #cfff5e;
-    border-radius: 100px;
-    margin: 10px;
-    padding: 10px;
-    width: 180px;
-    z-index: 1000;
-    position: relative;
-    box-sizing: border-box;
-    animation: 1s linear infinite;
-    background: radial-gradient(circle, transparent, #110a1a 45%);
-    opacity: 1;
-    box-shadow: 0 2px 4px rgba(141, 126, 255, 0.2), 0 3px 6px rgba(141, 126, 255, 0.3), 0 4px 8px rgba(141, 126, 255, 0.4);
-    transition: transform 0.4s;
-  }
-  
-  .AI-image:hover {
-    transform: translateY(-20px); /* Flyttar upp bilderna 20px när man hovrar */
-  }
-  
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
+  height: 180px;
+  border: 1px solid;
+  border-color: #cfff5e;
+  border-radius: 100px;
+  margin: 10px;
+  padding: 10px;
+  width: 180px;
+  z-index: 1000;
+  position: relative;
+  box-sizing: border-box;
+  animation: 1s linear infinite;
+  background: radial-gradient(circle, transparent, #110a1a 45%);
+  opacity: 1;
+  box-shadow: 0 2px 4px rgba(141, 126, 255, 0.2),
+    0 3px 6px rgba(141, 126, 255, 0.3), 0 4px 8px rgba(141, 126, 255, 0.4);
+  transition: transform 0.4s;
+}
 
-  .tmbd-logo {
-    height: 50px;
-  }
-  
+.AI-image:hover {
+  transform: translateY(-20px); /* Flyttar upp bilderna 20px när man hovrar */
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.tmbd-logo {
+  height: 50px;
+}

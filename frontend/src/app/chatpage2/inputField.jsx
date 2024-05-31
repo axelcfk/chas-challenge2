@@ -22,14 +22,14 @@ export default function InputField({
   return (
     <div
       style={{
-        border: "1px solid grey",
+        border: "1px solid #CFFF5E",
         backdropFilter: "blur(20px)",
         backgroundColor: "rgba(0, 0, 0, 0.2)",
       }}
-      className={`${heightDiv} flex justify-center items-center rounded-full z-10`}
+      className={`${heightDiv} flex justify-center items-center rounded-full z-10 px-4`}
     >
       <input
-        className="h-14 bg-transparent w-full  md:w-1/3 rounded-full text-xl text-center text-slate-50 md:mr-3 border-none"
+        className="h-14 bg-transparent w-full  md:w-1/3 rounded-full font-archivo font-semibold text-xl text-center text-slate-50 md:mr-3 border-none"
         type="text"
         value={input}
         onChange={handleInputChange}
@@ -43,7 +43,7 @@ export default function InputField({
         disabled={!input}
       >
         <FaArrowCircleRight
-          className={`h-6 w-6 mr-5    ${
+          className={`h-6 w-6     ${
             input
               ? " hover:text-slate-300 text-slate-100 hover:cursor-pointer"
               : " text-slate-400"

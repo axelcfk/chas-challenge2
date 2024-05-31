@@ -62,6 +62,12 @@ export default function MoviePage() {
     SVT: "/SVTPlay.svg",
     TV4Play: "/TV4Play.svg",
     "Discovery+": "/Discovery+.svg",
+    "Google Play Movies": "/googleplay.svg",
+    "Rakuten TV": "/Rakuten_logo.svg",
+    Blockbuster: "/Blockbuster.png",
+    "SF Anytime": "/SF.svg",
+    "Amazon Video": "/PrimeVideo.svg",
+    Microsoft: "/Microsoft.svg",
   };
 
   function handleToggle() {

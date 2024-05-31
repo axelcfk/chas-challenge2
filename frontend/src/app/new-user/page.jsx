@@ -6,10 +6,9 @@
 import { useState, useEffect } from "react";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
-import { FaCheckCircle, FaArrowRight } from "react-icons/fa";
+import { FaCheckCircle, FaArrowRight, FaHeart } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
 import { postMovieToDatabase } from "../utils";
-
 
 export default function MovieSelection() {
   const [movies, setMovies] = useState([]);
@@ -23,8 +22,8 @@ export default function MovieSelection() {
   const [fromMixPage, setFromMixPage] = useState(false); // Initialize state for the parameter
 
   const searchParams = useSearchParams();
- 
-  const isFromMixPage = searchParams.get('isFromMixPage')
+
+  const isFromMixPage = searchParams.get("isFromMixPage");
 
   //const { isFromMixPage } = router.query;
 
@@ -94,14 +93,13 @@ export default function MovieSelection() {
     }
   };
 
-  console.log("isFromMixPage:" , fromMixPage);
+  console.log("isFromMixPage:", fromMixPage);
 
   return (
     <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50 h-min-screen w-min-screen pt-20">
-      <h1 className="text-2xl font-bold text-center my-5 flex flex-col">
-        <span className="mb-4">Help us help you!</span>
-        <span className="text-base font-light">
-          Select the movies you like from the list for a better experience!
+      <h1 className="text-3xl font-archivo font-extrabold text-center pb-8  pt-4 flex flex-col  ">
+        <span className="">
+          Click to like movies for better recommendations!
         </span>
       </h1>
       <div className="grid grid-cols-3 gap-4">
@@ -123,16 +121,16 @@ export default function MovieSelection() {
               />
             ) : (
               <div className="overlay">
-                <FaCheckCircle
+                <FaHeart
                   //className="text-green-500"
-                  className="text-[#CFFF5E]"
+                  className="text-[#EA3546]"
                   style={{
                     fontSize: "40px",
                     position: "absolute",
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    zIndex: 10,
+                    zIndex: 40,
                   }}
                 />
                 <img
@@ -159,18 +157,22 @@ export default function MovieSelection() {
             <span className="px-2 text-xl">More options</span>{" "}
           </button>
         )}
-        {isFromMixPage ?  (<button
-          className="font-archivo bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
-          onClick={() => router.push("/mymixes2/Weekly")}
-        >
-          <span className="px-2 text-xl">Back to Mix Page</span> <FaArrowRight />
-        </button> ) : ( <button
-          className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
-          onClick={() => router.push("/startpage")}
-        >
-          <span className="px-2 text-xl">Continue</span> <FaArrowRight />
-        </button>)}
-       
+        {isFromMixPage ? (
+          <button
+            className="font-archivo bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
+            onClick={() => router.push("/mymixes2/Weekly")}
+          >
+            <span className="px-2 text-xl">Back to Mix Page</span>{" "}
+            <FaArrowRight />
+          </button>
+        ) : (
+          <button
+            className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
+            onClick={() => router.push("/startpage")}
+          >
+            <span className="px-2 text-xl">Continue</span> <FaArrowRight />
+          </button>
+        )}
       </div>
     </div>
   );
