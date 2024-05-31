@@ -161,19 +161,20 @@ export default function WatchListSlideMenu2() {
           Loading Watchlist...
         </div> */}
         <div className="flex gap-2 w-full h-[391px]">
-
-        <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={391} width={160}>
-
-        <Skeleton containerClassName="flex-1"></Skeleton>
-        <Skeleton containerClassName="flex-1" ></Skeleton>
-        <Skeleton containerClassName="flex-1"></Skeleton>
-        </SkeletonTheme>
+          <SkeletonTheme
+            baseColor="#535157"
+            highlightColor="#7b8085"
+            height={391}
+            width={160}
+          >
+            <Skeleton containerClassName="flex-1"></Skeleton>
+            <Skeleton containerClassName="flex-1"></Skeleton>
+            <Skeleton containerClassName="flex-1"></Skeleton>
+          </SkeletonTheme>
         </div>
       </>
     );
   }
-
-  
 
   return (
     <>
@@ -182,7 +183,7 @@ export default function WatchListSlideMenu2() {
       movieWatchListDetails.length > 0 ? (
         <div>
           <h2
-            className="mt-14 md:mt-4 mb-8  md:pl-0 uppercase text-xl  font-archivo font-bold"
+            className="mt-14 md:mt-4 mb-8  md:pl-0 uppercase text-2xl  font-archivo font-bold"
             tabIndex={0}
           >
             Watchlist

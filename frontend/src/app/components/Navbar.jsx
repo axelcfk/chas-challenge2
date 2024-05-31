@@ -78,7 +78,9 @@ export default function Navbar() {
               <div className="flex-shrink-0">
                 <Link className="no-underline" href="/startpage">
                   <span
-                    onClick={() => resetState()}
+                    onClick={() => {
+                      resetState();
+                    }}
                     className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
                   >
                     <span className="text-sm text-[#CFFF5E] mt-1">
@@ -198,7 +200,10 @@ export default function Navbar() {
               {isLoggedIn ? (
                 <>
                   <Link
-                    onClick={() => resetState()}
+                    onClick={() => {
+                      resetState();
+                      setIsOpen(false);
+                    }}
                     href="/chatpage2"
                     style={{ textDecoration: "none" }}
                   >
@@ -207,7 +212,10 @@ export default function Navbar() {
                     </span>
                   </Link>
                   <Link
-                    onClick={() => resetState()}
+                    onClick={() => {
+                      resetState();
+                      setIsOpen(false);
+                    }}
                     href="/startpage"
                     style={{ textDecoration: "none" }}
                   >
@@ -216,7 +224,10 @@ export default function Navbar() {
                     </span>
                   </Link>
                   <Link
-                    onClick={() => resetState()}
+                    onClick={() => {
+                      resetState();
+                      setIsOpen(false);
+                    }}
                     href="/about"
                     style={{ textDecoration: "none" }}
                   >
@@ -226,7 +237,10 @@ export default function Navbar() {
                   </Link>
                   {user && user.id && (
                     <Link
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => {
+                        resetState();
+                        setIsOpen(false);
+                      }}
                       href={`/profile/${user.id}`}
                       style={{ textDecoration: "none" }}
                     >

@@ -50,7 +50,7 @@ export default function ChatPage2() {
   } = useSearch();
   const [movieDetails, setMovieDetails] = useState([]);
   const [movieCredits, setMovieCredits] = useState({});
-  const { handleQuerySubmit } = useHandleQuerySubmit();
+  const { handleQuerySubmit, videoRef } = useHandleQuerySubmit();
 
   // const [movies, setMovies] = useState([]);
   // const [loading, setLoading] = useState(false);
@@ -60,7 +60,7 @@ export default function ChatPage2() {
   // const [errorMessage, setErrorMessage] = useState("");
 
   const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
-  const videoRef = useRef(null);
+  // const videoRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -186,9 +186,9 @@ export default function ChatPage2() {
       )}
       {showVideo && movies.length < 2 && (
         <div className={`md:w-full flex flex-col justify-center items-center`}>
-          <div className="relative h-96 flex justify-center items-center">
+          <div className=" h-96 flex justify-center items-center">
             <video
-              className="md:w-1/3  w-96 transform rounded-full z-10"
+              className="md:w-1/3 w-96 transform rounded-full z-10"
               ref={videoRef}
               autoPlay
               loop
@@ -201,8 +201,8 @@ export default function ChatPage2() {
           </div>
           {!loading ? (
             <p className="px-5 text-xl flex flex-col items-center h-24">
-              <span className="mb-4 text-2xl font-semibold text-center">
-                I'm your AI movie matcher
+              <span className="absolute top-50 bottom-50 mb-4 text-4xl font-archivo  font-extrabold text-center">
+                Hello! <br /> I'm your AI movie matcher
               </span>
             </p>
           ) : (
@@ -248,17 +248,17 @@ export default function ChatPage2() {
       )}
 
       {!loading && movies.length < 2 ? (
-        <div className="pt-20 w-full">
-          <div className=" w-full">
+        <div className="pt-20  fixed bottom-8 left-10 right-10">
+          <div className="  ">
             <AutoQuery input={input} setInput={setInput} />
           </div>
-          <div className=" w-full">
+          <div className=" ">
             <InputField
               setInput={setInput}
               input={input}
               handleQuerySubmit={handleQuerySubmit}
               handleInputChange={handleInputChange}
-              placeholder={"What's your vibe today?"}
+              placeholder={"Send a request to Ludi AI"}
               heightDiv={"h-14"}
             />
           </div>
