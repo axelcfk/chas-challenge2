@@ -13,8 +13,11 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   const [ratingFilter, setRatingFilter] = useState("All"); // State to handle the rating filter
   const [movieProviders, setMovieProviders] = useState([]); // State to handle movie providers
   const [fetchStreamService, setFetchStreamService] = useState(false); // State to fetch stream services
+  const [focusedIndex, setFocusedIndex] = useState(-1); // State to handle the focused index
 
   const inputRef = useRef(null); // Reference for the input field
+
+  const listRef = useRef(null); // Reference for the list of movies
 
   // API key for fetching movies, replace with your actual API key
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
@@ -87,6 +90,7 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   const handleChange = (event) => {
     const newValue = event.target.value;
     setInputValue(newValue);
+    setFocusedIndex(-1); // Reset the focused index
 
     // If the input value is empty, clear the movie list
     if (!newValue.trim()) {
@@ -97,8 +101,8 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (inputValue.trim()) {
-      setIsSearching(false); // Optionally hide the input field on submit
-      setIsSearchOpen(false); // Set the navbar state to closed
+      setIsSearching(true); // Optionally hide the input field on submit
+      setIsSearchOpen(true); // Set the navbar state to closed
     }
   };
 
@@ -121,8 +125,25 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   };
 
   const handleIconKeyPress = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Escape") {
       handleIconClick();
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "ArrowDown") {
+      setFocusedIndex((prevIndex) =>
+        prevIndex < filteredMovies.length - 1 ? prevIndex + 1 : 0
+      );
+    } else if (event.key === "ArrowUp") {
+      setFocusedIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : filteredMovies.length - 1
+      );
+    } else if (event.key === "Enter" && focusedIndex >= 0) {
+      const selectedMovie = filteredMovies[focusedIndex];
+      if (selectedMovie) {
+        window.location.href = `/movie/${encodeURIComponent(selectedMovie.id)}`;
+      }
     }
   };
 
@@ -179,8 +200,10 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter") {
+                  if (event.key === "Escape") {
                     handleClose();
+                  } else {
+                    handleKeyDown(event); // Handle arrow keys and enter key
                   }
                 }}
                 placeholder="Search Movie..."
@@ -216,9 +239,19 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
         </div>
       </form>
       {movies.length > 0 && (
-        <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full max-w-full max-h-[500px] overflow-y-scroll">
-          {filteredMovies.map((movie) => (
-            <li className="list-none p-2 hover:bg-gray-200" key={movie.id}>
+        <ul
+          className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full max-w-full max-h-[500px] overflow-y-scroll"
+          ref={listRef}
+        >
+          {filteredMovies.map((movie, index) => (
+            <li
+              className={`list-none p-2 hover:bg-gray-200 ${
+                index === focusedIndex
+                  ? "bg-gray-300 border-b-2 border-blue-500"
+                  : ""
+              }`}
+              key={movie.id}
+            >
               <Link
                 className="text-black no-underline hover:underline flex items-center"
                 href={`/movie/${encodeURIComponent(movie.id)}`}
