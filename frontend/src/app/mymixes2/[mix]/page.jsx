@@ -11,6 +11,7 @@ import { FaArrowRight, FaHeart, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 import { SlArrowLeft } from "react-icons/sl";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "./mixpage.css";
 
 export default function Mix() {
   const [mixFromDatabaseOnlyIDs, setMixFromDatabaseOnlyIDs] = useState([]);
@@ -231,8 +232,7 @@ export default function Mix() {
   console.log("mixDetails.length :", mixDetails.length);
 
   return (
-    <div className="bg-[#110A19] min-h-screen p-8 pt-20">
-
+    <div className="bg-[#110A19] min-h-screen p-8 pb-0 pt-20">
       <div className="h-full w-full flex flex-col items-center pt-8">
         <button
           className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
@@ -245,7 +245,11 @@ export default function Mix() {
             <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
               Your {mixTitle} mix by AI
             </h1>
-            <p className="text-slate-950 whitespace-nowrap">Based on your liked <FaHeart className="h-3 w-3" ></FaHeart> movies</p>
+            <p className="text-slate-950 whitespace-nowrap">
+              Based on your liked{" "}
+              <FaHeart className=" h-3 w-3 mx-1 text-[#EA3546]"></FaHeart>{" "}
+              movies
+            </p>
             {/* <button
               className="bg-slate-100 w-40 h-12 text-lg rounded-full font-extrabold font-archivo border border-solid border-white  transition duration-300 ease-in-out hover:bg-slate-200 hover:cursor-pointer hover:border-black "
               onClick={() => {
@@ -260,8 +264,10 @@ export default function Mix() {
 
         {/* min-h-full  */}
         <div
-          className="bg-[#1b1028] rounded-3xl min-h-[1000px] pt-4 pb-8 px-8 border border-solid border-[white] border-l-0 border-r-0 border-b-0 mt-8 w-full"
-          style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
+          //bg-[#1b1028]
+          className="//shadow-[rgba(0,0,15,0.5)_0px_0px_40px_0px] //shadow-[#CFFF5E] shadow-container shadow-container::after rounded-tr-3xl rounded-tl-3xl min-h-[1000px pt-4 pb-8 px-8 border border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8 w-full"
+          // style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
+          //style={{boxShadow: '#CFFF5E 0px 0px 40px 0px, #1b1028 0px -10px 20px -10px' }}
         >
           {/* <div className="flex w-full justify-end items-center">
           
@@ -323,9 +329,9 @@ export default function Mix() {
               )}
 
             {loading === true && isGettingStoredMix && (
-            <>
-              {console.log("Finding stored mix...")}
-              {/* <div className="flex min-h-[1000px]  w-full flex-col gap-8 justify-center items-center">
+              <>
+                {console.log("Finding stored mix...")}
+                {/* <div className="flex min-h-[1000px]  w-full flex-col gap-8 justify-center items-center">
 
                  <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={160} width={320}>
 
@@ -338,30 +344,32 @@ export default function Mix() {
                 </SkeletonTheme> 
                 <Skeleton containerClassName="flex-1" baseColor="#535157" highlightColor="#7b8085" height={1000}></Skeleton>
                 </div> */}
-                </>
-               
+              </>
             )}
 
             {loading && isAiGenerating && mixDetails.length === 0 ? (
-              
               <div className="relative flex w-full flex-col gap-8 justify-center items-center text-center">
-             <h2 className="absolute top-0 z-50 font-archivo text-white text-2xl font-extrabold">
-                AI is generating your Mix...
-              </h2>
+                <h2 className="absolute top-0 z-50 font-archivo text-white text-2xl font-extrabold">
+                  AI is generating your Mix...
+                </h2>
 
-              <div className="flex flex-col gap-8 z-20">
-
-              <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={160} width={320}>
-
-             <Skeleton containerClassName="flex-1"></Skeleton>
-             <Skeleton containerClassName="flex-1" ></Skeleton>
-             <Skeleton containerClassName="flex-1"></Skeleton>
-             <Skeleton containerClassName="flex-1"></Skeleton>
-             <Skeleton containerClassName="flex-1"></Skeleton>
-             <Skeleton containerClassName="flex-1"></Skeleton>
-             </SkeletonTheme> 
+                <div className="flex flex-col gap-8 z-20">
+                  <SkeletonTheme
+                    baseColor="#535157"
+                    highlightColor="#7b8085"
+                    height={160}
+                    width={320}
+                    borderRadius={20}
+                  >
+                    <Skeleton containerClassName="flex-1"></Skeleton>
+                    <Skeleton containerClassName="flex-1"></Skeleton>
+                    <Skeleton containerClassName="flex-1"></Skeleton>
+                    <Skeleton containerClassName="flex-1"></Skeleton>
+                    <Skeleton containerClassName="flex-1"></Skeleton>
+                    <Skeleton containerClassName="flex-1"></Skeleton>
+                  </SkeletonTheme>
+                </div>
               </div>
-             </div>
             ) : (
               <>
                 {mixDetails && mixDetails.length > 0 ? (

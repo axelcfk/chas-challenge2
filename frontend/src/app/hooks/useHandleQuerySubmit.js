@@ -2,7 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useSearch } from "../context/SearchContext";
-import { useState } from "react";
+import { useState, useRef } from "react";
+
+const changeSpeed = (videoRef, speed) => {
+  if (videoRef.current) {
+    videoRef.current.playbackRate = speed;
+  }
+};
 
 export const useHandleQuerySubmit = () => {
   const router = useRouter();
@@ -17,11 +23,15 @@ export const useHandleQuerySubmit = () => {
     resetState,
   } = useSearch();
 
+  const videoRef = useRef(null);
+
   const handleQuerySubmit = async () => {
     setInput("");
     setLoading(true);
     setMovies([]);
     setShowVideo(true);
+
+    changeSpeed(videoRef, 6.0); // ändra hastighet
 
     const token = localStorage.getItem("token");
 
@@ -40,19 +50,26 @@ export const useHandleQuerySubmit = () => {
           setLoading(false);
           setErrorMessage("");
           setShowVideo(false);
+
+          changeSpeed(videoRef, 3.0);
+
           router.push("/chatpage2");
         }, 10);
       } else {
         setErrorMessage(data.suggestion);
         setLoading(false);
         setShowVideo(false);
+
+        changeSpeed(videoRef, 1.0);
       }
     } catch (error) {
       console.error("Failed to fetch AI suggestion:", error);
       setLoading(false);
       setShowVideo(false);
+
+      changeSpeed(videoRef, 1.0);
     }
   };
 
-  return { handleQuerySubmit, setInput };
+  return { handleQuerySubmit, setInput, videoRef };
 };

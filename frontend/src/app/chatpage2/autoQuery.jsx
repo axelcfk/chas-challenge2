@@ -41,6 +41,45 @@ const autoQueryList = [
   "I want movies with iconic soundtracks",
   "I'm in the mood for political dramas",
   "I need movies with a lot of plot twists",
+  "I want movies with epic adventures",
+  "Recommend movies with strong leads",
+  "I need movies with feel-good vibes",
+  "I'm in the mood for spy thrillers",
+  "I want movies with alien invasions",
+  "Recommend movies with time travel",
+  "I need movies with epic romances",
+  "I'm in the mood for musical films",
+  "I want movies with plot twists",
+  "Recommend movies with gangsters",
+  "I need movies with clever heists",
+  "I'm in the mood for cult classics",
+  "I want movies with true stories",
+  "Recommend movies with road trips",
+  "I need movies with magic realism",
+  "I'm in the mood for zombie flicks",
+  "I want movies with martial arts",
+  "Recommend movies with sports drama",
+  "I need movies with epic journeys",
+  "I'm in the mood for spy comedies",
+  "I want movies with visual poetry",
+  "Recommend movies with rock bands",
+  "I need movies with fairy tales",
+  "I'm in the mood for ghost stories",
+  "I want movies with animal heroes",
+  "Recommend movies with ancient myths",
+  "I need movies with teen romance",
+  "I'm in the mood for horror films",
+  "I want movies with ancient epics",
+  "Recommend movies with robot wars",
+  "I need movies with bank heists",
+  "I'm in the mood for pirate tales",
+  "I want movies with urban legends",
+  "Recommend movies with royal drama",
+  "I need movies with jazz music",
+  "I'm in the mood for nature films",
+  "I want movies with haunted houses",
+  "Recommend movies with cooking shows",
+  "I need movies with folklore tales",
 ];
 
 const shuffleArray = (array) => {
@@ -65,7 +104,7 @@ export default function AutoQuery({ input, setInput }) {
       {autoQuery.slice(0, 2).map((query, index) => (
         <p
           key={index}
-          className={`rounded-full h-10 flex justify-center items-center hover:cursor-pointer ${
+          className={`rounded-full font-archivo font-semibold h-10 text-lg flex justify-center items-center hover:cursor-pointer ${
             input === query ? "bg-slate-100 text-slate-950" : ""
           }`}
           onClick={() => setInput(query)}
@@ -77,7 +116,7 @@ export default function AutoQuery({ input, setInput }) {
       {autoQuery.slice(2, 4).map((query, index) => (
         <p
           key={index + 2}
-          className={`rounded-full h-10 md:flex hidden justify-center items-center hover:cursor-pointer ${
+          className={`rounded-full  h-10 md:flex hidden justify-center items-center hover:cursor-pointer ${
             input === query ? "bg-slate-100 text-slate-950" : ""
           }`}
           onClick={() => setInput(query)}
