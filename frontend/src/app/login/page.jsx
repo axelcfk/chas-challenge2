@@ -25,12 +25,14 @@ export default function Login() {
 
   return (
     <div className="h-full bg-black flex flex-col justify-between items-center px-5 pt-40">
-      <div className=" ">
-        <span className="absolute top-2 left-4  py-2 text-white rounded-md font-medium  text-3xl">
+      <div className="absolute top-2 left-4 no-underline mt-3">
+        <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-xl">
             <FaDotCircle />
           </span>
-          <span className="font-archivo font-extrabold no-underline">LUDI</span>
+          <span className="">
+            <span className="font-archivo font-extrabold text-white">LUDI</span>
+          </span>
         </span>
       </div>
       <div className=" w-full">

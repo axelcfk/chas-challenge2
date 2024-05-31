@@ -70,7 +70,13 @@ export default function Navbar() {
   }
 
   return (
-    <nav className=" text-white fixed top-0 left-0 right-0 z-50 ">
+    <nav
+      className=" text-white fixed top-0 left-0 right-0 z-50 "
+      // style={{
+      //   backdropFilter: "blur(4px)",
+      //   backgroundColor: "rgba(0, 0, 0, 0.3)",
+      // }}
+    >
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16 ">
           {!isSearchOpen && (

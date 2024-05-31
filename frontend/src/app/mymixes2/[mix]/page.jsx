@@ -359,6 +359,7 @@ export default function Mix() {
                     highlightColor="#7b8085"
                     height={160}
                     width={320}
+                    borderRadius={20}
                   >
                     <Skeleton containerClassName="flex-1"></Skeleton>
                     <Skeleton containerClassName="flex-1"></Skeleton>

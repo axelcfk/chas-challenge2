@@ -208,8 +208,9 @@ export default function ChatPage2() {
           ) : (
             <div className=" flex justify-center items-center">
               <p className="px-5 text-xl flex flex-col items-center h-24">
-                <span className="mb-4 text-2xl font-semibold text-center">
-                  Finding the best match for you...
+                <span className="absolute top-50 bottom-50 mb-4 text-4xl font-archivo  font-extrabold text-center">
+                  Finding the best <br />
+                  match for you...
                 </span>
               </p>
             </div>

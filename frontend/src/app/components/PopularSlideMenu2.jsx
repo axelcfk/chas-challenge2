@@ -4,7 +4,7 @@ import { host } from "../utils";
 import SlideMenu from "./SlideMenu";
 import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css'
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function PopularSlideMenu2() {
   const [popularMoviesData, setPopularMoviesData] = useState(null);
@@ -113,52 +113,50 @@ export default function PopularSlideMenu2() {
   if (popularListDetails.length === 0) {
     return (
       <>
-       {/*  <div
+        {/*  <div
           className="flex flex-col justify-center items-center md:items-start pb-10 h-80 px-8 md:px-20  bg-slate-950 text-slate-100"
           tabIndex={0}
         >
           <p>Loading popular movies...</p>
          */}
         <div className="flex gap-2 w-full h-[391px]">
-
-         <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={391} width={160}>
-
-          <Skeleton containerClassName="flex-1"></Skeleton>
-          <Skeleton containerClassName="flex-1" ></Skeleton>
-          <Skeleton containerClassName="flex-1"></Skeleton>
-         </SkeletonTheme>
+          <SkeletonTheme
+            baseColor="#535157"
+            highlightColor="#7b8085"
+            height={391}
+            width={160}
+            borderRadius={20}
+          >
+            <Skeleton containerClassName="flex-1"></Skeleton>
+            <Skeleton containerClassName="flex-1"></Skeleton>
+            <Skeleton containerClassName="flex-1"></Skeleton>
+          </SkeletonTheme>
         </div>
-          
-          
-          
-          
-      {/*   </div> */}
+
+        {/*   </div> */}
       </>
     );
   }
   return (
     <>
+      <SlideMenu>
+        {popularListDetails.map((movie, index) => (
+          <MovieCardWatchAndLike
+            key={index}
+            //isLiked={true} // såklart är filmen liked eftersom den är i likelistan.... :)
+            voteAverage={movie.voteAverage}
+            isLiked={movie.isLiked}
+            isInWatchList={movie.isInWatchList}
+            id={movie.id}
+            title={movie.title}
+            poster={movie.poster}
+            overview={movie.overview}
+            streamingServices={movie.flatrate}
+          ></MovieCardWatchAndLike>
+        ))}
+      </SlideMenu>
 
-        <SlideMenu>
-          {popularListDetails.map((movie, index) => (
-            <MovieCardWatchAndLike
-              key={index}
-              //isLiked={true} // såklart är filmen liked eftersom den är i likelistan.... :)
-              voteAverage={movie.voteAverage}
-              isLiked={movie.isLiked}
-              isInWatchList={movie.isInWatchList}
-              id={movie.id}
-              title={movie.title}
-              poster={movie.poster}
-              overview={movie.overview}
-              streamingServices={movie.flatrate}
-            ></MovieCardWatchAndLike>
-          ))}
-        </SlideMenu>
-
-
-
-     {/*  {popularListDetails && popularListDetails.length > 0 ? (
+      {/*  {popularListDetails && popularListDetails.length > 0 ? (
         <SlideMenu>
           {popularListDetails.map((movie, index) => (
             <MovieCardWatchAndLike
@@ -182,8 +180,6 @@ export default function PopularSlideMenu2() {
         </div> 
       )}
      */}
-      
-
     </>
   );
 }
