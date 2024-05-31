@@ -144,13 +144,13 @@ export default function FetchedMovies({
             className="w-full  flex justify-center items-center rounded-2xl"
             style={{
               border: "0.8px solid grey",
-              backgroundColor: "rgba(141, 126, 255, 0.1)",
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
             }}
           >
             <div
               className="flex flex-col justify-center items-center w-full z-0"
               style={{
-                backgroundColor: "rgba(141, 126, 255, 0.1)",
+                backgroundColor: "rgba(141, 126, 255, 0.3)",
               }}
             >
               <div className="flex flex-col justify-center items-center w-full relative">
@@ -244,12 +244,12 @@ export default function FetchedMovies({
                 <div className="w-auto flex justify-center items-center pt-5 px-2 ">
                   <button
                     onClick={() => {
-                      handleButtonClicked(movie.id); // Toggles like state
-                      if (!watches[movie.id]) {
-                        postAddToWatchList(movie.id, "movie", movie.title); // Adds to like list if not liked
-                      } else {
-                        postRemoveFromWatchList(movie.id, "movie", movie.title); // Removes from like list if liked
-                      }
+                      handleButtonClicked(movie.id);
+                      // if (!watches[movie.id]) {
+                      //   postAddToWatchList(movie.id, "movie", movie.title); // Adds to like list if not liked
+                      // } else {
+                      //   postRemoveFromWatchList(movie.id, "movie", movie.title); // Removes from like list if liked
+                      // }
                     }}
                     className={`w-full h-10 ${
                       !watches[movie.id]

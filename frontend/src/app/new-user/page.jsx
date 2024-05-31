@@ -170,7 +170,7 @@ export default function MovieSelection() {
             className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
             onClick={() => router.push("/startpage")}
           >
-            <span className="px-2 text-xl">Continue</span> <FaArrowRight />
+            <span className="px-2 text-xl">Done</span> <FaArrowRight />
           </button>
         )}
       </div>
