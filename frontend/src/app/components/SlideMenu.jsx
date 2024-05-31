@@ -35,7 +35,7 @@ export default function SlideMenu({ children, placeholder = false }) {
             <div className="flex flex-col gap-8 justify-center items-center w-[50%] text-start">
               <h2 className="flex justify-center items-center w-64 text-2xl font-archivo font-extrabold uppercase"><span>Start adding <span className="text-3xl">+</span> Movies to your Watchlist</span> </h2>
               <Link className="no-underline" href={"/chatpage2"}>
-                  <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-[#CFFF5E] w-64 h-16 rounded-full font-extrabold font-archivo">
+                  <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo">
                     Find Movies <FaArrowRight color="rgb(2 6 23)" size={"30px"} />
                   </button>
                 </Link>

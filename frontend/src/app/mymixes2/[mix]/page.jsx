@@ -233,6 +233,7 @@ export default function Mix() {
 
   return (
     <div className="bg-[#110A19] min-h-screen p-8 pb-0 pt-20">
+     
       <div className="h-full w-full flex flex-col items-center pt-8">
         <button
           className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
@@ -265,7 +266,7 @@ export default function Mix() {
         {/* min-h-full  */}
         <div
           //bg-[#1b1028]
-          className="//shadow-[rgba(0,0,15,0.5)_0px_0px_40px_0px] //shadow-[#CFFF5E] shadow-container shadow-container::after rounded-tr-3xl rounded-tl-3xl min-h-[1000px pt-4 pb-8 px-8 border border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8 w-full"
+          className="//shadow-[rgba(0,0,15,0.5)_0px_0px_40px_0px] //shadow-[#CFFF5E] relative shadow-container rounded-tr-3xl rounded-tl-3xl min-h-[1000px] pt-4 pb-8 px-8 border border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8 w-full"
           // style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
           //style={{boxShadow: '#CFFF5E 0px 0px 40px 0px, #1b1028 0px -10px 20px -10px' }}
         >
@@ -330,6 +331,7 @@ export default function Mix() {
 
             {loading === true && isGettingStoredMix && (
               <>
+
                 {console.log("Finding stored mix...")}
                 {/* <div className="flex min-h-[1000px]  w-full flex-col gap-8 justify-center items-center">
 
@@ -350,7 +352,7 @@ export default function Mix() {
             {loading && isAiGenerating && mixDetails.length === 0 ? (
               <div className="relative flex w-full flex-col gap-8 justify-center items-center text-center">
                 <h2 className="absolute top-0 z-50 font-archivo text-white text-2xl font-extrabold">
-                  AI is generating your Mix...
+                  {/* AI is generating your Mix... */}
                 </h2>
 
                 <div className="flex flex-col gap-8 z-20">
