@@ -180,7 +180,7 @@ export default function ChatPage2() {
     <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
       {/* <Navbar /> */}
       {errorMessage && !loading && (
-        <div className="h-full flex justify-center items-center">
+        <div className="h-full flex justify-center items-center pt-40">
           <p className="text-3xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
@@ -226,7 +226,7 @@ export default function ChatPage2() {
                 onClick={() => resetState()}
                 className="pb-4  bg-transparent border-none hover:cursor-pointer"
               >
-                <TbEdit size={35} color="rgb(148 163 184)" />
+                <TbEdit size={35} color="#CFFF5E" />
               </button>
             </div>
             <InputField
@@ -259,7 +259,7 @@ export default function ChatPage2() {
               input={input}
               handleQuerySubmit={handleQuerySubmit}
               handleInputChange={handleInputChange}
-              placeholder={"Send a request to Ludi AI"}
+              placeholder={"Send a request to Ludi"}
               heightDiv={"h-14"}
             />
           </div>

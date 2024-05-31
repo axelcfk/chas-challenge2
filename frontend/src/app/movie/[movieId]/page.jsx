@@ -520,8 +520,8 @@ export default function MoviePage() {
                           </div>
                         ) : (
                           <div className="flex flex-col justify-center items-center">
-                            <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
-                            <p className="text-[#EA3546] mb-1 text-sm font-archivo font-semibold">
+                            <FaHeart className="h-5 w-5 text-[#CFFF5E] mb-1" />
+                            <p className="text-[#CFFF5E] mb-1 text-sm font-archivo font-semibold">
                               Unlike
                             </p>
                           </div>
@@ -529,7 +529,7 @@ export default function MoviePage() {
                       </div>
                     </div>
                     <div className="w-full flex flex-col justify-center items-center gap-4">
-                      <div className="relative w-full">
+                      <div className="absolute left-4 right-4 mt-8">
                         <button
                           onClick={() => {
                             handleButtonClicked(movieDetails.id)
@@ -552,9 +552,9 @@ export default function MoviePage() {
                           }
                           className={`w-full h-10 ${
                             !watches[movieDetails.id]
-                              ? "bg-[#3D3B8E]"
-                              : "bg-[#CFFF5E]"
-                          } flex justify-center items-center rounded-full px-3 border-none`}
+                              ? "bg-transparent "
+                              : "bg-[#CFFF5E] border-none"
+                          } flex justify-center items-center rounded-full px-3  border-2 border-solid`}
                         >
                           {!watches[movieDetails.id] ? (
                             <FaPlus className="text-xl text-gray-200" />
@@ -577,24 +577,35 @@ export default function MoviePage() {
                         </button>
                         <button
                           onClick={handleToggleDropdown}
-                          className="absolute right-0 top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 border-none cursor-pointer px-3"
+                          className="absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950  cursor-pointer px-3"
                         >
-                          <SlArrowDown fontWeight={"bold"} />
+                          <SlArrowDown fontFamily="archivo" fontWeight={600} />
                         </button>
                         {dropdownOpen && (
-                          <div className="absolute top-12 right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
-                            <ul>
+                          <div
+                            className="absolute left-4 right-4 mt-2  bg-white border rounded shadow-lg z-50"
+                            style={{
+                              border: "0.9px solid grey",
+
+                              backdropFilter: "blur(10px)",
+                              backgroundColor: "rgba(0, 0, 0, 0.3)",
+                            }}
+                          >
+                            <ul className="no-list-style">
                               {userLists.map((list) => (
                                 <li
                                   key={list.id}
-                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                                  className="px-4 py-2  cursor-pointer"
                                   onClick={() => handleAddMovieToList(list.id)}
+                                  style={{
+                                    border: "0.9px solid grey",
+                                  }}
                                 >
                                   {list.name}
                                 </li>
                               ))}
                               <li
-                                className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                                className=" text-slate-50  text-xl font-semibold font-archivo px-4 py-2  cursor-pointer"
                                 onClick={handleOpenModal}
                               >
                                 Create New List
@@ -606,7 +617,7 @@ export default function MoviePage() {
                     </div>
                   </div>
                 </div>
-                <div className="h-full lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
+                <div className="h-full mt-16 flex-col justify-start md:justify-center items-start  w-full md:w-full ">
                   <div className="h-full pb-5" onClick={handleToggle}>
                     {!toggleExpanded ? (
                       <div>
@@ -763,8 +774,8 @@ export default function MoviePage() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-md w-80">
+        <div className="fixed inset-0  flex items-center justify-center z-50">
+          <div className="bg-white p-6  rounded shadow-md w-80">
             <h2 className="text-xl font-bold mb-4">Create New List</h2>
             <input
               type="text"
@@ -775,7 +786,7 @@ export default function MoviePage() {
             ></input>
             <button
               onClick={handleCreateNewList()}
-              className="w-full p-2 bg-blue-500 text-white rounded"
+              className="w-full p-2 bg-[#CFFF5E] text-white rounded"
             >
               Create
             </button>

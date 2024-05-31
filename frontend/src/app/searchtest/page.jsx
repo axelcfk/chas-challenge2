@@ -19,6 +19,19 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   // API key for fetching movies, replace with your actual API key
   const movieAPI_KEY = "a97f158a2149d8f803423ee01dec4d83";
 
+  const serviceLogos = {
+    Netflix: "/Netflix1.svg",
+    Max: "/HBO1.svg",
+    Viaplay: "/Viaplay1.svg",
+    "Amazon Prime Video": "/Prime1.svg",
+    "Disney Plus": "/Disney1.svg",
+    "Tele2 Play": "/tele2play.png",
+    "Apple TV": "/AppleTv.svg",
+    SVT: "/SVTPlay.svg",
+    TV4Play: "/TV4Play.svg",
+    "Discovery+": "/Discovery+.svg",
+  };
+
   useEffect(() => {
     // Fetching movies based on the input value
     if (inputValue) {
@@ -205,41 +218,46 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
       {movies.length > 0 && (
         <ul className="mt-4 absolute z-10 bg-white text-black opacity-90 rounded-md w-full max-w-full max-h-[500px] overflow-y-scroll">
           {filteredMovies.map((movie) => (
-  <li className="list-none p-2 hover:bg-gray-200" key={movie.id}>
-    <Link
-      className="text-black no-underline hover:underline flex items-center"
-      href={`/movie/${encodeURIComponent(movie.id)}`}
-      onClick={handleCloseLinkClick} /* Add onClick handler */
-    >
-      <img
-        src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-        alt={movie.title}
-        className="w-10 h-10 mr-2"
-        aria-hidden="true"
-      />
-      <span className="mr-2">{movie.title}</span> {/* Add margin-right */}
-      {movieProviders &&
-        movieProviders.map((movieProviderObj) => {
-          if (movieProviderObj.movieId === movie.id) {
-            return (
-              <div key={movieProviderObj.movieId}>
-                {movieProviderObj.providers.noProviders && (
-                  <p>{movieProviderObj.providers.noProviders}</p>
-                )}
-                {movieProviderObj.providers.flatrate && (
-                  <p>
-                    {movieProviderObj.providers.flatrate[0].provider_name}
-                  </p>
-                )}
-              </div>
-            );
-          }
-          return null;
-        })}
-    </Link>
-  </li>
-))}
-
+            <li className="list-none p-2 hover:bg-gray-200" key={movie.id}>
+              <Link
+                className="text-black no-underline hover:underline flex items-center"
+                href={`/movie/${encodeURIComponent(movie.id)}`}
+                onClick={handleCloseLinkClick} /* Add onClick handler */
+              >
+                <img
+                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                  alt={movie.title}
+                  className="w-10 h-10 mr-2"
+                  aria-hidden="true"
+                />
+                <span className="mr-2">{movie.title}</span>{" "}
+                {/* Add margin-right */}
+                {movieProviders &&
+                  movieProviders.map((movieProviderObj) => {
+                    if (movieProviderObj.movieId === movie.id) {
+                      return (
+                        <div key={movieProviderObj.movieId}>
+                          {movieProviderObj.providers.noProviders && (
+                            <p>{movieProviderObj.providers.noProviders}</p>
+                          )}
+                          {movieProviderObj.providers.flatrate && (
+                            <img
+                              src={
+                                serviceLogos[
+                                  movieProviderObj.providers.flatrate[0]
+                                    .provider_name
+                                ]
+                              }
+                            />
+                          )}
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
     </div>

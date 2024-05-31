@@ -71,37 +71,42 @@ export default function Navbar() {
 
   return (
     <nav
-    className="text-white fixed top-0 left-0 right-0 z-50"
-    // style={{
-    //   backdropFilter: "blur(4px)",
-    //   backgroundColor: "rgba(0, 0, 0, 0.3)",
-    // }}
-  >
-    <div className="bg-[rgba(0,0,0,0.8)] backdrop-blur-md w-full h-full absolute top-0 left-0 right-0 bottom-0"></div> {/* Added wrapper div for blur effect */}
-    <div className="relative mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="relative flex items-center justify-between h-16 ">
-        {!isSearchOpen && (
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Link className="no-underline" href="/startpage">
-                <span
-                  onClick={() => {
-                    resetState();
-                  }}
-                  className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
-                >
-                  <span className="text-sm text-[#CFFF5E] mt-1">
-                    <FaDotCircle />
+      className="text-white fixed top-0 left-0 right-0 z-50"
+      // style={{
+      //   backdropFilter: "blur(4px)",
+      //   backgroundColor: "rgba(0, 0, 0, 0.3)",
+      // }}
+    >
+      <div
+        className=" backdrop-blur-md  w-full h-full absolute top-0 left-0 right-0 bottom-0"
+        style={{
+          backdropFilter: "blur(30px)",
+        }}
+      ></div>{" "}
+      {/* Added wrapper div for blur effect */}
+      <div className="relative mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative flex items-center justify-between h-16 ">
+          {!isSearchOpen && (
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <Link className="no-underline" href="/startpage">
+                  <span
+                    onClick={() => {
+                      resetState();
+                    }}
+                    className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
+                  >
+                    <span className="text-sm text-[#CFFF5E] mt-1">
+                      <FaDotCircle />
+                    </span>
+                    <span className="font-archivo font-extrabold no-underline">
+                      LUDI
+                    </span>
                   </span>
-                  <span className="font-archivo font-extrabold no-underline">
-                    LUDI
-                  </span>
-                </span>
-              </Link>
+                </Link>
+              </div>
             </div>
-          </div>
-        )}
-  
+          )}
 
           <div className="flex items-center md:hidden w-full justify-end">
             <div className="relative">
@@ -115,20 +120,22 @@ export default function Navbar() {
                 </button>
               )}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-4  bg-transparent rounded-2xl z-20  w-44">
+                <div
+                  className="absolute right-0 p-8 mt-2  bg-slate-50 rounded-2xl z-20  w-60"
+                  style={{
+                    border: "0.9px solid grey",
+                    backgroundColor: "rgba(141, 126, 255, 1)",
+                  }}
+                >
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
                     className="flex justify-center items-center text-base bg-[#CFFF5E] rounded-full  border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"
-                    style={{
-                      border: "0.9px solid grey",
-                      backdropFilter: "blur(10px)",
-                    }}
                   >
-                    AI Search
+                    AI-Search
                   </button>
                   <button
                     onClick={() => handleSearchTypeSelect("movie")}
-                    className="flex justify-center items-center text-base bg-[#CFFF5E] px-4 mt-2 py-2 font-archivo border-none font-bold h-12 rounded-full text-slate-950 hover:bg-gray-100 w-full text-left"
+                    className="flex justify-center items-center text-base bg-[#CFFF5E] px-4 mt-1 py-2 font-archivo border-none font-bold h-12 rounded-full text-slate-950 hover:bg-gray-100 w-full text-left"
                     style={{
                       border: "0.9px solid grey",
                       backdropFilter: "blur(10px)",
@@ -262,7 +269,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 pt-24 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 mt-60 text-xl  rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>
