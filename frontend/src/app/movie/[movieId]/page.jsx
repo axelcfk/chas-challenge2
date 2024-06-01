@@ -748,7 +748,7 @@ export default function MoviePage() {
                 type="text"
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
-                className="w-full p-2 bg-[#CFFF5E] mb-4 border rounded-full"
+                className="w-full p-2 mb-4 border rounded-full"
                 placeholder="List Name"
               ></input>
               <button
@@ -759,7 +759,7 @@ export default function MoviePage() {
               </button>
               <button
                 onClick={handleCloseModal}
-                className="w-full p-2 mt-2 text-gray-600"
+                className="w-full p-2 mt-2 text-gray-600 rounded-full"
               >
                 Cancel
               </button>

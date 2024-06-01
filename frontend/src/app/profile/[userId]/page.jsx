@@ -8,7 +8,6 @@ import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
 import WatchListForProfile from "@/app/components/WatchListForProfile";
 import Link from "next/link";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
-import Navbar from "@/app/components/Navbar";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
@@ -20,7 +19,19 @@ export default function Profile() {
   const tabNames = ["Profile", "Watchlist", "My lists"];
   const tabIndex = tabNames.indexOf(activeTab);
 
-  const removeCustomList = () => {};
+  const removeCustomList = async (listId) => {
+    try {
+      const response = await fetch(`http://localhost:3010/me/lists/${listId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP status ${response.status}`);
+      }
+      setUserLists(userLists.filter((list) => list.id !== listId));
+    } catch (error) {
+      console.error("Failed to delete list", error);
+    }
+  };
 
   const removeMovieFromCustomList = () => {};
 
@@ -90,8 +101,16 @@ export default function Profile() {
     fetchUserLists();
   }, []);
 
+  useEffect(() => {
+    const storedTab = localStorage.getItem("activeTab");
+    if (storedTab) {
+      setActiveTab(storedTab);
+    }
+  }, []);
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+    localStorage.setItem("activeTab", tab);
   };
 
   const handleCreateNewList = async () => {
@@ -116,8 +135,8 @@ export default function Profile() {
 
   return (
     <ProtectedRoute>
-      <main>
-        <div className="flex items-center flex-col pb-12">
+      <main className="mt-8">
+        <div className="flex items-center flex-col pb-12 bg-bg-[#110A1A]">
           {userData ? (
             <div className="flex items-center flex-col space-y-5 mt-12">
               <button className="bg-transparent border-none hover:cursor-pointer">
@@ -133,7 +152,7 @@ export default function Profile() {
             <p>Loading user data...</p>
           )}
         </div>
-        <div className="menu bg-[#110A19] flex flex-row justify-between px-8 items-center">
+        <div className="menu flex flex-row justify-between px-8 items-center">
           {tabNames.map((tab) => (
             <button
               key={tab}
@@ -198,12 +217,13 @@ export default function Profile() {
         {activeTab === "My lists" && (
           <div className="gradient-border-top bg-[#201430] p-8 mt-8">
             <div className="py-8">
-              <button
+              {/* {/* <button
                 onClick={handleCreateNewList}
                 className="py-2 px-4 bg-slate-100 border-none text-slate-900 font-semibold h-12 rounded-full text-lg"
               >
                 Create new list
-              </button>
+              </button> */}
+
               {loadingLists ? (
                 <p>Loading lists...</p>
               ) : (
@@ -212,13 +232,25 @@ export default function Profile() {
                     <p className="text-2xl">No lists created</p>
                   ) : (
                     userLists.map((list) => (
-                      <div key={list.id} className="my-4">
-                        <Link href={`/my-customlist/${list.id}`}>
-                          <h4 className="text-lg font-bold hover:underline">
-                            {list.name}
-                          </h4>
-                        </Link>
-                        <button>ta bort lista</button>
+                      <div key={list.id} className="mb-10">
+                        <div className="my-4 flex flex-row justify-between">
+                          <Link
+                            href={`/my-customlist/${list.id}`}
+                            className="no-underline text-[#CFFF5E]"
+                          >
+                            <h2 className="text-xl font-bold hover:underline">
+                              {list.name}
+                            </h2>
+                          </Link>
+                          <div className="h-8 float-end">
+                            <button
+                              onClick={() => removeCustomList(list.id)}
+                              className=""
+                            >
+                              Delete list
+                            </button>
+                          </div>
+                        </div>
                         {list.movies.length === 0 ? (
                           <p className="text-2xl">No movies in this list</p>
                         ) : (

@@ -2003,7 +2003,6 @@ function parseMovieNames(response) {
   return names;
 }
 
-
 function parseResponse(response) {
   // const movieRegex = /MOVIE NAME\d+:\s*([^,]+),?/g;
   const movieRegex = /MOVIE NAME\d+:\s*([^\n,]+)/g;
@@ -3049,6 +3048,22 @@ app.get("/me/lists/:listId", (req, res) => {
 
   return res.status(200).json(list);
 });
+
+// Endpoint för att ta bort en lista
+app.delete("/me/lists/:listId", (req, res) => {
+  const { listId } = req.params;
+
+  const listIndex = lists.findIndex((l) => l.id === parseInt(listId));
+  if (listIndex === -1) {
+    return res.status(404).json({ error: "List not found" });
+  }
+
+  lists.splice(listIndex, 1);
+
+  return res.status(200).json({ message: "List deleted" });
+});
+
+// Endpoint för att ta bort en film från en lista
 
 ///////////////////////////////////////////////////
 
