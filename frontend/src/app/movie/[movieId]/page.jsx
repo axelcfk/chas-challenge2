@@ -432,239 +432,243 @@ export default function MoviePage() {
           </div>
         )}
 
-        {loading ? (
-          <LoadingIndicator />
-        ) : (
-          <div className="h-full flex flex-col justify-center items-center relative z-10 px-8">
-            {movieDetails.title ? (
-              <div className="flex flex-col justify-center items-center text-slate-400 ">
-                <div className="flex flex-col  justify-center items-center ">
-                  <div
-                    className="w-full flex flex-row justify-center items-center parallax-container rounded-lg p-5"
-                    // style={{
-                    //   backdropFilter: "blur(15px)",
-                    //   backgroundColor: "rgba(0, 0, 0, 0.1)",
-                    // }}
-                    ref={parallaxRef}
-                  >
-                    <div className="w-full ">
-                      <h2 className=" font-semibold  text-slate-50 ">
-                        {movieDetails.title}
-                      </h2>
-                      <div className="flex text-sm">
-                        <p>
-                          {movieDetails.release.slice(0, 4)}
-                          <span className="text-sm mx-2">●</span>
-                        </p>
-                        <p>{movieDetails.runtime.toString()} mins</p>
-                      </div>
-                      <p className="font-semibold uppercase text-sm">
-                        {credits.director}
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
+        <div className="h-full flex flex-col justify-center items-center relative z-10 px-8">
+          {movieDetails.title ? (
+            <div className="flex flex-col justify-center items-center text-slate-400 ">
+              <div className="flex flex-col  justify-center items-center ">
+                <div
+                  className="w-full flex flex-row justify-center items-center parallax-container rounded-lg p-5"
+                  // style={{
+                  //   backdropFilter: "blur(15px)",
+                  //   backgroundColor: "rgba(0, 0, 0, 0.1)",
+                  // }}
+                  ref={parallaxRef}
+                >
+                  <div className="w-full ">
+                    <h2 className=" font-semibold  text-slate-50 ">
+                      {movieDetails.title}
+                    </h2>
+                    <div className="flex text-sm">
+                      <p>
+                        {movieDetails.release.slice(0, 4)}
+                        <span className="text-sm mx-2">●</span>
                       </p>
-                      <div className=" h-10 flex items-end">
-                        <p className="font-semibold  flex justify-center items-center">
-                          <span className={`mr-2 font-normal text-yellow-400`}>
-                            <FaStar />
-                          </span>
-                          <span
-                            className={`${
-                              movieDetails.voteAverage === 0
-                                ? "text-sm"
-                                : "text-xl"
-                            } text-zinc-100`}
-                          >
-                            {movieDetails.voteAverage === 0
-                              ? "NO RATING AVAILABLE"
-                              : movieDetails.voteAverage.toFixed(1)}
-                          </span>
-                        </p>
-                      </div>
-                      {/* <p>{movieDetails.runtime.toString()} mins</p> */}
+                      <p>{movieDetails.runtime.toString()} mins</p>
                     </div>
-                    <div className="flex flex-col w-full justify-center items-center gap-4 ">
-                      <div className="relative ">
-                        <img
-                          className=" h-52 md:h-96 rounded-md w-auto"
-                          src={movieDetails.poster}
-                          alt="Movie Poster"
-                          style={{ border: "0.5px solid grey" }}
-                        />
-                        <div
-                          style={{
-                            border: "0.9px solid grey",
-                            backdropFilter: "blur(4px)",
-                            backgroundColor: "rgba(0, 0, 0, 0.5)",
-                          }}
-                          onClick={() => {
-                            handleLikeButtonClicked(movieDetails.id);
-                            if (!likes[movieDetails.id]) {
-                              postAddToLikeList(
-                                movieDetails.id,
-                                "movie",
-                                movieDetails.title
-                              );
-                            } else {
-                              postRemoveFromLikeList(
-                                movieDetails.id,
-                                "movie",
-                                movieDetails.title
-                              );
-                            }
-                          }}
-                          className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
+                    <p className="font-semibold uppercase text-sm">
+                      {credits.director}
+                    </p>
+                    <div className=" h-10 flex items-end">
+                      <p className="font-semibold  flex justify-center items-center">
+                        <span className={`mr-2 font-normal text-yellow-400`}>
+                          <FaStar />
+                        </span>
+                        <span
+                          className={`${
+                            movieDetails.voteAverage === 0
+                              ? "text-sm"
+                              : "text-xl"
+                          } text-zinc-100`}
                         >
-                          {!likeButtonClicked ? (
-                            <div className="flex flex-col justify-center items-center">
-                              <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
-                              <p className="text-slate-100 mb-1 text-sm">
-                                Like
-                              </p>
-                            </div>
+                          {movieDetails.voteAverage === 0
+                            ? "NO RATING AVAILABLE"
+                            : movieDetails.voteAverage.toFixed(1)}
+                        </span>
+                      </p>
+                    </div>
+                    {/* <p>{movieDetails.runtime.toString()} mins</p> */}
+                  </div>
+                  <div className="flex flex-col w-full justify-center items-center gap-4 ">
+                    <div className="relative ">
+                      <img
+                        className=" h-52 md:h-96 rounded-md w-auto"
+                        src={movieDetails.poster}
+                        alt="Movie Poster"
+                        style={{ border: "0.5px solid grey" }}
+                      />
+                      <div
+                        style={{
+                          border: "0.9px solid grey",
+                          backdropFilter: "blur(4px)",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                        onClick={() => {
+                          handleLikeButtonClicked(movieDetails.id);
+                          if (!likes[movieDetails.id]) {
+                            postAddToLikeList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            );
+                          } else {
+                            postRemoveFromLikeList(
+                              movieDetails.id,
+                              "movie",
+                              movieDetails.title
+                            );
+                          }
+                        }}
+                        className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
+                      >
+                        {!likeButtonClicked ? (
+                          <div className="flex flex-col justify-center items-center">
+                            <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
+                            <p className="text-slate-100 mb-1 text-sm">Like</p>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col justify-center items-center">
+                            <FaHeart className="h-5 w-5 text-[#CFFF5E] mb-1" />
+                            <p className="text-[#CFFF5E] mb-1 text-sm font-archivo font-semibold">
+                              Liked
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-full flex flex-col justify-center items-center gap-4">
+                      <div className="absolute left-4 right-4 mt-8">
+                        <button
+                          onClick={() => handleButtonClicked(movieDetails.id)}
+                          className={`w-full h-10 ${
+                            !watches[movieDetails.id]
+                              ? "bg-transparent"
+                              : "bg-[#CFFF5E] border-none"
+                          } flex justify-center items-center rounded-full px-3 border-none`}
+                        >
+                          {!watches[movieDetails.id] ? (
+                            <FaPlus className="text-xl text-gray-200" />
                           ) : (
-                            <div className="flex flex-col justify-center items-center">
-                              <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
-                              <p className="text-[#EA3546] mb-1 text-sm font-archivo font-semibold">
-                                Unlike
-                              </p>
-                            </div>
+                            <FaCheck className="text-xl text-slate-950" />
                           )}
-                        </div>
-                      </div>
-                      <div className="w-full flex flex-col justify-center items-center gap-4">
-                        <div className="relative w-full">
-                          <button
-                            onClick={() => handleButtonClicked(movieDetails.id)}
-                            className={`w-full h-10 ${
-                              !watches[movieDetails.id]
-                                ? "bg-[#3D3B8E]"
-                                : "bg-[#CFFF5E]"
-                            } flex justify-center items-center rounded-full px-3 border-none`}
-                          >
-                            {!watches[movieDetails.id] ? (
-                              <FaPlus className="text-xl text-gray-200" />
-                            ) : (
-                              <FaCheck className="text-xl text-slate-950" />
-                            )}
-                            {!watches[movieDetails.id] ? (
-                              <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
-                                <span className="pr-4 font-archivo font-bold">
-                                  WATCHLIST
-                                </span>
-                              </p>
-                            ) : (
-                              <p className="pl-2 w-full text-sm font-light text-slate-950 flex justify-between items-center">
-                                <span className="pr-4 font-archivo font-bold">
-                                  ADDED
-                                </span>
-                              </p>
-                            )}
-                          </button>
-                          <button
-                            onClick={handleToggleDropdown}
-                            className="absolute right-0 top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 border-none cursor-pointer px-3"
-                          >
-                            <SlArrowDown fontWeight={"bold"} />
-                          </button>
-                          {dropdownOpen && (
-                            <div className="absolute top-12 right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
-                              <ul>
-                                {userLists.map((list) => (
-                                  <li
-                                    key={list.id}
-                                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                                    onClick={() =>
-                                      handleAddMovieToList(list.id)
-                                    }
-                                  >
-                                    {list.name}
-                                  </li>
-                                ))}
+                          {!watches[movieDetails.id] ? (
+                            <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
+                              <span className="pr-4 font-archivo font-bold">
+                                WATCHLIST
+                              </span>
+                            </p>
+                          ) : (
+                            <p className="pl-2 w-full text-sm font-light text-slate-950 flex justify-between items-center">
+                              <span className="pr-4 font-archivo font-bold">
+                                ADDED
+                              </span>
+                            </p>
+                          )}
+                        </button>
+                        <button
+                          onClick={handleToggleDropdown}
+                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${!watches[movieDetails.id] && "text-white"}  cursor-pointer px-3`}
+                        >
+                          <SlArrowDown fontFamily="archivo" fontWeight={600} />
+                        </button>
+                        {dropdownOpen && (
+  <div
+  className="absolute left-4 right-4 mt-2  bg-white border rounded shadow-lg z-50"
+  style={{
+    border: "0.9px solid grey",
+
+    backdropFilter: "blur(10px)",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+  }}
+>
+  <ul className="no-list-style">
+                              {userLists.map((list) => (
                                 <li
+                                  key={list.id}
                                   className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                                  onClick={handleOpenModal}
+                                  onClick={() => handleAddMovieToList(list.id)}
                                 >
-                                  Create New List
+                                  {list.name}
                                 </li>
-                              </ul>
-                            </div>
-                          )}
-                        </div>
+                              ))}
+                              <li
+                             className=" text-slate-50  text-xl font-semibold font-archivo px-4 py-2  cursor-pointer"
+                                onClick={handleOpenModal}
+                              >
+                                Create New List
+                              </li>
+                            </ul>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                  <div className="h-full lex flex-col justify-start md:justify-center items-start  w-full md:w-full ">
-                    <div className="h-full pb-5" onClick={handleToggle}>
-                      {!toggleExpanded ? (
-                        <div>
-                          <p className="mt-10 mb-2 font-medium text-lg">
-                            {movieDetails.tagline}
-                          </p>
-                          <div
-                            className={`md:w-full text-base font-light ${
-                              !toggleExpanded ? "fade-out" : ""
-                            }`}
-                          >
-                            {movieDetails.overview.slice(0, 200)}...
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="mt-10 mb-2 font-medium text-lg">
-                            {movieDetails.tagline}
-                          </p>
-                          <div className="md:w-full font-light text-base">
-                            {movieDetails.overview.slice(0, 600)}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className=" w-full mt-10 mb-10 ">
-                    <div className="w-full  ">
-                      {flatrateProviders && (
-                        <h3 className="text-sm text-slate-100 uppercase">
-                          STREAM ON:
-                        </h3>
-                      )}
-                    </div>
-                    <div className=" grid grid-cols-2 gap-2 justify-center items-center mt-2  mb-16 ">
-                      {flatrateProviders ? (
-                        <>{flatrateProviders}</>
-                      ) : (
-                        <p className="uppercase">
-                          No streaming providers in your area
-                        </p>
-                      )}
-                    </div>
-                    <div className="w-full  ">
-                      {rentProviders && (
-                        <h3 className="text-sm text-slate-100 uppercase">
-                          BUY AND RENT ON:
-                        </h3>
-                      )}
-                    </div>
-                    <div className=" grid grid-cols-3 justify-center items-center mt-2  mb-16">
-                      {rentProviders ? (
-                        <>{rentProviders}</>
-                      ) : (
-                        <p>No providers in your area</p>
-                      )}
                     </div>
                   </div>
                 </div>
+                <div className="h-full mt-16 flex-col justify-start md:justify-center items-start  w-full md:w-full ">
+                  <div className="h-full pb-5" onClick={handleToggle}>
+                    {!toggleExpanded ? (
+                      <div>
+                        <p className="mt-10 mb-2 font-medium text-lg">
+                          {movieDetails.tagline}
+                        </p>
+                        <div
+                          className={`md:w-full text-base font-light ${
+                            !toggleExpanded ? "fade-out" : ""
+                          }`}
+                        >
+                          {movieDetails.overview.slice(0, 200)}...
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="mt-10 mb-2 font-medium text-lg">
+                          {movieDetails.tagline}
+                        </p>
+                        <div className="md:w-full font-light text-base">
+                          {movieDetails.overview.slice(0, 600)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className=" w-full mt-10 mb-10 ">
+                  <div className="w-full  ">
+                    {flatrateProviders && (
+                      <h3 className="text-sm text-slate-100 uppercase">
+                        STREAM ON:
+                      </h3>
+                    )}
+                  </div>
+                  <div className=" grid grid-cols-2 gap-2 justify-center items-center mt-2  mb-16 ">
+                    {flatrateProviders ? (
+                      <>{flatrateProviders}</>
+                    ) : (
+                      <p className="uppercase">
+                        No streaming providers in your area
+                      </p>
+                    )}
+                  </div>
+                  <div className="w-full  ">
+                    {rentProviders && (
+                      <h3 className="text-sm text-slate-100 uppercase">
+                        BUY AND RENT ON:
+                      </h3>
+                    )}
+                  </div>
+                  <div className=" grid grid-cols-3 justify-center items-center mt-2  mb-16">
+                    {rentProviders ? (
+                      <>{rentProviders}</>
+                    ) : (
+                      <p>No providers in your area</p>
+                    )}
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className=" flex justify-center items-center h-full">
-                <h2 className=" text-center text-3xl font-semibold">
-                  What kind of film do you want to watch today?
-                </h2>
-              </div>
-            )}
-          </div>
-        )}
-        {/* <div className=" w-screen  flex justify-center items-center"> */}
-        <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
-          {/* <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
+            </div>
+          ) : (
+            <div className=" flex justify-center items-center h-full">
+              <h2 className=" text-center text-3xl font-semibold">
+                What kind of film do you want to watch today?
+              </h2>
+            </div>
+          )}
+        </div>
+      )}
+      {/* <div className=" w-screen  flex justify-center items-center"> */}
+      <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
+        {/* <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
         <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div> */}
           <iframe
             className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
@@ -748,33 +752,33 @@ export default function MoviePage() {
           </div>
         </div>
 
-        {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded shadow-lg w-80">
-              <h2 className="text-xl font-bold mb-4 text-black">Create New List</h2>
-              <input
-                type="text"
-                value={newListName}
-                onChange={(e) => setNewListName(e.target.value)}
-                className="w-full p-2 mb-4 border rounded"
-                placeholder="List Name"
-              ></input>
-              <button
-                onClick={handleCreateNewList}
-                className="w-full p-2 bg-blue-500 text-white rounded-full"
-              >
-                Create
-              </button>
-              <button
-                onClick={handleCloseModal}
-                className="w-full p-2 mt-2 text-gray-600 rounded-full"
-              >
-                Cancel
-              </button>
-            </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-80">
+            <h2 className="text-xl font-bold mb-4 text-black">Create New List</h2>
+            <input
+              type="text"
+              value={newListName}
+              onChange={(e) => setNewListName(e.target.value)}
+              className="w-full p-2 bg-[#CFFF5E] mb-4 border rounded-full"
+              placeholder="List Name"
+            ></input>
+            <button
+              onClick={handleCreateNewList()}
+              className="w-full p-2 bg-blue-500 text-white rounded-full"
+            >
+              Create
+            </button>
+            <button
+              onClick={handleCloseModal()}
+              className="w-full p-2 mt-2 text-gray-600"
+            >
+              Cancel
+            </button>
           </div>
-        )}
-      </div>
-    </ProtectedRoute>
+        </div>
+      )}
+    </div>
+    <ProtectedRoute>
   );
 }

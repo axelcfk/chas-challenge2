@@ -14,6 +14,13 @@ export default function CreateAccount() {
   const [successMessage, setSuccessMessage] = useState("");
   const { login } = useAuth();
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSubmit(event)
+    }
+  };
+
   useEffect(() => {
     let timeout;
     if (successMessage !== "") {
@@ -118,6 +125,7 @@ export default function CreateAccount() {
               placeholder="Enter password..."
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
               className="text-lg h-12  bg-slate-200 rounded-full font-semibold mb-5 px-5"
+              onKeyDown={handleKeyDown}
             />
             {errorMessage !== "" ? (
               <p className="text-[#EA3546] h-2">{errorMessage}</p>

@@ -11,6 +11,7 @@ export default function FirstPage() {
 
   const router = useRouter();
 
+
   return (
     <div className="h-full bg-black flex flex-col px-5 justify-start items-center">
       <div className="absolute top-2 left-4 no-underline mt-3">

@@ -127,7 +127,7 @@ export default function ActorPage() {
 
   return (
     <ProtectedRoute>
-      <div>
+<div className="bg-[#110A1A] pt-20">
         <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 py-2 z-10 text-slate-100 text-xl hover:cursor-pointer"
           onClick={handleNavigation}

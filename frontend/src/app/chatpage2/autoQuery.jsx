@@ -104,7 +104,7 @@ export default function AutoQuery({ input, setInput }) {
       {autoQuery.slice(0, 2).map((query, index) => (
         <p
           key={index}
-          className={`rounded-full font-archivo font-semibold h-10 text-lg flex justify-center items-center hover:cursor-pointer ${
+          className={`rounded-full font-archivo font-semibold h-10 text-base flex justify-center items-center hover:cursor-pointer ${
             input === query ? "bg-slate-100 text-slate-950" : ""
           }`}
           onClick={() => setInput(query)}
@@ -116,7 +116,7 @@ export default function AutoQuery({ input, setInput }) {
       {autoQuery.slice(2, 4).map((query, index) => (
         <p
           key={index + 2}
-          className={`rounded-full  h-10 md:flex hidden justify-center items-center hover:cursor-pointer ${
+          className={`rounded-full font-archivo font-semibold  h-10 md:flex hidden justify-center items-center hover:cursor-pointer ${
             input === query ? "bg-slate-100 text-slate-950" : ""
           }`}
           onClick={() => setInput(query)}

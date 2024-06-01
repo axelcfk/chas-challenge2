@@ -40,7 +40,7 @@ export function MovieCardMix({
 
   const serviceLogos = {
     Netflix: "/Netflix1.svg",
-    "HBO Max": "/HBO1.svg",
+    Max: "/HBO1.svg",
     Viaplay: "/Viaplay1.svg",
     "Amazon Prime Video": "/Prime1.svg",
     "Disney Plus": "/Disney1.svg",
@@ -98,8 +98,8 @@ export function MovieCardMix({
               </div>
             ) : (
               <div className="flex flex-col justify-center items-center">
-                <FaHeart className="h-6 w-6 text-[#EA3546]" />
-                <p className="text-[#EA3546] mb-1 text-xs"></p>
+                <FaHeart className="h-6 w-6 text-[#CFFF5E]" />
+                <p className="text-[#CFFF5E] mb-1 text-xs"></p>
               </div>
             )}
           </div>
@@ -140,7 +140,7 @@ export function MovieCardMix({
               !watched ? "bg-[#3D3B8E]" : "bg-green-600"
             } hover:cursor-pointer flex justify-center items-center rounded-full  box-border border-none`} */
           className={`w-32 h-8  bg-inherit border border-solid hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
-            !watched ? "border-white" : "border-green-600"
+            !watched ? "border-white" : "border-[#CFFF5E]"
           }`}
         >
           {!watched ? (

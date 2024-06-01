@@ -123,7 +123,7 @@ export default function MovieSelection() {
               <div className="overlay">
                 <FaHeart
                   //className="text-green-500"
-                  className="text-[#EA3546]"
+                  className="text-[#CFFF5E]"
                   style={{
                     fontSize: "40px",
                     position: "absolute",
@@ -154,7 +154,7 @@ export default function MovieSelection() {
             onClick={handleLoadMore}
             style={{ border: "1px solid grey" }}
           >
-            <span className="px-2 text-xl">More options</span>{" "}
+            <span className="px-2 text-xl">New options</span>{" "}
           </button>
         )}
         {isFromMixPage ? (
@@ -170,7 +170,7 @@ export default function MovieSelection() {
             className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
             onClick={() => router.push("/startpage")}
           >
-            <span className="px-2 text-xl">Continue</span> <FaArrowRight />
+            <span className="px-2 text-xl">Done</span> <FaArrowRight />
           </button>
         )}
       </div>

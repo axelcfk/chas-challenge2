@@ -9,34 +9,24 @@ import { useAuth } from "../context/AuthContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
 import { FaDotCircle } from "react-icons/fa";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { FaChevronUp } from "react-icons/fa6";
+import Link from "next/link";
+import InputField from "../chatpage2/inputField";
+import MovieSearch from "../searchtest/page";
+import { FaMagnifyingGlass, FaChevronUp } from "react-icons/fa6";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // Separate state for search bar
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown menu
-  const [searchType, setSearchType] = useState(""); // State to track selected search type
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchType, setSearchType] = useState("");
+  const [loading, setLoading] = useState(false);
   const { isLoggedIn, user, logout, checkAuth } = useAuth();
   const { input, setInput } = useSearch();
-  const { handleQuerySubmit } = useHandleQuerySubmit();
+  const { handleQuerySubmit: originalHandleQuerySubmit } =
+    useHandleQuerySubmit();
   const router = useRouter();
-  const pathname = usePathname(); // Hämtar den aktuella sökvägen/url:en
-
+  const pathname = usePathname();
   const { resetState } = useSearch();
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleQuerySubmit();
-    }
-  };
-
-  const handleSearchTypeSelect = (type) => {
-    setSearchType(type);
-    setIsSearchOpen(true);
-    setDropdownOpen(false);
-  };
 
   useEffect(() => {
     if (isOpen || isSearchOpen) {
@@ -61,6 +51,19 @@ export default function Navbar() {
     router.push("/");
   };
 
+  const handleSearchTypeSelect = (type) => {
+    setSearchType(type);
+    setIsSearchOpen(true);
+    setDropdownOpen(false);
+  };
+
+  const handleQuerySubmit = async (query) => {
+    setLoading(true);
+    await originalHandleQuerySubmit(query);
+    setLoading(false);
+    setIsSearchOpen(false); // Close the search bar after initiating the search
+  };
+
   if (
     !isLoggedIn ||
     ["/firstpage", "/login", "/create-account"].includes(pathname)) {
@@ -68,71 +71,78 @@ export default function Navbar() {
   }
 
   return (
-    <nav
-    className="text-white fixed top-0 left-0 right-0 z-50"
-    // style={{
-    //   backdropFilter: "blur(4px)",
-    //   backgroundColor: "rgba(0, 0, 0, 0.3)",
-    // }}
-  >
-    <div className="bg-[rgba(0,0,0,0.8)] backdrop-blur-md w-full h-full absolute top-0 left-0 right-0 bottom-0"></div> {/* Added wrapper div for blur effect */}
-    <div className="relative mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="relative flex items-center justify-between h-16 ">
-        {!isSearchOpen && (
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Link className="no-underline" href="/startpage">
-                <span
-                  onClick={() => {
-                    resetState();
-                  }}
-                  className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
-                >
-                  <span className="text-sm text-[#CFFF5E] mt-1">
-                    <FaDotCircle />
+    <nav className="text-white fixed top-0 left-0 right-0 z-50">
+      <div
+        className="backdrop-blur-md w-full h-full absolute top-0 left-0 right-0 bottom-0"
+        style={{
+          backdropFilter: "blur(30px)",
+        }}
+      ></div>
+      <div className="relative mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative flex items-center justify-between h-16 ">
+          {!isSearchOpen && (
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <Link className="no-underline" href="/startpage">
+                  <span
+                    onClick={() => {
+                      resetState();
+                    }}
+                    className="font-bebas flex justify-center items-center hover:cursor-pointer px-2 py-2 mr-1 text-white rounded-md font-medium cursor-pointer text-3xl text-center"
+                  >
+                    <span className="text-sm text-[#CFFF5E] mt-1">
+                      <FaDotCircle />
+                    </span>
+                    <span className="font-archivo font-extrabold no-underline">
+                      LUDI
+                    </span>
                   </span>
-                  <span className="font-archivo font-extrabold no-underline">
-                    LUDI
-                  </span>
-                </span>
-              </Link>
+                </Link>
+              </div>
             </div>
-          </div>
-        )}
-  
+          )}
 
           <div className="flex items-center md:hidden w-full justify-end">
             <div className="relative">
               {!isSearchOpen && (
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent ml-4"
                   aria-label="Search Menu"
                 >
                   <FaMagnifyingGlass className="h-6 w-6" />
                 </button>
               )}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-4  bg-transparent rounded-2xl z-20  w-44">
+                <div
+                  className="absolute right-0 p-8 mt-2 rounded-br-2xl rounded-bl-2xl z-20 w-60"
+                  style={{
+                    border: "0.9px solid grey",
+                    borderTop: 0,
+                    background: "rgba(17, 10, 26, 0.8)",
+                  }}
+                >
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
-                    className="flex justify-center items-center text-base bg-[#CFFF5E] rounded-full  border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"
-                    style={{
-                      border: "0.9px solid grey",
-                      backdropFilter: "blur(10px)",
-                    }}
+                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] rounded-md border-none px-4 py-2 h-12 font-archivo font-bold text-slate-950 hover:bg-gray-100 w-full text-left"
                   >
-                    AI Search
+                    <span className="text-lg font-archivo font-bold text-slate-950">
+                      AI-Search
+                    </span>{" "}
+                    <FaMagnifyingGlass className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleSearchTypeSelect("movie")}
-                    className="flex justify-center items-center text-base bg-[#CFFF5E] px-4 mt-2 py-2 font-archivo border-none font-bold h-12 rounded-full text-slate-950 hover:bg-gray-100 w-full text-left"
+                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] px-4 mt-4 py-2 font-archivo border-none font-bold h-12 rounded-md text-slate-950 hover:bg-gray-100 w-full text-left"
                     style={{
                       border: "0.9px solid grey",
                       backdropFilter: "blur(10px)",
                     }}
                   >
-                    Database Search
+                    <span className="text-lg font-archivo font-bold text-slate-950">
+                      Database Search{" "}
+                    </span>
+                    <FaMagnifyingGlass className="h-4 w-4" />
                   </button>
                 </div>
               )}
@@ -145,29 +155,54 @@ export default function Navbar() {
             )}
             {isSearchOpen && searchType === "ai" && (
               <div className="mt-2 w-full">
-                <InputField
-                  handleInputChange={(e) => setInput(e.target.value)}
-                  handleQuerySubmit={handleQuerySubmit}
-                  heightDiv={"h-10"}
-                  placeholder={"AI SEARCH"}
-                />
-                <button
-                  onClick={() => setIsSearchOpen(false)}
-                  className="absolute top-2 left-2 flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
-                  aria-label="Close Search"
-                >
-                  <FaChevronUp className="h-6 w-6" />
-                </button>
+                {loading ? (
+                  <>
+                    <InputField
+                      handleInputChange={(e) => setInput(e.target.value)}
+                      handleQuerySubmit={handleQuerySubmit}
+                      heightDiv={"h-10"}
+                      placeholder={""}
+                      input={input}
+                      setInput={setInput}
+                      loading={loading}
+                    />
+                    <button
+                      onClick={() => setIsSearchOpen(false)}
+                      className="absolute top-2 left-2 flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
+                      aria-label="Close Search"
+                    >
+                      <FaChevronUp className="h-6 w-6" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <InputField
+                      handleInputChange={(e) => setInput(e.target.value)}
+                      handleQuerySubmit={handleQuerySubmit}
+                      heightDiv={"h-10"}
+                      placeholder={"AI SEARCH"}
+                      input={input}
+                      setInput={setInput}
+                      loading={loading}
+                    />
+                    <button
+                      onClick={() => setIsSearchOpen(false)}
+                      className="absolute top-2 left-2 flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
+                      aria-label="Close Search"
+                    >
+                      <FaChevronUp className="h-6 w-6" />
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
 
-          {/* Burger menu button only for small screens */}
           {!isSearchOpen && (
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent ml-4"
                 aria-label="Burger Menu"
               >
                 <svg
@@ -196,7 +231,6 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Menu items for smaller screens */}
           <div
             className={`menu-modal ${
               isOpen ? "open" : "close"
@@ -260,7 +294,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 pt-24 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 mt-60 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>
@@ -282,7 +316,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Ordinary Navbar for larger screens */}
           <div className="hidden md:flex items-center justify-between w-full">
             <div className="flex items-center"></div>
             <div className="flex items-center">
@@ -291,7 +324,7 @@ export default function Navbar() {
                   <div className="relative">
                     <button
                       onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white  focus:outline-none border-none   focus:text-white bg-transparent ml-4"
+                      className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent ml-4"
                       aria-label="Search Menu"
                     >
                       <FaMagnifyingGlass className="h-6 w-6" />
@@ -321,19 +354,43 @@ export default function Navbar() {
                   )}
                   {isSearchOpen && searchType === "ai" && (
                     <div className="mt-2 w-full">
-                      <InputField
-                        handleInputChange={(e) => setInput(e.target.value)}
-                        handleQuerySubmit={handleQuerySubmit}
-                        heightDiv={"h-10"}
-                        placeholder={"AI SEARCH"}
-                      />
-                      <button
-                        onClick={() => setIsSearchOpen(false)}
-                        className="flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
-                        aria-label="Close Search"
-                      >
-                        <FaChevronUp className="h-6 w-6" />
-                      </button>
+                      {loading ? (
+                        <>
+                          <InputField
+                            handleInputChange={(e) => setInput(e.target.value)}
+                            handleQuerySubmit={handleQuerySubmit}
+                            heightDiv={"h-10"}
+                            placeholder={"AI SEARCH"}
+                            input={input}
+                            setInput={setInput}
+                          />
+                          <button
+                            onClick={() => setIsSearchOpen(false)}
+                            className="flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
+                            aria-label="Close Search"
+                          >
+                            <FaChevronUp className="h-6 w-6" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <InputField
+                            handleInputChange={(e) => setInput(e.target.value)}
+                            handleQuerySubmit={handleQuerySubmit}
+                            heightDiv={"h-10"}
+                            placeholder={"AI SEARCH"}
+                            input={input}
+                            setInput={setInput}
+                          />
+                          <button
+                            onClick={() => setIsSearchOpen(false)}
+                            className="flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none border-none focus:text-white bg-transparent mt-2"
+                            aria-label="Close Search"
+                          >
+                            <FaChevronUp className="h-6 w-6" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </>
