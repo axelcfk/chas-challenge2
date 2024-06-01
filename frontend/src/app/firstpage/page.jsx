@@ -5,7 +5,6 @@ import "./firstpage.css";
 import { useRef } from "react";
 import { FaDotCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function FirstPage() {
   const videoRef = useRef(null);

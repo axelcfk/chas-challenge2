@@ -1,16 +1,15 @@
 "use client";
 
+import Link from "next/link";
+import InputField from "../chatpage2/inputField";
+import MovieSearch from "../searchtest/page";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
 import { FaDotCircle } from "react-icons/fa";
-import Link from "next/link";
-import InputField from "../chatpage2/inputField";
-import MovieSearch from "../searchtest/page";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-
 import { FaChevronUp } from "react-icons/fa6";
 
 export default function Navbar() {
@@ -64,8 +63,7 @@ export default function Navbar() {
 
   if (
     !isLoggedIn ||
-    ["/firstpage", "/login", "/create-account"].includes(pathname)
-  ) {
+    ["/firstpage", "/login", "/create-account"].includes(pathname)) {
     return null;
   }
 

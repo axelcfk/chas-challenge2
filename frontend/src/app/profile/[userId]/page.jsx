@@ -115,132 +115,134 @@ export default function Profile() {
   };
 
   return (
-    <main>
-      <div className="flex items-center flex-col pb-12">
-        {userData ? (
-          <div className="flex items-center flex-col space-y-5 mt-12">
-            <button className="bg-transparent border-none hover:cursor-pointer">
-              <img
-                src="/profile-user.svg"
-                className="h-28"
-                alt="User Profile"
-              />
-            </button>
-            <h1>{userData.username}</h1>
-          </div>
-        ) : (
-          <p>Loading user data...</p>
-        )}
-      </div>
-      <div className="menu bg-[#110A19] flex flex-row justify-between px-8 items-center">
-        {tabNames.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => handleTabClick(tab)}
-            className={`  hover:cursor-pointer h-16 w-28 rounded-full text-lg font-semibold  ${
-              activeTab === tab
-                ? "bg-slate-100 text-slate-950 border-none"
-                : "bg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E]"
-            }`}
-          >
-            <h4>{tab}</h4>
-          </button>
-        ))}
-      </div>
-      <div
-        className="tabs-container"
-        style={{ transform: `translateX(${tabIndex * -100}%)` }}
-      ></div>
-      {activeTab === "Profile" && (
-        <div className="gradient-border-top bg-[#201430] p-8 mt-8">
-          <div className="my-8">
-            <h3 className="text-2xl">My favorites</h3>
-            <p className="text-sm">
-              Här ska man kunna trycka på en knapp så man får upp alla filmer
-              som ligger i sin "seen lista" och välja 3st favoriter som visas
-              nedan.
-            </p>
-            <SlideMenu>
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-            </SlideMenu>
-          </div>
-          <div className="mb-8">
-            <h3 className="text-2xl">Recent activity</h3>
-            <p className="text-sm">
-              Här visas dom senaste filmerna man har kollat på (=lagt till i sin
-              seen list)
-            </p>
-            <SlideMenu>
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-              <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-            </SlideMenu>
-          </div>
+    <ProtectedRoute>
+      <main>
+        <div className="flex items-center flex-col pb-12">
+          {userData ? (
+            <div className="flex items-center flex-col space-y-5 mt-12">
+              <button className="bg-transparent border-none hover:cursor-pointer">
+                <img
+                  src="/profile-user.svg"
+                  className="h-28"
+                  alt="User Profile"
+                />
+              </button>
+              <h1>{userData.username}</h1>
+            </div>
+          ) : (
+            <p>Loading user data...</p>
+          )}
         </div>
-      )}
-      {activeTab === "Watchlist" && (
-        <div className="gradient-border-top bg-[#201430] p-8 mt-8">
-          <div className="py-8">
-            <WatchListForProfile profilePage={true} />
-          </div>
-        </div>
-      )}
-      {activeTab === "My lists" && (
-        <div className="gradient-border-top bg-[#201430] p-8 mt-8">
-          <div className="py-8">
+        <div className="menu bg-[#110A19] flex flex-row justify-between px-8 items-center">
+          {tabNames.map((tab) => (
             <button
-              onClick={handleCreateNewList}
-              className="py-2 px-4 bg-slate-100 border-none text-slate-900 font-semibold h-12 rounded-full text-lg"
+              key={tab}
+              onClick={() => handleTabClick(tab)}
+              className={`  hover:cursor-pointer h-16 w-28 rounded-full text-lg font-semibold  ${
+                activeTab === tab
+                  ? "bg-slate-100 text-slate-950 border-none"
+                  : "bg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E]"
+              }`}
             >
-              Create new list
+              <h4>{tab}</h4>
             </button>
-            {loadingLists ? (
-              <p>Loading lists...</p>
-            ) : (
-              <div className="mt-4">
-                {userLists.length === 0 ? (
-                  <p className="text-2xl">No lists created</p>
-                ) : (
-                  userLists.map((list) => (
-                    <div key={list.id} className="my-4">
-                      <Link href={`/my-customlist/${list.id}`}>
-                        <h4 className="text-lg font-bold hover:underline">
-                          {list.name}
-                        </h4>
-                      </Link>
-                      <button>ta bort lista</button>
-                      {list.movies.length === 0 ? (
-                        <p className="text-2xl">No movies in this list</p>
-                      ) : (
-                        <SlideMenu>
-                          {list.movies.map((movie) => (
-                            <SlideMenuMovieCard
-                              key={movie.id}
-                              id={movie.id}
-                              title={movie.title}
-                              poster={movie.poster}
-                              overview={movie.overview}
-                            />
-                          ))}
-                        </SlideMenu>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
+          ))}
         </div>
-      )}
-    </main>
+        <div
+          className="tabs-container"
+          style={{ transform: `translateX(${tabIndex * -100}%)` }}
+        ></div>
+        {activeTab === "Profile" && (
+          <div className="gradient-border-top bg-[#201430] p-8 mt-8">
+            <div className="my-8">
+              <h3 className="text-2xl">My favorites</h3>
+              <p className="text-sm">
+                Här ska man kunna trycka på en knapp så man får upp alla filmer
+                som ligger i sin "seen lista" och välja 3st favoriter som visas
+                nedan.
+              </p>
+              <SlideMenu>
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              </SlideMenu>
+            </div>
+            <div className="mb-8">
+              <h3 className="text-2xl">Recent activity</h3>
+              <p className="text-sm">
+                Här visas dom senaste filmerna man har kollat på (=lagt till i
+                sin seen list)
+              </p>
+              <SlideMenu>
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+              </SlideMenu>
+            </div>
+          </div>
+        )}
+        {activeTab === "Watchlist" && (
+          <div className="gradient-border-top bg-[#201430] p-8 mt-8">
+            <div className="py-8">
+              <WatchListForProfile profilePage={true} />
+            </div>
+          </div>
+        )}
+        {activeTab === "My lists" && (
+          <div className="gradient-border-top bg-[#201430] p-8 mt-8">
+            <div className="py-8">
+              <button
+                onClick={handleCreateNewList}
+                className="py-2 px-4 bg-slate-100 border-none text-slate-900 font-semibold h-12 rounded-full text-lg"
+              >
+                Create new list
+              </button>
+              {loadingLists ? (
+                <p>Loading lists...</p>
+              ) : (
+                <div className="mt-4">
+                  {userLists.length === 0 ? (
+                    <p className="text-2xl">No lists created</p>
+                  ) : (
+                    userLists.map((list) => (
+                      <div key={list.id} className="my-4">
+                        <Link href={`/my-customlist/${list.id}`}>
+                          <h4 className="text-lg font-bold hover:underline">
+                            {list.name}
+                          </h4>
+                        </Link>
+                        <button>ta bort lista</button>
+                        {list.movies.length === 0 ? (
+                          <p className="text-2xl">No movies in this list</p>
+                        ) : (
+                          <SlideMenu>
+                            {list.movies.map((movie) => (
+                              <SlideMenuMovieCard
+                                key={movie.id}
+                                id={movie.id}
+                                title={movie.title}
+                                poster={movie.poster}
+                                overview={movie.overview}
+                              />
+                            ))}
+                          </SlideMenu>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+    </ProtectedRoute>
   );
 }

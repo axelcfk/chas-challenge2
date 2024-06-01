@@ -177,94 +177,98 @@ export default function ChatPage2() {
   // }, []);
 
   return (
-    <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
-      {/* <Navbar /> */}
-      {errorMessage && !loading && (
-        <div className="h-full flex justify-center items-center">
-          <p className="text-3xl font-semibold text-center">{errorMessage}</p>
-        </div>
-      )}
-      {showVideo && movies.length < 2 && (
-        <div className={`md:w-full flex flex-col justify-center items-center`}>
-          <div className=" h-96 flex justify-center items-center">
-            <video
-              className="md:w-1/3 w-96 transform rounded-full z-10"
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-            >
-              <source src="/ai-gif.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            <div className="video-gradient-overlay"></div>
+    <ProtectedRoute>
+      <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
+        {/* <Navbar /> */}
+        {errorMessage && !loading && (
+          <div className="h-full flex justify-center items-center">
+            <p className="text-3xl font-semibold text-center">{errorMessage}</p>
           </div>
-          {!loading ? (
-            <p className="px-5 text-xl flex flex-col items-center h-24">
-              <span className="absolute top-50 bottom-50 mb-4 text-4xl font-archivo  font-extrabold text-center">
-                Hello! <br /> I'm your AI movie matcher
-              </span>
-            </p>
-          ) : (
-            <div className=" flex justify-center items-center">
+        )}
+        {showVideo && movies.length < 2 && (
+          <div
+            className={`md:w-full flex flex-col justify-center items-center`}
+          >
+            <div className=" h-96 flex justify-center items-center">
+              <video
+                className="md:w-1/3 w-96 transform rounded-full z-10"
+                ref={videoRef}
+                autoPlay
+                loop
+                muted
+              >
+                <source src="/ai-gif.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="video-gradient-overlay"></div>
+            </div>
+            {!loading ? (
               <p className="px-5 text-xl flex flex-col items-center h-24">
                 <span className="absolute top-50 bottom-50 mb-4 text-4xl font-archivo  font-extrabold text-center">
-                  Finding the best <br />
-                  match for you...
+                  Hello! <br /> I'm your AI movie matcher
                 </span>
               </p>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              <div className=" flex justify-center items-center">
+                <p className="px-5 text-xl flex flex-col items-center h-24">
+                  <span className="absolute top-50 bottom-50 mb-4 text-4xl font-archivo  font-extrabold text-center">
+                    Finding the best <br />
+                    match for you...
+                  </span>
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
-      {movies.length === 6 && (
-        <div className=" ">
-          <div className="mt-20">
-            <div className="flex flex-col justify-end items-end">
-              <button
-                onClick={() => resetState()}
-                className="pb-4  bg-transparent border-none hover:cursor-pointer"
-              >
-                <TbEdit size={35} color="rgb(148 163 184)" />
-              </button>
-            </div>
-            <InputField
-              setInput={setInput}
-              input={input}
-              handleQuerySubmit={handleQuerySubmit}
-              handleInputChange={handleInputChange}
-              placeholder={"Refine your search..."}
-            />
-          </div>
-          <div className="z-0">
-            <FetchedMovies
-              credits={movieCredits}
-              movieDetails={movieDetails}
-              isAvailableOnSupportedServices={isAvailableOnSupportedServices}
-              streamingServiceLinks={streamingServiceLinks}
-            />
-          </div>
-        </div>
-      )}
-
-      {!loading && movies.length < 2 ? (
-        <div className="pt-20  fixed bottom-8 left-10 right-10">
-          <div className="  ">
-            <AutoQuery input={input} setInput={setInput} />
-          </div>
+        {movies.length === 6 && (
           <div className=" ">
-            <InputField
-              setInput={setInput}
-              input={input}
-              handleQuerySubmit={handleQuerySubmit}
-              handleInputChange={handleInputChange}
-              placeholder={"Send a request to Ludi AI"}
-              heightDiv={"h-14"}
-            />
+            <div className="mt-20">
+              <div className="flex flex-col justify-end items-end">
+                <button
+                  onClick={() => resetState()}
+                  className="pb-4  bg-transparent border-none hover:cursor-pointer"
+                >
+                  <TbEdit size={35} color="rgb(148 163 184)" />
+                </button>
+              </div>
+              <InputField
+                setInput={setInput}
+                input={input}
+                handleQuerySubmit={handleQuerySubmit}
+                handleInputChange={handleInputChange}
+                placeholder={"Refine your search..."}
+              />
+            </div>
+            <div className="z-0">
+              <FetchedMovies
+                credits={movieCredits}
+                movieDetails={movieDetails}
+                isAvailableOnSupportedServices={isAvailableOnSupportedServices}
+                streamingServiceLinks={streamingServiceLinks}
+              />
+            </div>
           </div>
-        </div>
-      ) : null}
-    </div>
+        )}
+
+        {!loading && movies.length < 2 ? (
+          <div className="pt-20  fixed bottom-8 left-10 right-10">
+            <div className="  ">
+              <AutoQuery input={input} setInput={setInput} />
+            </div>
+            <div className=" ">
+              <InputField
+                setInput={setInput}
+                input={input}
+                handleQuerySubmit={handleQuerySubmit}
+                handleInputChange={handleInputChange}
+                placeholder={"Send a request to Ludi AI"}
+                heightDiv={"h-14"}
+              />
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </ProtectedRoute>
   );
 }

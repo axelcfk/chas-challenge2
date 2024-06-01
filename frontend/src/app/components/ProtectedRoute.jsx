@@ -1,28 +1,33 @@
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const ProtectedRoute = ({ children }) => {
-    const { isLoggedIn, checkAuth } = useAuth();
-    const router = useRouter();
+  const { isLoggedIn, checkAuth } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const checkAuthentication = async () => {
-            await checkAuth();
-            if (!isLoggedIn) {
-                router.push("/");
-        }
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      await checkAuth();
+      setLoading(false);
+      if (!isLoggedIn) {
+        router.push("/");
+      }
     };
 
-        checkAuthentication();
-    }, [isLoggedIn, router])
+    checkAuthentication();
+  }, [isLoggedIn, router, checkAuth]);
 
-    if (!isLoggedIn) {
-        return null; //eller ladda till en laddningsgrej för att kolla om man 
-                    // är inloggad eller inte.
-    }
+  if (loading) {
+    return <div className="bg-black">Loading...</div>;
+  }
 
-    return children;
+  if (!isLoggedIn) {
+    return null;
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;
