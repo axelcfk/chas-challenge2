@@ -12,6 +12,7 @@ import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Navbar from "../components/Navbar";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se",
