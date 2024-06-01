@@ -9,9 +9,6 @@ import { useAuth } from "../context/AuthContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
 import { FaDotCircle } from "react-icons/fa";
-import Link from "next/link";
-import InputField from "../chatpage2/inputField";
-import MovieSearch from "../searchtest/page";
 import { FaMagnifyingGlass, FaChevronUp } from "react-icons/fa6";
 
 export default function Navbar() {

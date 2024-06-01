@@ -412,7 +412,6 @@ export default function MoviePage() {
   return (
     <ProtectedRoute>
       <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
-        {/* <BackButton /> */}
         <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
           onClick={handleNavigation}
@@ -432,19 +431,12 @@ export default function MoviePage() {
           </div>
         )}
 
-      {loading ? (
-        <LoadingIndicator />
-      ) : (
         <div className="h-full flex flex-col justify-center items-center relative z-10 px-8">
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center text-slate-400 ">
               <div className="flex flex-col  justify-center items-center ">
                 <div
                   className="w-full flex flex-row justify-center items-center parallax-container rounded-lg p-5"
-                  // style={{
-                  //   backdropFilter: "blur(15px)",
-                  //   backgroundColor: "rgba(0, 0, 0, 0.1)",
-                  // }}
                   ref={parallaxRef}
                 >
                   <div className="w-full ">
@@ -479,7 +471,6 @@ export default function MoviePage() {
                         </span>
                       </p>
                     </div>
-                    {/* <p>{movieDetails.runtime.toString()} mins</p> */}
                   </div>
                   <div className="flex flex-col w-full justify-center items-center gap-4 ">
                     <div className="relative ">
@@ -513,7 +504,7 @@ export default function MoviePage() {
                         }}
                         className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                       >
-                        {!likeButtonClicked ? (
+                        {!likes[movieDetails.id] ? (
                           <div className="flex flex-col justify-center items-center">
                             <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
                             <p className="text-slate-100 mb-1 text-sm">Like</p>
@@ -559,21 +550,23 @@ export default function MoviePage() {
                         </button>
                         <button
                           onClick={handleToggleDropdown}
-                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${!watches[movieDetails.id] && "text-white"}  cursor-pointer px-3`}
+                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${
+                            !watches[movieDetails.id] && "text-white"
+                          }  cursor-pointer px-3`}
                         >
                           <SlArrowDown fontFamily="archivo" fontWeight={600} />
                         </button>
                         {dropdownOpen && (
-  <div
-  className="absolute left-4 right-4 mt-2  bg-white border rounded shadow-lg z-50"
-  style={{
-    border: "0.9px solid grey",
+                          <div
+                            className="absolute left-4 right-4 mt-2  bg-white border rounded shadow-lg z-50"
+                            style={{
+                              border: "0.9px solid grey",
 
-    backdropFilter: "blur(10px)",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-  }}
->
-  <ul className="no-list-style">
+                              backdropFilter: "blur(10px)",
+                              backgroundColor: "rgba(0, 0, 0, 0.3)",
+                            }}
+                          >
+                            <ul className="no-list-style">
                               {userLists.map((list) => (
                                 <li
                                   key={list.id}
@@ -584,7 +577,7 @@ export default function MoviePage() {
                                 </li>
                               ))}
                               <li
-                             className=" text-slate-50  text-xl font-semibold font-archivo px-4 py-2  cursor-pointer"
+                                className=" text-slate-50  text-xl font-semibold font-archivo px-4 py-2  cursor-pointer"
                                 onClick={handleOpenModal}
                               >
                                 Create New List
@@ -665,11 +658,7 @@ export default function MoviePage() {
             </div>
           )}
         </div>
-      )}
-      {/* <div className=" w-screen  flex justify-center items-center"> */}
-      <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
-        {/* <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
-        <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div> */}
+        <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
           <iframe
             className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
             src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
@@ -678,9 +667,6 @@ export default function MoviePage() {
             allowFullScreen
           ></iframe>
         </div>
-
-        {/* </div> */}
-
         <div className="w-full pb-5 text-xl pt-16 ">
           <h2 className="text-xl px-8 font-normal">ACTORS</h2>
         </div>
@@ -700,8 +686,8 @@ export default function MoviePage() {
                       alt={actor.name}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.target.onerror = null; // Prevent looping
-                        e.target.src = "path_to_default_image.jpg"; // Fallback image
+                        e.target.onerror = null;
+                        e.target.src = "path_to_default_image.jpg";
                       }}
                     />
                   </div>
@@ -752,33 +738,35 @@ export default function MoviePage() {
           </div>
         </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg w-80">
-            <h2 className="text-xl font-bold mb-4 text-black">Create New List</h2>
-            <input
-              type="text"
-              value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
-              className="w-full p-2 bg-[#CFFF5E] mb-4 border rounded-full"
-              placeholder="List Name"
-            ></input>
-            <button
-              onClick={handleCreateNewList()}
-              className="w-full p-2 bg-blue-500 text-white rounded-full"
-            >
-              Create
-            </button>
-            <button
-              onClick={handleCloseModal()}
-              className="w-full p-2 mt-2 text-gray-600"
-            >
-              Cancel
-            </button>
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-80">
+              <h2 className="text-xl font-bold mb-4 text-black">
+                Create New List
+              </h2>
+              <input
+                type="text"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                className="w-full p-2 bg-[#CFFF5E] mb-4 border rounded-full"
+                placeholder="List Name"
+              ></input>
+              <button
+                onClick={handleCreateNewList}
+                className="w-full p-2 bg-blue-500 text-white rounded-full"
+              >
+                Create
+              </button>
+              <button
+                onClick={handleCloseModal}
+                className="w-full p-2 mt-2 text-gray-600"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-    <ProtectedRoute>
+        )}
+      </div>
+    </ProtectedRoute>
   );
 }

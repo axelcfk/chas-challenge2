@@ -11,8 +11,6 @@ import AutoQuery from "./autoQuery";
 import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
 import ProtectedRoute from "../components/ProtectedRoute";
-import Navbar from "../components/Navbar";
-import ProtectedRoute from "../components/ProtectedRoute";
 
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se",
@@ -252,24 +250,24 @@ export default function ChatPage2() {
           </div>
         )}
 
-      {!loading && movies.length < 2 ? (
-        <div className="pt-20  fixed bottom-8 left-10 right-10">
-          <div className="  ">
-            <AutoQuery input={input} setInput={setInput} />
+        {!loading && movies.length < 2 ? (
+          <div className="pt-20  fixed bottom-8 left-10 right-10">
+            <div className="  ">
+              <AutoQuery input={input} setInput={setInput} />
+            </div>
+            <div className=" ">
+              <InputField
+                setInput={setInput}
+                input={input}
+                handleQuerySubmit={handleQuerySubmit}
+                handleInputChange={handleInputChange}
+                placeholder={"Send a request to Ludi AI"}
+                heightDiv={"h-14"}
+              />
+            </div>
           </div>
-          <div className=" ">
-            <InputField
-              setInput={setInput}
-              input={input}
-              handleQuerySubmit={handleQuerySubmit}
-              handleInputChange={handleInputChange}
-              placeholder={"Send a request to Ludi AI"}
-              heightDiv={"h-14"}
-            />
-          </div>
-        </div>
-      ) : null}
-    </div>
-    <ProtectedRoute>
+        ) : null}
+      </div>
+    </ProtectedRoute>
   );
 }
