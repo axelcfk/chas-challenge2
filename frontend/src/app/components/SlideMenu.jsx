@@ -27,18 +27,23 @@ export default function SlideMenu({ children, placeholder = false }) {
         <div className="w-full h-full relative">
           <img
             className="h-80 w-full rounded-3xl"
-            style={{rotate: "180deg"}}
+            style={{ rotate: "180deg" }}
             src="/black-background-grunge-texture-dark-wallpaper.jpg"
             alt=""
           />
           <div className="w-full text-center absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col gap-8 justify-center items-center w-[50%] text-start">
-              <h2 className="flex justify-center items-center w-64 text-2xl font-archivo font-extrabold uppercase"><span>Start adding <span className="text-3xl">+</span> Movies to your Watchlist</span> </h2>
+              <h2 className="flex justify-center items-center w-64 text-2xl font-archivo font-extrabold uppercase">
+                <span>
+                  Start adding <span className="text-3xl">+</span> Movies to
+                  your Watchlist
+                </span>{" "}
+              </h2>
               <Link className="no-underline" href={"/chatpage2"}>
-                  <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo">
-                    Find Movies <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
-                  </button>
-                </Link>
+                <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo">
+                  Find Movies <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -47,7 +52,16 @@ export default function SlideMenu({ children, placeholder = false }) {
   );
 }
 
-export function SlideMenuMovieCard({ title, poster, overview, id }) {
+export function SlideMenuMovieCard({
+  title,
+  poster,
+  overview,
+  id,
+  movieId,
+  onClick,
+  className,
+  disableLink,
+}) {
   //console.log("SlideMenuMovieCard props:", { title, poster, overview, id });
 
   if (!poster) {
@@ -55,15 +69,27 @@ export function SlideMenuMovieCard({ title, poster, overview, id }) {
   }
 
   return (
-    <div className="mx-2 inline-block h-36 w-24">
-      <Link href={`/movie/${encodeURIComponent(id)}`}>
+    <div
+      className={`mx-2 inline-block h-36 w-24 ${className}`}
+      onClick={onClick}
+    >
+      {disableLink ? (
         <img
           style={{ border: "1px solid grey" }}
           className="inline-block w-24 h-full mr-3 rounded-md"
           src={poster}
           alt={title}
         />
-      </Link>
+      ) : (
+        <Link href={`/movie/${encodeURIComponent(id)}`}>
+          <img
+            style={{ border: "1px solid grey" }}
+            className="inline-block w-24 h-full mr-3 rounded-md"
+            src={poster}
+            alt={title}
+          />
+        </Link>
+      )}
       {/* <div className=" flex flex-col ml-3">
           <h2 className="text-md mb-4 font-light">{title}</h2>
           <p className="font-light text-slate-400">

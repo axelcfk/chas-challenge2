@@ -1,10 +1,10 @@
 "use client";
-import { useRouter } from "next/navigation";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
-
 import { useEffect, useState, useRef } from "react";
 import {
   fetchWatchAndLikeList,
@@ -16,8 +16,8 @@ import {
 } from "../../utils";
 import { checkLikeList } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
-import Navbar from "@/app/components/Navbar";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -154,6 +154,26 @@ export default function MoviePage() {
       console.error("Failed to create new list:", error);
     }
     handleCloseModal();
+  };
+
+  const handleAddToSeenList = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("http://localhost:3010/api/toggleSeen", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token, movieId }),
+      });
+      const data = await response.json();
+      setSeen((prevSeen) => ({
+        ...prevSeen,
+        [movieId]: data.seen,
+      }));
+    } catch (error) {
+      console.error("Error toggling seen status", error);
+    }
   };
 
   useEffect(() => {
@@ -367,46 +387,6 @@ export default function MoviePage() {
         ))
     : null;
 
-  // const handleAddMovieToList = async (listId) => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:3010/me/lists/add/${listId}`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ movieId: movieDetails.id }),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     console.log(data.message);
-  //   } catch (error) {
-  //     console.error("Failed to add movie to list:", error);
-  //   }
-  //   handleCloseModal();
-  // };
-
-  // const handleCreateNewList = async () => {
-  //   try {
-  //     const response = await fetch(`http://localhost:3010/me/lists/new`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
-  //     });
-  //     const data = await response.json();
-  //     setUserLists([...userLists, { id: data.listId, name: newListName }]);
-  //     setNewListName("");
-  //   } catch (error) {
-  //     console.error("Failed to create new list:", error);
-  //   }
-  //   handleCloseModal();
-  // };
-
-  //console.log("moviedetails:", movieDetails);
-
   console.log("button clicked", likeButtonClicked);
 
   return (
@@ -519,6 +499,15 @@ export default function MoviePage() {
                         )}
                       </div>
                     </div>
+                    <button
+                      onClick={handleAddToSeenList}
+                      className={`bg-transparent text-white border-none flex items-center ${
+                        seen[movieId] ? "text-green-500" : "text-white"
+                      }`}
+                    >
+                      <FaCheck /> &nbsp;{" "}
+                      {seen[movieId] ? "Seen" : "Mark as Seen"}
+                    </button>
                     <div className="w-full flex flex-col justify-center items-center gap-4">
                       <div className="absolute left-4 right-4 mt-8">
                         <button

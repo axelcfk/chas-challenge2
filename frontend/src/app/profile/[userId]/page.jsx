@@ -12,13 +12,15 @@ import ProtectedRoute from "@/app/components/ProtectedRoute";
 export default function Profile() {
   const [userData, setUserData] = useState(null);
   const [userLists, setUserLists] = useState([]);
+  const [seenMovies, setSeenMovies] = useState([]);
   const [newListName, setNewListName] = useState("");
   const [activeTab, setActiveTab] = useState("Profile");
   const [loadingLists, setLoadingLists] = useState(true);
+  const [loadingSeenMovies, setLoadingSeenMovies] = useState(true);
+  const [favorites, setFavorites] = useState([]);
   const router = useRouter();
   const tabNames = ["Profile", "Watchlist", "My lists"];
   const tabIndex = tabNames.indexOf(activeTab);
-
   const removeCustomList = async (listId) => {
     try {
       const response = await fetch(`http://localhost:3010/me/lists/${listId}`, {
@@ -102,6 +104,81 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
+    const fetchSeenMovies = async () => {
+      setLoadingSeenMovies(true);
+      try {
+        const userId = localStorage.getItem("userId");
+        const response = await fetch(
+          `http://localhost:3010/api/seen/${userId}`
+        );
+        const data = await response.json();
+        console.log("Fetched seen list:", data);
+
+        const moviesWithDetails = await Promise.all(
+          data.map(async (movieEntry) => {
+            console.log("Fetching details for movie ID:", movieEntry.movie_id);
+            const movie = await fetchTMDBMovieDetails(movieEntry.movie_id);
+            return {
+              id: movie.id,
+              title: movie.title,
+              overview: movie.overview,
+              poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            };
+          })
+        );
+        setSeenMovies(moviesWithDetails);
+        console.log("Fetched seen movies:", moviesWithDetails);
+      } catch (error) {
+        console.error("Failed to fetch seen movies", error);
+      } finally {
+        setLoadingSeenMovies(false);
+      }
+    };
+
+    fetchSeenMovies();
+  }, []);
+
+  // Hämta favoritfilmerna
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const response = await fetch(
+          `http://localhost:3010/favorites/${userId}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP status ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Favorite movie IDs fetched from DB:", data);
+  
+        const moviesWithDetails = await Promise.all(
+          data.map(async (movie) => {
+            try {
+              const movieDetails = await fetchTMDBMovieDetails(movie.movie_id);
+              console.log("Fetched details for movie ID:", movie.movie_id, movieDetails);
+              return {
+                ...movie,
+                title: movieDetails.title,
+                poster: `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`,
+                overview: movieDetails.overview,
+              };
+            } catch (error) {
+              console.error(`Failed to fetch details for movie ID ${movie.movie_id}:`, error);
+              return null;
+            }
+          })
+        );
+  
+        setFavorites(moviesWithDetails.filter(movie => movie !== null));
+      } catch (error) {
+        console.error("Failed to fetch favorites", error);
+      }
+    };
+    fetchFavorites();
+  }, []);
+
+  useEffect(() => {
     const storedTab = localStorage.getItem("activeTab");
     if (storedTab) {
       setActiveTab(storedTab);
@@ -174,35 +251,41 @@ export default function Profile() {
         {activeTab === "Profile" && (
           <div className="gradient-border-top bg-[#201430] p-8 mt-8">
             <div className="my-8">
-              <h3 className="text-2xl">My favorites</h3>
-              <p className="text-sm">
-                Här ska man kunna trycka på en knapp så man får upp alla filmer
-                som ligger i sin "seen lista" och välja 3st favoriter som visas
-                nedan.
-              </p>
+              <div className="flex flex-row justify-between">
+                <h3 className="text-2xl">My favorites</h3>
+                <button
+                  onClick={() =>
+                    router.push("http://localhost:3000/choose-favorites")
+                  }
+                >
+                  Edit
+                </button>
+              </div>
               <SlideMenu>
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                {favorites.map((movie) => (
+                  <SlideMenuMovieCard
+                    key={movie.id}
+                    id={movie.id}
+                    title={movie.title}
+                    poster={movie.poster}
+                    overview={movie.overview}
+                  />
+                ))}
               </SlideMenu>
             </div>
             <div className="mb-8">
               <h3 className="text-2xl">Recent activity</h3>
-              <p className="text-sm">
-                Här visas dom senaste filmerna man har kollat på (=lagt till i
-                sin seen list)
-              </p>
+              <p className="text-sm"></p>
               <SlideMenu>
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
-                <SlideMenuMovieCard poster={"/troll-poster.jpg"} />
+                {seenMovies.map((movie) => (
+                  <SlideMenuMovieCard
+                    key={movie.id}
+                    id={movie.id}
+                    title={movie.title}
+                    poster={movie.poster}
+                    overview={movie.overview}
+                  />
+                ))}
               </SlideMenu>
             </div>
           </div>
@@ -236,7 +319,7 @@ export default function Profile() {
                         <div className="my-4 flex flex-row justify-between">
                           <Link
                             href={`/my-customlist/${list.id}`}
-                            className="no-underline text-[#CFFF5E]"
+                            className="no-underline text-white"
                           >
                             <h2 className="text-xl font-bold hover:underline">
                               {list.name}

@@ -3065,6 +3065,145 @@ app.delete("/me/lists/:listId", (req, res) => {
 
 // Endpoint för att ta bort en film från en lista
 
+// Endpoint för att lägga till och ta bort från seen lista
+app.post("/api/toggleSeen", async (req, res) => {
+  const { movieId, token } = req.body;
+
+  if (!token || !movieId) {
+    return res.status(400).json({
+      error: "Token and movieId are required.",
+    });
+  }
+
+  try {
+    // Hitta den aktuella sessionen med hjälp av token
+    const [sessionResults] = await pool.query(
+      "SELECT * FROM sessions WHERE token = ?",
+      [token]
+    );
+    if (sessionResults.length === 0) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    const userId = sessionResults[0].user_id;
+
+    // Kolla om filmen redan finns i seen listan
+    const [checkResults] = await pool.query(
+      "SELECT * FROM seen_movies WHERE user_id = ? AND movie_id = ?",
+      [userId, movieId]
+    );
+    if (checkResults.length > 0) {
+      // Om filmen redan finns, ta bort den
+      await pool.query(
+        "DELETE FROM seen_movies WHERE user_id = ? AND movie_id = ?",
+        [userId, movieId]
+      );
+      return res
+        .status(200)
+        .json({ message: "Movie removed from seen list", seen: false });
+    } else {
+      // Om filmen inte finns, lägg till den
+      await pool.query(
+        "INSERT INTO seen_movies (user_id, movie_id, created_at) VALUES (?, ?, ?)",
+        [userId, movieId, new Date()]
+      );
+      return res
+        .status(200)
+        .json({ message: "Movie added to seen list", seen: true });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+// Endpoint för att hämta seen listan
+app.get("/api/seen/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Kontrollera om användaren existerar
+    const [userResults] = await pool.query(
+      "SELECT id FROM users WHERE id = ?",
+      [userId]
+    );
+    if (userResults.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const [seenMovies] = await pool.query(
+      "SELECT * FROM seen_movies WHERE user_id = ?",
+      [userId]
+    );
+    return res.status(200).json(seenMovies);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Server error");
+  }
+});
+
+// Endpoint för att lägga till i favorites
+app.post("/favorites", async (req, res) => {
+  const { user_id, movie_id } = req.body;
+
+  console.log("Received favorite data:", req.body); // Logga inkommande data
+
+  try {
+    // Kontrollera så användaren inte har mer än 4 favoriter
+    const [result] = await query(
+      "SELECT COUNT(*) as count FROM favorites WHERE user_id = ?",
+      [user_id]
+    );
+    if (result.count >= 4) {
+      console.log("User already has 4 favorites"); // Logga felet
+      return res.status(400).send("Users can only have 4 favorites");
+    }
+
+    // Kontrollera om filmen finns i `seen_movies`
+    const [seenMovie] = await query(
+      "SELECT * FROM seen_movies WHERE user_id = ? AND movie_id = ?",
+      [user_id, movie_id]
+    );
+
+    // Justera kontrollen för att se till att vi korrekt kontrollerar om en film finns
+    if (!seenMovie || seenMovie.length === 0) {
+      console.log("Movie not found in seen movies list"); // Logga felet
+      return res.status(400).send("Movie not found in seen movies list");
+    }
+
+    // Lägg till filmen i favoriter
+    await query("INSERT INTO favorites (user_id, movie_id) VALUES (?, ?)", [
+      user_id,
+      movie_id,
+    ]);
+    res.status(201).send("Favorite added successfully");
+  } catch (error) {
+    console.error("Error adding favorite:", error); // Logga felet
+    res.status(500).send(error.message);
+  }
+});
+
+// Endpoint för att hämta favorites listan
+app.get("/favorites/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const results = await query(
+      `
+      SELECT seen_movies.movie_id 
+      FROM favorites 
+      JOIN seen_movies ON favorites.movie_id = seen_movies.movie_id 
+      WHERE favorites.user_id = ?
+      `,
+      [userId]
+    );
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching favorites:", error); // Logga felet
+    res.status(500).send(error.message);
+  }
+});
+
 ///////////////////////////////////////////////////
 
 app.listen(port, "0.0.0.0", () => {
