@@ -21,6 +21,7 @@ export default function Profile() {
   const router = useRouter();
   const tabNames = ["Profile", "Watchlist", "My lists"];
   const tabIndex = tabNames.indexOf(activeTab);
+
   const removeCustomList = async (listId) => {
     try {
       const response = await fetch(`http://localhost:3010/me/lists/${listId}`, {
@@ -151,7 +152,7 @@ export default function Profile() {
         }
         const data = await response.json();
         console.log("Favorite movie IDs fetched from DB:", data);
-  
+
         const moviesWithDetails = await Promise.all(
           data.map(async (movie) => {
             try {
@@ -169,7 +170,7 @@ export default function Profile() {
             }
           })
         );
-  
+
         setFavorites(moviesWithDetails.filter(movie => movie !== null));
       } catch (error) {
         console.error("Failed to fetch favorites", error);
@@ -252,29 +253,31 @@ export default function Profile() {
           <div className="gradient-border-top bg-[#201430] p-8 mt-8">
             <div className="my-8">
               <div className="flex flex-row justify-between">
-                <h3 className="text-2xl">My favorites</h3>
+                <h3 className="text-2xl mb-4">My favorites</h3>
                 <button
                   onClick={() =>
                     router.push("http://localhost:3000/choose-favorites")
                   }
+                  className="h-7 w-14"
                 >
                   Edit
                 </button>
               </div>
               <SlideMenu>
                 {favorites.map((movie) => (
-                  <SlideMenuMovieCard
-                    key={movie.id}
-                    id={movie.id}
-                    title={movie.title}
-                    poster={movie.poster}
-                    overview={movie.overview}
-                  />
+                  <Link href={`/movie/${movie.movie_id}`} key={movie.movie_id}>
+                    <SlideMenuMovieCard
+                      id={movie.movie_id}
+                      title={movie.title}
+                      poster={movie.poster}
+                      overview={movie.overview}
+                    />
+                  </Link>
                 ))}
               </SlideMenu>
             </div>
             <div className="mb-8">
-              <h3 className="text-2xl">Recent activity</h3>
+              <h3 className="text-2xl mb-4">Recent activity</h3>
               <p className="text-sm"></p>
               <SlideMenu>
                 {seenMovies.map((movie) => (
@@ -300,13 +303,6 @@ export default function Profile() {
         {activeTab === "My lists" && (
           <div className="gradient-border-top bg-[#201430] p-8 mt-8">
             <div className="py-8">
-              {/* {/* <button
-                onClick={handleCreateNewList}
-                className="py-2 px-4 bg-slate-100 border-none text-slate-900 font-semibold h-12 rounded-full text-lg"
-              >
-                Create new list
-              </button> */}
-
               {loadingLists ? (
                 <p>Loading lists...</p>
               ) : (

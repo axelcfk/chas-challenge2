@@ -3204,6 +3204,20 @@ app.get("/favorites/:userId", async (req, res) => {
   }
 });
 
+
+// Endpoint för att kunna rensa/uppdatera favoriter
+app.delete("/favorites/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    await query("DELETE FROM favorites WHERE user_id = ?", [userId]);
+    res.status(200).send("Favorites cleared successfully");
+  } catch (error) {
+    console.error("Error clearing favorites:", error); // Logga felet
+    res.status(500).send(error.message);
+  }
+});
+
 ///////////////////////////////////////////////////
 
 app.listen(port, "0.0.0.0", () => {

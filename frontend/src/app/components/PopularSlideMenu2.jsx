@@ -38,14 +38,22 @@ export default function PopularSlideMenu2() {
 
       const data = await response.json();
 
-      setPopularMoviesData(data);
+
+      const filteredData = data.filter(movieData => {
+        return movieData.movie.vote_average > 0;
+      });
+
+      setPopularMoviesData(filteredData);
     } catch (error) {
       console.error("Error:", error);
-    } /* finally {
+    }
+  }
+    
+    /* finally {
       // setLikedSeriesFetched(true); // bara en behövs
      // setListsFetched(true);
     } */
-  }
+  
 
   //console.log("movie ", movie);
 
