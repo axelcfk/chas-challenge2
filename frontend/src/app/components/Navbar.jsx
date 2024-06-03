@@ -63,7 +63,8 @@ export default function Navbar() {
 
   if (
     !isLoggedIn ||
-    ["/firstpage", "/login", "/create-account"].includes(pathname)) {
+    ["/firstpage", "/login", "/create-account"].includes(pathname)
+  ) {
     return null;
   }
 

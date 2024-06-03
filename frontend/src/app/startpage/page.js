@@ -78,11 +78,12 @@ export default function Startpage() {
                   Use AI to find a movie!
                 </h2>
                 <div className=" h-full flex justify-center items-center">
-                <Link className="no-underline" href={"/chatpage2"}>
-                  <button className="flex items-center justify-center gap-4 hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo">
-                    AI SEARCH <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
-                  </button>
-                </Link>
+                  <Link className="no-underline" href={"/chatpage2"}>
+                    <button className="flex items-center justify-center gap-4 hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo">
+                      AI SEARCH{" "}
+                      <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
+                    </button>
+                  </Link>
                   {/* <img
                   className="h-64 -mt-40 -mr-9 z-10"
                   src="/image.png"
@@ -123,23 +124,23 @@ export default function Startpage() {
                     AI{" "}
                   </h2>
 
-                <h2 className="text-5xl font-archivo font-extrabold uppercase">
-                  Mix
-                </h2>
-                <p className="whitespace-nowrap font-archivo">
-                  Based on your liked{" "}
-                  <FaHeart className="h-3 w-3 pt-6 mx-1 text-[#EA3546]"></FaHeart>{" "}
-                  movies
-                </p>
+                  <h2 className="text-5xl font-archivo font-extrabold uppercase">
+                    Mix
+                  </h2>
+                  <p className="whitespace-nowrap font-archivo">
+                    Based on your liked{" "}
+                    <FaHeart className="h-3 w-3 pt-6 mx-1 text-[#EA3546]"></FaHeart>{" "}
+                    movies
+                  </p>
+                </div>
+                <div className="ml-20 ">
+                  <FaArrowRight color="rgb(2 6 23)" size={"60px"} />
+                </div>
               </div>
-              <div className="ml-20 ">
-                <FaArrowRight color="rgb(2 6 23)" size={"60px"} />
-              </div>
-            </div>
-          </Link>
-        </div>
-        {/* <div className="w-full md:px24 bg-amber-500  "> */}
-        {/* <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
+            </Link>
+          </div>
+          {/* <div className="w-full md:px24 bg-amber-500  "> */}
+          {/* <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
           <div className="pl-8">
             <WatchListSlideMenu2></WatchListSlideMenu2>
           </div> */}
@@ -161,7 +162,7 @@ export default function Startpage() {
               className="mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
               tabIndex={0}
             >
-             Watchlist
+              Watchlist
               {/* (isLiked=false, isInWatchList=false) */}
             </h2>
             <div className="md:pl-0">
