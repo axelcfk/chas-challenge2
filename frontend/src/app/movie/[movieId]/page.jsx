@@ -511,12 +511,27 @@ export default function MoviePage() {
                     <div className="w-full flex flex-col justify-center items-center gap-4">
                       <div className="absolute left-4 right-4 mt-8">
                         <button
-                          onClick={() => handleButtonClicked(movieDetails.id)}
+                          onClick={() => {
+                            handleButtonClicked(movieDetails.id);
+                            if (!watches[movieDetails.id]) {
+                              postAddToWatchList(
+                                movieDetails.id,
+                                "movie",
+                                movieDetails.title
+                              );
+                            } else {
+                              postRemoveFromWatchList(
+                                movieDetails.id,
+                                "movie",
+                                movieDetails.title
+                              );
+                            }
+                          }}
                           className={`w-full h-10 ${
                             !watches[movieDetails.id]
-                              ? "bg-transparent"
+                              ? "bg-transparent "
                               : "bg-[#CFFF5E] border-none"
-                          } flex justify-center items-center rounded-full px-3 border-none`}
+                          } flex justify-center items-center rounded-full px-3  border-2 border-solid`}
                         >
                           {!watches[movieDetails.id] ? (
                             <FaPlus className="text-xl text-gray-200" />
