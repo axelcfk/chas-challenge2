@@ -185,6 +185,7 @@ export default function ChatPage2() {
     try {
       await fetch("/clearSuggestionsAndQueries", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
       console.log("Suggestions and queries cleared.");
     } catch (error) {
