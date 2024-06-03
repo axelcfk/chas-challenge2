@@ -178,7 +178,7 @@ export default function WatchListForProfile({ profilePage }) {
               title={movie.title}
               poster={movie.poster}
               overview={movie.overview}
-              showRating={false}
+              showRating={false} // false?
               profilePage={profilePage}
               className="movie-card"
               streamingServices={movie.flatrate}

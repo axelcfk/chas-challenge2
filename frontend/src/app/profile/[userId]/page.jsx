@@ -8,6 +8,7 @@ import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
 import WatchListForProfile from "@/app/components/WatchListForProfile";
 import Link from "next/link";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
+import { SlArrowLeft } from "react-icons/sl";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
@@ -21,6 +22,12 @@ export default function Profile() {
   const router = useRouter();
   const tabNames = ["Profile", "Watchlist", "My lists"];
   const tabIndex = tabNames.indexOf(activeTab);
+
+
+  const handleNavigation = () => {
+    //router.back();
+    router.back();
+  };
 
   const removeCustomList = async (listId) => {
     try {
@@ -213,8 +220,14 @@ export default function Profile() {
 
   return (
     <ProtectedRoute>
-      <main className="mt-8">
-        <div className="flex items-center flex-col pb-12 bg-bg-[#110A1A]">
+      <main className="mt-8 bg-[#110A19] min-h-screen">
+      <button
+            className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
+            onClick={handleNavigation}
+          >
+            <SlArrowLeft />
+          </button>
+        <div className="flex items-center flex-col pb-12 bg-[#110A19]">
           {userData ? (
             <div className="flex items-center flex-col space-y-5 mt-12">
               <button className="bg-transparent border-none hover:cursor-pointer">
@@ -224,7 +237,7 @@ export default function Profile() {
                   alt="User Profile"
                 />
               </button>
-              <h1>{userData.username}</h1>
+              <h1 className="font-archivo font-extrabold">{userData.username}</h1>
             </div>
           ) : (
             <p>Loading user data...</p>
@@ -237,8 +250,8 @@ export default function Profile() {
               onClick={() => handleTabClick(tab)}
               className={`  hover:cursor-pointer h-16 w-28 rounded-full text-lg font-semibold  ${
                 activeTab === tab
-                  ? "bg-slate-100 text-slate-950 border-none"
-                  : "bg-transparent text-slate-200 border-2 border-solid box-border border-[#3D3B8E]"
+                  ? "bg-[#CFFF5E] text-slate-950 border-none"
+                  : "bg-transparent text-white border-2 border-solid box-border border-[#CFFF5E]"
               }`}
             >
               <h4>{tab}</h4>
@@ -250,7 +263,7 @@ export default function Profile() {
           style={{ transform: `translateX(${tabIndex * -100}%)` }}
         ></div>
         {activeTab === "Profile" && (
-          <div className="gradient-border-top bg-[#201430] p-8 mt-8">
+          <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
             <div className="my-8">
               <div className="flex flex-row justify-between">
                 <h3 className="text-2xl mb-4">My favorites</h3>
@@ -258,7 +271,7 @@ export default function Profile() {
                   onClick={() =>
                     router.push("http://localhost:3000/choose-favorites")
                   }
-                  className="h-6 w-12 rounded-full border-none"
+                  className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
                 >
                   Edit
                 </button>
@@ -294,14 +307,14 @@ export default function Profile() {
           </div>
         )}
         {activeTab === "Watchlist" && (
-          <div className="gradient-border-top bg-[#201430] p-8 mt-8">
+          <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
             <div className="py-8">
               <WatchListForProfile profilePage={true} />
             </div>
           </div>
         )}
         {activeTab === "My lists" && (
-          <div className="gradient-border-top bg-[#201430] p-8 mt-8">
+          <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
             <div className="py-8">
               {loadingLists ? (
                 <p>Loading lists...</p>

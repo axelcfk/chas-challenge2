@@ -11,6 +11,7 @@ import AutoQuery from "./autoQuery";
 import InputField from "./inputField";
 import FetchedMovies from "./FetchedMovies";
 import ProtectedRoute from "../components/ProtectedRoute";
+import { SlArrowLeft } from "react-icons/sl";
 
 const streamingServiceLinks = {
   Netflix: "https://www.netflix.com/se",
@@ -175,9 +176,21 @@ export default function ChatPage2() {
   //   console.log("Initial sessionstorage:", sessionStorage);
   // }, []);
 
+
+
+  const handleNavigation = () => {
+    router.back();
+  };
+
   return (
     <ProtectedRoute>
       <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
+      <button
+          className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
+          onClick={handleNavigation}
+        >
+          <SlArrowLeft />
+        </button>
         {/* <Navbar /> */}
         {errorMessage && !loading && (
           <div className="h-full flex justify-center items-center pt-40">

@@ -132,14 +132,10 @@ export default function MovieCardWatchAndLike({
               className={`w-full h-8 bg-inherit border border-solid mb-4 ${
                 !watched
                   ? "border-white"
-                  : profilePage
-                  ? "border-profile-page"
                   : "border-[#cfff5e]"
               } hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
                 !watched
                   ? ""
-                  : profilePage
-                  ? "profile-added-button"
                   : "added-button"
               }`}
             >
