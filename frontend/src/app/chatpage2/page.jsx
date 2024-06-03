@@ -187,7 +187,10 @@ export default function ChatPage2() {
   useEffect(() => {
     let timer;
 
-    const phrases = ["Hello, I'm LUDI!", "How can I assist?"];
+    const phrases = [
+      "I'm your personal movie matcher",
+      `What do you want to watch today?`,
+    ];
 
     if (animationPhase === "erasing") {
       if (currentText.length > 0) {
@@ -208,7 +211,7 @@ export default function ChatPage2() {
       } else {
         timer = setTimeout(() => {
           setAnimationPhase("erasing");
-        }, 7000); //vänta 3 sek innan radera
+        }, 6000); //vänta 6 sek innan radera
       }
     }
 

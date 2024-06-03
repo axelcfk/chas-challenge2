@@ -761,9 +761,7 @@ export default function MoviePage() {
                           alt="poster"
                         />
                       </Link>
-                      <p className=" w-full bg-amber-700 text-wrap">
-                        {movie.title}
-                      </p>
+                      <p className=" w-full  text-wrap">{movie.title}</p>
                     </div>
                   ))}
               </SlideMenu>
@@ -789,12 +787,12 @@ export default function MoviePage() {
                 type="text"
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
-                className="w-96 pl-4 h-12 mb-4 border rounded-full font-semibold font-archivo text-lg"
+                className="w-full pl-4 h-12 mb-4 border rounded-full font-semibold font-archivo text-lg"
                 placeholder="List Name"
               ></input>
               <button
                 onClick={handleCreateNewList}
-                className="w-96 h-12 bg-[#CFFF5E] text-slate-950 rounded-full font-archivo font-bold text-lg border-none"
+                className="w-96  h-12 bg-[#CFFF5E] text-slate-950 rounded-full font-archivo font-bold text-lg border-none"
               >
                 Create
               </button>

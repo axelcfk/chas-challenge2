@@ -248,7 +248,7 @@ export default function Mix() {
                 Your {mixTitle} mix by AI
               </h1>
               <p className="text-slate-950 whitespace-nowrap font-archivo">
-                Based on your liked{" "}
+                Based on your
                 <FaHeart className=" h-3 w-3 mx-1 text-[#EA3546]"></FaHeart>{" "}
                 movies
               </p>
@@ -264,14 +264,14 @@ export default function Mix() {
             </div>
           </div>
 
-        {/* min-h-full  */}
-        <div
-          //bg-[#1b1028]
-          className="//shadow-[rgba(0,0,15,0.5)_0px_0px_40px_0px] //shadow-[#CFFF5E] relative shadow-container rounded-tr-3xl rounded-tl-3xl min-h-[1000px] pt-4 pb-8 px-8 border border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8 w-full"
-          // style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
-          //style={{boxShadow: '#CFFF5E 0px 0px 40px 0px, #1b1028 0px -10px 20px -10px' }}
-        >
-          {/* <div className="flex w-full justify-end items-center">
+          {/* min-h-full  */}
+          <div
+            //bg-[#1b1028]
+            className="//shadow-[rgba(0,0,15,0.5)_0px_0px_40px_0px] //shadow-[#CFFF5E] relative shadow-container rounded-tr-3xl rounded-tl-3xl min-h-[1000px] pt-4 pb-8 px-8 border border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8 w-full"
+            // style={{ backgroundColor: "rgba(141, 126, 255, 0.2)" }}
+            //style={{boxShadow: '#CFFF5E 0px 0px 40px 0px, #1b1028 0px -10px 20px -10px' }}
+          >
+            {/* <div className="flex w-full justify-end items-center">
           
             <button className="text-white flex gap-2 box-border justify-center items-center text-center p-6 py-2 bg-inherit rounded-lg border-2 border-solid border-[#FF506C] hover:border-white">
               <FaPlus className="text-2xl text-white" /> Save List
@@ -330,11 +330,10 @@ export default function Mix() {
                   </div>
                 )}
 
-            {loading === true && isGettingStoredMix && (
-              <>
-
-                {console.log("Finding stored mix...")}
-                {/* <div className="flex min-h-[1000px]  w-full flex-col gap-8 justify-center items-center">
+              {loading === true && isGettingStoredMix && (
+                <>
+                  {console.log("Finding stored mix...")}
+                  {/* <div className="flex min-h-[1000px]  w-full flex-col gap-8 justify-center items-center">
 
                  <SkeletonTheme baseColor="#535157" highlightColor="#7b8085" height={160} width={320}>
 
@@ -350,11 +349,11 @@ export default function Mix() {
                 </>
               )}
 
-            {loading && isAiGenerating && mixDetails.length === 0 ? (
-              <div className="relative flex w-full flex-col gap-8 justify-center items-center text-center">
-                <h2 className="absolute top-0 z-50 font-archivo text-white text-2xl font-extrabold">
-                  {/* AI is generating your Mix... */}
-                </h2>
+              {loading && isAiGenerating && mixDetails.length === 0 ? (
+                <div className="relative flex w-full flex-col gap-8 justify-center items-center text-center">
+                  <h2 className="absolute top-0 z-50 font-archivo text-white text-2xl font-extrabold">
+                    {/* AI is generating your Mix... */}
+                  </h2>
 
                   <div className="flex flex-col gap-8 z-20">
                     <SkeletonTheme
