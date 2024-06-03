@@ -54,7 +54,7 @@ export default function MoviePage() {
 
   const serviceLogos = {
     Netflix: "/Netflix.svg",
-    "HBO Max": "/HBO1.svg",
+    "Max": "/HBO1.svg",
     Viaplay: "/Viaplay.svg",
     "Amazon Prime Video": "/PrimeVideo.svg",
     "Disney Plus": "/Disney2.webp",
@@ -531,7 +531,7 @@ export default function MoviePage() {
                             !watches[movieDetails.id]
                               ? "bg-transparent "
                               : "bg-[#CFFF5E] border-none"
-                          } flex justify-center items-center rounded-full px-3  border-2 border-solid`}
+                          } flex justify-center items-center rounded-full px-3 border-2 border-solid border-white`}
                         >
                           {!watches[movieDetails.id] ? (
                             <FaPlus className="text-xl text-gray-200" />
@@ -554,7 +554,7 @@ export default function MoviePage() {
                         </button>
                         <button
                           onClick={handleToggleDropdown}
-                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${
+                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-white top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${
                             !watches[movieDetails.id] && "text-white"
                           }  cursor-pointer px-3`}
                         >
