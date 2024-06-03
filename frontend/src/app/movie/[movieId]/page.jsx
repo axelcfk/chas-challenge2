@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
+import {
+  FaPlus,
+  FaRegHeart,
+  FaHeart,
+  FaCheck,
+  FaStar,
+  FaEye,
+} from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
 import { useEffect, useState, useRef } from "react";
 import {
@@ -503,11 +510,24 @@ export default function MoviePage() {
                     <button
                       onClick={handleAddToSeenList}
                       className={`bg-transparent text-white border-none flex items-center ${
-                        seen[movieId] ? "text-green-500" : "text-white"
+                        seen[movieId] ? "text-[#CFFF5E]" : "text-white"
                       }`}
                     >
-                      <FaCheck /> &nbsp;{" "}
-                      {seen[movieId] ? "Seen" : "Mark as Seen"}
+                      {seen[movieId] ? (
+                        <div className="mb-8 flex justify-end items-center">
+                          <FaEye color="white" size={24} />
+                          <p className="font-semibold font-archivo ml-2">
+                            Mark as seen
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="mb-8 flex justify-center items-center ">
+                          <FaEye color="#CFFF5E" size={24} />
+                          <p className="font-semibold font-archivo ml-2 text-[#CFFF5E]">
+                            Seen
+                          </p>
+                        </div>
+                      )}
                     </button>
                     <div className="w-full flex flex-col justify-center items-center gap-4">
                       <div className="absolute left-4 right-4 mt-8">
