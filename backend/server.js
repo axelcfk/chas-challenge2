@@ -2086,7 +2086,7 @@ app.post("/moviesuggest2", async (req, res) => {
           MOVIE NAME4: [string], MOVIE NAME5: [string], MOVIE NAME6: [string]. 
           
           Additionally, it will provide a motivation of maximum 120 characters for why these movies were suggested, in the format:
-          MOTIVATION: [string]
+          MOTIVATION: [string]. 
           
           It will not answer any other queries. It will only suggest movies and TV series. 
                   
@@ -2103,13 +2103,13 @@ app.post("/moviesuggest2", async (req, res) => {
                   
           When making suggestions, follow these steps:
           1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a very funny and humoristic way in maximum 250 characters. Also ignore any queries in ${latestUserQuery} if foul language is present.     
-          3. Review the latest user query: ${latestUserQuery}.
-          4. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
-          5. Avoid suggesting movies that are already in the latest suggestions.
-          6. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
-          7. Consider the genres, themes, or keywords from the latest user query to refine the search.
-          8. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
-          9. If no suitable suggestions are available, explain why and provide alternative options.
+          2. Always take the latest user queries in  ${latestUserQuery} in account to suggest more accurate recommendations.
+          3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+          4. Avoid suggesting movies that are already in the latest suggestions.
+          5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+          6. Consider the genres, themes, or keywords from the latest user query to refine the search.
+          7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+          8. If no suitable suggestions are available, explain why and provide alternative options.
           For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
                   
           If you have no suggestions, explain in your response in maximum 200 characters. Also, look inside ${latestSuggestions.join(
@@ -3203,7 +3203,6 @@ app.get("/favorites/:userId", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-
 
 // Endpoint för att kunna rensa/uppdatera favoriter
 app.delete("/favorites/:userId", async (req, res) => {

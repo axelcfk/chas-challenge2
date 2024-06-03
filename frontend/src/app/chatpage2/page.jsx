@@ -203,7 +203,7 @@ export default function ChatPage2() {
             </div>
             {!loading ? (
               <p className="px-5 text-xl flex flex-col items-center h-24">
-                <span className="absolute top-50 bottom-50 mb-4 text-4xl font-archivo px-8 font-extrabold text-center">
+                <span className="absolute top-50 bottom-50 mb-4 text-3xl font-archivo px-8 font-extrabold text-center">
                   Hello! <br /> I'm LUDI - your personal movie matcher
                 </span>
               </p>

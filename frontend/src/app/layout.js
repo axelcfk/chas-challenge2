@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { SearchProvider } from "./context/SearchContext";
 import { AuthProvider } from "./context/AuthContext";
+import CustomCursor from "./CustomCursor";
 
 export const metadata = {
   title: "LUDI - Your Go-To Place for Movies",
