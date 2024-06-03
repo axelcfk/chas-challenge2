@@ -149,7 +149,7 @@ export default function FetchedMovies({
             <div
               className="flex flex-col justify-center items-center w-full z-0 rounded-2xl"
               style={{
-                backgroundColor: "rgba(141, 126, 255, 0.3)",
+                backgroundColor: "rgba(141, 126, 255, 0.2)",
               }}
             >
               <div className="flex flex-col justify-center items-center w-full relative">

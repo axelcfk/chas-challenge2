@@ -82,7 +82,7 @@ export default function Navbar() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Link className="no-underline" href="/startpage">
-                  <span
+                  <spanx
                     onClick={() => {
                       resetState();
                     }}
@@ -94,7 +94,7 @@ export default function Navbar() {
                     <span className="font-archivo font-extrabold no-underline">
                       LUDI
                     </span>
-                  </span>
+                  </spanx>
                 </Link>
               </div>
             </div>

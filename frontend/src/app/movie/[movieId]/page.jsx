@@ -54,7 +54,7 @@ export default function MoviePage() {
 
   const serviceLogos = {
     Netflix: "/Netflix.svg",
-    "HBO Max": "/HBO1.svg",
+    "Max": "/HBO1.svg",
     Viaplay: "/Viaplay.svg",
     "Amazon Prime Video": "/PrimeVideo.svg",
     "Disney Plus": "/Disney2.webp",
