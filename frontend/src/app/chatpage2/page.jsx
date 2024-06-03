@@ -184,7 +184,7 @@ export default function ChatPage2() {
 
   const clearSuggestionsAndQueries = async () => {
     try {
-      await fetch("/clearSuggestionsAndQueries", {
+      await fetch(`${host}/clearSuggestionsAndQueries`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -196,7 +196,8 @@ export default function ChatPage2() {
 
   const handleReset = () => {
     resetState();
-    clearSuggestionsAndQueries();
+    //clearSuggestionsAndQueries();
+    resetLatestQueryAndSuggestions()
   };
 
   const [currentText, setCurrentText] = useState("Hello I'm LUDI!");
