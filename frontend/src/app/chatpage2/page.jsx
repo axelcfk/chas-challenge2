@@ -24,7 +24,7 @@ const streamingServiceLinks = {
 const isAvailableOnSupportedServices = (streaming) => {
   const supportedServices = [
     { name: "Netflix", logo: "/netflix.svg" },
-    { name: "HBO Max", logo: "/logo.svg" },
+    { name: "Max", logo: "/logo.svg" },
     { name: "Viaplay", logo: "/viaplay.png" },
     { name: "Amazon Prime", logo: "prime.svg" },
     { name: "Disney+", logo: "/disney.png" },
@@ -176,16 +176,48 @@ export default function ChatPage2() {
   //   console.log("Initial sessionstorage:", sessionStorage);
   // }, []);
 
-
-
   const handleNavigation = () => {
     router.back();
   };
 
+  const [currentText, setCurrentText] = useState("Hello I'm LUDI!");
+  const [animationPhase, setAnimationPhase] = useState("erasing");
+  const [currentPhrase, setCurrentPhrase] = useState(0);
+
+  useEffect(() => {
+    let timer;
+
+    const phrases = ["Hello, I'm LUDI!", "How can I assist?"];
+
+    if (animationPhase === "erasing") {
+      if (currentText.length > 0) {
+        timer = setTimeout(() => {
+          setCurrentText((prev) => prev.substring(0, prev.length - 1));
+        }, 5); // hastighet
+      } else {
+        setAnimationPhase("writing");
+        setCurrentPhrase((prev) => (prev === 0 ? 1 : 0)); // Toggle between phrases
+      }
+    } else if (animationPhase === "writing") {
+      if (currentText !== phrases[currentPhrase]) {
+        timer = setTimeout(() => {
+          setCurrentText((prev) =>
+            phrases[currentPhrase].substring(0, prev.length + 1)
+          );
+        }, 5); // hastighet
+      } else {
+        timer = setTimeout(() => {
+          setAnimationPhase("erasing");
+        }, 7000); //vänta 3 sek innan radera
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [currentText, animationPhase, currentPhrase]);
   return (
     <ProtectedRoute>
       <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
-      <button
+        <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
           onClick={handleNavigation}
         >
@@ -216,8 +248,8 @@ export default function ChatPage2() {
             </div>
             {!loading ? (
               <p className="px-5 text-xl flex flex-col items-center h-24">
-                <span className="absolute top-50 bottom-50 mb-4 text-3xl font-archivo px-8 font-extrabold text-center">
-                  Hello! <br /> I'm LUDI - your personal movie matcher
+                <span className="absolute top-50 bottom-50 mb-4 text-3xl font-archivo px-8 font-extrabold text-center uppercase">
+                  {currentText}
                 </span>
               </p>
             ) : (

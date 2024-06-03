@@ -2105,7 +2105,7 @@ app.post("/moviesuggest2", async (req, res) => {
                   
           When making suggestions, follow these steps:
           1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a very funny and humoristic way in maximum 250 characters. Also ignore any queries in ${latestUserQuery} if foul language is present.     
-          2. Always take the latest user queries in  ${latestUserQuery} in account to suggest more accurate recommendations.
+          2. Always take the 10 latest user queries in  ${latestUserQuery} into account to give more accurate suggestions.
           3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
           4. Avoid suggesting movies that are already in the latest suggestions.
           5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.

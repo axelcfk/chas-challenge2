@@ -54,7 +54,7 @@ export default function MoviePage() {
 
   const serviceLogos = {
     Netflix: "/Netflix.svg",
-    "Max": "/HBO1.svg",
+    Max: "/Max.svg",
     Viaplay: "/Viaplay.svg",
     "Amazon Prime Video": "/PrimeVideo.svg",
     "Disney Plus": "/Disney2.webp",
@@ -63,12 +63,13 @@ export default function MoviePage() {
     SVT: "/SVTPlay.svg",
     TV4Play: "/TV4Play.svg",
     "Discovery+": "/Discovery+.svg",
-    "Google Play Movies": "/googleplay.svg",
+    "Google Play Movies": "/Play.png",
     "Rakuten TV": "/Rakuten_logo.svg",
     Blockbuster: "/Blockbuster.png",
     "SF Anytime": "/SF.svg",
     "Amazon Video": "/PrimeVideo.svg",
-    Microsoft: "/Microsoft.svg",
+    "Microsoft Store": "/Microsoft.svg",
+    MUBI: "/Mubi.svg",
   };
 
   function handleToggle() {
@@ -345,7 +346,7 @@ export default function MoviePage() {
             className="bg-slate-200 rounded-full h-12 w-full flex justify-evenly items-center"
           >
             <img
-              className="h-6"
+              className="h-4"
               src={serviceLogos[provider.provider_name]}
               alt={provider.provider_name}
             />
@@ -362,7 +363,7 @@ export default function MoviePage() {
             className="bg-slate-200 rounded-full h-12 w-full flex justify-evenly items-center"
           >
             <img
-              className="h-6"
+              className="h-4"
               src={serviceLogos[provider.provider_name]}
               alt={provider.provider_name}
             />
@@ -539,7 +540,7 @@ export default function MoviePage() {
                             <FaCheck className="text-xl text-slate-950" />
                           )}
                           {!watches[movieDetails.id] ? (
-                            <p className="pl-2 w-full text-sm font-light text-grey-200 flex justify-between items-center">
+                            <p className="pl-2 w-full text-sm font-light text-white flex justify-between items-center">
                               <span className="pr-4 font-archivo font-bold">
                                 WATCHLIST
                               </span>
@@ -632,7 +633,7 @@ export default function MoviePage() {
                       </h3>
                     )}
                   </div>
-                  <div className=" grid grid-cols-2 gap-2 justify-center items-center mt-2  mb-16 ">
+                  <div className=" grid grid-cols-3 gap-2 justify-center items-center mt-2  mb-16 ">
                     {flatrateProviders ? (
                       <>{flatrateProviders}</>
                     ) : (
@@ -648,7 +649,7 @@ export default function MoviePage() {
                       </h3>
                     )}
                   </div>
-                  <div className=" grid grid-cols-3 justify-center items-center mt-2  mb-16">
+                  <div className=" grid grid-cols-3 gap-2 justify-center items-center mt-2  mb-16">
                     {rentProviders ? (
                       <>{rentProviders}</>
                     ) : (
@@ -723,51 +724,63 @@ export default function MoviePage() {
             </h2>
           </div>
           <div className=" flex justify-center items-center ">
-            {similar && similar.length > 0 && similar.poster != "" && (
+            {similar && similar.length > 0 && (
               <SlideMenu>
-                {similar.map((movie, index) => (
-                  <div
-                    key={index}
-                    className="inline-block justify-center items-center pl-8 pt-10 "
-                  >
-                    <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
-                      <img
-                        style={{ border: "0.5px solid grey" }}
-                        className="h-80 rounded-xl hover:cursor-pointer"
-                        src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
-                        alt="poster"
-                      />
-                    </Link>
-                    <p className="">{movie.title}</p>
-                  </div>
-                ))}
+                {similar
+                  .filter((movie) => movie.poster) // filtrera posters utan bild
+                  .map((movie, index) => (
+                    <div
+                      key={index}
+                      className="inline-block justify-center items-center pl-8 pt-10 h-full  "
+                    >
+                      <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                        <img
+                          style={{ border: "0.5px solid grey" }}
+                          className="h-80  rounded-xl hover:cursor-pointer"
+                          src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
+                          alt="poster"
+                        />
+                      </Link>
+                      <p className=" w-full bg-amber-700 text-wrap">
+                        {movie.title}
+                      </p>
+                    </div>
+                  ))}
               </SlideMenu>
             )}
           </div>
         </div>
 
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded shadow-lg w-80">
-              <h2 className="text-xl font-bold mb-4 text-black">
+          <div className="absolute inset-0 flex items-center justify-center z-50">
+            <div
+              className="flex flex-col justify-center items-start p-6 rounded-2xl shadow-lg w-96"
+              style={{
+                border: "0.9px solid grey",
+                backdropFilter: "blur(30px)",
+
+                background: "rgba(17, 10, 26, 0.9)",
+              }}
+            >
+              <h2 className="text-xl text-left font-bold font-archivo mb-4 text-white">
                 Create New List
               </h2>
               <input
                 type="text"
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
-                className="w-full p-2 mb-4 border rounded-full"
+                className="w-96 pl-4 h-12 mb-4 border rounded-full font-semibold font-archivo text-lg"
                 placeholder="List Name"
               ></input>
               <button
                 onClick={handleCreateNewList}
-                className="w-full p-2 bg-blue-500 text-white rounded-full"
+                className="w-96 h-12 bg-[#CFFF5E] text-slate-950 rounded-full font-archivo font-bold text-lg border-none"
               >
                 Create
               </button>
               <button
                 onClick={handleCloseModal}
-                className="w-full p-2 mt-2 text-gray-600 rounded-full"
+                className="w-96 h-12 mt-2 text-gray-600 rounded-full font-archivo font-bold text-lg border-none"
               >
                 Cancel
               </button>

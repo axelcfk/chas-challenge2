@@ -122,22 +122,22 @@ export default function Navbar() {
                 >
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
-                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] rounded-md border-none px-4 py-2 h-12 font-archivo font-bold text-slate-950 hover:bg-gray-100 w-full text-left"
+                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] rounded-full border-none px-4 py-2 h-12 font-archivo font-bold text-slate-950 hover:bg-gray-100 w-full text-left"
                   >
-                    <span className="text-lg font-archivo font-bold text-slate-950">
+                    <span className="text-base font-archivo font-bold text-slate-950 uppercase">
                       AI-Search
                     </span>{" "}
                     <FaMagnifyingGlass className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleSearchTypeSelect("movie")}
-                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] px-4 mt-4 py-2 font-archivo border-none font-bold h-12 rounded-md text-slate-950 hover:bg-gray-100 w-full text-left"
+                    className="flex gap-4 justify-center items-center text-base bg-[#CFFF5E] px-4 mt-4 py-2 font-archivo border-none font-bold h-12 rounded-full text-slate-950 hover:bg-gray-100 w-full text-left"
                     style={{
                       border: "0.9px solid grey",
                       backdropFilter: "blur(10px)",
                     }}
                   >
-                    <span className="text-lg font-archivo font-bold text-slate-950">
+                    <span className="text-base font-archivo font-bold text-slate-950 uppercase">
                       Database Search{" "}
                     </span>
                     <FaMagnifyingGlass className="h-4 w-4" />
