@@ -2024,6 +2024,11 @@ function parseResponse(response) {
 
 const latestSuggestions = [];
 const latestUserQuery = [];
+app.post("/clearSuggestionsAndQueries", (req, res) => {
+  latestSuggestions.length = 0;
+  latestUserQuery.length = 0;
+  res.status(200).json({ message: "Suggestions and queries cleared." });
+});
 
 app.post("/moviesuggest2", async (req, res) => {
   const { token, query: userQuery } = req.body;
@@ -2104,8 +2109,8 @@ app.post("/moviesuggest2", async (req, res) => {
           MOTIVATION: [string]
                   
           When making suggestions, follow these steps:
-          1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a very funny and humoristic way in maximum 250 characters. Also ignore any queries in ${latestUserQuery} if foul language is present.     
-          2. Always take the 10 latest user queries in  ${latestUserQuery} into account to give more accurate suggestions.
+          1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a very funny and humoristic way in maximum 250 characters. Also ignore any queries in ${latestUserQuery} if foul language is present.   
+          2. If there are any queries in ${latestUserQuery} add all of them to the search. The queries in ${latestUserQuery} are always in relation to the previous 4 queries. For example, if i search on "A movie that makes me cry", and after that search on "with more women" the search should be "A movie that makes me cry" + "with more women". 
           3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
           4. Avoid suggesting movies that are already in the latest suggestions.
           5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
