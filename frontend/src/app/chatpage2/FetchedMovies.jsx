@@ -144,11 +144,10 @@ export default function FetchedMovies({
             className="w-full  flex justify-center items-center rounded-2xl"
             style={{
               border: "0.8px solid grey",
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
             }}
           >
             <div
-              className="flex flex-col justify-center items-center w-full z-0"
+              className="flex flex-col justify-center items-center w-full z-0 rounded-2xl"
               style={{
                 backgroundColor: "rgba(141, 126, 255, 0.3)",
               }}

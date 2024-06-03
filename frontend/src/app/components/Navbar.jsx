@@ -120,13 +120,7 @@ export default function Navbar() {
                 </button>
               )}
               {dropdownOpen && (
-                <div
-                  className="absolute right-0 p-8 mt-2  bg-slate-50 rounded-2xl z-20  w-60"
-                  style={{
-                    border: "0.9px solid grey",
-                    backgroundColor: "rgba(141, 126, 255, 1)",
-                  }}
-                >
+                <div className="absolute right-0 p-8 mt-2  bg-slate-950 rounded-2xl z-20  w-60">
                   <button
                     onClick={() => handleSearchTypeSelect("ai")}
                     className="flex justify-center items-center text-base bg-[#CFFF5E] rounded-full  border-none px-4 py-2 h-12 font-archivo font-bold  text-slate-950 hover:bg-gray-100 w-full text-left"

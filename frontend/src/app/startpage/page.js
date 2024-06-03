@@ -68,7 +68,6 @@ export default function Startpage() {
             <div
               className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
               style={{
-                // border: "1px solid grey",
                 backgroundColor: "rgba(141, 126, 255, 0.1)",
               }}
               ref={parallaxRef}
@@ -155,18 +154,18 @@ export default function Startpage() {
           </div>
         </div> */}
 
-          <div className="w-full md:px-24 mt-14 md:mt-4">
-            <h2
-              className="mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
-              tabIndex={0}
-            >
-             Watchlist
-              {/* (isLiked=false, isInWatchList=false) */}
-            </h2>
-            <div className="md:pl-0">
-              <WatchListSlideMenu2 />
-            </div>
+        <div className="w-full md:px-24 mt-14 md:mt-4">
+          <h2
+            className="mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
+            tabIndex={0}
+          >
+            Watchlist
+            {/* (isLiked=false, isInWatchList=false) */}
+          </h2>
+          <div className="md:pl-0">
+            <WatchListSlideMenu2 />
           </div>
+        </div>
 
         {/* <div className="w-full md:px-24 ">
             <h2 className="mb-8 md:pl-0 uppercase">
