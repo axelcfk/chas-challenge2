@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearch } from "../context/SearchContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { TbEdit } from "react-icons/tb";
+import { host } from "../utils";
 
 import { postMovieProvidersToDatabase, postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
@@ -217,6 +218,35 @@ export default function ChatPage2() {
 
     return () => clearTimeout(timer);
   }, [currentText, animationPhase, currentPhrase]);
+
+
+  async function resetLatestQueryAndSuggestions() {
+   
+    try {
+      
+      //const token = localStorage.getItem("token");
+
+      const response = await fetch(`${host}/resetlatestuserqueryandsuggestions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+         // token: token,
+        }),
+
+      });
+
+      const data = await response.json();
+
+      if (data.message) {
+        console.log(data.message);
+      } else {
+        console.log("failed receiving data.message from /resetlatestuserqueryandsuggestions endpoint");
+      }
+    } catch (error ) {
+      console.error("Failed to reset latest user query and suggestions", error);
+    }
+    }
+
   return (
     <ProtectedRoute>
       <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
@@ -273,7 +303,10 @@ export default function ChatPage2() {
             <div className="mt-20">
               <div className="flex flex-col justify-end items-end">
                 <button
-                  onClick={() => resetState()}
+                  onClick={() => {
+                    resetState()
+                    resetLatestQueryAndSuggestions();
+                  }}
                   className="pb-4  bg-transparent border-none hover:cursor-pointer"
                 >
                   <TbEdit size={35} color="#CFFF5E" />

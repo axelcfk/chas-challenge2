@@ -2025,6 +2025,17 @@ function parseResponse(response) {
 const latestSuggestions = [];
 const latestUserQuery = [];
 
+
+
+app.post("/resetlatestuserqueryandsuggestions", async (req, res) => {
+  latestUserQuery.length = 0;  // This will empty the array
+  latestSuggestions.length = 0;      // This will empty the array
+
+  console.log("latestUserQuery and latestSuggestions has been reset");
+  res.send({ message: "Arrays have been reset." });
+});
+
+
 app.post("/moviesuggest2", async (req, res) => {
   const { token, query: userQuery } = req.body;
 
@@ -2054,7 +2065,7 @@ app.post("/moviesuggest2", async (req, res) => {
   let likedMovies;
   try {
     likedMovies = await query(
-      "SELECT movie_id FROM liked_movies WHERE user_id = ?",
+      "SELECT movie_title FROM liked_movies WHERE user_id = ?",
       [currentUserId]
     );
   } catch (error) {
@@ -2062,9 +2073,9 @@ app.post("/moviesuggest2", async (req, res) => {
     return res.status(500).send("Error fetching liked movies");
   }
 
-  const likedMovieTitles = likedMovies.map((movie) => movie.title);
+  const likedMovieTitles = likedMovies.map((movie) => movie.movie_title);
 
-  console.log("likedMovieTitles: ", likedMovieTitles);
+  //console.log("likedMovieTitles: ", likedMovieTitles);
 
   const likedMovieTitlesString = likedMovieTitles.join(", ");
   console.log("likedMovieTitlesString: ", likedMovieTitlesString);

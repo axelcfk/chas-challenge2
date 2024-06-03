@@ -70,7 +70,7 @@ export default function Startpage() {
                 className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
                 style={{
                   // border: "1px solid grey",
-                  backgroundColor: "rgba(141, 126, 255, 0.1)",
+                  backgroundColor: "#1D1631", //rgba(141, 126, 255, 0.1)
                 }}
                 ref={parallaxRef}
               >

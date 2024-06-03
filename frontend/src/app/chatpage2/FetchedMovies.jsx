@@ -149,7 +149,7 @@ export default function FetchedMovies({
             <div
               className="flex flex-col justify-center items-center w-full z-0 rounded-2xl"
               style={{
-                backgroundColor: "rgba(141, 126, 255, 0.2)",
+                backgroundColor: "#1D1631", //rgba(141, 126, 255, 0.2)
               }}
             >
               <div className="flex flex-col justify-center items-center w-full relative">
@@ -198,8 +198,8 @@ export default function FetchedMovies({
                   </span>
                   <span className="pl-1"> {movie.voteAverage.toFixed(1)}</span>
                 </p>
-                <h2 className="text-base h-14 font-semibold  px-2">
-                  {movie.title}
+                <h2 className="text-base h-14 font-semibold px-2">
+                  {movie.title.length > 45 ? movie.title.substring(0, 45) + '...' : movie.title}
                 </h2>
                 {/* {movie.streaming?.flatrate?.some((provider) =>
                   supportedServices.includes(provider.provider_name)
