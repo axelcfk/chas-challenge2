@@ -2024,6 +2024,11 @@ function parseResponse(response) {
 
 const latestSuggestions = [];
 const latestUserQuery = [];
+app.post("/clearSuggestionsAndQueries", async (req, res) => {
+  latestSuggestions.length = 0;
+  latestUserQuery.length = 0;
+  res.status(200).json({ message: "Suggestions and queries cleared." });
+});
 
 
 
@@ -2081,7 +2086,7 @@ app.post("/moviesuggest2", async (req, res) => {
   console.log("likedMovieTitlesString: ", likedMovieTitlesString);
   latestUserQuery.push(userQuery);
   if (latestUserQuery.length > 15) {
-    latestUserQuery.pop(); // Remove the oldest one if the length exceeds 15
+    latestUserQuery.shift(); // Remove the oldest one if the length exceeds 15
   }
   console.log("Received user query:", userQuery);
 
@@ -2115,19 +2120,18 @@ app.post("/moviesuggest2", async (req, res) => {
           MOTIVATION: [string]
                   
           When making suggestions, follow these steps:
-          1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a very funny and humoristic way in maximum 250 characters. Also ignore any queries in ${latestUserQuery} if foul language is present.     
-          2. Always take the 10 latest user queries in  ${latestUserQuery} into account to give more accurate suggestions.
+          1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a humorous way in maximum 250 characters. Ignore any queries in ${latestUserQuery} if foul language is present.   
+          2. If there are any queries in ${latestUserQuery}, add all of them to the search. The queries in ${latestUserQuery} are always in relation to the previous 4 queries. For example, if I search on "A movie that makes me cry" and then search on "with more women", the search should be "A movie that makes me cry" + "with more women". 
           3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
           4. Avoid suggesting movies that are already in the latest suggestions.
-          5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+          5. Avoid suggesting movies that are already in the user's liked movies: ${likedMovieTitles.join(
+            ", "
+          )}.
           6. Consider the genres, themes, or keywords from the latest user query to refine the search.
           7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
-          8. If no suitable suggestions are available, explain why and provide alternative options.
-          For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
-                  
-          If you have no suggestions, explain in your response in maximum 200 characters. Also, look inside ${latestSuggestions.join(
-            ", "
-          )} and ${latestUserQuery} and suggest movies based on the queries.`,
+          8. For each query in ${latestUserQuery}, ensure the suggestions are distinct and progressively refined based on the user's subsequent queries. Reference previous suggestions to avoid repetition and improve relevance.
+          9. If no suitable suggestions are available, explain why and provide alternative options.
+          For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.`,
         },
         {
           role: "user",
@@ -2166,7 +2170,7 @@ app.post("/moviesuggest2", async (req, res) => {
     if (movieNames.length === 6) {
       latestSuggestions.unshift(movieNames.join(", "));
       if (latestSuggestions.length > 36) {
-        latestSuggestions.pop(); // Remove the oldest one if the length exceeds 36
+        latestSuggestions.shift(); // Remove the oldest one if the length exceeds 36
       }
 
       res.json({ movieNames, motivation });

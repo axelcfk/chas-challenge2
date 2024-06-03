@@ -6,6 +6,7 @@ import { useSearch } from "../context/SearchContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { TbEdit } from "react-icons/tb";
 import { host } from "../utils";
+import axios from "axios";
 
 import { postMovieProvidersToDatabase, postMovieToDatabase } from "../utils";
 import AutoQuery from "./autoQuery";
@@ -181,6 +182,23 @@ export default function ChatPage2() {
     router.back();
   };
 
+  const clearSuggestionsAndQueries = async () => {
+    try {
+      await fetch("/clearSuggestionsAndQueries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log("Suggestions and queries cleared.");
+    } catch (error) {
+      console.error("Error clearing suggestions and queries:", error);
+    }
+  };
+
+  const handleReset = () => {
+    resetState();
+    clearSuggestionsAndQueries();
+  };
+
   const [currentText, setCurrentText] = useState("Hello I'm LUDI!");
   const [animationPhase, setAnimationPhase] = useState("erasing");
   const [currentPhrase, setCurrentPhrase] = useState(0);
@@ -212,7 +230,7 @@ export default function ChatPage2() {
       } else {
         timer = setTimeout(() => {
           setAnimationPhase("erasing");
-        }, 6000); //vänta 6 sek innan radera
+        }, 7000); //vänta 7 sek innan radera
       }
     }
 
@@ -303,10 +321,7 @@ export default function ChatPage2() {
             <div className="mt-20">
               <div className="flex flex-col justify-end items-end">
                 <button
-                  onClick={() => {
-                    resetState()
-                    resetLatestQueryAndSuggestions();
-                  }}
+                  onClick={handleReset}
                   className="pb-4  bg-transparent border-none hover:cursor-pointer"
                 >
                   <TbEdit size={35} color="#CFFF5E" />
