@@ -178,7 +178,7 @@ export default function Navbar() {
                       handleInputChange={(e) => setInput(e.target.value)}
                       handleQuerySubmit={handleQuerySubmit}
                       heightDiv={"h-10"}
-                      placeholder={"AI SEARCH"}
+                      placeholder={"Search with LUDI..."}
                       input={input}
                       setInput={setInput}
                       loading={loading}
