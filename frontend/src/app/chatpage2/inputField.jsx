@@ -7,6 +7,7 @@ export default function InputField({
   input,
   placeholder,
   heightDiv,
+  loading,
 }) {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -28,14 +29,20 @@ export default function InputField({
       }}
       className={`${heightDiv} flex justify-center items-center rounded-full z-10 px-4`}
     >
-      <input
-        className="h-14 bg-transparent w-full  md:w-1/3 rounded-full font-archivo font-semibold text-xl text-center text-slate-50 md:mr-3 border-none"
-        type="text"
-        value={input}
-        onChange={handleInputChange}
-        placeholder={placeholder}
-        onKeyDown={handleKeyDown}
-      />
+      {!loading ? (
+        <input
+          className="h-14 bg-transparent w-full  md:w-1/3 rounded-full font-archivo font-semibold text-xl text-center text-slate-50 md:mr-3 border-none"
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          placeholder={placeholder}
+          onKeyDown={handleKeyDown}
+        />
+      ) : (
+        <div className="h-8 bg-transparent w-full pl-6 md:w-1/3 rounded-full font-archivo font-semibold text-lg text-center text-slate-50 md:mr-3 border-none">
+          Finding the best match for you...{" "}
+        </div>
+      )}
       <button
         className="flex justify-center items-center border-none bg-transparent"
         onChange={handleInputChange}

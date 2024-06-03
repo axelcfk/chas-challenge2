@@ -123,7 +123,7 @@ export default function MovieSelection() {
               <div className="overlay">
                 <FaHeart
                   //className="text-green-500"
-                  className="text-[#EA3546]"
+                  className="text-[#CFFF5E]"
                   style={{
                     fontSize: "40px",
                     position: "absolute",

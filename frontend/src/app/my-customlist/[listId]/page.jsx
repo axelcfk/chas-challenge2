@@ -58,8 +58,9 @@ export default function MyCustomList() {
   };
 
   return (
-    <div className="my-customlist-container">
-      <h1>{listName}</h1>
+    <div className="my-customlist-container bg-[#110A1A]">
+      <div></div>
+      <h1 className="mt-14 mb-6 flex justify-center font-archivo">{listName}</h1>
       {loadingLists ? (
         <p>Loading movies...</p>
       ) : (
@@ -86,11 +87,6 @@ export default function MyCustomList() {
                         Remove from list
                       </button>
                     </li>
-                    <li>
-                      <button>Add to watchlist</button>
-                    </li>
-                    <li>More alternatives </li>
-                    <li>More alternatives </li>
                   </ul>
                 </div>
               )}

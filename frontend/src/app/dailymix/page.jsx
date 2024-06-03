@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { host } from "../utils";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function DailyMix() {
   const [moviesAndReasoning, setMoviesAndReasoning] = useState({});
   //const [buttonClicked, setButtonClicked] = useState(false);
 
   const [loading, setLoading] = useState(false);
-/* 
+  /* 
   useEffect(() => {
 
     handleQuerySubmit();
@@ -17,7 +18,6 @@ export default function DailyMix() {
  */
   const handleQuerySubmit = async () => {
     setLoading(true);
-
 
     try {
       const response = await fetch(`${host}/generatedailymix`, {
@@ -39,43 +39,44 @@ export default function DailyMix() {
     } catch (error) {
       console.error("Failed to fetch AI suggestion:", error);
     } finally {
-      setLoading(false)
-
+      setLoading(false);
     }
     // setLoading(false);
     //setLoading(false);
-
   };
 
-
   // TODO: fetch movie details, ID most importantly, and then create an array of movie objects (title, id) and send that to postAddToDailyMix
-
-  
-
-
 
   if (loading) {
     return <div>Loading Weekly mix...</div>;
   }
 
   return (
-    <div>
-      <h1>DAILY MIX</h1>
-      <button
-        className={`h-12 bg-slate-400 text-slate-900 w-full md:w-1/3 rounded-full md:mt-0 mt-5 font-semibold text-xl`}
-        onClick={() => {
-         // setButtonClicked(true)
-          handleQuerySubmit();
-        }}
-        //disabled={!input}
-      >
-        Generate Weekly mix
-      </button>
-
+    <ProtectedRoute>
       <div>
-       {/*   <p> {movieDetails.suggestion ? ( <p>{movieDetails.suggestion}</p>) : ("No titles generated") } </p> */}
-       <div>{moviesAndReasoning.titles ? (<p>{moviesAndReasoning.titles}</p>) : ("No titles generated")}</div>
+        <h1>DAILY MIX</h1>
+        <button
+          className={`h-12 bg-slate-400 text-slate-900 w-full md:w-1/3 rounded-full md:mt-0 mt-5 font-semibold text-xl`}
+          onClick={() => {
+            // setButtonClicked(true)
+            handleQuerySubmit();
+          }}
+          //disabled={!input}
+        >
+          Generate Weekly mix
+        </button>
+
+        <div>
+          {/*   <p> {movieDetails.suggestion ? ( <p>{movieDetails.suggestion}</p>) : ("No titles generated") } </p> */}
+          <div>
+            {moviesAndReasoning.titles ? (
+              <p>{moviesAndReasoning.titles}</p>
+            ) : (
+              "No titles generated"
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
-import { useRouter } from "next/navigation";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
 import { SlArrowLeft, SlUser, SlArrowDown } from "react-icons/sl";
-
 import { useEffect, useState, useRef } from "react";
 import {
   fetchWatchAndLikeList,
@@ -16,7 +16,8 @@ import {
 } from "../../utils";
 import { checkLikeList } from "../../utils";
 import SlideMenu from "../../components/SlideMenu";
-import Navbar from "@/app/components/Navbar";
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 export default function MoviePage() {
   const [movieDetails, setMovieDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -153,6 +154,26 @@ export default function MoviePage() {
       console.error("Failed to create new list:", error);
     }
     handleCloseModal();
+  };
+
+  const handleAddToSeenList = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("http://localhost:3010/api/toggleSeen", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token, movieId }),
+      });
+      const data = await response.json();
+      setSeen((prevSeen) => ({
+        ...prevSeen,
+        [movieId]: data.seen,
+      }));
+    } catch (error) {
+      console.error("Error toggling seen status", error);
+    }
   };
 
   useEffect(() => {
@@ -366,85 +387,36 @@ export default function MoviePage() {
         ))
     : null;
 
-  // const handleAddMovieToList = async (listId) => {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:3010/me/lists/add/${listId}`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ movieId: movieDetails.id }),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     console.log(data.message);
-  //   } catch (error) {
-  //     console.error("Failed to add movie to list:", error);
-  //   }
-  //   handleCloseModal();
-  // };
-
-  // const handleCreateNewList = async () => {
-  //   try {
-  //     const response = await fetch(`http://localhost:3010/me/lists/new`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ name: newListName, movieId: movieDetails.id }),
-  //     });
-  //     const data = await response.json();
-  //     setUserLists([...userLists, { id: data.listId, name: newListName }]);
-  //     setNewListName("");
-  //   } catch (error) {
-  //     console.error("Failed to create new list:", error);
-  //   }
-  //   handleCloseModal();
-  // };
-
-  //console.log("moviedetails:", movieDetails);
-
   console.log("button clicked", likeButtonClicked);
 
   return (
-    <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
-      {/* <Navbar /> */}
+    <ProtectedRoute>
+      <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
+        <button
+          className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
+          onClick={handleNavigation}
+        >
+          <SlArrowLeft />
+        </button>
 
-      {/* <BackButton /> */}
-      <button
-        className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
-        onClick={handleNavigation}
-      >
-        <SlArrowLeft />
-      </button>
+        {movieDetails.backdrop && (
+          <div className="">
+            <img
+              id="img"
+              className="absolute top-0 left-0 w-full object-cover z-0 "
+              src={movieDetails.backdrop}
+              alt="Movie Backdrop"
+            />
+            <div className="gradient"></div>
+          </div>
+        )}
 
-      {movieDetails.backdrop && (
-        <div className="">
-          <img
-            id="img"
-            className="absolute top-0 left-0 w-full object-cover z-0 "
-            src={movieDetails.backdrop}
-            alt="Movie Backdrop"
-          />
-          <div className="gradient"></div>
-        </div>
-      )}
-
-      {loading ? (
-        <LoadingIndicator />
-      ) : (
         <div className="h-full flex flex-col justify-center items-center relative z-10 px-8">
           {movieDetails.title ? (
             <div className="flex flex-col justify-center items-center text-slate-400 ">
               <div className="flex flex-col  justify-center items-center ">
                 <div
                   className="w-full flex flex-row justify-center items-center parallax-container rounded-lg p-5"
-                  // style={{
-                  //   backdropFilter: "blur(15px)",
-                  //   backgroundColor: "rgba(0, 0, 0, 0.1)",
-                  // }}
                   ref={parallaxRef}
                 >
                   <div className="w-full ">
@@ -479,7 +451,6 @@ export default function MoviePage() {
                         </span>
                       </p>
                     </div>
-                    {/* <p>{movieDetails.runtime.toString()} mins</p> */}
                   </div>
                   <div className="flex flex-col w-full justify-center items-center gap-4 ">
                     <div className="relative ">
@@ -513,7 +484,7 @@ export default function MoviePage() {
                         }}
                         className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                       >
-                        {!likeButtonClicked ? (
+                        {!likes[movieDetails.id] ? (
                           <div className="flex flex-col justify-center items-center">
                             <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
                             <p className="text-slate-100 mb-1 text-sm">Like</p>
@@ -522,39 +493,30 @@ export default function MoviePage() {
                           <div className="flex flex-col justify-center items-center">
                             <FaHeart className="h-5 w-5 text-[#CFFF5E] mb-1" />
                             <p className="text-[#CFFF5E] mb-1 text-sm font-archivo font-semibold">
-                              Unlike
+                              Liked
                             </p>
                           </div>
                         )}
                       </div>
                     </div>
+                    <button
+                      onClick={handleAddToSeenList}
+                      className={`bg-transparent text-white border-none flex items-center ${
+                        seen[movieId] ? "text-green-500" : "text-white"
+                      }`}
+                    >
+                      <FaCheck /> &nbsp;{" "}
+                      {seen[movieId] ? "Seen" : "Mark as Seen"}
+                    </button>
                     <div className="w-full flex flex-col justify-center items-center gap-4">
                       <div className="absolute left-4 right-4 mt-8">
                         <button
-                          onClick={() => {
-                            handleButtonClicked(movieDetails.id)
-                            if (!watches[movieDetails.id]) {
-                              postAddToWatchList(
-                                movieDetails.id,
-                                "movie",
-                                movieDetails.title
-                              );
-                            } else {
-                              postRemoveFromWatchList(
-                                movieDetails.id,
-                                "movie",
-                                movieDetails.title
-                              );
-                            }
-                            
-                          }
-
-                          }
+                          onClick={() => handleButtonClicked(movieDetails.id)}
                           className={`w-full h-10 ${
                             !watches[movieDetails.id]
-                              ? "bg-transparent "
+                              ? "bg-transparent"
                               : "bg-[#CFFF5E] border-none"
-                          } flex justify-center items-center rounded-full px-3  border-2 border-solid`}
+                          } flex justify-center items-center rounded-full px-3 border-none`}
                         >
                           {!watches[movieDetails.id] ? (
                             <FaPlus className="text-xl text-gray-200" />
@@ -577,7 +539,9 @@ export default function MoviePage() {
                         </button>
                         <button
                           onClick={handleToggleDropdown}
-                          className="absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950  cursor-pointer px-3"
+                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-gray top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${
+                            !watches[movieDetails.id] && "text-white"
+                          }  cursor-pointer px-3`}
                         >
                           <SlArrowDown fontFamily="archivo" fontWeight={600} />
                         </button>
@@ -595,11 +559,8 @@ export default function MoviePage() {
                               {userLists.map((list) => (
                                 <li
                                   key={list.id}
-                                  className="px-4 py-2  cursor-pointer"
+                                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                                   onClick={() => handleAddMovieToList(list.id)}
-                                  style={{
-                                    border: "0.9px solid grey",
-                                  }}
                                 >
                                   {list.name}
                                 </li>
@@ -686,119 +647,115 @@ export default function MoviePage() {
             </div>
           )}
         </div>
-      )}
-      {/* <div className=" w-screen  flex justify-center items-center"> */}
-      <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
-        {/* <div className="absolute inset-x-0 top-0 h-16 gradient-top"></div>
-        <div className="absolute inset-x-0 bottom-0 h-16 gradient-bottom"></div> */}
-        <iframe
-          className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
-          src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
-
-      {/* </div> */}
-
-      <div className="w-full pb-5 text-xl pt-16 ">
-        <h2 className="text-xl px-8 font-normal">ACTORS</h2>
-      </div>
-      <div className="px-5 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-6">
-        {credits.actors.map((actor, index) => (
-          <div
-            key={index}
-            className="w-full flex flex-col justify-between items-center"
-          >
-            {actorImages[actor.personId] ? (
-              <Link href={`/actor/${encodeURIComponent(actor.personId)}`}>
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300 hover:border-4 hover:border-blue-500 transition-all duration-300">
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${
-                      actorImages[actor.personId]
-                    }`}
-                    alt={actor.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null; // Prevent looping
-                      e.target.src = "path_to_default_image.jpg"; // Fallback image
-                    }}
-                  />
+        <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
+          <iframe
+            className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
+            src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+        <div className="w-full pb-5 text-xl pt-16 ">
+          <h2 className="text-xl px-8 font-normal">ACTORS</h2>
+        </div>
+        <div className="px-5 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-6">
+          {credits.actors.map((actor, index) => (
+            <div
+              key={index}
+              className="w-full flex flex-col justify-between items-center"
+            >
+              {actorImages[actor.personId] ? (
+                <Link href={`/actor/${encodeURIComponent(actor.personId)}`}>
+                  <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300 hover:border-4 hover:border-blue-500 transition-all duration-300">
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${
+                        actorImages[actor.personId]
+                      }`}
+                      alt={actor.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "path_to_default_image.jpg";
+                      }}
+                    />
+                  </div>
+                </Link>
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-gray-300 flex justify-center items-center">
+                  <span className=" text-gray-500 text-6xl ">
+                    <SlUser />
+                  </span>
                 </div>
-              </Link>
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-300 flex justify-center items-center">
-                <span className=" text-gray-500 text-6xl ">
-                  <SlUser />
-                </span>
+              )}
+              <div className="  h-20">
+                <p className="text-sm text-center mt-1 mb-2 font-semibold ">
+                  {actor.name}
+                </p>
+                <p className="text-xs text-center ">{actor.character}</p>
               </div>
+            </div>
+          ))}
+        </div>
+        <div className="bg-[#1B1725] w-full py-16 ">
+          <div className=" w-full ">
+            <h2 className="px-8 text-xl uppercase font-normal">
+              You may also like
+            </h2>
+          </div>
+          <div className=" flex justify-center items-center ">
+            {similar && similar.length > 0 && similar.poster != "" && (
+              <SlideMenu>
+                {similar.map((movie, index) => (
+                  <div
+                    key={index}
+                    className="inline-block justify-center items-center pl-8 pt-10 "
+                  >
+                    <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                      <img
+                        style={{ border: "0.5px solid grey" }}
+                        className="h-80 rounded-xl hover:cursor-pointer"
+                        src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
+                        alt="poster"
+                      />
+                    </Link>
+                    <p className="">{movie.title}</p>
+                  </div>
+                ))}
+              </SlideMenu>
             )}
-            <div className="  h-20">
-              <p className="text-sm text-center mt-1 mb-2 font-semibold ">
-                {actor.name}
-              </p>
-              <p className="text-xs text-center ">{actor.character}</p>
+          </div>
+        </div>
+
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg w-80">
+              <h2 className="text-xl font-bold mb-4 text-black">
+                Create New List
+              </h2>
+              <input
+                type="text"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                className="w-full p-2 mb-4 border rounded-full"
+                placeholder="List Name"
+              ></input>
+              <button
+                onClick={handleCreateNewList}
+                className="w-full p-2 bg-blue-500 text-white rounded-full"
+              >
+                Create
+              </button>
+              <button
+                onClick={handleCloseModal}
+                className="w-full p-2 mt-2 text-gray-600 rounded-full"
+              >
+                Cancel
+              </button>
             </div>
           </div>
-        ))}
+        )}
       </div>
-      <div className="bg-[#1B1725] w-full py-16 ">
-        <div className=" w-full ">
-          <h2 className="px-8 text-xl uppercase font-normal">
-            You may also like
-          </h2>
-        </div>
-        <div className=" flex justify-center items-center ">
-          {similar && similar.length > 0 && similar.poster != "" && (
-            <SlideMenu>
-              {similar.map((movie, index) => (
-                <div
-                  key={index}
-                  className="inline-block justify-center items-center pl-8 pt-10 "
-                >
-                  <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
-                    <img
-                      style={{ border: "0.5px solid grey" }}
-                      className="h-80 rounded-xl hover:cursor-pointer"
-                      src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
-                      alt="poster"
-                    />
-                  </Link>
-                  <p className="">{movie.title}</p>
-                </div>
-              ))}
-            </SlideMenu>
-          )}
-        </div>
-      </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0  flex items-center justify-center z-50">
-          <div className="bg-white p-6  rounded shadow-md w-80">
-            <h2 className="text-xl font-bold mb-4">Create New List</h2>
-            <input
-              type="text"
-              value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
-              className="w-full p-2 mb-4 border rounded"
-              placeholder="List Name"
-            ></input>
-            <button
-              onClick={handleCreateNewList()}
-              className="w-full p-2 bg-[#CFFF5E] text-white rounded"
-            >
-              Create
-            </button>
-            <button
-              onClick={handleCloseModal()}
-              className="w-full p-2 mt-2 text-gray-600"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    </ProtectedRoute>
   );
 }
