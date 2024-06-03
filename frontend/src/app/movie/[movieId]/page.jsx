@@ -531,7 +531,7 @@ export default function MoviePage() {
                             !watches[movieDetails.id]
                               ? "bg-transparent "
                               : "bg-[#CFFF5E] border-none"
-                          } flex justify-center items-center rounded-full px-3 border-2 border-solid border-white`}
+                          } flex justify-center items-center rounded-full px-3  border-2 border-solid border-white`}
                         >
                           {!watches[movieDetails.id] ? (
                             <FaPlus className="text-xl text-gray-200" />
