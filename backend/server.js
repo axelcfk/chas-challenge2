@@ -2074,6 +2074,8 @@ app.post("/moviesuggest2", async (req, res) => {
   }
   console.log("Received user query:", userQuery);
 
+  console.log("queries", latestUserQuery, "suggestions", latestSuggestions);
+
   try {
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
@@ -2103,13 +2105,13 @@ app.post("/moviesuggest2", async (req, res) => {
                   
           When making suggestions, follow these steps:
           1. If the query is inappropriate (i.e., foul language, sexual language that you deem inappropriate or anything else), don't suggest any movies but respond in a very funny and humoristic way in maximum 250 characters. Also ignore any queries in ${latestUserQuery} if foul language is present.     
-          3. Review the latest user query: ${latestUserQuery}.
-          4. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
-          5. Avoid suggesting movies that are already in the latest suggestions.
-          6. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
-          7. Consider the genres, themes, or keywords from the latest user query to refine the search.
-          8. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
-          9. If no suitable suggestions are available, explain why and provide alternative options.
+          2. Always review the latest user query in: ${latestUserQuery}.
+          3. Examine the latest suggestions: ${latestSuggestions.join(", ")}.
+          4. Avoid suggesting movies that are already in the latest suggestions.
+          5. Avoid suggesting movies that are already in ${likedMovieTitlesString}.
+          6. Consider the genres, themes, or keywords from the latest user query to refine the search.
+          7. If a new user query suggests a refinement (e.g., from "action" to "comedy action"), adjust the suggestions accordingly.
+          8. If no suitable suggestions are available, explain why and provide alternative options.
           For example, if the latest user query is "action comedy" and the latest suggestions included "Die Hard" and "Mad Max", suggest movies that blend action and comedy while avoiding those already suggested.
                   
           If you have no suggestions, explain in your response in maximum 200 characters. Also, look inside ${latestSuggestions.join(
@@ -3204,7 +3206,6 @@ app.get("/favorites/:userId", async (req, res) => {
   }
 });
 
-
 // Endpoint för att kunna rensa/uppdatera favoriter
 app.delete("/favorites/:userId", async (req, res) => {
   const userId = req.params.userId;
@@ -3223,5 +3224,3 @@ app.delete("/favorites/:userId", async (req, res) => {
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });
-
-
