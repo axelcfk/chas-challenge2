@@ -539,7 +539,7 @@ export default function MoviePage() {
                             <FaCheck className="text-xl text-slate-950" />
                           )}
                           {!watches[movieDetails.id] ? (
-                            <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
+                            <p className="pl-2 w-full text-sm font-light text-grey-200 flex justify-between items-center">
                               <span className="pr-4 font-archivo font-bold">
                                 WATCHLIST
                               </span>
@@ -554,7 +554,11 @@ export default function MoviePage() {
                         </button>
                         <button
                           onClick={handleToggleDropdown}
-                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full border-x-white top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${
+                          className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full ${
+                            !watches[movieDetails.id]
+                              ? "border-x-white"
+                              : "border-x-black"
+                          } top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${
                             !watches[movieDetails.id] && "text-white"
                           }  cursor-pointer px-3`}
                         >
