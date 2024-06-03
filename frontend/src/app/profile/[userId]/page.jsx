@@ -258,7 +258,7 @@ export default function Profile() {
                   onClick={() =>
                     router.push("http://localhost:3000/choose-favorites")
                   }
-                  className="h-7 w-14"
+                  className="h-6 w-12 rounded-full border-none"
                 >
                   Edit
                 </button>
