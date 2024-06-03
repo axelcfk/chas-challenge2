@@ -541,7 +541,7 @@ export default function MoviePage() {
                           {!watches[movieDetails.id] ? (
                             <p className="pl-2 w-full text-sm font-light text-gray-200 flex justify-between items-center">
                               <span className="pr-4 font-archivo font-bold">
-                                WATCHLIST
+                                WATCHLISTT
                               </span>
                             </p>
                           ) : (
