@@ -93,26 +93,32 @@ export default function Startpage() {
               </div>
             </div>
           </main>
-          <div className="w-full md:px-24 ">
-            <h2
-              className="md:mt-4 mb-8 md:pl-0 uppercase text-2xl font-archivo font-bold"
-              tabIndex={0}
-            >
-              Popular today
-              {/* (isLiked=false, isInWatchList=false) */}
-            </h2>
+          <div className="w-full md:px-24 "> {/* mt-14 */}
+            <div className="flex gap-2 items-center mb-8 md:pl-0">
+              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
+              <h2
+                className="md:pl-0 uppercase text-2xl font-archivo font-bold"
+                tabIndex={0}
+              >
+                Popular today
+                {/* (isLiked=false, isInWatchList=false) */}
+              </h2>
+            </div>
             <div className="md:pl-0">
               <PopularSlideMenu2 />
             </div>
           </div>
 
-          <div className="w-full md:px-24 ">
-            <h2
-              className="mt-14 mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
-              tabIndex={0}
-            >
-              My Mix
-            </h2>
+          <div className="w-full md:px-24 mt-14">
+            <div className="flex gap-2 items-center mb-8 md:pl-0">
+              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
+              <h2
+                className="uppercase text-2xl font-archivo font-bold"
+                tabIndex={0}
+              >
+                My Mix
+              </h2>
+            </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
               <div className="flex justify-center items-center pl-4 md:pl-0 h-40   bg-[#CFFF5E] rounded-3xl card-shadow2 p-8">
@@ -157,14 +163,18 @@ export default function Startpage() {
           </div>
         </div> */}
 
-          <div className="w-full md:px-24 mt-14 md:mt-4">
-            <h2
-              className="mb-8 md:pl-0 uppercase text-2xl  font-archivo font-bold"
-              tabIndex={0}
-            >
-              Watchlist
-              {/* (isLiked=false, isInWatchList=false) */}
-            </h2>
+          <div className="w-full md:px-24 mt-14 ">
+            <div className="flex gap-2 items-center mb-8 md:pl-0">
+              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
+              <h2
+                className="uppercase text-2xl  font-archivo font-bold"
+                tabIndex={0}
+              >
+                Watchlist
+                {/* (isLiked=false, isInWatchList=false) */}
+              </h2>
+            </div>
+
             <div className="md:pl-0">
               <WatchListSlideMenu2 />
             </div>
