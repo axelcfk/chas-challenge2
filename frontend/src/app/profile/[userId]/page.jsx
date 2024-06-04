@@ -275,7 +275,7 @@ export default function Profile() {
             <div className="my-8">
               <div className="flex flex-row justify-between">
                 <h3 className="text-2xl mb-4 font-archivo font-semibold">
-                  My favorites
+                  My Favorites
                 </h3>
                 <button
                   onClick={() =>
@@ -349,9 +349,9 @@ export default function Profile() {
                           <div className="h-8 float-end">
                             <button
                               onClick={() => removeCustomList(list.id)}
-                              className=""
+                              className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
                             >
-                              Delete list
+                              Delete
                             </button>
                           </div>
                         </div>

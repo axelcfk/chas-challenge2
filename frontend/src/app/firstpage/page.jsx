@@ -5,12 +5,50 @@ import "./firstpage.css";
 import { useRef } from "react";
 import { FaDotCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function FirstPage() {
   const videoRef = useRef(null);
 
   const router = useRouter();
 
+  const [currentText, setCurrentText] = useState("Hello I'm LUDI!");
+  const [animationPhase, setAnimationPhase] = useState("erasing");
+  const [currentPhrase, setCurrentPhrase] = useState(0);
+
+  useEffect(() => {
+    let timer;
+
+    const phrases = [
+      "Say hello to LUDI",
+      `Say hello to a new way of finding movies`,
+    ];
+
+    if (animationPhase === "erasing") {
+      if (currentText.length > 0) {
+        timer = setTimeout(() => {
+          setCurrentText((prev) => prev.substring(0, prev.length - 1));
+        }, 5); // hastighet
+      } else {
+        setAnimationPhase("writing");
+        setCurrentPhrase((prev) => (prev === 0 ? 1 : 0)); // Toggle between phrases
+      }
+    } else if (animationPhase === "writing") {
+      if (currentText !== phrases[currentPhrase]) {
+        timer = setTimeout(() => {
+          setCurrentText((prev) =>
+            phrases[currentPhrase].substring(0, prev.length + 1)
+          );
+        }, 5); // hastighet
+      } else {
+        timer = setTimeout(() => {
+          setAnimationPhase("erasing");
+        }, 7000); //vänta 7 sek innan radera
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [currentText, animationPhase, currentPhrase]);
 
   return (
     <div className="h-full bg-black flex flex-col px-5 justify-start items-center">
@@ -42,9 +80,9 @@ export default function FirstPage() {
           Your browser does not support the video tag.
         </video>
       </div>
-      <div className="flex justify-center items-center w-2/3 ">
+      <div className="flex justify-center items-center w-3/4 ">
         <h2 className="text-center font-archivo font-extrabold text-4xl uppercase">
-          Say Hello To Your <br /> AI Movie matcher
+          {currentText}
         </h2>
       </div>
 
