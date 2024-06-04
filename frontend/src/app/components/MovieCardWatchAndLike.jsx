@@ -43,7 +43,7 @@ export default function MovieCardWatchAndLike({
 
   const serviceLogos = {
     Netflix: "/Netflix1.svg",
-    "HBO Max": "/HBO1.svg",
+    "Max": "/HBO1.svg",
     Viaplay: "/Viaplay1.svg",
     "Amazon Prime Video": "/Prime1.svg",
     "Disney Plus": "/Disney1.svg",
@@ -56,18 +56,20 @@ export default function MovieCardWatchAndLike({
 
   return (
     <div
-      className={`inline-block mr-2 rounded-2xl ${className}`}
+      //className={`inline-block mr-2 rounded-2xl ${className}`}
+      className={`w-40 inline-block rounded-2xl ${profilePage ? "mr-0" : "mr-2"}`}
       style={{
-        border: profilePage ? "none" : "0.5px solid grey",
-        backgroundColor: "rgba(141, 126, 255, 0.1)",
+        //border: profilePage ? "none" : "0.5px solid grey",
+        border: "0.5px solid grey",
+        backgroundColor: "#1D1631", //rgba(141, 126, 255, 0.1)
       }}
     >
-      <div className=" h-full w-full flex flex-col justify-center">
-        <div className="h-60 w-full flex justify-center m-0">
-          <div className="relative h-full">
+      <div className="h-full w-40 flex flex-col justify-center">
+        <div className="h-60 w-40 flex justify-center m-0">
+          <div className="relative h-full w-40">
             <Link href={`/movie/${encodeURIComponent(id)}`}>
               <img
-                className="h-full rounded-t-2xl w-40 box-border"
+                className="box-border h-full rounded-t-2xl w-40" // div further down also has w-40
                 src={poster}
                 alt="Movie Poster"
                 aria-label={title}

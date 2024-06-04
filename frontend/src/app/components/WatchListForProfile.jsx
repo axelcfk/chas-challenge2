@@ -167,7 +167,7 @@ export default function WatchListForProfile({ profilePage }) {
       {listsFetched &&
       movieWatchListDetails &&
       movieWatchListDetails.length > 0 ? (
-        <div className="grid-container mt-8">
+        <div className="w-fit grid-container mt-8">
           {movieWatchListDetails.map((movie, index) => (
             <MovieCardWatchAndLike
               key={index}

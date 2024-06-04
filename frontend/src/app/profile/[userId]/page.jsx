@@ -319,8 +319,8 @@ export default function Profile() {
           </div>
         )}
         {activeTab === "Watchlist" && (
-          <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
-            <div className="py-8">
+          <div className="flex w-full rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
+            <div className="flex justify-center w-full py-8 ">
               <WatchListForProfile profilePage={true} />
             </div>
           </div>
