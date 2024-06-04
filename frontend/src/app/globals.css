@@ -355,6 +355,14 @@ input:focus {
   z-index: 20;
 } */
 
+.sectionTitleUnderline {
+  content: '';
+  height: 1.3rem;
+  width: 0.3rem;
+  border-radius: 5px;
+}
+
+
 .card-shadow {
   background-color: rgba(141, 126, 255, 0.2);
   box-shadow: 0 2px 4px rgba(141, 126, 255, 0.2),
