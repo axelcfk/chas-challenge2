@@ -23,7 +23,6 @@ export default function Profile() {
   const tabNames = ["Profile", "Watchlist", "My lists"];
   const tabIndex = tabNames.indexOf(activeTab);
 
-
   const handleNavigation = () => {
     //router.back();
     router.back();
@@ -164,7 +163,11 @@ export default function Profile() {
           data.map(async (movie) => {
             try {
               const movieDetails = await fetchTMDBMovieDetails(movie.movie_id);
-              console.log("Fetched details for movie ID:", movie.movie_id, movieDetails);
+              console.log(
+                "Fetched details for movie ID:",
+                movie.movie_id,
+                movieDetails
+              );
               return {
                 ...movie,
                 title: movieDetails.title,
@@ -172,13 +175,16 @@ export default function Profile() {
                 overview: movieDetails.overview,
               };
             } catch (error) {
-              console.error(`Failed to fetch details for movie ID ${movie.movie_id}:`, error);
+              console.error(
+                `Failed to fetch details for movie ID ${movie.movie_id}:`,
+                error
+              );
               return null;
             }
           })
         );
 
-        setFavorites(moviesWithDetails.filter(movie => movie !== null));
+        setFavorites(moviesWithDetails.filter((movie) => movie !== null));
       } catch (error) {
         console.error("Failed to fetch favorites", error);
       }
@@ -221,12 +227,12 @@ export default function Profile() {
   return (
     <ProtectedRoute>
       <main className="mt-8 bg-[#110A19] min-h-screen">
-      <button
-            className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
-            onClick={handleNavigation}
-          >
-            <SlArrowLeft />
-          </button>
+        <button
+          className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
+          onClick={handleNavigation}
+        >
+          <SlArrowLeft />
+        </button>
         <div className="flex items-center flex-col pb-12 bg-[#110A19]">
           {userData ? (
             <div className="flex items-center flex-col space-y-5 mt-12">
@@ -237,7 +243,9 @@ export default function Profile() {
                   alt="User Profile"
                 />
               </button>
-              <h1 className="font-archivo font-extrabold">{userData.username}</h1>
+              <h1 className="font-archivo font-extrabold">
+                {userData.username}
+              </h1>
             </div>
           ) : (
             <p>Loading user data...</p>
@@ -266,7 +274,9 @@ export default function Profile() {
           <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
             <div className="my-8">
               <div className="flex flex-row justify-between">
-                <h3 className="text-2xl mb-4">My favorites</h3>
+                <h3 className="text-2xl mb-4 font-archivo font-semibold">
+                  My favorites
+                </h3>
                 <button
                   onClick={() =>
                     router.push("http://localhost:3000/choose-favorites")
@@ -290,7 +300,9 @@ export default function Profile() {
               </SlideMenu>
             </div>
             <div className="mb-8">
-              <h3 className="text-2xl mb-4">Recent activity</h3>
+              <h3 className="text-2xl mb-4 font-archivo font-semibold">
+                Recently seen
+              </h3>
               <p className="text-sm"></p>
               <SlideMenu>
                 {seenMovies.map((movie) => (

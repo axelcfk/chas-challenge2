@@ -513,7 +513,7 @@ export default function MoviePage() {
                         seen[movieId] ? "text-[#CFFF5E]" : "text-white"
                       }`}
                     >
-                      {seen[movieId] ? (
+                      {!seen[movieId] ? (
                         <div className="mb-8 flex justify-end items-center">
                           <FaEye color="white" size={24} />
                           <p className="font-semibold font-archivo ml-2">
