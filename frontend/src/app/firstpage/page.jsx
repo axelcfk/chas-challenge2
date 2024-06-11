@@ -31,7 +31,7 @@ export default function FirstPage() {
         }, 5); // hastighet
       } else {
         setAnimationPhase("writing");
-        setCurrentPhrase((prev) => (prev === 0 ? 1 : 0)); // Toggle between phrases
+        setCurrentPhrase((prev) => (prev === 0 ? 1 : 0)); // Toggle between phrase hej hej
       }
     } else if (animationPhase === "writing") {
       if (currentText !== phrases[currentPhrase]) {
