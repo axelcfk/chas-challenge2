@@ -110,9 +110,8 @@ export default function MovieCardWatchAndLike({
         <div className="h-full w-40 flex flex-col justify-start">
           {" "}
           {/* gap-4 */}
-          <div className="w-full ">
             <h2 className="px-2 pt-2 h-12 text-wrap font-semibold overflow-ellipsis">{title}</h2>
-          </div>
+          
           {showRating && (
             <p className="flex justify-start items-center px-2 pt-2">
               <span>
