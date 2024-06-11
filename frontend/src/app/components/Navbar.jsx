@@ -203,10 +203,9 @@ export default function Navbar() {
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-400 focus:outline-none border-none focus:text-white bg-transparent ml-4"
-                /*  bg-transparent funkar inte på Safari?
                 style={{
                   WebkitBackdropFilter: "blur(10px)"
-                }} */
+                }} 
                 aria-label="Burger Menu"
               >
                 <svg
@@ -239,6 +238,9 @@ export default function Navbar() {
             className={`menu-modal ${
               isOpen ? "open" : "close"
             } flex-col md:hidden z-10 absolute w-full left-0 right-0`}
+            style={{
+              WebkitBackdropFilter: "blur(30px)"
+            }} 
           >
             <div className="mt-16">
               {isLoggedIn ? (
