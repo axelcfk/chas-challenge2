@@ -25,6 +25,13 @@ export default function MovieSelection() {
 
   const isFromMixPage = searchParams.get("isFromMixPage");
 
+  useEffect(() => {
+    if (isFromMixPage) {
+      setFromMixPage(true);
+    }
+    // Fetch movies or perform other actions based on the parameter
+  }, [isFromMixPage]);
+
   //const { isFromMixPage } = router.query;
 
   useEffect(() => {
@@ -175,5 +182,18 @@ export default function MovieSelection() {
         )}
       </div>
     </div>
+  );
+}
+
+
+
+import { Suspense } from "react";
+import MovieSelection from "../components/MovieSelection";
+
+export default function MovieSelectionPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MovieSelection />
+    </Suspense>
   );
 }
