@@ -2,6 +2,7 @@
 
 // Almost same code as the populer movies, enhanced to fetch top-rated and populer genre
 // and mix them randomly
+import { Suspense } from "react";
 
 import { useState, useEffect } from "react";
 import { postAddToLikeList } from "../utils";
@@ -10,7 +11,7 @@ import { FaCheckCircle, FaArrowRight, FaHeart } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
 import { postMovieToDatabase } from "../utils";
 
-export default function MovieSelection() {
+function MovieSelection() {
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState(new Set());
   // const [moreOptions, setMoreOptions] = useState(9);
@@ -184,11 +185,6 @@ export default function MovieSelection() {
     </div>
   );
 }
-
-
-
-import { Suspense } from "react";
-import MovieSelection from "../components/MovieSelection";
 
 export default function MovieSelectionPage() {
   return (
