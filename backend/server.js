@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 // CORS-konfiguration
 const corsOptions = {
-  origin: "http://16.171.5.238:3000",
+  origin: ["http://16.171.5.238:3000", "https://ludi-app.com:3000"],
   credentials: true,
 };
 
