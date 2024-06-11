@@ -294,7 +294,7 @@ export default function ChatPage2() {
                 muted
               >
                 <source src="/ai-gif.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
+                Your browser does not support the video.
               </video>
               <div className="video-gradient-overlay"></div>
             </div>
