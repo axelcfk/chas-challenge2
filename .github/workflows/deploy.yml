@@ -25,7 +25,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           source: "."
-          target: "/home/ubuntu/chas-challenge2"
+          target: "/home/ubuntu/ludi"
 
       - name: Build Docker image
         run: docker-compose build --no-cache
@@ -38,6 +38,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/chas-challenge2
+            cd /home/ubuntu/ludi
             sudo docker-compose down
             sudo docker-compose up --build -d
