@@ -14,9 +14,6 @@ jobs:
       - name: Check out Repo
         uses: actions/checkout@v2
 
-      - name: Clean npm cache
-        run: npm cache clean --force
-
       - name: Install Dependencies
         run: npm install
 
