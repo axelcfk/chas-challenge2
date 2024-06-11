@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const response = await axios.post(
-        "http://localhost:3010/sessions",
+        "http://16.171.5.238:3010/sessions",
         { username, password },
         { withCredentials: true }
       );
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://localhost:3010/logout",
+        "http://16.171.5.238:3010/logout",
         {},
         { withCredentials: true }
       );
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         return;
       }
-      const response = await axios.get("http://localhost:3010/session-status", {
+      const response = await axios.get("http://16.171.5.238:3010/session-status", {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });

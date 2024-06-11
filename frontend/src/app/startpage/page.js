@@ -1,17 +1,8 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import Navbar from "../components/Navbar";
 import Link from "next/link";
-import SlideMenu, {
-  SlideMenuMixCard,
-  SlideMenuMovieCard,
-  SlideMenuSearchHistoryCard,
-} from "../components/SlideMenu";
-import DailyMixBasedOnLikesSlideMenu from "../components/DailyMixSlideMenu";
-import LikeListSlideMenu2 from "../components/LikeListSlideMenu2";
 import WatchListSlideMenu2 from "../components/WatchListSlideMenu2";
-import MovieCardWatchAndLike from "../components/MovieCardWatchAndLike";
 import PopularSlideMenu2 from "../components/PopularSlideMenu2";
 import { FaArrowRight, FaHeart } from "react-icons/fa";
 import ProtectedRoute from "../components/ProtectedRoute";

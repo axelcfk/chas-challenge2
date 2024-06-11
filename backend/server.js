@@ -19,13 +19,13 @@ dotenv.config();
 
 const app = express();
 const port = 3010;
-const host = "http://localhost:3010";
+const host = "http://16.171.5.238:3010";
 
 app.use(cookieParser());
 
 // CORS-konfiguration
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "http://16.171.5.238:3000",
   credentials: true,
 };
 
@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 
 // Middleware för att sätta CORS-rubriker korrekt
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "http://16.171.5.238:3000");
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
@@ -43,10 +43,11 @@ const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
 // connect to DB
 const pool = mysql.createPool({
+  host: "mysql",
   user: "root",
   password: "root",
   database: "movie-app-sql",
-  port: process.env.DB_PORT,
+  //port: process.env.DB_PORT,
   // port: 3306 || 8889,
 });
 
@@ -1245,7 +1246,7 @@ app.post("/me/watchlists", async (req, res) => {
   });
 });
 
-// FOR US, if we want to see data here: http://localhost:3010/me/likelists
+// FOR US, if we want to see data here: http://16.171.5.238:3010/me/likelists
 app.get("/me/likelists", (req, res) => {
   const data = {
     likedMoviesList: likedMoviesList,
@@ -1255,7 +1256,7 @@ app.get("/me/likelists", (req, res) => {
   res.json(data);
 });
 
-// FOR US, if we want to see data here: http://localhost:3010/me/watchlists
+// FOR US, if we want to see data here: http://16.171.5.238:3010/me/watchlists
 app.get("/me/watchlists", (req, res) => {
   const data = {
     movieWatchList: movieWatchList,
@@ -3234,5 +3235,5 @@ app.delete("/favorites/:userId", async (req, res) => {
 ///////////////////////////////////////////////////
 
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on http://16.171.5.238:${port}`);
 });

@@ -298,7 +298,7 @@ export default function DailyMixBasedOnLikesSlideMenu() {
 
   async function postAddToMixOnBackend(id, title) {
     try {
-      //const response = await fetch("http://localhost:4000/sessions", {
+      //const response = await fetch("http://16.171.5.238:4000/sessions", {
       const response = await fetch(`${host}/addtodailymixbasedonlikes`, {
         // users sidan på backend! dvs inte riktiga sidan!
         method: "POST",

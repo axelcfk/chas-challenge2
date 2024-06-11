@@ -30,7 +30,7 @@ export default function Profile() {
 
   const removeCustomList = async (listId) => {
     try {
-      const response = await fetch(`http://localhost:3010/me/lists/${listId}`, {
+      const response = await fetch(`http://16.171.5.238:3010/me/lists/${listId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -56,7 +56,7 @@ export default function Profile() {
       console.log("token:", localStorage.getItem("token"));
 
       try {
-        const response = await fetch(`http://localhost:3010/users/${userId}`, {
+        const response = await fetch(`http://16.171.5.238:3010/users/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -79,7 +79,7 @@ export default function Profile() {
     const fetchUserLists = async () => {
       setLoadingLists(true);
       try {
-        const response = await fetch("http://localhost:3010/me/lists");
+        const response = await fetch("http://16.171.5.238:3010/me/lists");
         const data = await response.json();
 
         const listsWithMovieDetails = await Promise.all(
@@ -116,7 +116,7 @@ export default function Profile() {
       try {
         const userId = localStorage.getItem("userId");
         const response = await fetch(
-          `http://localhost:3010/api/seen/${userId}`
+          `http://16.171.5.238:3010/api/seen/${userId}`
         );
         const data = await response.json();
         console.log("Fetched seen list:", data);
@@ -151,7 +151,7 @@ export default function Profile() {
       try {
         const userId = localStorage.getItem("userId");
         const response = await fetch(
-          `http://localhost:3010/favorites/${userId}`
+          `http://16.171.5.238:3010/favorites/${userId}`
         );
         if (!response.ok) {
           throw new Error(`HTTP status ${response.status}`);
@@ -206,7 +206,7 @@ export default function Profile() {
 
   const handleCreateNewList = async () => {
     try {
-      const response = await fetch(`http://localhost:3010/me/lists/new`, {
+      const response = await fetch(`http://16.171.5.238:3010/me/lists/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -279,7 +279,7 @@ export default function Profile() {
                 </h3>
                 <button
                   onClick={() =>
-                    router.push("http://localhost:3000/choose-favorites")
+                    router.push("http://16.171.5.238:3000/choose-favorites")
                   }
                   className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
                 >

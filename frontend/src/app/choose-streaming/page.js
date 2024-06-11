@@ -18,7 +18,7 @@ export default function ChooseStreaming() {
   const handleSumbit = async () => {
     try {
       console.log("Selected Streaming Services:", selectedServices); // de valda streaming-tjänsterna sparas i selectedServices.
-      const response = await fetch("http://localhost:3010/streaming-services", {
+      const response = await fetch("http://16.171.5.238:3010/streaming-services", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

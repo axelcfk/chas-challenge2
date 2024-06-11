@@ -34,7 +34,7 @@ export default function ActorPage() {
 
   //       try {
   //         const response = await fetch(
-  //           "http://localhost:3010/fetchingmoviepagedetails",
+  //           "http://16.171.5.238:3010/fetchingmoviepagedetails",
   //           {
   //             method: "POST",
   //             headers: {

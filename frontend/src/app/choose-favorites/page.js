@@ -18,7 +18,7 @@ export default function ChooseFavorites() {
       try {
         const userId = localStorage.getItem("userId");
         const response = await fetch(
-          `http://localhost:3010/api/seen/${userId}`
+          `http://16.171.5.238:3010/api/seen/${userId}`
         );
         if (!response.ok) {
           throw new Error(`HTTP status ${response.status}`);
@@ -47,7 +47,7 @@ export default function ChooseFavorites() {
       try {
         const userId = localStorage.getItem("userId");
         const response = await fetch(
-          `http://localhost:3010/favorites/${userId}`
+          `http://16.171.5.238:3010/favorites/${userId}`
         );
         if (!response.ok) {
           throw new Error(`HTTP status ${response.status}`);
@@ -81,7 +81,7 @@ export default function ChooseFavorites() {
     // Rensa/uppdatera nuvarande favoriter
     try {
       const response = await fetch(
-        `http://localhost:3010/favorites/${userId}`,
+        `http://16.171.5.238:3010/favorites/${userId}`,
         {
           method: "DELETE",
         }
@@ -96,7 +96,7 @@ export default function ChooseFavorites() {
     // Spara dom nya favoriterna
     for (let movieId of selectedFavorites) {
       try {
-        const response = await fetch("http://localhost:3010/favorites", {
+        const response = await fetch("http://16.171.5.238:3010/favorites", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
