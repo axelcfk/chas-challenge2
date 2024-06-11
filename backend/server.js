@@ -2030,16 +2030,13 @@ app.post("/clearSuggestionsAndQueries", async (req, res) => {
   res.status(200).json({ message: "Suggestions and queries cleared." });
 });
 
-
-
 app.post("/resetlatestuserqueryandsuggestions", async (req, res) => {
-  latestUserQuery.length = 0;  // This will empty the array
-  latestSuggestions.length = 0;      // This will empty the array
+  latestUserQuery.length = 0; // This will empty the array
+  latestSuggestions.length = 0; // This will empty the array
 
   console.log("latestUserQuery and latestSuggestions has been reset");
   res.send({ message: "Arrays have been reset." });
 });
-
 
 app.post("/moviesuggest2", async (req, res) => {
   const { token, query: userQuery } = req.body;
@@ -2135,7 +2132,7 @@ app.post("/moviesuggest2", async (req, res) => {
         },
         {
           role: "user",
-          content: c,
+          content: userQuery,
         },
       ],
     });
