@@ -266,8 +266,12 @@ export default function ChatPage2() {
     }
   }
 
+ /*  <ProtectedRoute>
+    </ProtectedRoute>
+
+ */
+
   return (
-    <ProtectedRoute>
       <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
         <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-20 z-40 text-slate-100 text-xl hover:cursor-pointer"
@@ -366,6 +370,5 @@ export default function ChatPage2() {
           </div>
         ) : null}
       </div>
-    </ProtectedRoute>
   );
 }

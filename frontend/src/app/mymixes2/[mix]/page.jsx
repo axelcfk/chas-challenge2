@@ -232,8 +232,11 @@ export default function Mix() {
   console.log("isAiGenerating: ", isAiGenerating);
   console.log("mixDetails.length :", mixDetails.length);
 
+/*   <ProtectedRoute>
+    </ProtectedRoute>
+ */
+
   return (
-    <ProtectedRoute>
       <div className="bg-[#110A19] min-h-screen p-8 pb-0 pt-20">
         <div className="h-full w-full flex flex-col items-center pt-8">
           <button
@@ -399,6 +402,5 @@ export default function Mix() {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
   );
 }

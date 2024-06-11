@@ -113,8 +113,11 @@ export default function ChooseFavorites() {
     router.push(`/profile/${user.id}`);
   };
 
+ /*  <ProtectedRoute>
+    </ProtectedRoute>
+ */
+
   return (
-    <ProtectedRoute>
       <main className="mt-24">
         <h1>Pick 4 Favorite Movies</h1>
         <div className="movie-list">
@@ -137,6 +140,5 @@ export default function ChooseFavorites() {
 
         <button onClick={saveFavorites}>Save Favorites</button>
       </main>
-    </ProtectedRoute>
   );
 }

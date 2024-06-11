@@ -127,8 +127,11 @@ export default function ActorPage() {
     console.log("actorDetails updated:", actorDetails);
   }, [actorDetails]);
 
+  {/* <ProtectedRoute>
+    </ProtectedRoute>
+ */}
+
   return (
-    <ProtectedRoute>
       <div className="bg-[#110A1A] pt-20">
         <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
@@ -214,6 +217,5 @@ export default function ActorPage() {
           </SlideMenu>
         </div>
       </div>
-    </ProtectedRoute>
   );
 }
