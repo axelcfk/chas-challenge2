@@ -197,13 +197,12 @@ export default function ChatPage2() {
   const handleReset = () => {
     resetState();
     //clearSuggestionsAndQueries();
-    resetLatestQueryAndSuggestions()
+    resetLatestQueryAndSuggestions();
   };
 
   const [currentText, setCurrentText] = useState("Hello I'm LUDI!");
   const [animationPhase, setAnimationPhase] = useState("erasing");
   const [currentPhrase, setCurrentPhrase] = useState(0);
-
   useEffect(() => {
     let timer;
 
@@ -238,39 +237,40 @@ export default function ChatPage2() {
     return () => clearTimeout(timer);
   }, [currentText, animationPhase, currentPhrase]);
 
-
   async function resetLatestQueryAndSuggestions() {
-   
     try {
-      
       //const token = localStorage.getItem("token");
 
-      const response = await fetch(`${host}/resetlatestuserqueryandsuggestions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-         // token: token,
-        }),
-
-      });
+      const response = await fetch(
+        `${host}/resetlatestuserqueryandsuggestions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            // token: token,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.message) {
         console.log(data.message);
       } else {
-        console.log("failed receiving data.message from /resetlatestuserqueryandsuggestions endpoint");
+        console.log(
+          "failed receiving data.message from /resetlatestuserqueryandsuggestions endpoint"
+        );
       }
-    } catch (error ) {
+    } catch (error) {
       console.error("Failed to reset latest user query and suggestions", error);
     }
-    }
+  }
 
   return (
     <ProtectedRoute>
       <div className="bg-black flex flex-col justify-center items-center md:items-start px-8 md:px-20 text-slate-100 z-0  pb-5 ">
         <button
-          className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
+          className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-20 z-40 text-slate-100 text-xl hover:cursor-pointer"
           onClick={handleNavigation}
         >
           <SlArrowLeft />
