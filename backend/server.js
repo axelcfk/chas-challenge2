@@ -38,7 +38,11 @@ app.get("/", (req, res) => {
 
 // Middleware för att sätta CORS-rubriker korrekt
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://16.171.5.238:3000");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "http://16.171.5.238:3000",
+    "https://ludi-app.com:3000"
+  );
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
