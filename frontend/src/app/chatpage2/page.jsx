@@ -292,6 +292,7 @@ export default function ChatPage2() {
                 autoPlay
                 loop
                 muted
+                style={{ pointerEvents: "none", userSelect: "none" }}
               >
                 <source src="/ai-gif.mp4" type="video/mp4" />
                 Your browser does not support the video.
