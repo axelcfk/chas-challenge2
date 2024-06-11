@@ -82,6 +82,7 @@ export default function MovieCardWatchAndLike({
               style={{
                 border: "0.9px solid grey",
                 backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)",
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
               }}
               onClick={() => {
@@ -112,7 +113,7 @@ export default function MovieCardWatchAndLike({
           {" "}
           {/* gap-4 */}
           <div className="w-full">
-            <h2 className="w-full px-2 pt-2 h-12 whitespace-normal break-words font-semibold">
+            <h2 className="w-[95%] px-2 pt-2 h-12 whitespace-normal break-words font-semibold">
               {title}
             </h2>
           </div>
