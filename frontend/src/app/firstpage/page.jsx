@@ -75,6 +75,7 @@ export default function FirstPage() {
           autoPlay
           loop
           muted
+          style={{ pointerEvents: "none", userSelect: "none" }}
         >
           <source src="/ai-gif.mp4" type="video/mp4" />
           Your browser does not support the video tag.
