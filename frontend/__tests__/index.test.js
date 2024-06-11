@@ -1,15 +1,15 @@
-import Startpage from '@/app/startpage/page';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
+import FirstPage from '@/app/firstpage/page';
+ 
 
-
-describe('Home', () => {
-  it('renders a h2 that says Use AI to find a movie!', () => {
+describe('FirstPage', () => {
+  it('renders a "Log in" button when the user is not logged in', () => {
     // Render the Home component
-    render(<Startpage/>);
+    render(<FirstPage />);
 
-    // Check if the h2 with text Use AI to find a movie! is rendered
-    const h2 = screen.getByText('Use AI to find a movie!');
-    expect(h2).toBeInTheDocument();
+    // Check if the "Log In" button is rendered
+    const logInButton = screen.getByText('Log in');
+    expect(logInButton).toBeInTheDocument();
   });
 });
