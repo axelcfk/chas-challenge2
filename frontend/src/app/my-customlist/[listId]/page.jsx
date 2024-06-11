@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import "./my-customList.css";
+import "./my-customlist.css";
 import { useParams } from "next/navigation";
 import { fetchTMDBMovieDetails } from "@/app/utils";
 import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
