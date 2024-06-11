@@ -40,10 +40,9 @@ export default function MovieCardWatchAndLike({
     return <div>Loading...</div>;
   }
 
-
   const serviceLogos = {
     Netflix: "/Netflix1.svg",
-    "Max": "/HBO1.svg",
+    Max: "/HBO1.svg",
     Viaplay: "/Viaplay1.svg",
     "Amazon Prime Video": "/Prime1.svg",
     "Disney Plus": "/Disney1.svg",
@@ -57,7 +56,9 @@ export default function MovieCardWatchAndLike({
   return (
     <div
       //className={`inline-block mr-2 rounded-2xl ${className}`}
-      className={`w-40 inline-block rounded-2xl ${profilePage ? "mr-0" : "mr-2"}`}
+      className={`w-40 inline-block rounded-2xl ${
+        profilePage ? "mr-0" : "mr-2"
+      }`}
       style={{
         //border: profilePage ? "none" : "0.5px solid grey",
         border: "0.5px solid grey",
@@ -111,10 +112,10 @@ export default function MovieCardWatchAndLike({
           {" "}
           {/* gap-4 */}
           <div className="w-full">
-
-          <h2 className="px-2 pt-2 h-12 break-words font-semibold ">{title}</h2>
+            <h2 className="w-full px-2 pt-2 h-12 whitespace-normal break-words font-semibold">
+              {title}
+            </h2>
           </div>
-          
           {showRating && (
             <p className="flex justify-start items-center px-2 pt-2">
               <span>
@@ -134,13 +135,9 @@ export default function MovieCardWatchAndLike({
                 }
               }}
               className={`w-full h-8 bg-inherit border border-solid mb-4 ${
-                !watched
-                  ? "border-white"
-                  : "border-[#cfff5e]"
+                !watched ? "border-white" : "border-[#cfff5e]"
               } hover:cursor-pointer flex justify-center items-center rounded-full box-border ${
-                !watched
-                  ? ""
-                  : "added-button"
+                !watched ? "" : "added-button"
               }`}
             >
               {!watched ? (
