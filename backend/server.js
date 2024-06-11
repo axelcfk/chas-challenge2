@@ -2136,7 +2136,7 @@ app.post("/moviesuggest2", async (req, res) => {
         },
         {
           role: "user",
-          content: userQuery,
+          content: c,
         },
       ],
     });

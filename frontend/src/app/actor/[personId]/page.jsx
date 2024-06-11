@@ -9,6 +9,8 @@ import { FaPlus, FaRegHeart, FaHeart, FaCheck, FaStar } from "react-icons/fa";
 import Link from "next/link";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 
+// hello
+
 export default function ActorPage() {
   const [loading, setLoading] = useState(true);
   const [movieDetails, setMovieDetails] = useState([]);
@@ -127,8 +129,8 @@ export default function ActorPage() {
 
   return (
     <ProtectedRoute>
-<div className="bg-[#110A1A] pt-20">
-<button
+      <div className="bg-[#110A1A] pt-20">
+        <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
           onClick={handleNavigation}
         >

@@ -177,8 +177,8 @@ export default function FetchedMovies({
                       </div>
                     ) : (
                       <div className="flex flex-col justify-center items-center">
-                        <FaHeart className="h-5 w-5 text-[#EA3546] mb-1" />
-                        <p className="text-[#EA3546] mb-1 text-sm">Unlike</p>
+                        <FaHeart className="h-5 w-5 text-[#CFFF5E] mb-1" />
+                        <p className="text-[#CFFF5E] mb-1 text-sm">Unlike</p>
                       </div>
                     )}
                   </div>
@@ -199,7 +199,9 @@ export default function FetchedMovies({
                   <span className="pl-1"> {movie.voteAverage.toFixed(1)}</span>
                 </p>
                 <h2 className="text-base h-14 font-semibold px-2">
-                  {movie.title.length > 45 ? movie.title.substring(0, 45) + '...' : movie.title}
+                  {movie.title.length > 45
+                    ? movie.title.substring(0, 45) + "..."
+                    : movie.title}
                 </h2>
                 {/* {movie.streaming?.flatrate?.some((provider) =>
                   supportedServices.includes(provider.provider_name)
