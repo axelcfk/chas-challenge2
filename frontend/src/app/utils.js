@@ -1,6 +1,6 @@
 "use client";
 
-export const host = "http://localhost:3010";
+export const host = "http://16.171.5.238:3010";
 
 export async function postAddToLikeList(id, movieOrSeries, title) {
   //const [token, setToken] = useState(null);
@@ -20,7 +20,7 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
   const token = localStorage.getItem("token");
 
   try {
-    //const response = await fetch("http://localhost:4000/sessions", {
+    //const response = await fetch("http://16.171.5.238:4000/sessions", {
     const response = await fetch(`${host}/me/likelists/addtolikelist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
@@ -44,7 +44,7 @@ export async function postRemoveFromLikeList(id, movieOrSeries, title) {
   try {
     const token = localStorage.getItem("token");
 
-    //const response = await fetch("http://localhost:4000/sessions", {
+    //const response = await fetch("http://16.171.5.238:4000/sessions", {
     const response = await fetch(`${host}/me/likelists/removefromlikelist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
@@ -67,7 +67,7 @@ export async function postAddToWatchList(id, movieOrSeries, title) {
   try {
     const token = localStorage.getItem("token");
 
-    //const response = await fetch("http://localhost:4000/sessions", {
+    //const response = await fetch("http://16.171.5.238:4000/sessions", {
     const response = await fetch(`${host}/me/watchlists/addtowatchlist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
@@ -92,7 +92,7 @@ export async function postRemoveFromWatchList(id, movieOrSeries, title) {
   try {
     const token = localStorage.getItem("token");
 
-    //const response = await fetch("http://localhost:4000/sessions", {
+    //const response = await fetch("http://16.171.5.238:4000/sessions", {
     const response = await fetch(`${host}/me/watchlists/removefromwatchlist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
@@ -286,7 +286,7 @@ export const handleQuerySubmit = async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:3010/moviesuggest2", {
+    const response = await fetch("http://16.171.5.238:3010/moviesuggest2", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: input, token: token }),

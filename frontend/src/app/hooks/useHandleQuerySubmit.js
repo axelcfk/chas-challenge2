@@ -36,7 +36,7 @@ export const useHandleQuerySubmit = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("http://localhost:3010/moviesuggest2", {
+      const response = await fetch("http://16.171.5.238:3010/moviesuggest2", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: input, token: token }),

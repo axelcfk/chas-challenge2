@@ -19,7 +19,7 @@ export default function MyCustomList() {
       setLoadingLists(true);
       try {
         const response = await fetch(
-          `http://localhost:3010/me/lists/${listId}`
+          `http://16.171.5.238:3010/me/lists/${listId}`
         );
         const data = await response.json();
 

@@ -116,7 +116,7 @@ export default function MoviePage() {
   const handleAddMovieToList = async (listId) => {
     try {
       const response = await fetch(
-        `http://localhost:3010/me/lists/add/${listId}`,
+        `http://16.171.5.238:3010/me/lists/add/${listId}`,
         {
           method: "POST",
           headers: {
@@ -136,7 +136,7 @@ export default function MoviePage() {
 
   const fetchUserLists = async () => {
     try {
-      const response = await fetch("http://localhost:3010/me/lists");
+      const response = await fetch("http://16.171.5.238:3010/me/lists");
       const data = await response.json();
       setUserLists(data);
       console.log("Fetcheded user lists:", data);
@@ -147,7 +147,7 @@ export default function MoviePage() {
 
   const handleCreateNewList = async () => {
     try {
-      const response = await fetch(`http://localhost:3010/me/lists/new`, {
+      const response = await fetch(`http://16.171.5.238:3010/me/lists/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -167,7 +167,7 @@ export default function MoviePage() {
   const handleAddToSeenList = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:3010/api/toggleSeen", {
+      const response = await fetch("http://16.171.5.238:3010/api/toggleSeen", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -212,7 +212,7 @@ export default function MoviePage() {
 
       try {
         const response = await fetch(
-          "http://localhost:3010/fetchingmoviepagedetails",
+          "http://16.171.5.238:3010/fetchingmoviepagedetails",
           {
             method: "POST",
             headers: {
