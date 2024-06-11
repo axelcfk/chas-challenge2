@@ -50,9 +50,12 @@ export default function DailyMix() {
   if (loading) {
     return <div>Loading Weekly mix...</div>;
   }
+/* 
+  <ProtectedRoute>
+    </ProtectedRoute>
+ */
 
   return (
-    <ProtectedRoute>
       <div>
         <h1>DAILY MIX</h1>
         <button
@@ -77,6 +80,5 @@ export default function DailyMix() {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
   );
 }

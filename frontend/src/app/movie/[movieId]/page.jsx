@@ -397,8 +397,11 @@ export default function MoviePage() {
 
   console.log("button clicked", likeButtonClicked);
 
+ /*  <ProtectedRoute>
+    </ProtectedRoute>
+ */
+
   return (
-    <ProtectedRoute>
       <div className=" flex flex-col justify-center items-center md:items-start pt-20  h-min-screen  bg-[#110A1A] text-slate-100 overflow-y">
         <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
@@ -806,6 +809,5 @@ export default function MoviePage() {
           </div>
         )}
       </div>
-    </ProtectedRoute>
   );
 }

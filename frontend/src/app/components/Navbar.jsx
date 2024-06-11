@@ -74,6 +74,7 @@ export default function Navbar() {
         className="backdrop-blur-md w-full h-full absolute top-0 left-0 right-0 bottom-0"
         style={{
           backdropFilter: "blur(30px)",
+          WebkitBackdropFilter: "blur(30px)",
         }}
       ></div>
       <div className="relative mx-auto px-4 sm:px-6 lg:px-8">
@@ -135,6 +136,7 @@ export default function Navbar() {
                     style={{
                       border: "0.9px solid grey",
                       backdropFilter: "blur(10px)",
+                      WebkitBackdropFilter: "blur(10px)"
                     }}
                   >
                     <span className="text-base font-archivo font-bold text-slate-950 uppercase">
@@ -201,6 +203,9 @@ export default function Navbar() {
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-400 focus:outline-none border-none focus:text-white bg-transparent ml-4"
+                style={{
+                  WebkitBackdropFilter: "blur(10px)"
+                }} 
                 aria-label="Burger Menu"
               >
                 <svg
@@ -233,6 +238,9 @@ export default function Navbar() {
             className={`menu-modal ${
               isOpen ? "open" : "close"
             } flex-col md:hidden z-10 absolute w-full left-0 right-0`}
+            style={{
+              WebkitBackdropFilter: "blur(30px)"
+            }} 
           >
             <div className="mt-16">
               {isLoggedIn ? (

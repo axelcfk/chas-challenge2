@@ -17,9 +17,9 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
     setToken(tokenStorage);
   }, []) */
 
-  const token = localStorage.getItem("token");
 
   try {
+    const token = localStorage.getItem("token");
     //const response = await fetch("http://16.171.5.238:4000/sessions", {
     const response = await fetch(`${host}/me/likelists/addtolikelist`, {
       // users sidan på backend! dvs inte riktiga sidan!

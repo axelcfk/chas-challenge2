@@ -50,8 +50,9 @@ export default function Startpage() {
     
   }, []) */
 
+    
+    /*  <ProtectedRoute> </ProtectedRoute> */
   return (
-    <ProtectedRoute>
       <div className="px-4 pt-14 bg-[#110A1A]">
         <div className=" pb-8 h-full w-full ">
           <main className="w-full flex flex-col text-slate-100 py-20 justify-center  md:items-start  md:px-24">
@@ -112,9 +113,9 @@ export default function Startpage() {
             </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center pl-4 md:pl-0 h-40   bg-[#CFFF5E] rounded-3xl card-shadow2 p-8">
-                <div className="  text-slate-950   flex flex-col justify-center items-start">
-                  <h2 className=" text-5xl font-archivo font-extrabold uppercase">
+              <div className="flex justify-center items-center md:pl-0 h-40 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8"> {/* pl-4 tog bort? */}
+                <div className="text-slate-950 flex flex-col justify-center items-start">
+                  <h2 className="text-5xl font-archivo font-extrabold uppercase">
                     Weekly
                   </h2>
                   <h2 className=" text-5xl font-archivo font-extrabold uppercase">
@@ -182,7 +183,6 @@ export default function Startpage() {
           </div> */}
         </div>
       </div>
-    </ProtectedRoute>
   );
 }
 

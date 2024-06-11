@@ -224,8 +224,11 @@ export default function Profile() {
     }
   };
 
+/*   <ProtectedRoute>
+    </ProtectedRoute>
+ */
+
   return (
-    <ProtectedRoute>
       <main className="mt-8 bg-[#110A19] min-h-screen">
         <button
           className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
@@ -379,6 +382,5 @@ export default function Profile() {
           </div>
         )}
       </main>
-    </ProtectedRoute>
   );
 }

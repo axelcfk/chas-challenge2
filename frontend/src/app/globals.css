@@ -322,6 +322,7 @@ input:focus {
   height: calc(100% - 64px); /* Adjust to match the height of your navbar */
   z-index: 1000; /* Ensure it is above other elements */
   backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
 }
 
 /* Class for opening */
@@ -387,6 +388,7 @@ input:focus {
 
 .nav {
   backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
   /* background-color: rgba(0, 0, 0, 0.2);
   z-index: 50; Ensure it is below the modal */
 }
