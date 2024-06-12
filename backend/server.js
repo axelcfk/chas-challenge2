@@ -38,6 +38,7 @@ const corsOptions = {
     "http://ludi-app.com:3000",
     "http://localhost",
     "http://localhost:3000",
+    "http://10.0.2.2:3000",
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "INSERT"],
@@ -3252,7 +3253,7 @@ app.delete("/api/favorites/:userId", async (req, res) => {
 ///////////////////////////////////////////////////
 
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Server running on ${host}:${port}`);
+  console.log(`Server running on ${host}`);
 });
 /* if (process.env.ENVIRONMENT === 'local') {
   app.listen(port, "0.0.0.0", () => {
