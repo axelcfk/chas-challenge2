@@ -121,7 +121,7 @@ async function query(sql, params) {
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // CREATE ACCOUNT
-app.post("/users", async (req, res) => {
+app.post("api/users", async (req, res) => {
   const { username, password } = req.body;
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
