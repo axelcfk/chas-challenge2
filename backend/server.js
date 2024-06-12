@@ -23,24 +23,24 @@ const host = "http://16.171.5.238:3010";
 
 app.use(cookieParser());
 
-// app.get("/", (req, res) => {
-//   res.send("Hello World!");
-// });
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
-// // CORS-konfiguration
-// const corsOptions = {
-//   origin: [
-//     "http://16.171.5.238:3000",
-//     "https://ludi-app.com",
-//     "https://www.ludi-app.com",
-//     "http://ludi-app.com:3000",
-//   ],
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
+// CORS-konfiguration
+const corsOptions = {
+  origin: [
+    "http://16.171.5.238:3000",
+    "https://ludi-app.com",
+    "https://www.ludi-app.com",
+    "http://ludi-app.com:3000",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "INSERT"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-// app.options("*", cors(corsOptions)); // Handle preflight requests
+app.options("*", cors(corsOptions)); // Handle preflight requests
 
 // app.use(cors(corsOptions));
 // app.use(bodyParser.json());
@@ -54,21 +54,21 @@ app.use(cookieParser());
 //   next();
 // });
 
-// CORS-konfiguration
-const corsOptions = {
-  origin: "http://16.171.5.238:3000",
-  credentials: true,
-};
+// // CORS-konfiguration
+// const corsOptions = {
+//   origin: "http://16.171.5.238:3000",
+//   credentials: true,
+// };
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-// Middleware för att sätta CORS-rubriker korrekt
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://16.171.5.238:3000");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// // Middleware för att sätta CORS-rubriker korrekt
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "http://16.171.5.238:3000");
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   next();
+// });
 
 const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
