@@ -8,6 +8,7 @@ import {
   useCallback,
 } from "react";
 import axios from "axios";
+import { host } from "../utils";
 
 const AuthContext = createContext();
 
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const response = await axios.post(
-        "http://16.171.5.238:3010/sessions",
+        `${host}:3010/sessions`,
         { username, password },
         { withCredentials: true }
       );
@@ -53,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://16.171.5.238:3010/logout",
+        `${host}:3010/logout`,
         {},
         { withCredentials: true }
       );
@@ -80,7 +81,7 @@ export const AuthProvider = ({ children }) => {
           return;
         }
         const response = await axios.get(
-          "http://16.171.5.238:3010/session-status",
+          `${host}:3010/session-status`,
           {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,

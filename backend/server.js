@@ -19,14 +19,24 @@ dotenv.config();
 
 const app = express();
 const port = 3010;
-const host = "http://16.171.5.238:3010";
+const host = process.env.HOST;
+
 
 app.use(cookieParser());
 
 // CORS-konfiguration
 const corsOptions = {
-  origin: "http://16.171.5.238:3000",
+  origin: [
+    "http://16.171.5.238:3000",
+    "https://ludi-app.com",
+    "https://www.ludi-app.com",
+    "http://ludi-app.com:3000",
+    "http://localhost",
+    "http://localhost:3000"
+  ],
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "INSERT"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
@@ -34,15 +44,30 @@ app.use(bodyParser.json());
 
 // Middleware för att sätta CORS-rubriker korrekt
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://16.171.5.238:3000");
+  res.header("Access-Control-Allow-Origin", `${host}:3000`);
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
 
 const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
+let poolConfig = {
+  //host: "mysql",
+  host: process.env.DB_HOST,
+  user: "root",
+  password: "root",
+  database: "movie-app-sql"
+};
+
+// if working locally we add the port. On AWS it should be an empty line
+if (process.env.ENVIRONMENT === 'local') {
+  poolConfig.port = process.env.DB_PORT;
+}
+
+const pool = mysql.createPool(poolConfig);
+
 // connect to DB
-const pool = mysql.createPool({
+/* const pool = mysql.createPool({
   host: "mysql",
   user: "root",
   password: "root",
@@ -50,6 +75,8 @@ const pool = mysql.createPool({
   //port: process.env.DB_PORT,
   // port: 3306 || 8889,
 });
+ */
+
 
 let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let likedMoviesListId = 1;
@@ -886,39 +913,6 @@ app.post("/popularmovies", async (req, res) => {
   }
 });
 
-async function getMixFromOurDatabaseOnlyIDs() {
-  try {
-    const response = await fetch(`${host}/dailymixbasedonlikes`, {
-      // users sidan på backend! dvs inte riktiga sidan!
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      /*  body: JSON.stringify({
-       
-      }), */
-    });
-
-    const data = await response.json();
-    if (data.mix && data.mix) {
-      console.log(
-        "fetched data.mix from backend: ",
-        data.mix
-        // setMixFromDatabaseOnlyIDs(data.mix)
-      );
-
-      return data.mix;
-    } else {
-      console.log(
-        "failed to fetch data.mix from backend, or does not exist yet"
-      );
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  } finally {
-    //setFetchedMixWithIDsFromDatabase(true);
-  }
-}
 
 const fetchedMovies = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
 const fetchedSeries = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
@@ -3235,5 +3229,5 @@ app.delete("/favorites/:userId", async (req, res) => {
 ///////////////////////////////////////////////////
 
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Server running on http://16.171.5.238:${port}`);
+  console.log(`Server running on ${host}:${port}`);
 });

@@ -2,7 +2,7 @@
 
 import { SlideMenuMovieCard } from "../components/SlideMenu";
 import { useState, useEffect } from "react";
-import { fetchTMDBMovieDetails } from "@/app/utils";
+import { fetchTMDBMovieDetails, host } from "@/app/utils";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -18,7 +18,7 @@ export default function ChooseFavorites() {
       try {
         const userId = localStorage.getItem("userId");
         const response = await fetch(
-          `http://16.171.5.238:3010/api/seen/${userId}`
+          `${host}:3010/api/seen/${userId}`
         );
         if (!response.ok) {
           throw new Error(`HTTP status ${response.status}`);
@@ -47,7 +47,7 @@ export default function ChooseFavorites() {
       try {
         const userId = localStorage.getItem("userId");
         const response = await fetch(
-          `http://16.171.5.238:3010/favorites/${userId}`
+          `${host}:3010/favorites/${userId}`
         );
         if (!response.ok) {
           throw new Error(`HTTP status ${response.status}`);
@@ -81,7 +81,7 @@ export default function ChooseFavorites() {
     // Rensa/uppdatera nuvarande favoriter
     try {
       const response = await fetch(
-        `http://16.171.5.238:3010/favorites/${userId}`,
+        `${host}:3010/favorites/${userId}`,
         {
           method: "DELETE",
         }
@@ -96,7 +96,7 @@ export default function ChooseFavorites() {
     // Spara dom nya favoriterna
     for (let movieId of selectedFavorites) {
       try {
-        const response = await fetch("http://16.171.5.238:3010/favorites", {
+        const response = await fetch(`${host}:3010/favorites`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

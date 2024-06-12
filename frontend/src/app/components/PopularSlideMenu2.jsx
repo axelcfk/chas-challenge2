@@ -24,7 +24,7 @@ export default function PopularSlideMenu2() {
         "fetched localStorage token for Account data: ",
         tokenStorage
       ); */
-      const response = await fetch(`${host}/popularmovies`, {
+      const response = await fetch(`${host}:3010/popularmovies`, {
         // users sidan på backend! dvs inte riktiga sidan!
         method: "POST",
         headers: {
