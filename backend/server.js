@@ -7,8 +7,8 @@
 
 import express from "express";
 import cors from "cors";
-import fs from 'fs';
-import https from 'https';
+import fs from "fs";
+import https from "https";
 import OpenAI from "openai";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
@@ -123,7 +123,7 @@ async function query(sql, params) {
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // CREATE ACCOUNT
-app.post("/users", async (req, res) => {
+app.post("/api/users", async (req, res) => {
   const { username, password } = req.body;
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -170,7 +170,7 @@ app.post("/users", async (req, res) => {
 });
 
 // SESSION
-app.post("/sessions", async (req, res) => {
+app.post("/api/sessions", async (req, res) => {
   console.log("Login attempt:", req.body);
 
   const { username, password } = req.body;
@@ -3250,7 +3250,6 @@ app.delete("/favorites/:userId", async (req, res) => {
 });
 
 ///////////////////////////////////////////////////
-
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on ${host}:${port}`);
