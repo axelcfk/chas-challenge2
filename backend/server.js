@@ -224,7 +224,7 @@ app.post("/api/sessions", async (req, res) => {
   }
 });
 
-app.post("/logout", async (req, res) => {
+app.post("/api/logout", async (req, res) => {
   const token = req.cookies.token;
   console.log("Logout attempt, receiced token:", token);
 
@@ -249,7 +249,7 @@ app.post("/logout", async (req, res) => {
 });
 
 // Endpoint for authentication
-app.get("/session-status", async (req, res) => {
+app.get("/api/session-status", async (req, res) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
   if (!token) {
@@ -433,7 +433,7 @@ const fetchAllMovieIdsFromTMDB = async (movieNamesFromGPT) => {
  */
 
 //streaming tjänster
-app.post("/fetchmovieprovidersTMDB", async (req, res) => {
+app.post("/api/fetchmovieprovidersTMDB", async (req, res) => {
   try {
     const { id } = req.body;
 
@@ -568,7 +568,7 @@ async function addMovieToDatabase(movie, movieOrSeries) {
 // One movie is an array of two objects, one object movie's providers and the other object is just the id of the movie
 const fetchedProvidersOfMovie = [];
 
-app.get("/fetchedProvidersOfMovie", (req, res) => {
+app.get("/api/fetchedProvidersOfMovie", (req, res) => {
   const data = {
     fetchedProvidersOfMovie: fetchedProvidersOfMovie,
   };
@@ -576,7 +576,7 @@ app.get("/fetchedProvidersOfMovie", (req, res) => {
   res.json(data);
 });
 
-app.post("/addmovieproviderstodatabase", async (req, res) => {
+app.post("/api/addmovieproviderstodatabase", async (req, res) => {
   try {
     const { movieProvidersObject } = req.body;
 
@@ -827,7 +827,7 @@ async function checkIfWatchListed(movieId, userId) {
   return isInWatchList; */
 }
 
-app.post("/popularmovies", async (req, res) => {
+app.post("/api/popularmovies", async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -941,7 +941,7 @@ const fetchedMovies = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
 const fetchedSeries = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
 
 // BARA FÖR ATT SE VAD SOM HAR SPARATS, VI SKA INTE ANVÄNDA DENNA
-app.get("/allfetchedmoviesorseries", async (req, res) => {
+app.get("/api/allfetchedmoviesorseries", async (req, res) => {
   res.status(200).json({
     message: "GET data for /allfetchedmoviesorseries: ",
     fetchedMovies: fetchedMovies,
@@ -1057,7 +1057,7 @@ app.post("/movieobject", async (req, res) => {
  */
 
 // get movie object from our database
-app.post("/movieobject", async (req, res) => {
+app.post("/api/movieobject", async (req, res) => {
   try {
     console.log("/movieobject req.body: ", req.body);
     const { movieId, movieOrSeries } = req.body;
@@ -1149,7 +1149,7 @@ async function getProvidersOfMOvieObjectOurDatabase(movieId) {
 
 //////////////////////ADD MOVIE TO DATABASE //////////////////////////////////
 
-app.post("/addmovietodatabase", async (req, res) => {
+app.post("/api/addmovietodatabase", async (req, res) => {
   const { movie, movieOrSeries } = req.body;
 
   try {
@@ -1220,7 +1220,7 @@ app.post("/addmovietodatabase", async (req, res) => {
 ////////////////////////////////////////////////////////
 
 // post the lists
-app.post("/me/likelists", async (req, res) => {
+app.post("/api/me/likelists", async (req, res) => {
   //const
   // const { token } = req.body; // token from current session
 
@@ -1255,7 +1255,7 @@ app.post("/me/likelists", async (req, res) => {
   });
 });
 
-app.post("/me/watchlists", async (req, res) => {
+app.post("/api/me/watchlists", async (req, res) => {
   res.status(200).json({
     message: "Post data for /me/watchlist received: ",
     movieWatchList: movieWatchList,
@@ -1264,7 +1264,7 @@ app.post("/me/watchlists", async (req, res) => {
 });
 
 // FOR US, if we want to see data here: http://16.171.5.238:3010/me/likelists
-app.get("/me/likelists", (req, res) => {
+app.get("/api/me/likelists", (req, res) => {
   const data = {
     likedMoviesList: likedMoviesList,
     likedSeriesList: likedSeriesList,
@@ -1274,7 +1274,7 @@ app.get("/me/likelists", (req, res) => {
 });
 
 // FOR US, if we want to see data here: http://16.171.5.238:3010/me/watchlists
-app.get("/me/watchlists", (req, res) => {
+app.get("/api/me/watchlists", (req, res) => {
   const data = {
     movieWatchList: movieWatchList,
     seriesWatchList: seriesWatchList,
@@ -1284,7 +1284,7 @@ app.get("/me/watchlists", (req, res) => {
 });
 
 // usually use both watchlist and likelist in movie cards...
-app.get("/watchandlikelists", (req, res) => {
+app.get("/api/watchandlikelists", (req, res) => {
   const data = {
     movieWatchList: movieWatchList,
     likedMoviesList: likedMoviesList,
@@ -1362,7 +1362,7 @@ async function getWatchAndLikeList(token) {
 }
 
 // user-specific watchandlikelists
-app.post("/me/watchandlikelists", async (req, res) => {
+app.post("/api/me/watchandlikelists", async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -1517,7 +1517,7 @@ app.post("/me/watchandlikelists", async (req, res) => {
   res.json(data); */
 });
 
-app.post("/me/likelists/addtolikelist", async (req, res) => {
+app.post("/api/me/likelists/addtolikelist", async (req, res) => {
   try {
     const { movieId, movieOrSeries, title, token } = req.body;
 
@@ -1641,7 +1641,7 @@ app.post("/me/likelists/addtolikelist", async (req, res) => {
 });
 
 // TODO: fix so it removes from the user's likelist
-app.post("/me/likelists/removefromlikelist", async (req, res) => {
+app.post("/api/me/likelists/removefromlikelist", async (req, res) => {
   //console.log("halla");
 
   try {
@@ -1760,7 +1760,7 @@ app.post("/me/likelists/removefromlikelist", async (req, res) => {
 });
 
 // TODO: fix so it removes from the user's watchlist
-app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
+app.post("/api/me/watchlists/removefromwatchlist", async (req, res) => {
   try {
     const { movieId, movieOrSeries, title, token } = req.body;
 
@@ -1873,7 +1873,7 @@ app.post("/me/watchlists/removefromwatchlist", async (req, res) => {
   }
 });
 
-app.post("/me/watchlists/addtowatchlist", async (req, res) => {
+app.post("/api/me/watchlists/addtowatchlist", async (req, res) => {
   try {
     const { movieId, movieOrSeries, title, token } = req.body;
 
@@ -2042,13 +2042,13 @@ function parseResponse(response) {
 
 const latestSuggestions = [];
 const latestUserQuery = [];
-app.post("/clearSuggestionsAndQueries", async (req, res) => {
+app.post("/api/clearSuggestionsAndQueries", async (req, res) => {
   latestSuggestions.length = 0;
   latestUserQuery.length = 0;
   res.status(200).json({ message: "Suggestions and queries cleared." });
 });
 
-app.post("/resetlatestuserqueryandsuggestions", async (req, res) => {
+app.post("/api/resetlatestuserqueryandsuggestions", async (req, res) => {
   latestUserQuery.length = 0; // This will empty the array
   latestSuggestions.length = 0; // This will empty the array
 
@@ -2056,7 +2056,7 @@ app.post("/resetlatestuserqueryandsuggestions", async (req, res) => {
   res.send({ message: "Arrays have been reset." });
 });
 
-app.post("/moviesuggest2", async (req, res) => {
+app.post("/api/moviesuggest2", async (req, res) => {
   const { token, query: userQuery } = req.body;
 
   if (!token || !userQuery) {
@@ -2223,7 +2223,7 @@ function parseReasoning(response) {
   return match ? match[1] : null;
 }
 
-app.post("/moviesuggest", async (req, res) => {
+app.post("/api/moviesuggest", async (req, res) => {
   const userQuery = req.body.query;
   console.log("Received user query:", userQuery);
 
@@ -2275,7 +2275,7 @@ app.post("/moviesuggest", async (req, res) => {
   }
 });
 
-app.get("/dailymixes", async (req, res) => {
+app.get("/api/dailymixes", async (req, res) => {
   const data = {
     dailyMixes: dailyMixes,
   };
@@ -2283,7 +2283,7 @@ app.get("/dailymixes", async (req, res) => {
   res.json(data);
 });
 
-app.get("/dailymixbasedonlikes", async (req, res) => {
+app.get("/api/dailymixbasedonlikes", async (req, res) => {
   const data = {
     mix: dailyMixes.dailyMixBasedOnLikes,
   };
@@ -2292,7 +2292,7 @@ app.get("/dailymixbasedonlikes", async (req, res) => {
 });
 
 // made this an endpoint so we can simply load in the daily mix based on likes if it has already been generated earlier
-app.post("/me/dailymixbasedonlikes", async (req, res) => {
+app.post("/api/me/dailymixbasedonlikes", async (req, res) => {
   //const mixOnlyIdsAndTitles = dailyMixes.dailyMixBasedOnLikes; // dont have to make copy? ... ?
 
   const { token } = req.body;
@@ -2386,7 +2386,7 @@ app.post("/me/dailymixbasedonlikes", async (req, res) => {
 
 } */
 
-app.post("/addtodailymixbasedonlikes", async (req, res) => {
+app.post("/api/addtodailymixbasedonlikes", async (req, res) => {
   try {
     // KAN DEN TA IN ARRAY?
     // array of movie objects, only containing name and id... id has been fetched in frontend from API
@@ -2433,7 +2433,7 @@ app.post("/addtodailymixbasedonlikes", async (req, res) => {
 // TODO: i mysql så kör vi bara en table med dailymixes och så får man hitta den korrekta med hjälp av user_id
 let dailyMixes = { dailyMixBasedOnLikes: [] };
 
-app.get("/generatedailymix", async (req, res) => {
+app.get("/api/generatedailymix", async (req, res) => {
   // no user query needed, will be based on existing like list
   /* const userQuery = req.body.query;
     console.log("Received user query:", userQuery); */
@@ -2501,7 +2501,7 @@ app.get("/generatedailymix", async (req, res) => {
 // TODO: dailymix på SQL borde ha kolumnerna: id för själva mixen, id för userid, och movieid.
 // dvs en rad har id, userid, movieid
 // måste vi då hämta de 6 senaste genererade filmerna eller deletar vi ALLA filmer som finns i dailymix innan vi sparar nya? Den enda anledningen att vi har detta på sql är för att vi vill kunna ladda om sidan / logga ut och hämta senaste genererade mixen...
-app.post("/generatedailymix2", async (req, res) => {
+app.post("/api/generatedailymix2", async (req, res) => {
   // no user query needed, will be based on existing like list
   /* const userQuery = req.body.query;
     console.log("Received user query:", userQuery); */
@@ -2806,7 +2806,7 @@ app.post("/generatedailymix2", async (req, res) => {
 
 // Spara streaming tjänsterna
 //* IMPORTANT INFORMATION: detta ska sparas i databasen
-app.post("/streaming-services", (req, res) => {
+app.post("/api/streaming-services", (req, res) => {
   try {
     const { services } = req.body;
     console.log("Selected Streaming Services:", services);
@@ -2984,7 +2984,7 @@ const fetchCompleteMovieDetails = async (movieId) => {
   }
 };
 
-app.post("/fetchingmoviepagedetails", async (req, res) => {
+app.post("/api/fetchingmoviepagedetails", async (req, res) => {
   try {
     const { movieId, personId } = req.body;
 
@@ -3007,7 +3007,7 @@ app.post("/fetchingmoviepagedetails", async (req, res) => {
   }
 });
 
-app.get("/users/:userId", async (req, res) => {
+app.get("/api/users/:userId", async (req, res) => {
   const userId = req.params.userId;
   try {
     const user = await query("SELECT * FROM users WHERE id = ?", [userId]);
@@ -3026,7 +3026,7 @@ let lists = [];
 let listIdCounter = 1;
 
 // Endpoint för att skapa en ny lista och lägga till en film i listan
-app.post("/me/lists/new", (req, res) => {
+app.post("/api/me/lists/new", (req, res) => {
   const { name, movieId } = req.body;
 
   if (!name || !movieId) {
@@ -3045,7 +3045,7 @@ app.post("/me/lists/new", (req, res) => {
 });
 
 // Endpoint för att lägga till en film i en lista som finns
-app.post("/me/lists/add/:listId", (req, res) => {
+app.post("/api/me/lists/add/:listId", (req, res) => {
   const { listId } = req.params;
   const { movieId } = req.body;
 
@@ -3065,11 +3065,11 @@ app.post("/me/lists/add/:listId", (req, res) => {
 });
 
 // Endpoint för att hämta alla custom listor
-app.get("/me/lists", (req, res) => {
+app.get("/api/me/lists", (req, res) => {
   return res.status(200).json(lists);
 });
 
-app.get("/me/lists/:listId", (req, res) => {
+app.get("/api/me/lists/:listId", (req, res) => {
   const { listId } = req.params;
 
   const list = lists.find((l) => l.id === parseInt(listId));
@@ -3082,7 +3082,7 @@ app.get("/me/lists/:listId", (req, res) => {
 });
 
 // Endpoint för att ta bort en lista
-app.delete("/me/lists/:listId", (req, res) => {
+app.delete("/api/me/lists/:listId", (req, res) => {
   const { listId } = req.params;
 
   const listIndex = lists.findIndex((l) => l.id === parseInt(listId));
@@ -3098,7 +3098,7 @@ app.delete("/me/lists/:listId", (req, res) => {
 // Endpoint för att ta bort en film från en lista
 
 // Endpoint för att lägga till och ta bort från seen lista
-app.post("/api/toggleSeen", async (req, res) => {
+app.post("/api/api/toggleSeen", async (req, res) => {
   const { movieId, token } = req.body;
 
   if (!token || !movieId) {
@@ -3175,7 +3175,7 @@ app.get("/api/seen/:userId", async (req, res) => {
 });
 
 // Endpoint för att lägga till i favorites
-app.post("/favorites", async (req, res) => {
+app.post("/api/favorites", async (req, res) => {
   const { user_id, movie_id } = req.body;
 
   console.log("Received favorite data:", req.body); // Logga inkommande data
@@ -3216,7 +3216,7 @@ app.post("/favorites", async (req, res) => {
 });
 
 // Endpoint för att hämta favorites listan
-app.get("/favorites/:userId", async (req, res) => {
+app.get("/api/favorites/:userId", async (req, res) => {
   const userId = req.params.userId;
 
   try {
@@ -3237,7 +3237,7 @@ app.get("/favorites/:userId", async (req, res) => {
 });
 
 // Endpoint för att kunna rensa/uppdatera favoriter
-app.delete("/favorites/:userId", async (req, res) => {
+app.delete("/api/favorites/:userId", async (req, res) => {
   const userId = req.params.userId;
 
   try {
