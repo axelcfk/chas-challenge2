@@ -3,9 +3,11 @@
 import Link from "next/link";
 import "./firstpage.css";
 import { useRef } from "react";
-import { FaDotCircle } from "react-icons/fa";
+import { FaArrowRight, FaDotCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+
 
 export default function FirstPage() {
   const videoRef = useRef(null);
@@ -15,6 +17,31 @@ export default function FirstPage() {
   const [currentText, setCurrentText] = useState("Hello I'm LUDI!");
   const [animationPhase, setAnimationPhase] = useState("erasing");
   const [currentPhrase, setCurrentPhrase] = useState(0);
+
+  const { isLoggedIn, user, logout, checkAuth } = useAuth();
+/* 
+  let isLoggedInLocalStorage;
+
+  useEffect(() => {
+    isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedInLocalStorage != null && isLoggedInLocalStorage === true) {
+      setIsLoggedIn(true);
+    } else if (
+      isLoggedInLocalStorage != null &&
+      isLoggedInLocalStorage === false
+    ) {
+      setIsLoggedIn(false);
+    } else {
+      console.log(
+        "isLoggedIn does not exist in localStorage, setting isLoggedIn in firstpage/page.jsx to false"
+      );
+      setIsLoggedIn(false);
+      //localStorage.setItem("isLoggedIn", false); // onödigt?
+    }
+  }, []); */
 
   useEffect(() => {
     let timer;
@@ -68,7 +95,7 @@ export default function FirstPage() {
       >
         About
       </Link>
-      <div className="flex flex-col items-center justify-center md:mt-24 mt-20">
+      <div className="flex flex-col items-center justify-center md:mt-24 mt-16">
         <video
           className="md:w-1/3 w-96 transform rounded-full z-10"
           ref={videoRef}
@@ -81,23 +108,20 @@ export default function FirstPage() {
           Your browser does not support the video tag.
         </video>
       </div>
-      <div className="flex justify-center items-center w-3/4 ">
+      <div className="flex justify-center items-center w-[90%]">
         <h2 className="text-center font-archivo font-extrabold text-4xl uppercase">
           {currentText}
         </h2>
       </div>
 
       <div className="flex flex-col items-center w-full absolute bottom-6">
-        <button
+        {!isLoggedIn ? (<><button
           onClick={() => {
             router.push("/create-account");
           }}
           className="border-none text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg hover:cursor-pointer"
         >
-          {/* <Link href="create-account" className="w-full h-full no-underline text-slate-900"> */}
-          {/* moved "link" to button's onclick, otherwise you have to click on the text 'Create an account'  */}
           Create an account
-          {/*   </Link> */}
         </button>
         <button
           onClick={() => {
@@ -106,20 +130,22 @@ export default function FirstPage() {
           style={{ border: "1px solid white" }}
           className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold shadow-lg hover:cursor-pointer"
         >
-          {/*   <Link href="login" className="no-underline text-slate-100"> */}
           Log in
-          {/* </Link> */}
+        </button></>) : (<>
+          <Link className="no-underline w-11/12 mb-4 " href={"/startpage"}>
+                <button className="flex justify-center items-center gap-4 border-none text-xl h-14 w-full max-w-md bg-[#CFFF5E] rounded-full font-semibold text-slate-900 hover:bg-slate-200 shadow-lg hover:cursor-pointer">
+                  Startpage <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
+                </button>
+              </Link>
+        <button
+          onClick={logout}
+          className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold border border-solid border-white hover:cursor-pointer"
+        >
+          Log Out
         </button>
-        {/* <div className="w-full flex justify-end mt-8 mr-8">
-          <button className="bg-black border-none">
-            <Link
-              className="text-white text-lg no-underline about-btn"
-              href={"about"}
-            >
-              About
-            </Link>
-          </button>
-        </div> */}
+        
+         
+         </>)}
       </div>
     </div>
   );
