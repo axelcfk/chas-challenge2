@@ -29,7 +29,7 @@ export default function WatchListForProfile({ profilePage }) {
         "fetched localStorage token for Account data: ",
         tokenStorage
       ); */
-      const response = await fetch(`${host}:3010/me/watchandlikelists`, {
+      const response = await fetch(`${host}/api/me/watchandlikelists`, {
         // users sidan på backend! dvs inte riktiga sidan!
         method: "POST",
         headers: {
@@ -71,7 +71,7 @@ export default function WatchListForProfile({ profilePage }) {
 
   async function fetchMovieProviders(id) {
     try {
-      const response = await fetch(`${host}:3010/fetchmovieprovidersTMDB`, {
+      const response = await fetch(`${host}/api/fetchmovieprovidersTMDB`, {
         // users sidan på backend! dvs inte riktiga sidan!
         method: "POST",
         headers: {

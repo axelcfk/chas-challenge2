@@ -55,7 +55,7 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   // Function to fetch movie providers from the backend
   async function fetchMovieProviders(id) {
     try {
-      const response = await fetch(`${host}:3010/fetchmovieprovidersTMDB`, {
+      const response = await fetch(`${host}/api/fetchmovieprovidersTMDB`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

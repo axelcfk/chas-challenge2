@@ -13,7 +13,7 @@ export default function CustomListForProfile() {
 
   async function fetchUserLists() {
     try {
-      const response = await fetch(`${host}:3010/me/lists`, {
+      const response = await fetch(`${host}/api/me/lists`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
