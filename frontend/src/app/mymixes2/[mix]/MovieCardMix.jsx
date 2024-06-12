@@ -53,7 +53,7 @@ export function MovieCardMix({
 
   return (
     <div
-      className="flex h-40 w-80 gap-4 pl-1 rounded-2xl //bg-[#1D1631] bg-[#110A19]" // same bg as background
+      className="flex h-40 w-80 gap-4 pl-1 rounded-2xl  //bg-[#1D1631] bg-[#110A19] " // same bg as background
       style={{ border: "0.5px solid grey" }}
     >
       {/* <Link href={`/movie/${encodeURIComponent(id)}`}>
@@ -70,7 +70,7 @@ export function MovieCardMix({
           <Link href={`/movie/${encodeURIComponent(id)}`}>
             <img
               className="h-full w-auto border-[0.5px] border-solid border-r-0 border-t-0 border-b-0 box-border rounded-tl-2xl rounded-bl-2xl"
-              style={{borderColor: "gray"}}
+              style={{ borderColor: "gray" }}
               src={poster}
               alt="Movie Poster"
               // style={{ border: "0.5px solid grey" }}

@@ -128,7 +128,7 @@ export default function Navbar() {
                     <span className="text-base font-archivo font-bold text-slate-950 uppercase">
                       AI-Search
                     </span>{" "}
-                    <FaMagnifyingGlass className="h-4 w-4" />
+                    <FaMagnifyingGlass className="h-6 w-6" />
                   </button>
                   <button
                     onClick={() => handleSearchTypeSelect("movie")}
@@ -136,7 +136,7 @@ export default function Navbar() {
                     style={{
                       border: "0.9px solid grey",
                       backdropFilter: "blur(10px)",
-                      WebkitBackdropFilter: "blur(10px)"
+                      WebkitBackdropFilter: "blur(10px)",
                     }}
                   >
                     <span className="text-base font-archivo font-bold text-slate-950 uppercase">
@@ -204,8 +204,8 @@ export default function Navbar() {
                 onClick={() => setIsOpen(!isOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-400 focus:outline-none border-none focus:text-white bg-transparent ml-4"
                 style={{
-                  WebkitBackdropFilter: "blur(10px)"
-                }} 
+                  WebkitBackdropFilter: "blur(10px)",
+                }}
                 aria-label="Burger Menu"
               >
                 <svg
@@ -239,8 +239,8 @@ export default function Navbar() {
               isOpen ? "open" : "close"
             } flex-col md:hidden z-10 absolute w-full left-0 right-0`}
             style={{
-              WebkitBackdropFilter: "blur(30px)"
-            }} 
+              WebkitBackdropFilter: "blur(30px)",
+            }}
           >
             <div className="mt-16">
               {isLoggedIn ? (
@@ -402,7 +402,7 @@ export default function Navbar() {
                 </>
               )}
               <Link href="/about" style={{ textDecoration: "none" }}>
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
+                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
                   About
                 </span>
               </Link>
@@ -411,7 +411,7 @@ export default function Navbar() {
                   href={`/profile/${user.id}`}
                   style={{ textDecoration: "none" }}
                 >
-                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-base font-medium cursor-pointer block text-center text-white">
+                  <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
                     Profile
                   </span>
                 </Link>
@@ -421,7 +421,7 @@ export default function Navbar() {
                 onClick={handleLogout}
                 style={{ textDecoration: "none" }}
               >
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
+                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
                   Log Out
                 </span>
               </Link>

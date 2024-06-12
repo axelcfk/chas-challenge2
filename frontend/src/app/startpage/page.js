@@ -50,58 +50,54 @@ export default function Startpage() {
     
   }, []) */
 
-    
-    /*  <ProtectedRoute> </ProtectedRoute> */
+  /*  <ProtectedRoute> </ProtectedRoute> */
   return (
-      <div className="px-4 pt-14 bg-[#110A1A]">
-        <div className=" pb-8 h-full w-full ">
-          <main className="w-full flex flex-col text-slate-100 py-20 justify-center  md:items-start  md:px-24">
-            <div className="w-full">
-              {/* <h2 className="mb-10 md:text-left">AI-SEARCH</h2> */}
-              <div
-                className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
-                style={{
-                  // border: "1px solid grey",
-                  backgroundColor: "#1D1631", //rgba(141, 126, 255, 0.1)
-                }}
-                ref={parallaxRef}
-              >
-                <h2 className=" text-5xl w-full font-archivo font-extrabold uppercase">
-                  Use AI to find a movie!
-                </h2>
-                <div className=" h-full flex justify-center items-center">
-                  <Link className="no-underline" href={"/chatpage2"}>
-                    <button className="flex items-center justify-center gap-4 hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo">
-                      AI SEARCH{" "}
-                      <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
-                    </button>
-                  </Link>
-                  {/* <img
-                  className="h-64 -mt-40 -mr-9 z-10"
-                  src="/image.png"
-                  alt="AI"
-                /> */}
-                </div>
+    <div className="px-4 pt-14 bg-[#110A1A]">
+      <div className=" pb-8 h-full w-full ">
+        <main className="w-full flex flex-col text-slate-100 py-20 justify-center  md:items-start  md:px-24">
+          <div className="w-full md:w-2/4 ">
+            {/* <h2 className="mb-10 md:text-left">AI-SEARCH</h2> */}
+            <div
+              className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
+              style={{
+                // border: "1px solid grey",
+                backgroundColor: "#1D1631", //rgba(141, 126, 255, 0.1)
+              }}
+              ref={parallaxRef}
+            >
+              <h2 className=" text-5xl w-full font-archivo font-extrabold uppercase">
+                Use AI to find a movie!
+              </h2>
+              <div className=" h-full flex justify-center items-center">
+                <Link className="no-underline" href={"/chatpage2"}>
+                  <button className="flex items-center justify-center gap-4 hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo">
+                    AI SEARCH <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
+                  </button>
+                </Link>
               </div>
             </div>
-          </main>
-          <div className="w-full md:px-24 "> {/* mt-14 */}
-            <div className="flex gap-2 items-center mb-8 md:pl-0">
-              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
-              <h2
-                className="md:pl-0 uppercase text-2xl font-archivo font-bold"
-                tabIndex={0}
-              >
-                Popular today
-                {/* (isLiked=false, isInWatchList=false) */}
-              </h2>
-            </div>
-            <div className="md:pl-0">
-              <PopularSlideMenu2 />
-            </div>
           </div>
+        </main>
+        <div className="w-full md:pl-24 md:w-10/12">
+          {" "}
+          {/* mt-14 */}
+          <div className="flex gap-2 items-center mb-8 md:pl-0">
+            <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
+            <h2
+              className="md:pl-0 uppercase text-2xl font-archivo font-bold"
+              tabIndex={0}
+            >
+              Popular today
+              {/* (isLiked=false, isInWatchList=false) */}
+            </h2>
+          </div>
+          <div className="md:pl-0 md:h-full">
+            <PopularSlideMenu2 />
+          </div>
+        </div>
 
-          <div className="w-full md:px-24 mt-14">
+        <div className="md:flex">
+          <div className="w-full md:px-24 mt-14 md:w-2/4">
             <div className="flex gap-2 items-center mb-8 md:pl-0">
               <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
               <h2
@@ -113,7 +109,9 @@ export default function Startpage() {
             </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center md:pl-0 h-40 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8"> {/* pl-4 tog bort? */}
+              <div className="flex justify-center items-center md:pl-0 h-full bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64">
+                {" "}
+                {/* pl-4 tog bort? */}
                 <div className="text-slate-950 flex flex-col justify-center items-start">
                   <h2 className="text-5xl font-archivo font-extrabold uppercase">
                     Weekly
@@ -125,7 +123,7 @@ export default function Startpage() {
                   <h2 className="text-5xl font-archivo font-extrabold uppercase">
                     Mix
                   </h2>
-                  <p className="whitespace-nowrap font-archivo">
+                  <p className="whitespace-nowrap font-archivo font-extrabold ">
                     Based on your liked{" "}
                     <FaHeart className="h-3 w-3 pt-6 mx-1 text-[#EA3546]"></FaHeart>{" "}
                     movies
@@ -155,7 +153,7 @@ export default function Startpage() {
           </div>
         </div> */}
 
-          <div className="w-full md:px-24 mt-14 ">
+          <div className="w-full md:px-24 mt-14 md:w-2/4 ">
             <div className="flex gap-2 items-center mb-8 md:pl-0">
               <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
               <h2
@@ -171,8 +169,9 @@ export default function Startpage() {
               <WatchListSlideMenu2 />
             </div>
           </div>
+        </div>
 
-          {/* <div className="w-full md:px-24 ">
+        {/* <div className="w-full md:px-24 ">
             <h2 className="mb-8 md:pl-0 uppercase">
               {" "}
               LIKELIST (remove in final product)
@@ -181,8 +180,8 @@ export default function Startpage() {
               <LikeListSlideMenu2 />
             </div>
           </div> */}
-        </div>
       </div>
+    </div>
   );
 }
 

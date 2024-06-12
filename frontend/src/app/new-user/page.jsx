@@ -3,7 +3,6 @@
 // Almost same code as the populer movies, enhanced to fetch top-rated and populer genre
 // and mix them randomly
 import { Suspense } from "react";
-
 import { useState, useEffect } from "react";
 import { postAddToLikeList } from "../utils";
 import { postRemoveFromLikeList } from "../utils";
@@ -104,13 +103,13 @@ function MovieSelection() {
   console.log("isFromMixPage:", fromMixPage);
 
   return (
-    <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50 h-min-screen w-min-screen pt-20">
+    <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50  pt-20 ">
       <h1 className="text-3xl font-archivo font-extrabold text-center pb-8  pt-4 flex flex-col  ">
         <span className="">
           Click to like movies for better recommendations!
         </span>
       </h1>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4  md:row-span-4">
         {movies.slice(currentStartIndex, currentStartIndex + 9).map((movie) => (
           <div
             key={movie.id}
@@ -121,7 +120,7 @@ function MovieSelection() {
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
-                className="w-full h-auto cursor-pointer"
+                className="w-full h-full cursor-pointer"
                 onClick={() => {
                   handleMovieClick(movie);
                   postAddToLikeList(movie.id, "movie", movie.title);
@@ -145,7 +144,7 @@ function MovieSelection() {
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
-                  className="w-full h-auto cursor-pointer"
+                  className="w-full h-full cursor-pointer"
                   onClick={() => {
                     handleMovieClick(movie);
                     postRemoveFromLikeList(movie.id, "movie");
@@ -156,7 +155,7 @@ function MovieSelection() {
           </div>
         ))}
       </div>
-      <div className="w-full flex justify-center items-center pt-5 gap-8 ">
+      <div className="w-full flex justify-center items-center pt-5 gap-8 md:fixed md:bottom-2 md:left-0 md:right-0  ">
         {movies.length > currentStartIndex + 9 && (
           <button
             className="font-extrabold font-archivo bg-[#CFFF5E] flex justify-center items-center text-slate-950 rounded-full py-3 px-6 transition-all mx-auto"

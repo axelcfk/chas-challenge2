@@ -357,12 +357,11 @@ input:focus {
 } */
 
 .sectionTitleUnderline {
-  content: '';
+  content: "";
   height: 1.3rem;
   width: 0.3rem;
   border-radius: 5px;
 }
-
 
 .card-shadow {
   background-color: rgba(141, 126, 255, 0.2);

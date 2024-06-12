@@ -4,7 +4,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 export default function SlideMenu({ children, placeholder = false }) {
   return (
-    <div className="flex max-w-full">
+    <div className="flex max-w-full ">
       {!placeholder ? (
         <div className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth removeScrollbar ">
           <style>
@@ -24,20 +24,18 @@ export default function SlideMenu({ children, placeholder = false }) {
           {children}
         </div>
       ) : (
-        <div className="w-full h-full relative">
-          <img
-            className="h-80 w-full rounded-3xl"
+        <div className="w-full h-full md:h-80 rounded-2xl relative bg-[#1D1631] card-shadow">
+          <div className="h-80"></div>
+          {/* <img
+            className="h-80  w-full rounded-3xl"
             style={{ rotate: "180deg" }}
             src="/black-background-grunge-texture-dark-wallpaper.jpg"
             alt=""
-          />
+          /> */}
           <div className="w-full text-center absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col gap-8 justify-center items-center w-[50%] text-start">
-              <h2 className="flex justify-center items-center w-64 text-2xl font-archivo font-extrabold uppercase">
-                <span>
-                  Start adding <span className="text-3xl">+</span> Movies to
-                  your Watchlist
-                </span>{" "}
+              <h2 className="flex justify-center items-center w-64 text-4xl font-archivo font-extrabold uppercase">
+                <span>Start adding to your Watchlist</span>
               </h2>
               <Link className="no-underline" href={"/chatpage2"}>
                 <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo">
