@@ -20,7 +20,7 @@ export default function DailyMix() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${host}/generatedailymix`, {
+      const response = await fetch(`${host}:3010/generatedailymix`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         //body: JSON.stringify({ }),

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useSearch } from "../context/SearchContext";
 import { useState, useRef } from "react";
+import { host } from "../utils";
 
 const changeSpeed = (videoRef, speed) => {
   if (videoRef.current) {
@@ -36,7 +37,7 @@ export const useHandleQuerySubmit = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("http://16.171.5.238:3010/moviesuggest2", {
+      const response = await fetch(`${host}:3010/moviesuggest2`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: input, token: token }),

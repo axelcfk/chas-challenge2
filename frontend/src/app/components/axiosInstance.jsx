@@ -1,7 +1,8 @@
 import axios from "axios";
+import { host } from "../utils";
 
 const axiosInstance = axios.create({
-    baseURL: "http://16.171.5.238:3010",
+    baseURL: `${host}:3010`,
     withCredentials: true,
 });
 

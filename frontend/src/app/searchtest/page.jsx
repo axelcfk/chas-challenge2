@@ -55,7 +55,7 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
   // Function to fetch movie providers from the backend
   async function fetchMovieProviders(id) {
     try {
-      const response = await fetch(`${host}/fetchmovieprovidersTMDB`, {
+      const response = await fetch(`${host}:3010/fetchmovieprovidersTMDB`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -194,7 +194,7 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
               />
               <input
                 ref={inputRef}
-                className=" border pl-24 h-12 text-white border-solid bg-deep-purple rounded-full shadow appearance-none pr-40 w-full box-border"
+                className="border pl-24 h-12 text-white border-solid bg-deep-purple rounded-full shadow appearance-none pr-40 w-full box-border text-xl"
                 type="text"
                 value={inputValue}
                 onChange={handleChange}

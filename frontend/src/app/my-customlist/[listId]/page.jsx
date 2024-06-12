@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import "./my-customlist.css";
 import { useParams } from "next/navigation";
-import { fetchTMDBMovieDetails } from "@/app/utils";
+import { fetchTMDBMovieDetails, host } from "@/app/utils";
 import SlideMenu, { SlideMenuMovieCard } from "@/app/components/SlideMenu";
 
 export default function MyCustomList() {
@@ -19,7 +19,7 @@ export default function MyCustomList() {
       setLoadingLists(true);
       try {
         const response = await fetch(
-          `http://16.171.5.238:3010/me/lists/${listId}`
+          `${host}:3010/me/lists/${listId}`
         );
         const data = await response.json();
 

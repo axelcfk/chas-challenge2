@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/context/AuthContext";
 import { FaDotCircle } from "react-icons/fa";
+import { host } from "../utils";
 
 export default function CreateAccount() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function CreateAccount() {
     setErrorMessage(""); // Clear previous error messages
 
     try {
-      const response = await fetch("http://16.171.5.238:3010/users", {
+      const response = await fetch(`${host}:3010/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
