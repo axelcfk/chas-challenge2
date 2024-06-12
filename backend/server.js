@@ -56,22 +56,19 @@ app.get("/", (req, res) => {
 
 // CORS-konfiguration
 const corsOptions = {
-  origin: [
-    "http://16.171.5.238:3000",
-    "https://ludi-app.com",
-    "https://www.ludi-app.com",
-    "http://ludi-app.com:3000",
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: "http://16.171.5.238:3000",
   credentials: true,
 };
 
-// Use CORS middleware with the defined options
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-app.options("*", cors(corsOptions)); // Handle preflight requests
+// Middleware för att sätta CORS-rubriker korrekt
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://16.171.5.238:3000");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
