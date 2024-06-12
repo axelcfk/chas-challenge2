@@ -27,11 +27,16 @@ app.use(cookieParser());
 const corsOptions = {
   origin: [
     "http://16.171.5.238:3000",
-    "https://ludi-app.com:3000",
     "https://ludi-app.com",
+    "https://www.ludi-app.com",
+    "http://ludi-app.com:3000",
   ],
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
+
+app.options("*", cors(corsOptions)); // Handle preflight requests
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -40,14 +45,12 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// Middleware för att sätta CORS-rubriker korrekt
+// Middleware for setting headers (applied globally)
 app.use((req, res, next) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "http://16.171.5.238:3000",
-    "https://ludi-app.com:3000"
-  );
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
