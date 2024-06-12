@@ -27,7 +27,7 @@ export default function LikeListSlideMenu2() {
         "fetched localStorage token for Account data: ",
         tokenStorage
       ); */
-      const response = await fetch(`${host}:3010/me/watchandlikelists`, {
+      const response = await fetch(`${host}/api/me/watchandlikelists`, {
         // users sidan på backend! dvs inte riktiga sidan!
         method: "POST",
         headers: {

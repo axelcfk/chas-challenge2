@@ -23,7 +23,7 @@ export async function postAddToLikeList(id, movieOrSeries, title) {
   try {
     const token = localStorage.getItem("token");
     //const response = await fetch("http://16.171.5.238:4000/sessions", {
-    const response = await fetch(`${host}:3010/me/likelists/addtolikelist`, {
+    const response = await fetch(`${host}/api/me/likelists/addtolikelist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
       headers: {
@@ -47,7 +47,7 @@ export async function postRemoveFromLikeList(id, movieOrSeries, title) {
     const token = localStorage.getItem("token");
 
     //const response = await fetch("http://16.171.5.238:4000/sessions", {
-    const response = await fetch(`${host}:3010/me/likelists/removefromlikelist`, {
+    const response = await fetch(`${host}/api/me/likelists/removefromlikelist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
       headers: {
@@ -70,7 +70,7 @@ export async function postAddToWatchList(id, movieOrSeries, title) {
     const token = localStorage.getItem("token");
 
     //const response = await fetch("http://16.171.5.238:4000/sessions", {
-    const response = await fetch(`${host}:3010/me/watchlists/addtowatchlist`, {
+    const response = await fetch(`${host}/api/me/watchlists/addtowatchlist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
       headers: {
@@ -95,7 +95,7 @@ export async function postRemoveFromWatchList(id, movieOrSeries, title) {
     const token = localStorage.getItem("token");
 
     //const response = await fetch("http://16.171.5.238:4000/sessions", {
-    const response = await fetch(`${host}:3010/me/watchlists/removefromwatchlist`, {
+    const response = await fetch(`${host}/api/me/watchlists/removefromwatchlist`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
       headers: {
@@ -117,7 +117,7 @@ export async function postRemoveFromWatchList(id, movieOrSeries, title) {
 export async function fetchMovieObject(id) {
   //console.log("Fetching movie details from backend for ID:", id);
 
-  const response = await fetch(`${host}:3010/movieobject`, {
+  const response = await fetch(`${host}/api/movieobject`, {
     // users sidan på backend! dvs inte riktiga sidan!
     method: "POST",
     headers: {
@@ -142,7 +142,7 @@ export async function fetchMovieObject(id) {
 // api.js
 export async function postMovieToDatabase(movieObject) {
   try {
-    const responseBackend = await fetch(`${host}:3010/addmovietodatabase`, {
+    const responseBackend = await fetch(`${host}/api/addmovietodatabase`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -168,7 +168,7 @@ export async function postMovieProvidersToDatabase(
   movieProvidersObject
 ) {
   try {
-    const responseBackend = await fetch(`${host}:3010/addmovieproviderstodatabase`, {
+    const responseBackend = await fetch(`${host}/api/addmovieproviderstodatabase`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -191,7 +191,7 @@ export async function postMovieProvidersToDatabase(
 
 export async function checkLikeList() {
   try {
-    const data = await fetch(`${host}:3010/me/likelists`, {
+    const data = await fetch(`${host}/api/me/likelists`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -218,7 +218,7 @@ export async function fetchWatchAndLikeList() {
       "fetched localStorage token for Account data: ",
       tokenStorage
     ); */
-    const response = await fetch(`${host}:3010/me/watchandlikelists`, {
+    const response = await fetch(`${host}/api/me/watchandlikelists`, {
       // users sidan på backend! dvs inte riktiga sidan!
       method: "POST",
       headers: {
@@ -288,7 +288,7 @@ export const handleQuerySubmit = async () => {
   }
 
   try {
-    const response = await fetch(`${host}:3010/moviesuggest2`, {
+    const response = await fetch(`${host}/api/moviesuggest2`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: input, token: token }),

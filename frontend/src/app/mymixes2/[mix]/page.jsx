@@ -80,7 +80,7 @@ export default function Mix() {
         setIsGettingStoredMix(true);
         const token = localStorage.getItem("token");
 
-        const response = await fetch(`${host}:3010/me/dailymixbasedonlikes`, {
+        const response = await fetch(`${host}/api/me/dailymixbasedonlikes`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -186,7 +186,7 @@ export default function Mix() {
       setIsAiGenerating(true);
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`${host}:3010/generatedailymix2`, {
+      const response = await fetch(`${host}/api/generatedailymix2`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

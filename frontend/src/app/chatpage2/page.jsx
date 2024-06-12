@@ -184,7 +184,7 @@ export default function ChatPage2() {
 
   const clearSuggestionsAndQueries = async () => {
     try {
-      await fetch(`${host}:3010/clearSuggestionsAndQueries`, {
+      await fetch(`${host}/api/clearSuggestionsAndQueries`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -242,7 +242,7 @@ export default function ChatPage2() {
       //const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `${host}:3010/resetlatestuserqueryandsuggestions`,
+        `${host}/api/resetlatestuserqueryandsuggestions`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
