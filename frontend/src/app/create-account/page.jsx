@@ -39,7 +39,7 @@ export default function CreateAccount() {
     setErrorMessage(""); // Clear previous error messages
 
     try {
-      const response = await fetch(`${host}/users`, {
+      const response = await fetch(`${host}:3010/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
