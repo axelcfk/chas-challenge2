@@ -7,6 +7,8 @@
 
 import express from "express";
 import cors from "cors";
+import fs from 'fs';
+import https from 'https';
 import OpenAI from "openai";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
@@ -3252,6 +3254,26 @@ app.delete("/favorites/:userId", async (req, res) => {
 
 ///////////////////////////////////////////////////
 
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on ${host}:${port}`);
 });
+/* if (process.env.ENVIRONMENT === 'local') {
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`Server running on ${host}:${port}`);
+  });
+} else {
+
+  const sslOptions = {
+    key: fs.readFileSync(
+      "/home/ubuntu/chas-challenge2/certs/live/ludi-app.com/privkey.pem"
+    ),
+    cert: fs.readFileSync(
+      "/home/ubuntu/chas-challenge2/certs/live/ludi-app.com/fullchain.pem"
+    ),
+  };
+
+  https.createServer(sslOptions, app).listen(port, () => {
+    console.log(`Server is running on https://ludi-app.com:${port} with HTTPS`);
+  });
+} */
