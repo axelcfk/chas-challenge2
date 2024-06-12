@@ -124,13 +124,14 @@ app.post("/users", async (req, res) => {
       [username, hashedPassword]
     );
     const userId = insertResult.insertId;
-
+    // TODO: TA BORT NÄR MYSQL ÄR REDO (behöver inte skapa tomma listor med mysql):
     likedMoviesList.push({
       likedMoviesListId: likedMoviesListId++,
       userId: userId,
       myLikedMoviesList: [],
     });
 
+    // create empty watchlist for new user
     movieWatchList.push({
       movieWatchListId: movieWatchListId++,
       userId: userId,
@@ -143,10 +144,8 @@ app.post("/users", async (req, res) => {
       username: username,
     });
   } catch (error) {
-    console.error("Error creating user:", error.stack); // Improved logging
-    res
-      .status(500)
-      .json({ message: "Error creating user", error: error.message });
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Error creating user" });
   }
 });
 
