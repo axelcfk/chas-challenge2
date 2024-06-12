@@ -126,6 +126,7 @@ function MovieSelection() {
                   handleMovieClick(movie);
                   postAddToLikeList(movie.id, "movie", movie.title);
                 }}
+                style={{ outline: "none" }}
               />
             ) : (
               <div className="overlay">
