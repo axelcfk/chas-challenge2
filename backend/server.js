@@ -23,7 +23,6 @@ const app = express();
 const port = 3010;
 const host = process.env.HOST;
 
-
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
@@ -38,7 +37,7 @@ const corsOptions = {
     "https://www.ludi-app.com",
     "http://ludi-app.com:3000",
     "http://localhost",
-    "http://localhost:3000"
+    "http://localhost:3000",
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "INSERT"],
@@ -82,11 +81,11 @@ let poolConfig = {
   host: process.env.DB_HOST,
   user: "root",
   password: "root",
-  database: "movie-app-sql"
+  database: "movie-app-sql",
 };
 
 // if working locally we add the port. On AWS it should be an empty line
-if (process.env.ENVIRONMENT === 'local') {
+if (process.env.ENVIRONMENT === "local") {
   poolConfig.port = process.env.DB_PORT;
 }
 
@@ -103,8 +102,7 @@ const pool = mysql.createPool(poolConfig);
 });
  */
 
-
-let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
+let likedMoviesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL l
 let likedMoviesListId = 1;
 let likedSeriesList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
 let movieWatchList = []; // TA BORT NÄR VI HAR FIXAT MYSQL
@@ -938,7 +936,6 @@ app.post("/popularmovies", async (req, res) => {
     console.log("failed to run /popularmovies endpoint");
   }
 });
-
 
 const fetchedMovies = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
 const fetchedSeries = []; //! TA BORT NÄR VI HAR FIXAT MYSQL
