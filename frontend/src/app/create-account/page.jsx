@@ -17,7 +17,7 @@ export default function CreateAccount() {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleSubmit(event)
+      handleSubmit(event);
     }
   };
 
@@ -82,7 +82,7 @@ export default function CreateAccount() {
     <div
       className="h-full bg-black flex flex-col justify-between items-center px-5 pt-40"
       style={{
-        backgroundImage: "url('/front-img.jpg')",
+        // backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
