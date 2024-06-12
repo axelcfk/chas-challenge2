@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const response = await axios.post(
-        `${host}/sessions`,
+        `${host}/api/sessions`,
         { username, password },
         { withCredentials: true }
       );
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        `${host}/logout`,
+        `${host}/api/logout`,
         {},
         { withCredentials: true }
       );
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
           return;
         }
         const response = await axios.get(
-          `${host}/session-status`,
+          `${host}/api/session-status`,
           {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
