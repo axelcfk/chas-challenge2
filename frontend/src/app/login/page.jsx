@@ -24,7 +24,7 @@ export default function Login() {
   }
 
   return (
-    <div className="h-full bg-black flex flex-col justify-between items-center px-5 pt-40">
+    <div className="h-full bg-black flex flex-col justify-between items-center px-5 pt-20">
       <div className="absolute top-2 left-4 no-underline mt-3">
         <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-xl">
@@ -46,7 +46,7 @@ export default function Login() {
         <h2 className="text-3xl font-archivo font-semibold text-center mb-8  text-slate-100">
           Log in
         </h2>
-        <div className="flex flex-col ">
+        <div className="flex flex-col justify-center items-center ">
           <p className="mb-2 text-slate-100">Username</p>
           <input
             onChange={(e) => setUsername(e.target.value)}
@@ -56,7 +56,7 @@ export default function Login() {
             autoFocus
             placeholder="Enter username..."
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-lg h-12 bg-slate-200 rounded-full font-semibold mb-2 px-5"
+            className="text-lg h-12 bg-slate-200 rounded-full font-semibold mb-2 px-5 w-11/12 max-w-md"
           />
           <p className="mb-2 mt-4 text-slate-100">Password</p>
           <input
@@ -66,13 +66,13 @@ export default function Login() {
             type="password"
             placeholder="Enter password..."
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-lg h-12 bg-slate-200 rounded-full font-semibold mb-2 px-5"
+            className="text-lg h-12 bg-slate-200 rounded-full font-semibold mb-2 px-5 w-11/12 max-w-md"
           />
 
           <button
             onClick={handleSignIn}
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-20 text-black"
+            className="text-xl h-14  bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-20 text-black w-11/12 max-w-md "
           >
             Log in
           </button>

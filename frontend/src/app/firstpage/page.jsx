@@ -108,7 +108,7 @@ export default function FirstPage() {
         </video>
       </div>
       <div className="flex justify-center items-center w-[90%]">
-        <h2 className="text-center font-archivo font-extrabold text-4xl uppercase">
+        <h2 className="text-center font-archivo font-extrabold text-2xl md:text-4xl uppercase z-50 -mt-10">
           {currentText}
         </h2>
       </div>

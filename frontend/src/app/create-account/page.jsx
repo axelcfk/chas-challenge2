@@ -81,7 +81,7 @@ export default function CreateAccount() {
 
   return (
     <div
-      className="h-full bg-black flex flex-col justify-between items-center px-5 pt-40"
+      className="h-full bg-black flex flex-col justify-between items-center px-5 pt-20"
       style={{
         // backgroundImage: "url('/front-img.jpg')",
         backgroundPosition: "bottom",
@@ -105,7 +105,7 @@ export default function CreateAccount() {
         </h2>
 
         {successMessage === "" ? (
-          <div className="flex flex-col w-full ">
+          <div className="flex flex-col w-full justify-center items-center ">
             <p className="mb-2 text-slate-100">Username</p>
             <input
               type="text"
@@ -115,7 +115,7 @@ export default function CreateAccount() {
               autoFocus
               placeholder="Enter username..."
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-lg h-12  bg-slate-200 rounded-full font-semibold mb-2 px-5"
+              className="text-lg h-12  bg-slate-200 rounded-full font-semibold mb-2 px-5 w-11/12 max-w-md"
             />
             <p className="mb-2 mt-4 text-slate-100">Password</p>
             <input
@@ -125,7 +125,7 @@ export default function CreateAccount() {
               required
               placeholder="Enter password..."
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-lg h-12  bg-slate-200 rounded-full font-semibold mb-5 px-5"
+              className="text-lg h-12  bg-slate-200 rounded-full font-semibold mb-5 px-5 w-11/12 max-w-md"
               onKeyDown={handleKeyDown}
             />
             {errorMessage !== "" ? (
@@ -136,12 +136,12 @@ export default function CreateAccount() {
             <button
               onClick={handleSubmit}
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-16 text-black"
+              className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-16 text-black"
             >
               Create account
             </button>{" "}
             <div className="flex mt-10 justify-center items-center">
-              <p className="text-slate-100">Do you already have an account?</p>
+              <p className="text-slate-100">Already have an account?</p>
               <Link
                 href={"/login"}
                 className="no-underline font-archivo font-extrabold ml-2 text-slate-100 "
