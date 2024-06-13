@@ -63,7 +63,7 @@ export default function MovieCardWatchAndLike({
       style={{
         //border: profilePage ? "none" : "0.5px solid grey",
         border: "0.5px solid grey",
-        backgroundColor: "#1D1631", //rgba(141, 126, 255, 0.11)
+        backgroundColor: "#1D1631", //rgba(141, 126, 255, 0.111)
       }}
     >
       <div className="h-full w-40 flex flex-col justify-center">
