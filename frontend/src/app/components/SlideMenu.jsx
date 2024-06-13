@@ -69,10 +69,10 @@ export default function SlideMenu({ children, placeholder = false }) {
   }, [children, scrollLeft, canScrollRight]);
 
   return (
-    <div className="flex max-w-full relative">
+    <div className="flex max-w-full relative ">
       {!placeholder ? (
         <>
-          <div className="relative w-full overflow-hidden">
+          <div className="relative w-full">
             <div
               ref={scrollContainerRef}
               className="w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth removeScrollbar"
@@ -97,7 +97,7 @@ export default function SlideMenu({ children, placeholder = false }) {
           </div>
         </>
       ) : (
-        <div className="w-full h-full md:h-64 md:p-8 rounded-2xl relative bg-[#1D1631] card-shadow mx-4 lg:mx-0">
+        <div className="w-full rounded-2xl relative bg-[#1D1631] card-shadow mx-4 lg:mx-0 ">
           <div className="h-80"></div>
           <div className="w-full text-center absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col gap-8 justify-start items-start w-[80%] text-start">

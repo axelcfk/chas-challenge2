@@ -181,7 +181,7 @@ export default function WatchListSlideMenu2() {
       {listsFetched &&
       movieWatchListDetails &&
       movieWatchListDetails.length > 0 ? (
-        <div>
+        <div >
          {/*  <h2
             className="mt-14 md:mt-4 mb-8  md:pl-0 uppercase text-xl  font-archivo font-bold"
             tabIndex={0}

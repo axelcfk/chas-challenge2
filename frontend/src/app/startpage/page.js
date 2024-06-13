@@ -94,10 +94,10 @@ export default function Startpage() {
           </div>
         </div>
 
-        <div className="md:w-[90%] md:ml-12 lg:flex lg:gap-14 ">
-          <div className="  mt-14 ">
-            <div className="flex gap-2 items-center mb-8 lg:pl-0">
-              <div className="flex h-full  justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
+        <div className="md:w-[90%] md:ml-12 lg:flex lg:gap-14">
+          <div className=" mt-14 ">
+            <div className="flex gap-2 items-center mb-8 lg:pl-0 ">
+              <div className="flex justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
               <h2
                 className="uppercase text-2xl font-archivo font-bold"
                 tabIndex={0}
@@ -127,7 +127,7 @@ export default function Startpage() {
             </Link>
           </div>
 
-          <div className="w-full lg:max-w-[60%] mt-14 ">
+          <div className="w-full lg:max-w-[60%] mt-14 "> {/* overflow-hidden fixar problemet på lite mindre desktop (precis ovanför lg) där slidemenyn fortsätter ut lite över dens div */}
             <div className="lg:w-full flex gap-2 items-center mb-8 lg:pl-0">
               <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
               <h2

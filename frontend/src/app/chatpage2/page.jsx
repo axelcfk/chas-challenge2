@@ -278,8 +278,20 @@ export default function ChatPage2() {
       </button>
       {/* <Navbar /> */}
       {errorMessage && !loading && (
-        <div className="h-full flex justify-center items-center pt-40">
-          <p className="text-3xl font-semibold text-center">{errorMessage}</p>
+        <div className="h-full flex flex-col justify-center items-center pt-40">
+           <div className="flex  justify-end items-end">
+            <div className="flex gap-4 pb-2">
+
+              <p className="text-xl font-semibold text-center">Start over: </p>  
+              <button
+                onClick={handleReset}
+                className="bg-transparent border-none hover:cursor-pointer"
+              >
+                <TbEdit size={35} color="#CFFF5E" />
+              </button>
+            </div>
+            </div>
+          <p className="lg:max-w-[50%] text-xl font-semibold text-center">{errorMessage}</p>
         </div>
       )}
       {showVideo && movies.length < 2 && (
@@ -351,7 +363,7 @@ export default function ChatPage2() {
       )}
 
       {!loading && movies.length < 2 ? (
-        <div className="pt-20 fixed bottom-8 left-10 right-10 md:left-80 md:right-80">
+        <div className="pt-20 fixed bottom-8 left-10 right-10 lg:left-52 lg:right-52">
           <div className="  ">
             <AutoQuery input={input} setInput={setInput} />
           </div>
