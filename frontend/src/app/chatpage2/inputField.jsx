@@ -8,6 +8,7 @@ export default function InputField({
   placeholder,
   heightDiv,
   loading,
+  inNavBar = false,
 }) {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -27,11 +28,12 @@ export default function InputField({
         backdropFilter: "blur(20px)",
         backgroundColor: "rgba(0, 0, 0, 0.2)",
       }}
-      className={`${heightDiv} flex justify-center items-center rounded-full z-10 px-4`}
+      className={`${heightDiv} flex justify-center ${inNavBar && "sm:justify-between"} items-center rounded-full z-10 px-4`}
     >
+      <div className={`hidden ${inNavBar && "sm:flex"} `}></div> {/* emtpy div just to utilize justify-between in NAVBAR */}
       {!loading ? (
         <input
-          className="h-14 bg-transparent w-full  md:w-1/3 rounded-full font-archivo font-semibold text-xl text-center text-slate-50 md:mr-3 border-none"
+          className={`h-14 bg-transparent w-full  md:w-1/3 ${inNavBar && "md:w-full"} rounded-full font-archivo font-semibold text-xl text-center text-slate-50 md:mr-3 border-none`}
           type="text"
           value={input}
           onChange={handleInputChange}
