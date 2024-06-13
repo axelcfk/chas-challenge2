@@ -78,7 +78,7 @@ export default function FirstPage() {
   }, [currentText, animationPhase, currentPhrase]);
 
   return (
-    <div className="h-full bg-black flex flex-col px-5 justify-start items-center">
+    <div className="h-full bg-black flex flex-col justify-start items-center">
       <div className="absolute top-2 left-4 no-underline mt-3">
         <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-xl">
@@ -132,7 +132,7 @@ export default function FirstPage() {
         >
           Log in
         </button></>) : (<>
-          <Link className="no-underline w-11/12 mb-4 " href={"/startpage"}>
+          <Link className="no-underline w-11/12 mb-4 max-w-md" href={"/startpage"}>
                 <button className="flex justify-center items-center gap-4 border-none text-xl h-14 w-full max-w-md bg-[#CFFF5E] rounded-full font-semibold text-slate-900 hover:bg-slate-200 shadow-lg hover:cursor-pointer">
                   Startpage <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
                 </button>
