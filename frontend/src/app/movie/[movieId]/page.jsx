@@ -36,7 +36,7 @@ export default function MoviePage() {
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
   const [seen, setSeen] = useState({});
   const [watches, setWatches] = useState({});
-  const [likes, setLikes] = useState({});
+  const [likes, setLikes] = useState(false);
   const [actorImages, setActorImages] = useState({});
   const [videos, setVideos] = useState({});
   const [similar, setSimilar] = useState([]);
@@ -98,10 +98,11 @@ export default function MoviePage() {
   }
   function handleLikeButtonClicked(id) {
     setLikeButtonClicked(!likeButtonClicked);
-    setLikes((prevLikes) => ({
+    /* setLikes((prevLikes) => ({
       ...prevLikes,
       [id]: !prevLikes[id],
-    }));
+    })); */
+    setLikes(!likes);
   }
 
   const handleOpenModal = () => {
@@ -211,12 +212,13 @@ export default function MoviePage() {
       }
 
       try {
+        const tokenStorage = localStorage.getItem("token");
         const response = await fetch(`${host}/api/fetchingmoviepagedetails`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ movieId }),
+          body: JSON.stringify({ movieId, token: tokenStorage }),
         });
         const data = await response.json();
 
@@ -242,6 +244,7 @@ export default function MoviePage() {
               return acc;
             }, {})
           );
+          setLikes(data.isLiked)
         }
       } catch (error) {
         console.error("Error fetching movie page details:", error);
@@ -255,7 +258,7 @@ export default function MoviePage() {
 
   //fetcha likelist
   //const [fetchedLikedMovies, setFetchedLikedMovies] = useState(false);
-
+/* 
   useEffect(() => {
     const fetchLikeList = async () => {
       try {
@@ -265,27 +268,18 @@ export default function MoviePage() {
 
         setLikedMovies(movies);
 
-        /*  if (movieId !== undefined) {
-        // Check if the movie is in the liked list
-        const isLiked = movies.some((movie) => movie.movie_id === movieId);
-        console.log("Movie ID:", movieId, "Is Liked:", isLiked);
-
-        // Update the state
-        setLikeButtonClicked(isLiked);
-      } else {
-        console.warn("movieId is not defined");
-      } */
+       
       } catch (error) {
         console.error("Failed to fetch liked movies list");
       }
     };
 
     fetchLikeList();
-  }, [movieId]);
+  }, [movieId]); */
 
   //console.log(likeButtonClicked);
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("likedmovies: ", likedMovies);
     if (likedMovies.length > 0) {
       likedMovies.map((movie) => {
@@ -294,7 +288,7 @@ export default function MoviePage() {
         }
       });
     }
-  }, [likedMovies]);
+  }, [likedMovies]); */
 
   /*  useEffect(() => {
 
@@ -474,7 +468,7 @@ export default function MoviePage() {
                       }}
                       onClick={() => {
                         handleLikeButtonClicked(movieDetails.id);
-                        if (!likes[movieDetails.id]) {
+                        if (!likes) {
                           postAddToLikeList(
                             movieDetails.id,
                             "movie",
@@ -490,7 +484,7 @@ export default function MoviePage() {
                       }}
                       className="absolute top-0 right-0 rounded-tr-md rounded-bl-md h-16 w-12 flex justify-center items-center hover:cursor-pointer"
                     >
-                      {!likes[movieDetails.id] ? (
+                      {!likes ? (
                         <div className="flex flex-col justify-center items-center">
                           <FaRegHeart className="h-5 w-5 text-slate-100 mb-1" />
                           <p className="text-slate-100 mb-1 text-sm">Like</p>

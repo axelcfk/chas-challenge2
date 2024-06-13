@@ -2987,18 +2987,40 @@ const fetchCompleteMovieDetails = async (movieId) => {
 
 app.post("/api/fetchingmoviepagedetails", async (req, res) => {
   try {
-    const { movieId, personId } = req.body;
+    const { movieId, token } = req.body; // personId som gjorde inget?
 
-    if (!movieId) {
+    if (!movieId || !token) { 
       return res
         .status(400)
-        .json({ error: "Missing required parameter: movieId" });
+        .json({ error: "Missing required parameter: movieId or token" });
     }
 
-    const movieDetails = await fetchCompleteMovieDetails(movieId, personId);
+    let sessionSearchResult;
+
+    try {
+      // use the token to find the current session (user_id that is logged in)
+      sessionSearchResult = await query(
+        "SELECT * FROM sessions WHERE token = ?",
+        [token]
+      );
+      console.log("sessionSearchResult: ", sessionSearchResult);
+    } catch (error) {
+      
+      console.log("Not logged in or Error finding session", error);
+      return res.status(500).send("2:Error finding session in endpoint /api/fetchingmoviepagedetails");
+    }
+    
+     const currentSession = sessionSearchResult[0];
+     const currentUserId = currentSession.user_id;
+      
+    
+
+    const movieDetails = await fetchCompleteMovieDetails(movieId); // och personId , som gjorde inget?
+
+    const isLiked = await checkIfLiked(movieId, currentUserId)
 
     if (movieDetails) {
-      res.json({ movieDetails });
+      res.json({ movieDetails, isLiked });
     } else {
       res.json({ error: "Error fetching movie details" });
     }
