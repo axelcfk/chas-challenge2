@@ -297,11 +297,11 @@ export default function Navbar() {
             className={`menu-modal ${
               isOpen ? "open" : "close"
             } flex-col lg:hidden z-10 absolute w-full left-0 right-0`}
-            style={{
+           /*  style={{
               WebkitBackdropFilter: "blur(30px)",
-            }}
+            }} */
           >
-            <div className="mt-16">
+            <div className="mt-4">
               {isLoggedIn ? (
                 <>
                   <Link
@@ -359,7 +359,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 mt-20 text-xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 mt-20 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>
