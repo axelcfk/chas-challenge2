@@ -379,7 +379,7 @@ export default function Mix() {
             ) : (
               <>
                 {mixDetails && mixDetails.length > 0 ? (
-                  <div className="flex w-full flex-col md:grid md:grid-cols-3 gap-8 justify-center items-center">
+                  <div className="flex w-full flex-col lg:grid lg:grid-cols-2 gap-8 justify-center items-center lg:justify-items-center">
                     {mixDetails.map((movie, index) => (
                       <MovieCardMix
                         key={index}

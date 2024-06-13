@@ -52,7 +52,7 @@ export default function Startpage() {
 
   /*  <ProtectedRoute> </ProtectedRoute> */
   return (
-    <div className=" bg-[#110A1A] w-full pt-14 ">
+    <div className=" bg-[#110A1A] w-full ">
       <div className=" pb-8 h-full w-full ">
         <main className="w-full flex flex-col text-slate-100 py-12 justify-center items-center md:items-start  ">
           <div className="w-[90%] md:w-2/4 md:ml-12 ">
@@ -97,7 +97,7 @@ export default function Startpage() {
         <div className="md:w-[90%] md:ml-12 lg:flex lg:gap-14 ">
           <div className="  mt-14 ">
             <div className="flex gap-2 items-center mb-8 lg:pl-0">
-              <div className="flex h-full  justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
+              <div className="flex h-full  justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
               <h2
                 className="uppercase text-2xl font-archivo font-bold"
                 tabIndex={0}
@@ -107,9 +107,9 @@ export default function Startpage() {
             </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 lg:w-[80%] ml-4 mr-4 md:ml-0 ">
+              <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 lg:w-[80%] ml-4 mr-4 lg:ml-0 ">
                 {" "}
-                <div className="text-slate-950 flex flex-col justify-center items-start md:items-start">
+                <div className="text-slate-950 flex flex-col justify-center items-start md:items-center">
                   <h2 className="text-6xl md:text-6xl font-archivo font-extrabold uppercase">
                     Weekly AI Mix
                   </h2>
@@ -129,7 +129,7 @@ export default function Startpage() {
 
           <div className="w-full lg:max-w-[60%] mt-14 ">
             <div className="lg:w-full flex gap-2 items-center mb-8 lg:pl-0">
-              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
+              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
               <h2
                 className="uppercase text-2xl  font-archivo font-bold "
                 tabIndex={0}

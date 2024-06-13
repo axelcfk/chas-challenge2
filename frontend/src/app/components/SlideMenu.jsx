@@ -45,35 +45,34 @@ export default function SlideMenu({ children, placeholder = false }) {
   };
 
   useEffect(() => {
-    updateScrollability();
+    const container = scrollContainerRef.current;
+    if (container) {
+      const handleScroll = () => {
+        setScrollLeft(container.scrollLeft);
+        updateScrollability();
+      };
 
-    const handleResize = () => {
-      updateScrollability();
-    };
+      updateScrollability(); // Initial update
 
-    window.addEventListener("resize", handleResize);
+      window.addEventListener("resize", updateScrollability);
+      container.addEventListener("scroll", handleScroll);
 
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.addEventListener("scroll", updateScrollability);
+      return () => {
+        window.removeEventListener("resize", updateScrollability);
+        container.removeEventListener("scroll", handleScroll);
+      };
     }
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (scrollContainerRef.current) {
-        scrollContainerRef.current.removeEventListener("scroll", updateScrollability);
-      }
-    };
-  }, []);
+  }, [scrollContainerRef]);
 
   useEffect(() => {
     updateScrollability();
-  }, [children]);
+  }, [children, scrollLeft, canScrollRight]);
 
   return (
     <div className="flex max-w-full relative">
       {!placeholder ? (
         <>
-          <div className="relative w-full">
+          <div className="relative w-full overflow-hidden">
             <div
               ref={scrollContainerRef}
               className="w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth removeScrollbar"
@@ -98,7 +97,7 @@ export default function SlideMenu({ children, placeholder = false }) {
           </div>
         </>
       ) : (
-        <div className="w-full h-full md:h-64 md:p-8 rounded-2xl relative bg-[#1D1631] card-shadow mx-4 lg:mx-0 ">
+        <div className="w-full h-full md:h-64 md:p-8 rounded-2xl relative bg-[#1D1631] card-shadow mx-4 lg:mx-0">
           <div className="h-80"></div>
           <div className="w-full text-center absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col gap-8 justify-start items-start w-[80%] text-start">
