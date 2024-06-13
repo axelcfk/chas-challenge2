@@ -1,4 +1,4 @@
-.AI-image {
+/* .AI-image {
   height: 100px;
   width: 100px;
   border: 1px solid;
@@ -15,17 +15,17 @@
   box-shadow: 0 2px 4px rgba(141, 126, 255, 0.2),
     0 3px 6px rgba(141, 126, 255, 0.3), 0 4px 8px rgba(141, 126, 255, 0.4);
   transition: transform 0.4s;
-}
+} */
 
-.AI-image:hover {
-  transform: translateY(-20px); /* Flyttar upp bilderna 20px när man hovrar */
+/* .AI-image:hover {
+  transform: translateY(-20px); 
 }
 
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-}
+} */
 
 .tmbd-logo {
   height: 50px;
