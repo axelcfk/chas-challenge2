@@ -219,7 +219,7 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
                 </div>
                 <button
                   type="button"
-                  className="text-gray-500 rounded bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
+                  className="text-gray-500 rounded md:text-lg bg-deep-purple px-2 py-1 hover:bg-lighter-purple cursor-pointer border-none focus:outline-none mr-2"
                   onClick={() => setFetchStreamService(true)}
                 >
                   Stream
