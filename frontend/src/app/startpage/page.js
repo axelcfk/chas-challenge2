@@ -91,7 +91,7 @@ export default function Startpage() {
               {/* (isLiked=false, isInWatchList=false) */}
             </h2>
           </div>
-          <div className="md:pl-0 md:h-full">
+          <div className="">
             <PopularSlideMenu2 />
           </div>
         </div>
