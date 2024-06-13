@@ -103,14 +103,14 @@ function MovieSelection() {
   console.log("isFromMixPage:", fromMixPage);
 
   return (
-    <div className="flex flex-col justify-evenly p-4 bg-black text-slate-50  pt-20 ">
-      <h1 className="text-3xl font-archivo font-extrabold text-center pb-8  pt-4 flex flex-col  ">
+    <div className="flex flex-col justify-center items-center p-4 bg-black text-slate-50   ">
+      <h1 className="text-2xl md:text-4xl md:mb-12 font-archivo font-extrabold text-center pb-8  pt-4 flex flex-col  ">
         <span className="">
           Click to like movies for better recommendations!
         </span>
       </h1>
-      <div className="grid grid-cols-3 gap-4  md:row-span-4">
-        {movies.slice(currentStartIndex, currentStartIndex + 9).map((movie) => (
+      <div className="grid grid-cols-3 gap-4 w-[90%] md:w-[90%] md:grid-cols-6 md:row-span-4">
+        {movies.slice(currentStartIndex, currentStartIndex + 6).map((movie) => (
           <div
             key={movie.id}
             className="rounded-lg  shadow-lg overflow-hidden"
@@ -155,30 +155,33 @@ function MovieSelection() {
           </div>
         ))}
       </div>
-      <div className="w-full flex justify-center items-center pt-5 gap-8 md:fixed md:bottom-2 md:left-0 md:right-0  ">
+      <div className="w-full flex justify-center items-center pt-5 gap-8 md:fixed md:bottom-12 md:left-0 md:right-0 fixed bottom-8 left-4 rigth-4  ">
         {movies.length > currentStartIndex + 9 && (
           <button
-            className="font-extrabold font-archivo bg-[#CFFF5E] flex justify-center items-center text-slate-950 rounded-full py-3 px-6 transition-all mx-auto"
+            className="font-extrabold font-archivo bg-[#CFFF5E] flex justify-center items-center text-slate-950 rounded-full py-2 px-6 transition-all md:w-60 w-40"
             onClick={handleLoadMore}
             style={{ border: "1px solid grey" }}
           >
-            <span className="px-2 text-xl">New options</span>{" "}
+            <span className="px-2 text-xl font-archivo font-bold">More</span>{" "}
           </button>
         )}
         {isFromMixPage ? (
           <button
-            className="font-archivo bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
+            className="font-archivo bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-2 px-6 transition-all md:w-60 w-40"
             onClick={() => router.push("/mymixes2/Weekly")}
           >
-            <span className="px-2 text-xl">Back to Mix Page</span>{" "}
+            <span className="px-2 text-xl font-archivo font-bold">
+              Back to Mix Page
+            </span>{" "}
             <FaArrowRight />
           </button>
         ) : (
           <button
-            className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-2 border-solid box-border border-[#CFFF5E] items-center  rounded-full py-3 px-6 transition-all mx-auto"
+            className="bg-transparent flex justify-centerbg-transparent text-slate-200 border-none items-center  rounded-full py-2 px-6 transition-all md:w-60 w-40"
             onClick={() => router.push("/startpage")}
           >
-            <span className="px-2 text-xl">Done</span> <FaArrowRight />
+            <span className="px-2 text-xl font-archivo font-bold">Done</span>{" "}
+            <FaArrowRight />
           </button>
         )}
       </div>
