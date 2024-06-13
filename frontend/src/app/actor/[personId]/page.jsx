@@ -127,95 +127,99 @@ export default function ActorPage() {
     console.log("actorDetails updated:", actorDetails);
   }, [actorDetails]);
 
-  {/* <ProtectedRoute>
+  {
+    /* <ProtectedRoute>
     </ProtectedRoute>
- */}
+ */
+  }
 
   return (
-      <div className="bg-[#110A1A] pt-20">
-        <button
-          className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
-          onClick={handleNavigation}
-        >
-          <SlArrowLeft />
-        </button>
-        <div className="flex flex-col  justify-center items-center w-full py-10">
-          <h2 className="text-2xl pb-8">{actorDetails.name}</h2>
-          <div className="w-60 h-60 rounded-full overflow-hidden bg-gray-300 ">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${actorDetails.profilePath}`}
-              alt={"actor"}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "path_to_default_image.jpg";
-              }}
-            />
-          </div>
-          <div className="h-full pt-8 px-8" onClick={handleToggle}>
-            {!toggleExpanded ? (
-              <div
-                className={`md:w-full text-base font-light  ${
-                  !toggleExpanded ? "fade-out" : ""
-                }`}
-              >
-                {actorDetails.biography
-                  ? actorDetails.biography.slice(0, 200)
-                  : ""}
-                ...
-              </div>
-            ) : (
-              <div className="md:w-full font-light text-base">
-                {actorDetails.biography
-                  ? actorDetails.biography.slice(0, 600)
-                  : ""}
-              </div>
-            )}
-          </div>
+    <div className="bg-[#110A1A] pt-20">
+      <button
+        className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-24 z-40 text-slate-100 text-xl hover:cursor-pointer"
+        onClick={handleNavigation}
+      >
+        <SlArrowLeft />
+      </button>
+      <div className="flex flex-col  justify-center items-center w-full py-10">
+        <h2 className="text-2xl pb-8 font-archivo font-extrabold">
+          {actorDetails.name}
+        </h2>
+        <div className="w-60 h-60 rounded-full overflow-hidden bg-gray-300 ">
+          <img
+            src={`https://image.tmdb.org/t/p/w500${actorDetails.profilePath}`}
+            alt={"actor"}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "path_to_default_image.jpg";
+            }}
+          />
         </div>
-        <div className="py-16 bg-[#1B1725]">
-          <h2 className="pb-8 px-8">STARRING IN</h2>
-          <SlideMenu>
-            {movieDetails.map((movie, index) => {
-              return (
-                <div key={index} className="px-8 inline-block w-34">
-                  <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                      alt={"poster"}
-                      style={{ border: "0.5px solid grey" }}
-                      className="h-80 rounded-xl hover:cursor-pointer"
-                      onError={(e) => {
-                        e.target.onerror = null; // Prevent looping
-                        e.target.src = "path_to_default_image.jpg"; // Fallback image
-                      }}
-                    />
-                  </Link>
-                  <div className="flex flex-col justify-start items-start">
-                    <h2 className="text-sm font-semibold  text-slate-50 w-34 ">
-                      {movie.title}
-                    </h2>
-                    {/* <p>{actor.character}</p> */}
-                    <p className="font-semibold  flex justify-center items-center">
-                      <span className={`mr-2  font-normal  text-yellow-400`}>
-                        <FaStar />
-                      </span>
-                      <span
-                        className={`${
-                          movie.vote_average === 0 ? "text-sm" : "text-xl"
-                        } text-zinc-100`}
-                      >
-                        {movie.vote_average === 0
-                          ? "NO RATING AVAILABLE"
-                          : movie.vote_average.toFixed(1)}
-                      </span>
-                    </p>{" "}
-                  </div>
-                </div>
-              );
-            })}
-          </SlideMenu>
+        <div className="h-full pt-8 px-8" onClick={handleToggle}>
+          {!toggleExpanded ? (
+            <div
+              className={`md:w-full text-base font-light  ${
+                !toggleExpanded ? "fade-out" : ""
+              }`}
+            >
+              {actorDetails.biography
+                ? actorDetails.biography.slice(0, 200)
+                : ""}
+              ...
+            </div>
+          ) : (
+            <div className="md:w-full font-light text-base">
+              {actorDetails.biography
+                ? actorDetails.biography.slice(0, 600)
+                : ""}
+            </div>
+          )}
         </div>
       </div>
+      <div className="py-16 bg-[#1B1725]">
+        <h2 className="pb-8 px-8 font-archivo font-extrabold">STARRING IN</h2>
+        <SlideMenu>
+          {movieDetails.map((movie, index) => {
+            return (
+              <div key={index} className="px-8 inline-block w-34">
+                <Link href={`/movie/${encodeURIComponent(movie.id)}`}>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={"poster"}
+                    style={{ border: "0.5px solid grey" }}
+                    className="h-80 rounded-xl hover:cursor-pointer"
+                    onError={(e) => {
+                      e.target.onerror = null; // Prevent looping
+                      e.target.src = "path_to_default_image.jpg"; // Fallback image
+                    }}
+                  />
+                </Link>
+                <div className="flex flex-col justify-start items-start">
+                  <h2 className="text-sm font-semibold  text-slate-50 w-34 ">
+                    {movie.title}
+                  </h2>
+                  {/* <p>{actor.character}</p> */}
+                  <p className="font-semibold  flex justify-center items-center">
+                    <span className={`mr-2  font-normal  text-yellow-400`}>
+                      <FaStar />
+                    </span>
+                    <span
+                      className={`${
+                        movie.vote_average === 0 ? "text-sm" : "text-xl"
+                      } text-zinc-100`}
+                    >
+                      {movie.vote_average === 0
+                        ? "NO RATING AVAILABLE"
+                        : movie.vote_average.toFixed(1)}
+                    </span>
+                  </p>{" "}
+                </div>
+              </div>
+            );
+          })}
+        </SlideMenu>
+      </div>
+    </div>
   );
 }
