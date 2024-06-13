@@ -77,7 +77,11 @@ export default function FirstPage() {
   }, [currentText, animationPhase, currentPhrase]);
 
   return (
-    <div className="h-full bg-black flex flex-col justify-start items-center">
+    <div
+      className={`h-full bg-black flex flex-col justify-start items-center ${
+        !isLoggedIn && "pt-16"
+      }`}
+    >
       <div className="absolute top-2 left-4 no-underline mt-3">
         <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-sm">
@@ -94,9 +98,9 @@ export default function FirstPage() {
       >
         About
       </Link>
-      <div className="flex flex-col items-center justify-center md:mt-24 mt-16">
+      <div className="flex flex-col items-center justify-center">
         <video
-          className="md:w-1/3 w-96 transform rounded-full z-10"
+          className="md:w-1/3 w-80 sm:w-96 transform rounded-full z-10"
           ref={videoRef}
           autoPlay
           loop
@@ -108,7 +112,7 @@ export default function FirstPage() {
         </video>
       </div>
       <div className="flex justify-center items-center w-[90%]">
-        <h2 className="text-center font-archivo font-extrabold text-2xl md:text-4xl uppercase z-50 -mt-10">
+        <h2 className="text-center font-archivo font-extrabold text-2xl md:text-4xl uppercase z-40 -mt-10">
           {currentText}
         </h2>
       </div>
