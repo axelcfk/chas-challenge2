@@ -80,7 +80,7 @@ export default function FirstPage() {
     <div className="h-full bg-black flex flex-col justify-start items-center">
       <div className="absolute top-2 left-4 no-underline mt-3">
         <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
-          <span className="text-xl">
+          <span className="text-sm">
             <FaDotCircle />
           </span>
           <span className="">
