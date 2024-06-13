@@ -105,6 +105,9 @@ export default function FirstPage() {
           autoPlay
           loop
           muted
+          playsInline
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
           style={{ pointerEvents: "none", userSelect: "none" }}
         >
           <source src="/ai-gif.mp4" type="video/mp4" />

@@ -323,6 +323,12 @@ input:focus {
   /* z-index: 1000; */ /* Ensure it is above other elements */
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.9
+  ); /* Fallback for browsers not supporting backdrop-filter */
 }
 
 /* Class for opening */

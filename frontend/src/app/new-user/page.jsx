@@ -103,7 +103,7 @@ function MovieSelection() {
   console.log("isFromMixPage:", fromMixPage);
 
   return (
-    <div className="flex flex-col justify-center items-center p-4 bg-black text-slate-50   ">
+    <div className="flex flex-col justify-center items-center p-4 bg-black text-slate-50  pt-20 ">
       <h1 className="text-2xl md:text-4xl md:mb-12 font-archivo font-extrabold text-center pb-8  pt-4 flex flex-col  ">
         <span className="">
           Click to like movies for better AI recommendations!
