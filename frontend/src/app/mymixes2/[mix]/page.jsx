@@ -237,7 +237,7 @@ export default function Mix() {
  */
 
   return (
-    <div className="bg-[#110A19] min-h-screen p-8 pb-0  md:px-40">
+    <div className="bg-[#110A19] min-h-screen p-8 pb-0 pt-20 md:px-40">
       <div className="h-full w-full flex flex-col items-center pt-8">
         <button
           className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-20  text-slate-100 text-xl hover:cursor-pointer"

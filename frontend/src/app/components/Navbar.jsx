@@ -73,7 +73,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="text-white sticky top-0 left-0 right-0 z-50">
+    <nav className="text-white fixed top-0 left-0 right-0 z-50">
       <div
         className=" w-full h-full absolute top-0 left-0 right-0 bottom-0" /* backdrop-blur-md */
         style={{
