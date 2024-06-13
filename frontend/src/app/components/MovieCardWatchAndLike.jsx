@@ -57,7 +57,7 @@ export default function MovieCardWatchAndLike({
   return (
     <div
       //className={`inline-block mr-2 rounded-2xl ${className}`}
-      className={`w-40 inline-block rounded-2xl  ml-4 ${
+      className={`w-40 inline-block rounded-2xl  ml-4 md:ml-0 ${
         profilePage ? "mr-0" : "mr-2"
       }`}
       style={{
