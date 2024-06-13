@@ -24,7 +24,7 @@ export default function SlideMenu({ children, placeholder = false }) {
           {children}
         </div>
       ) : (
-        <div className="w-full h-full md:h-80 rounded-2xl relative bg-[#1D1631] card-shadow">
+        <div className="w-full h-full md:h-80 rounded-2xl relative bg-[#1D1631] card-shadow mx-4">
           <div className="h-80"></div>
           {/* <img
             className="h-80  w-full rounded-3xl"
@@ -39,7 +39,7 @@ export default function SlideMenu({ children, placeholder = false }) {
                   Start adding to your Watchlist
                 </span>
               </h2>
-              <Link className="no-underline" href={"/chatpage2"}>
+              <Link className="no-underline text-black" href={"/chatpage2"}>
                 <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo">
                   Find Movies <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
                 </button>

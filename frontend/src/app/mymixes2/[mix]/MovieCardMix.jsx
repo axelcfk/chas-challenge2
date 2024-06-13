@@ -53,7 +53,7 @@ export function MovieCardMix({
 
   return (
     <div
-      className="flex h-40 w-80 gap-4 pl-1 rounded-2xl  //bg-[#1D1631] bg-[#110A19] " // same bg as background
+      className="flex h-40 w-80 gap-4 pl-1 rounded-2xl  ml-4  //bg-[#1D1631] bg-[#110A19] " // same bg as background
       style={{ border: "0.5px solid grey" }}
     >
       {/* <Link href={`/movie/${encodeURIComponent(id)}`}>

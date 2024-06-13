@@ -52,9 +52,9 @@ export default function Startpage() {
 
   /*  <ProtectedRoute> </ProtectedRoute> */
   return (
-    <div className="pt-14 bg-[#110A1A] w-full ">
+    <div className=" bg-[#110A1A] w-full ">
       <div className=" pb-8 h-full w-full ">
-        <main className="w-full flex flex-col text-slate-100 py-20 justify-center items-center md:items-start  ">
+        <main className="w-full flex flex-col text-slate-100 py-12 justify-center items-center md:items-start  ">
           <div className="w-[90%] md:w-2/4 md:ml-12 ">
             {/* <h2 className="mb-10 md:text-left">AI-SEARCH</h2> */}
             <div
@@ -69,7 +69,7 @@ export default function Startpage() {
                 Use AI to find a movie!
               </h2>
               <div className=" h-full flex justify-center items-center">
-                <Link className="no-underline" href={"/chatpage2"}>
+                <Link className="no-underline text-black" href={"/chatpage2"}>
                   <button className="flex items-center justify-center gap-4 hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo">
                     AI SEARCH <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
                   </button>
@@ -78,9 +78,9 @@ export default function Startpage() {
             </div>
           </div>
         </main>
-        <div className="w-full md:ml-12 md:w-11/12">
+        <div className="w-full md:ml-12 md:w-[90%]">
           <div className="flex gap-2 items-center mb-8 md:pl-0">
-            <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 "></div>
+            <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
             <h2
               className="md:pl-0 uppercase text-2xl font-archivo font-bold"
               tabIndex={0}
@@ -89,13 +89,13 @@ export default function Startpage() {
               {/* (isLiked=false, isInWatchList=false) */}
             </h2>
           </div>
-          <div className="md:pl-0 md:h-full">
+          <div className="md:pl-0 ml-4 md:h-full md:ml-0">
             <PopularSlideMenu2 />
           </div>
         </div>
 
-        <div className="md:ml-12 md:flex md:w-11/12 ">
-          <div className="md:w-2/4  mt-14 md:mr-14">
+        <div className="md:ml-12 md:flex md:w-full] ">
+          <div className="  mt-14 md:mr-14">
             <div className="flex gap-2 items-center mb-8 md:pl-0">
               <div className="flex h-full  justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
               <h2
@@ -107,22 +107,22 @@ export default function Startpage() {
             </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center md:pl-0 h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 md:w-full ml-4 md:ml-0 w-[80%]">
+              <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 md:w-[80%] ml-4 mr-4 md:ml-0 ">
                 {" "}
-                <div className="text-slate-950 flex flex-col justify-center items-start md:items-center  px-8">
-                  <h2 className="text-5xl md:text-6xl font-archivo font-extrabold uppercase">
+                <div className="text-slate-950 flex flex-col justify-center items-start md:items-center">
+                  <h2 className="text-6xl md:text-6xl font-archivo font-extrabold uppercase">
                     Weekly AI Mix
                   </h2>
 
                   <p className="whitespace-nowrap font-archivo font-extrabold md:text-2xl">
-                    Based on your liked{" "}
-                    <FaHeart className="h-3 w-3 pt-6 mx-1 text-[#EA3546]"></FaHeart>{" "}
+                    Based on your
+                    <FaHeart className="h-3 w-3 pt-4 mx-1 text-[#EA3546]"></FaHeart>{" "}
                     movies
                   </p>
                 </div>
-                <div className="md:hidden">
+                {/* <div className="md:hidden">
                   <FaArrowRight color="rgb(2 6 23)" size={"60px"} />
-                </div>
+                </div> */}
               </div>
             </Link>
           </div>
@@ -138,7 +138,7 @@ export default function Startpage() {
               </h2>
             </div>
 
-            <div className=" md:w-full mx-4 md:mx-0">
+            <div className=" md:w-full  md:mx-0">
               <WatchListSlideMenu2 />
             </div>
           </div>
