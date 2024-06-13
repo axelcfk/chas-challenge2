@@ -113,7 +113,7 @@ function MovieSelection() {
         {movies.slice(currentStartIndex, currentStartIndex + 6).map((movie) => (
           <div
             key={movie.id}
-            className="rounded-lg  shadow-lg overflow-hidden"
+            className="rounded-lg h-40 shadow-lg overflow-hidden"
             style={{ border: "1px solid grey" }}
           >
             {!selectedMovies.has(movie.id) ? (
@@ -155,6 +155,8 @@ function MovieSelection() {
           </div>
         ))}
       </div>
+
+      {/* fixa så att det visas 6 istället och grid cols 3  samma som ovan*/}
       <div className="w-full flex justify-center items-center pt-5 gap-8 md:fixed md:bottom-12 md:left-0 md:right-0 fixed bottom-8 left-4 rigth-4  ">
         {movies.length > currentStartIndex + 9 && (
           <button
