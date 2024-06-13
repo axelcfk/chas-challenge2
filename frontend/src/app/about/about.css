@@ -6,7 +6,7 @@
   border-radius: 100px;
   margin: 10px;
   padding: 10px;
-  z-index: 0;
+  z-index: 10;
   position: relative;
   box-sizing: border-box;
   animation: 1s linear infinite;
