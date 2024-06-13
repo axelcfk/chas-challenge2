@@ -65,7 +65,7 @@ export default function Startpage() {
               }}
               ref={parallaxRef}
             >
-              <h2 className=" text-5xl w-full font-archivo font-extrabold uppercase md:mt-20">
+              <h2 className=" text-5xl w-full font-archivo font-extrabold uppercase lg:mt-16">
                 Use AI to find a movie!
               </h2>
               <div className=" h-full flex justify-center items-center">
@@ -94,9 +94,9 @@ export default function Startpage() {
           </div>
         </div>
 
-        <div className="md:ml-12 md:flex  ">
-          <div className="  mt-14 md:mr-14">
-            <div className="flex gap-2 items-center mb-8 md:pl-0">
+        <div className="md:w-[90%] md:ml-12 lg:flex lg:gap-14 ">
+          <div className="  mt-14 ">
+            <div className="flex gap-2 items-center mb-8 lg:pl-0">
               <div className="flex h-full  justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
               <h2
                 className="uppercase text-2xl font-archivo font-bold"
@@ -107,7 +107,7 @@ export default function Startpage() {
             </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 md:w-[80%] ml-4 mr-4 md:ml-0 ">
+              <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 lg:w-[80%] ml-4 mr-4 md:ml-0 ">
                 {" "}
                 <div className="text-slate-950 flex flex-col justify-center items-start md:items-start">
                   <h2 className="text-6xl md:text-6xl font-archivo font-extrabold uppercase">
@@ -127,9 +127,9 @@ export default function Startpage() {
             </Link>
           </div>
 
-          <div className="w-full  mt-14 md:w-2/4 ">
-            <div className="flex gap-2 items-center mb-8 md:pl-0">
-              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4"></div>
+          <div className="w-full lg:max-w-[60%] mt-14 ">
+            <div className="lg:w-full flex gap-2 items-center mb-8 lg:pl-0">
+              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
               <h2
                 className="uppercase text-2xl  font-archivo font-bold "
                 tabIndex={0}
@@ -138,7 +138,7 @@ export default function Startpage() {
               </h2>
             </div>
 
-            <div className=" md:w-full  md:mx-0">
+            <div className="lg:w-full lg:mx-0">
               <WatchListSlideMenu2 />
             </div>
           </div>
