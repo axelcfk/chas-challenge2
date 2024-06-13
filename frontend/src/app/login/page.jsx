@@ -26,7 +26,7 @@ export default function Login() {
   return (
     <div className="h-full bg-black flex flex-col justify-between items-center px-5 pt-20">
       <div className="absolute top-2 left-4 no-underline mt-3">
-        <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
+        <span className=" flex justify-center items-center  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-sm">
             <FaDotCircle />
           </span>
@@ -43,7 +43,7 @@ export default function Login() {
           <h1 className="font-bebas no-underline text-7xl">BAMMS</h1>
         </div> */}
 
-        <h2 className="text-3xl font-archivo font-semibold text-center mb-8  text-slate-100">
+        <h2 className="text-3xl font-archivo font-semibold text-center mb-8  text-slate-100 mt-8">
           Log in
         </h2>
         <div className="flex flex-col justify-center items-center ">
@@ -72,7 +72,7 @@ export default function Login() {
           <button
             onClick={handleSignIn}
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-xl h-14  bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-20 text-black w-11/12 max-w-md "
+            className="text-xl h-14  bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-12 text-black w-11/12 max-w-md "
           >
             Log in
           </button>

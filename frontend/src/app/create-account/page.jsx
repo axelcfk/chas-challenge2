@@ -90,7 +90,7 @@ export default function CreateAccount() {
       }}
     >
       <div className="absolute top-2 left-4 no-underline mt-3">
-        <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
+        <span className=" flex justify-center items-center  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-sm">
             <FaDotCircle />
           </span>
@@ -100,7 +100,7 @@ export default function CreateAccount() {
         </span>
       </div>
       <div className="w-full">
-        <h2 className="text-3xl font-archivo font-semibold text-center mb-8  text-slate-100">
+        <h2 className="text-3xl font-archivo font-semibold text-center mb-8 mt-8 text-slate-100">
           {successMessage === "" ? "Create an account" : ""}
         </h2>
 
@@ -136,7 +136,7 @@ export default function CreateAccount() {
             <button
               onClick={handleSubmit}
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-16 text-black"
+              className="text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-8 text-black"
             >
               Create account
             </button>{" "}

@@ -83,7 +83,7 @@ export default function FirstPage() {
       }`}
     >
       <div className="absolute top-2 left-4 no-underline mt-3">
-        <span className="  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
+        <span className=" flex justify-center items-center  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-sm">
             <FaDotCircle />
           </span>
@@ -93,14 +93,14 @@ export default function FirstPage() {
         </span>
       </div>
       <Link
-        className="absolute top-2 right-4 mt-3  text-white text-lg no-underline about-btn"
+        className="absolute top-4 right-4 mt-3  text-white text-lg no-underline about-btn"
         href={"about"}
       >
         About
       </Link>
       <div className="flex flex-col items-center justify-center">
         <video
-          className="md:w-1/3 w-80 sm:w-96 transform rounded-full z-10"
+          className="md:w-1/3 w-80 sm:w-96 transform rounded-full z-10 mt-12"
           ref={videoRef}
           autoPlay
           loop
