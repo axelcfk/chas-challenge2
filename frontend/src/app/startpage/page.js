@@ -52,7 +52,7 @@ export default function Startpage() {
 
   /*  <ProtectedRoute> </ProtectedRoute> */
   return (
-    <div className=" bg-[#110A1A] w-full ">
+    <div className=" bg-[#110A1A] w-full pt-14">
       <div className=" pb-8 h-full w-full ">
         <main className="w-full flex flex-col text-slate-100 py-12 justify-center items-center md:items-start  ">
           <div className="w-[90%] md:w-2/4 md:ml-12 ">
