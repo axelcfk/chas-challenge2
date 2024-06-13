@@ -3017,10 +3017,12 @@ app.post("/api/fetchingmoviepagedetails", async (req, res) => {
 
     const movieDetails = await fetchCompleteMovieDetails(movieId); // och personId , som gjorde inget?
 
-    const isLiked = await checkIfLiked(movieId, currentUserId)
+    const isLiked = await checkIfLiked(movieId, currentUserId);
+
+    const isInWatchList = await checkIfWatchListed(movieId, currentUserId);
 
     if (movieDetails) {
-      res.json({ movieDetails, isLiked });
+      res.json({ movieDetails, isLiked, isInWatchList });
     } else {
       res.json({ error: "Error fetching movie details" });
     }

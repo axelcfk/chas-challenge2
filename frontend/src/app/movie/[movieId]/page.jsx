@@ -35,7 +35,7 @@ export default function MoviePage() {
   const [actorsToggle, setActorsToggle] = useState(false);
   const [likeButtonClicked, setLikeButtonClicked] = useState(false);
   const [seen, setSeen] = useState({});
-  const [watches, setWatches] = useState({});
+  const [watches, setWatches] = useState(false);
   const [likes, setLikes] = useState(false);
   const [actorImages, setActorImages] = useState({});
   const [videos, setVideos] = useState({});
@@ -91,10 +91,12 @@ export default function MoviePage() {
   }
 
   function handleButtonClicked(id) {
-    setWatches((prevWatches) => ({
+    
+    /* setWatches((prevWatches) => ({
       ...prevWatches,
       [id]: !prevWatches[id],
-    }));
+    })); */
+    setWatches(!watches);
   }
   function handleLikeButtonClicked(id) {
     setLikeButtonClicked(!likeButtonClicked);
@@ -245,6 +247,7 @@ export default function MoviePage() {
             }, {})
           );
           setLikes(data.isLiked)
+          setWatches(data.isInWatchList)
         }
       } catch (error) {
         console.error("Error fetching movie page details:", error);
@@ -526,7 +529,7 @@ export default function MoviePage() {
                       <button
                         onClick={() => {
                           handleButtonClicked(movieDetails.id);
-                          if (!watches[movieDetails.id]) {
+                          if (!watches) {
                             postAddToWatchList(
                               movieDetails.id,
                               "movie",
@@ -541,17 +544,17 @@ export default function MoviePage() {
                           }
                         }}
                         className={`w-full h-10 ${
-                          !watches[movieDetails.id]
+                          !watches
                             ? "bg-transparent "
                             : "bg-[#CFFF5E] border-none"
                         } flex justify-center items-center rounded-full px-3  border-2 border-solid border-white`}
                       >
-                        {!watches[movieDetails.id] ? (
+                        {!watches ? (
                           <FaPlus className="text-xl text-gray-200" />
                         ) : (
                           <FaCheck className="text-xl text-slate-950" />
                         )}
-                        {!watches[movieDetails.id] ? (
+                        {!watches ? (
                           <p className="pl-2 w-full text-sm font-light text-white flex justify-between items-center">
                             <span className="pr-4 font-archivo font-bold">
                               WATCHLIST
@@ -568,11 +571,11 @@ export default function MoviePage() {
                       <button
                         onClick={handleToggleDropdown}
                         className={`absolute right-0 border-l-2 w-12 border-t-0 border-b-0 border-r-0 rounded-tr-full rounded-br-full ${
-                          !watches[movieDetails.id]
+                          !watches
                             ? "border-x-white"
                             : "border-x-black"
                         } top-0 h-10 flex items-center justify-center bg-transparent text-slate-950 ${
-                          !watches[movieDetails.id] && "text-white"
+                          !watches && "text-white"
                         }  cursor-pointer px-3`}
                       >
                         <SlArrowDown fontFamily="archivo" fontWeight={600} />
