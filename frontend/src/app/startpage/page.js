@@ -109,7 +109,7 @@ export default function Startpage() {
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
               <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 md:w-[80%] ml-4 mr-4 md:ml-0 ">
                 {" "}
-                <div className="text-slate-950 flex flex-col justify-center items-start md:items-center">
+                <div className="text-slate-950 flex flex-col justify-center items-start md:items-start">
                   <h2 className="text-6xl md:text-6xl font-archivo font-extrabold uppercase">
                     Weekly AI Mix
                   </h2>

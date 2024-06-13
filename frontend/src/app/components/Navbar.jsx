@@ -8,7 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
-import { FaDotCircle } from "react-icons/fa";
+import { FaDotCircle, FaUser } from "react-icons/fa";
 import {
   FaMagnifyingGlass,
   FaChevronUp,
@@ -391,13 +391,6 @@ export default function Navbar() {
               {isLoggedIn && (
                 <>
                   <div className="relative">
-                    {/* <button
-                      onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-400 focus:outline-none border-none focus:text-white bg-transparent ml-4"
-                      aria-label="Search Menu"
-                    >
-                      <FaMagnifyingGlass className="h-6 w-6" />
-                    </button> */}
                     <div className="flex items-center w-full justify-end">
                       <div className="relative">
                         {!isSearchOpen && (
@@ -406,7 +399,7 @@ export default function Navbar() {
                             className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-gray-400 focus:outline-none border-none focus:text-white bg-transparent ml-4"
                             aria-label="Search Menu"
                           >
-                            <FaMagnifyingGlass className="h-6 w-6" />
+                            <FaMagnifyingGlass size={20} />
                           </button>
                         )}
                         {dropdownOpen && (
@@ -425,7 +418,7 @@ export default function Navbar() {
                               <span className="text-base font-archivo font-bold text-slate-950 uppercase">
                                 AI-Search
                               </span>{" "}
-                              <FaMagnifyingGlass className="h-6 w-6" />
+                              <FaMagnifyingGlass className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => handleSearchTypeSelect("movie")}
@@ -569,8 +562,8 @@ export default function Navbar() {
                 </>
               )}
               <Link href="/about" style={{ textDecoration: "none" }}>
-                <span className="ml-16 hover:bg-lighter-purple px-3 py-2 rounded-md text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
-                  About
+                <span className=" hover:bg-lighter-purple px-3 py-2 rounded-md text-xl font-bold font-archivo cursor-pointer block text-center text-white">
+                  About LUDI
                 </span>
               </Link>
               {user && user.id && (
@@ -579,7 +572,7 @@ export default function Navbar() {
                   style={{ textDecoration: "none" }}
                 >
                   <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
-                    Profile
+                    <FaUser size={20} />
                   </span>
                 </Link>
               )}
@@ -588,8 +581,8 @@ export default function Navbar() {
                 onClick={handleLogout}
                 style={{ textDecoration: "none" }}
               >
-                <span className=" px-3 rounded-md ml-8 text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
-                  <FaArrowRightFromBracket />
+                <span className=" px-3 rounded-md  text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
+                  <FaArrowRightFromBracket size={20} />
                 </span>
               </Link>
             </div>
