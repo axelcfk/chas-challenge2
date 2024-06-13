@@ -115,9 +115,7 @@ export default function Profile() {
       setLoadingSeenMovies(true);
       try {
         const userId = localStorage.getItem("userId");
-        const response = await fetch(
-          `${host}/api/seen/${userId}`
-        );
+        const response = await fetch(`${host}/api/seen/${userId}`);
         const data = await response.json();
         console.log("Fetched seen list:", data);
 
@@ -150,9 +148,7 @@ export default function Profile() {
     const fetchFavorites = async () => {
       try {
         const userId = localStorage.getItem("userId");
-        const response = await fetch(
-          `${host}/api/favorites/${userId}`
-        );
+        const response = await fetch(`${host}/api/favorites/${userId}`);
         if (!response.ok) {
           throw new Error(`HTTP status ${response.status}`);
         }
@@ -224,164 +220,159 @@ export default function Profile() {
     }
   };
 
-/*   <ProtectedRoute>
+  /*   <ProtectedRoute>
     </ProtectedRoute>
  */
 
   return (
-      <main className="mt-8 bg-[#110A19] min-h-screen">
-        <button
-          className="bg-transparent border-none absolute top-20 left-4 z-40 text-slate-100 text-xl hover:cursor-pointer"
-          onClick={handleNavigation}
-        >
-          <SlArrowLeft />
-        </button>
-        <div className="flex items-center flex-col pb-12 bg-[#110A19]">
-          {userData ? (
-            <div className="flex items-center flex-col space-y-5 mt-12">
-              <button className="bg-transparent border-none hover:cursor-pointer">
-                <img
-                  src="/profile-user.svg"
-                  className="h-28"
-                  alt="User Profile"
-                />
-              </button>
-              <h1 className="font-archivo font-extrabold">
-                {userData.username}
-              </h1>
-            </div>
-          ) : (
-            <p>Loading user data...</p>
-          )}
-        </div>
-        <div className="menu flex flex-row justify-between px-8 items-center">
-          {tabNames.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => handleTabClick(tab)}
-              className={`  hover:cursor-pointer h-16 w-28 rounded-full text-lg font-semibold  ${
-                activeTab === tab
-                  ? "bg-[#CFFF5E] text-slate-950 border-none"
-                  : "bg-transparent text-white border-2 border-solid box-border border-[#CFFF5E]"
-              }`}
-            >
-              <h4>{tab}</h4>
+    <main className="mt-8 bg-[#110A19] min-h-screen md:px-44">
+      <button
+        className="bg-transparent border-none absolute top-0 left-0 m-8 px-4 my-20  text-slate-100 text-xl hover:cursor-pointer"
+        onClick={handleNavigation}
+      >
+        <SlArrowLeft />
+      </button>
+      <div className="flex items-center flex-col pb-12 bg-[#110A19]">
+        {userData ? (
+          <div className="flex items-center flex-col space-y-5 mt-12">
+            <button className="bg-transparent border-none hover:cursor-pointer">
+              <img
+                src="/profile-user.svg"
+                className="h-28"
+                alt="User Profile"
+              />
             </button>
-          ))}
-        </div>
-        <div
-          className="tabs-container"
-          style={{ transform: `translateX(${tabIndex * -100}%)` }}
-        ></div>
-        {activeTab === "Profile" && (
-          <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
-            <div className="my-8">
-              <div className="flex flex-row justify-between">
-                <h3 className="text-2xl mb-4 font-archivo font-semibold">
-                  My Favorites
-                </h3>
-                <button
-                  onClick={() =>
-                    router.push(`/choose-favorites`)
-                    
-                  }
-                  className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
-                >
-                  Edit
-                </button>
-              </div>
-              <SlideMenu>
-                {favorites.map((movie) => (
-                  <Link href={`/movie/${movie.movie_id}`} key={movie.movie_id}>
-                    <SlideMenuMovieCard
-                      id={movie.movie_id}
-                      title={movie.title}
-                      poster={movie.poster}
-                      overview={movie.overview}
-                    />
-                  </Link>
-                ))}
-              </SlideMenu>
-            </div>
-            <div className="mb-8">
+            <h1 className="font-archivo font-extrabold">{userData.username}</h1>
+          </div>
+        ) : (
+          <p>Loading user data...</p>
+        )}
+      </div>
+      <div className="menu flex flex-row justify-between px-8 md:px-60 items-center">
+        {tabNames.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => handleTabClick(tab)}
+            className={`  hover:cursor-pointer h-16 w-28 rounded-full text-lg font-semibold  ${
+              activeTab === tab
+                ? "bg-[#CFFF5E] text-slate-950 border-none"
+                : "bg-transparent text-white border-2 border-solid box-border border-[#CFFF5E]"
+            }`}
+          >
+            <h4>{tab}</h4>
+          </button>
+        ))}
+      </div>
+      <div
+        className="tabs-container"
+        style={{ transform: `translateX(${tabIndex * -100}%)` }}
+      ></div>
+      {activeTab === "Profile" && (
+        <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
+          <div className="my-8">
+            <div className="flex flex-row justify-between">
               <h3 className="text-2xl mb-4 font-archivo font-semibold">
-                Recently seen
+                My Favorites
               </h3>
-              <p className="text-sm"></p>
-              <SlideMenu>
-                {seenMovies.map((movie) => (
+              <button
+                onClick={() => router.push(`/choose-favorites`)}
+                className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
+              >
+                Edit
+              </button>
+            </div>
+            <SlideMenu>
+              {favorites.map((movie) => (
+                <Link href={`/movie/${movie.movie_id}`} key={movie.movie_id}>
                   <SlideMenuMovieCard
-                    key={movie.id}
-                    id={movie.id}
+                    id={movie.movie_id}
                     title={movie.title}
                     poster={movie.poster}
                     overview={movie.overview}
                   />
-                ))}
-              </SlideMenu>
-            </div>
+                </Link>
+              ))}
+            </SlideMenu>
           </div>
-        )}
-        {activeTab === "Watchlist" && (
-          <div className="flex w-full rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
-            <div className="flex justify-center w-full py-8 ">
-              <WatchListForProfile profilePage={true} />
-            </div>
+          <div className="mb-8">
+            <h3 className="text-2xl mb-4 font-archivo font-semibold">
+              Recently seen
+            </h3>
+            <p className="text-sm"></p>
+            <SlideMenu>
+              {seenMovies.map((movie) => (
+                <SlideMenuMovieCard
+                  key={movie.id}
+                  id={movie.id}
+                  title={movie.title}
+                  poster={movie.poster}
+                  overview={movie.overview}
+                />
+              ))}
+            </SlideMenu>
           </div>
-        )}
-        {activeTab === "My lists" && (
-          <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
-            <div className="py-8">
-              {loadingLists ? (
-                <p>Loading lists...</p>
-              ) : (
-                <div className="mt-4">
-                  {userLists.length === 0 ? (
-                    <p className="text-2xl">No lists created</p>
-                  ) : (
-                    userLists.map((list) => (
-                      <div key={list.id} className="mb-10">
-                        <div className="my-4 flex flex-row justify-between">
-                          <Link
-                            href={`/my-customlist/${list.id}`}
-                            className="no-underline text-white"
+        </div>
+      )}
+      {activeTab === "Watchlist" && (
+        <div className="flex w-full rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
+          <div className="flex justify-center w-full py-8 ">
+            <WatchListForProfile profilePage={true} />
+          </div>
+        </div>
+      )}
+      {activeTab === "My lists" && (
+        <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
+          <div className="py-8">
+            {loadingLists ? (
+              <p>Loading lists...</p>
+            ) : (
+              <div className="mt-4">
+                {userLists.length === 0 ? (
+                  <p className="text-2xl">No lists created</p>
+                ) : (
+                  userLists.map((list) => (
+                    <div key={list.id} className="mb-10">
+                      <div className="my-4 flex flex-row justify-between">
+                        <Link
+                          href={`/my-customlist/${list.id}`}
+                          className="no-underline text-white"
+                        >
+                          <h2 className="text-xl font-bold hover:underline">
+                            {list.name}
+                          </h2>
+                        </Link>
+                        <div className="h-8 float-end">
+                          <button
+                            onClick={() => removeCustomList(list.id)}
+                            className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
                           >
-                            <h2 className="text-xl font-bold hover:underline">
-                              {list.name}
-                            </h2>
-                          </Link>
-                          <div className="h-8 float-end">
-                            <button
-                              onClick={() => removeCustomList(list.id)}
-                              className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
-                            >
-                              Delete
-                            </button>
-                          </div>
+                            Delete
+                          </button>
                         </div>
-                        {list.movies.length === 0 ? (
-                          <p className="text-2xl">No movies in this list</p>
-                        ) : (
-                          <SlideMenu>
-                            {list.movies.map((movie) => (
-                              <SlideMenuMovieCard
-                                key={movie.id}
-                                id={movie.id}
-                                title={movie.title}
-                                poster={movie.poster}
-                                overview={movie.overview}
-                              />
-                            ))}
-                          </SlideMenu>
-                        )}
                       </div>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
+                      {list.movies.length === 0 ? (
+                        <p className="text-2xl">No movies in this list</p>
+                      ) : (
+                        <SlideMenu>
+                          {list.movies.map((movie) => (
+                            <SlideMenuMovieCard
+                              key={movie.id}
+                              id={movie.id}
+                              title={movie.title}
+                              poster={movie.poster}
+                              overview={movie.overview}
+                            />
+                          ))}
+                        </SlideMenu>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
-        )}
-      </main>
+        </div>
+      )}
+    </main>
   );
 }

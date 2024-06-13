@@ -33,9 +33,11 @@ export default function SlideMenu({ children, placeholder = false }) {
             alt=""
           /> */}
           <div className="w-full text-center absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col gap-8 justify-center items-center w-[50%] text-start">
-              <h2 className="flex justify-center items-center w-64 text-4xl font-archivo font-extrabold uppercase">
-                <span>Start adding to your Watchlist</span>
+            <div className="flex flex-col gap-8 justify-start items-start w-[80%] text-start">
+              <h2 className="flex justify-center items-center  text-3xl  uppercase">
+                <span className="font-archivo font-extrabold">
+                  Start adding to your Watchlist
+                </span>
               </h2>
               <Link className="no-underline" href={"/chatpage2"}>
                 <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo">
