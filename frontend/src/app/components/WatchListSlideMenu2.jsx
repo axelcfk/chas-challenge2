@@ -5,7 +5,7 @@ import SlideMenu from "./SlideMenu";
 import MovieCardWatchAndLike from "./MovieCardWatchAndLike";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
-export default function WatchListSlideMenu2() {
+export default function WatchListSlideMenu2({setIsWatchlistEmpty}) {
   //const [token, setToken] = useState(tokenStorage)
 
   const [movieWatchList, setMovieWatchList] = useState([]);
@@ -152,6 +152,23 @@ export default function WatchListSlideMenu2() {
     }
     //}, [showLikedDetails]);
   }, [listsFetched]);
+
+
+  useEffect(() => {
+    if (listsFetched && movieWatchListDetails.length === 0) /* movieWatchListDetails */ {
+      setIsWatchlistEmpty(true);
+      console.log("setIsWatchlistEmpty to true");
+      
+    } else if (listsFetched && movieWatchListDetails.length > 0) {
+      setIsWatchlistEmpty(false);
+      console.log("setIsWatchlistEmpty to false");
+    } else {
+      console.log("failed setting setIsWatchlistEmpty to true or false");
+    }
+  }, [listsFetched, movieWatchListDetails])
+
+ 
+  
 
   //if (likedMoviesList = = null || likedSeriesList == null) {
   if (likedMoviesList == null) {

@@ -17,6 +17,8 @@ export default function Startpage() {
 
   //const [tokenStorage, setTokenStorage] = useState(null)
 
+  const [isWatchlistEmpty, setIsWatchlistEmpty] = useState(true); // just for overflow-hidden styling...
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
@@ -127,7 +129,7 @@ export default function Startpage() {
             </Link>
           </div>
 
-          <div className="w-full lg:max-w-[60%] mt-14 "> {/* overflow-hidden fixar problemet på lite mindre desktop (precis ovanför lg) där slidemenyn fortsätter ut lite över dens div */}
+          <div className={`w-full lg:max-w-[60%] mt-14 ${isWatchlistEmpty ? "overflow-visible" : "overflow-hidden"}`}> {/* overflow-hidden fixar problemet på lite mindre desktop (precis ovanför lg) där slidemenyn fortsätter ut lite över dens div */}
             <div className="lg:w-full flex gap-2 items-center mb-8 lg:pl-0">
               <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
               <h2
@@ -139,7 +141,7 @@ export default function Startpage() {
             </div>
 
             <div className="lg:w-full lg:mx-0">
-              <WatchListSlideMenu2 />
+              <WatchListSlideMenu2 setIsWatchlistEmpty={setIsWatchlistEmpty} />
             </div>
           </div>
         </div>
