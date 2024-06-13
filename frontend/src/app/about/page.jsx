@@ -57,7 +57,7 @@ const About = () => {
         us to revolutionize movie discovery, providing accurate recommendations
         using OpenAI.
       </p> */}
-      <div class="grid-container space-y-10">
+      <div class="grid grid-cols-3 space-y-10">
         <div class="grid-item text-center mt-10">
           <img src="/shantiAI.webp" className="AI-image" />
           <h2 className="font-bold">Shanti</h2>
@@ -67,12 +67,14 @@ const About = () => {
         <div class="grid-item text-center">
           <img src="/marcusAI.jpg" className="AI-image" />
           <h2 className="font-bold">Marcus</h2>
-          <h3>Software Developer</h3>
+          <h3>Software Developer,</h3>
+          <h3>DevOps</h3>
         </div>
         <div class="grid-item text-center">
           <img src="/axel.webp" className="AI-image" />
           <h2 className="font-bold">Axel</h2>
-          <h3>Software Developer</h3>
+          <h3>Software Developer,</h3>
+          <h3>DevOps</h3>
         </div>
         <div class="grid-item text-center">
           <img src="/mikael.webp" className="AI-image" />
