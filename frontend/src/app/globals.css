@@ -324,9 +324,9 @@ input:focus {
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   background-color: rgba(
-    57,
-    57,
-    57,
+    0,
+    0,
+    0,
     0.8
   ); /* Fallback for browsers not supporting backdrop-filter */
 }
