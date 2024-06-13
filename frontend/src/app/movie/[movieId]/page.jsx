@@ -526,7 +526,7 @@ export default function MoviePage() {
                     )}
                   </button>
                   <div className="w-full flex flex-col justify-center items-center gap-4">
-                    <div className="absolute left-4 right-4 mt-8">
+                    <div className="absolute left-4 right-4 mt-8 md:w-1/4 md:absolute md:left-[60%]">
                       <button
                         onClick={() => {
                           handleButtonClicked(movieDetails.id);
@@ -683,7 +683,7 @@ export default function MoviePage() {
           </div>
         )}
       </div>
-      <div className="relative w-full flex flex-col justify-center items-center bg-[#1B1725] h-80 py-16 ">
+      <div className="relative w-full  flex flex-col justify-center items-center  bg-[#1B1725] h-80 py-16 ">
         <iframe
           className="border-none z-10 rounded-md w-[90%] h-[90%] md:w-[30%]"
           src={`https://www.youtube-nocookie.com/embed/${videos}?rel=0&controls=0`}
