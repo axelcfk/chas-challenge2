@@ -9,7 +9,11 @@ import { useAuth } from "../context/AuthContext";
 import { useHandleQuerySubmit } from "../hooks/useHandleQuerySubmit";
 import { useSearch } from "../context/SearchContext";
 import { FaDotCircle } from "react-icons/fa";
-import { FaMagnifyingGlass, FaChevronUp } from "react-icons/fa6";
+import {
+  FaMagnifyingGlass,
+  FaChevronUp,
+  FaArrowRightFromBracket,
+} from "react-icons/fa6";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -584,8 +588,8 @@ export default function Navbar() {
                 onClick={handleLogout}
                 style={{ textDecoration: "none" }}
               >
-                <span className="hover:bg-lighter-purple px-3 py-2 rounded-md text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
-                  Log Out
+                <span className=" px-3 rounded-md ml-8 text-2xl font-bold font-archivo cursor-pointer block text-center text-white">
+                  <FaArrowRightFromBracket />
                 </span>
               </Link>
             </div>
