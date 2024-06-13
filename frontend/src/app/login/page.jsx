@@ -72,7 +72,7 @@ export default function Login() {
           <button
             onClick={handleSignIn}
             style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-            className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-20"
+            className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-20 text-black"
           >
             Log in
           </button>

@@ -70,7 +70,7 @@ export default function Startpage() {
               </h2>
               <div className=" h-full flex justify-center items-center">
                 <Link className="no-underline text-black" href={"/chatpage2"}>
-                  <button className="flex items-center justify-center gap-4 hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo">
+                  <button className="flex items-center justify-center gap-4 hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-72 h-16 rounded-full font-extrabold font-archivo text-black">
                     AI SEARCH <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
                   </button>
                 </Link>
@@ -94,7 +94,7 @@ export default function Startpage() {
           </div>
         </div>
 
-        <div className="md:ml-12 md:flex md:w-full] ">
+        <div className="md:ml-12 md:flex  ">
           <div className="  mt-14 md:mr-14">
             <div className="flex gap-2 items-center mb-8 md:pl-0">
               <div className="flex h-full  justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>

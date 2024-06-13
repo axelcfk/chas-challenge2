@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 
-
 export default function FirstPage() {
   const videoRef = useRef(null);
 
@@ -19,7 +18,7 @@ export default function FirstPage() {
   const [currentPhrase, setCurrentPhrase] = useState(0);
 
   const { isLoggedIn, user, logout, checkAuth } = useAuth();
-/* 
+  /* 
   let isLoggedInLocalStorage;
 
   useEffect(() => {
@@ -115,37 +114,44 @@ export default function FirstPage() {
       </div>
 
       <div className="flex flex-col items-center w-full absolute bottom-6">
-        {!isLoggedIn ? (<><button
-          onClick={() => {
-            router.push("/create-account");
-          }}
-          className="border-none text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg hover:cursor-pointer"
-        >
-          Create an account
-        </button>
-        <button
-          onClick={() => {
-            router.push("/login");
-          }}
-          style={{ border: "1px solid white" }}
-          className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold shadow-lg hover:cursor-pointer"
-        >
-          Log in
-        </button></>) : (<>
-          <Link className="no-underline w-11/12 mb-4 max-w-md" href={"/startpage"}>
-                <button className="flex justify-center items-center gap-4 border-none text-xl h-14 w-full max-w-md bg-[#CFFF5E] rounded-full font-semibold text-slate-900 hover:bg-slate-200 shadow-lg hover:cursor-pointer">
-                  Startpage <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
-                </button>
-              </Link>
-        <button
-          onClick={logout}
-          className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold border border-solid border-white hover:cursor-pointer"
-        >
-          Log Out
-        </button>
-        
-         
-         </>)}
+        {!isLoggedIn ? (
+          <>
+            <button
+              onClick={() => {
+                router.push("/create-account");
+              }}
+              className="border-none text-xl h-14 w-11/12 max-w-md bg-[#CFFF5E] rounded-full font-semibold mb-4 text-slate-900 hover:bg-slate-200 shadow-lg hover:cursor-pointer"
+            >
+              Create an account
+            </button>
+            <button
+              onClick={() => {
+                router.push("/login");
+              }}
+              style={{ border: "1px solid white" }}
+              className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold shadow-lg hover:cursor-pointer "
+            >
+              Log in
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              className="no-underline w-11/12 mb-4 max-w-md"
+              href={"/startpage"}
+            >
+              <button className="flex justify-center items-center gap-4 border-none text-xl h-14 w-full max-w-md bg-[#CFFF5E] rounded-full font-semibold text-slate-900 hover:bg-slate-200 shadow-lg hover:cursor-pointer">
+                Startpage <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
+              </button>
+            </Link>
+            <button
+              onClick={logout}
+              className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold border border-solid border-white hover:cursor-pointer"
+            >
+              Log Out
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

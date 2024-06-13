@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ export default function SlideMenu({ children, placeholder = false }) {
       const scrollAmount = scrollContainerRef.current.clientWidth * 1; // 100% of the container's width
       scrollContainerRef.current.scrollBy({
         left: scrollAmount,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
       setIsRightClicked(true);
       setScrollLeft(scrollContainerRef.current.scrollLeft + scrollAmount);
@@ -26,7 +26,7 @@ export default function SlideMenu({ children, placeholder = false }) {
       const scrollAmount = scrollContainerRef.current.clientWidth * 1; // 100% of the container's width
       scrollContainerRef.current.scrollBy({
         left: -scrollAmount, // scroll left
-        behavior: 'smooth'
+        behavior: "smooth",
       });
       setScrollLeft(scrollContainerRef.current.scrollLeft - scrollAmount);
     }
@@ -39,10 +39,10 @@ export default function SlideMenu({ children, placeholder = false }) {
       };
 
       const container = scrollContainerRef.current;
-      container.addEventListener('scroll', handleScroll);
+      container.addEventListener("scroll", handleScroll);
 
       return () => {
-        container.removeEventListener('scroll', handleScroll);
+        container.removeEventListener("scroll", handleScroll);
       };
     }
   }, []);
@@ -52,15 +52,24 @@ export default function SlideMenu({ children, placeholder = false }) {
       {!placeholder ? (
         <>
           <div className="relative w-full">
-            <div ref={scrollContainerRef} className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth removeScrollbar">
+            <div
+              ref={scrollContainerRef}
+              className="w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth removeScrollbar"
+            >
               {children}
             </div>
             {scrollLeft > 0 && (
-              <button className="hidden md:flex scroll-button-left" onClick={handleScrollLeft}>
+              <button
+                className="hidden md:flex scroll-button-left"
+                onClick={handleScrollLeft}
+              >
                 <FaArrowLeft size={"60px"}></FaArrowLeft>
               </button>
             )}
-            <button className="hidden md:flex scroll-button" onClick={handleScrollRight}>
+            <button
+              className="hidden md:flex scroll-button"
+              onClick={handleScrollRight}
+            >
               <FaArrowRight size={"60px"}></FaArrowRight>
             </button>
           </div>
@@ -82,7 +91,7 @@ export default function SlideMenu({ children, placeholder = false }) {
                 </span>
               </h2>
               <Link className="no-underline text-black" href={"/chatpage2"}>
-                <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo">
+                <button className="flex justify-center items-center gap-4 no-underline hover:cursor-pointer border-none text-2xl bg-[#CFFF5E] hover:bg-gray-100 w-64 h-16 rounded-full font-extrabold font-archivo text-black">
                   Find Movies <FaArrowRight color="rgb(2 6 23)" size={"24px"} />
                 </button>
               </Link>
@@ -100,7 +109,7 @@ export default function SlideMenu({ children, placeholder = false }) {
             -ms-overflow-style: none; /* Internet Explorer 10+ */
           }
         }
-        
+
         .scroll-button {
           position: absolute;
           top: 50%;
@@ -112,12 +121,12 @@ export default function SlideMenu({ children, placeholder = false }) {
           border-radius: 50%;
           width: 80px;
           height: 80px;
-         /*  display: flex; */
+          /*  display: flex; */
           align-items: center;
           justify-content: center;
           cursor: pointer;
         }
-  
+
         .scroll-button:hover {
           background-color: rgba(0, 0, 0, 0.7);
         }
@@ -138,7 +147,7 @@ export default function SlideMenu({ children, placeholder = false }) {
           justify-content: center;
           cursor: pointer;
         }
-  
+
         .scroll-button-left:hover {
           background-color: rgba(0, 0, 0, 0.7);
         }
