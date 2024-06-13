@@ -1,11 +1,47 @@
 "use client";
 
+import { SlArrowLeft } from "react-icons/sl";
 import "./about.css";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
+import { FaDotCircle } from "react-icons/fa";
+import Link from "next/link";
 
 const About = () => {
+
+  const router = useRouter();
+  const handleNavigation = () => {
+    router.back();
+    //router.push("/startpage");
+  };
+
+  const { isLoggedIn } = useAuth();
+
   return (
     <div className="py-8 font-archivo">
-      <div className="flex flex-col items-center justify-center mb-8  ">
+       {!isLoggedIn && <><div className="absolute top-2 left-4 no-underline mt-3">
+        <span className=" flex justify-center items-center  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
+          <span className="text-sm">
+            <FaDotCircle />
+          </span>
+          <span className="">
+            <span className="font-archivo font-extrabold text-white">LUDI</span>
+          </span>
+        </span>
+      </div>
+      <Link
+        className="absolute top-4 right-4 mt-3  text-white text-lg no-underline about-btn"
+        href={"about"}
+      >
+        About
+      </Link></>}
+      <button
+          className={`bg-transparent border-none absolute top-0 left-0 m-8 my-20 ${!isLoggedIn ? "pt-2" : "pt-1"}  text-slate-100 text-xl hover:cursor-pointer`}
+          onClick={handleNavigation}
+        >
+          <SlArrowLeft />
+        </button>
+      <div className="pt-16  flex flex-col items-center justify-center mb-8  ">
         <div
           className="w-full mt-12 xs:h-48 h-64 sm:h-80 md:h-96  mb-8 bg-cover bg-center"
           style={{ backgroundImage: "url('/About_page.jpg')" }}

@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import WatchListSlideMenu2 from "../components/WatchListSlideMenu2";
 import PopularSlideMenu2 from "../components/PopularSlideMenu2";
-import { FaArrowRight, FaHeart } from "react-icons/fa";
+import { FaArrowRight, FaArrowUp, FaHeart } from "react-icons/fa";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 //TODO: texten i rutan ska var lite större
@@ -111,20 +111,33 @@ export default function Startpage() {
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
               <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 lg:w-[80%] ml-4 mr-4 lg:ml-0 ">
                 {" "}
-                <div className="text-slate-950 flex flex-col justify-center items-start md:items-center">
+                <div className="text-slate-950 flex flex-col justify-center items-start md:items-center lg:items-start gap-6">
                   <h2 className="text-6xl md:text-6xl font-archivo font-extrabold uppercase">
                     Weekly AI Mix
                   </h2>
 
-                  <p className="whitespace-nowrap font-archivo font-extrabold md:text-2xl">
+                  <p className="relative whitespace-nowrap font-archivo font-extrabold md:text-2xl w-full">
                     Based on your
-                    <FaHeart className="h-3 w-3 pt-4 mx-1 text-[#EA3546]"></FaHeart>{" "}
+                    <FaHeart className="h-3 w-3 mx-1 text-[#EA3546]"></FaHeart>{" "}
                     movies
+                    {/* <span className="absolute right-0 lg:hidden top-0 -mt-4 md:-mt-2 "> 
+                      <FaArrowRight color="rgb(2 6 23)" size={"48px"} />
+                    </span> */}
+                    
                   </p>
+                  
+                  <div className="w-full hidden lg:flex items-center justify-center lg:justify-start ">
+                  <FaArrowUp color="rgb(2 6 23)" size={"60px"} />
                 </div>
-                {/* <div className="md:hidden">
+                
+                </div>
+                <div className="w-[25%] md:w-[20%] flex md:hidden items-center justify-end lg:justify-start ">
+                  <FaArrowRight color="rgb(2 6 23)" size={"48px"} />
+                </div>
+                <div className="w-[25%] md:w-[20%] hidden md:flex lg:hidden items-center justify-end lg:justify-start ">
                   <FaArrowRight color="rgb(2 6 23)" size={"60px"} />
-                </div> */}
+                </div>
+               
               </div>
             </Link>
           </div>

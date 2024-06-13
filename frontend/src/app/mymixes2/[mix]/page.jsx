@@ -42,8 +42,8 @@ export default function Mix() {
   const router = useRouter();
 
   const handleNavigation = () => {
-    //router.back();
-    router.push("/startpage");
+    router.back();
+    //router.push("/startpage");
   };
 
   const handleNavigationNewUser = () => {

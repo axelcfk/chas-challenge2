@@ -82,7 +82,7 @@ export default function FirstPage() {
         !isLoggedIn && "pt-16"
       }`}
     >
-      <div className="absolute top-2 left-4 no-underline mt-3">
+      {!isLoggedIn && <><div className="absolute top-2 left-4 no-underline mt-3">
         <span className=" flex justify-center items-center  py-2 text-[#CFFF5E] rounded-md font-medium  text-3xl">
           <span className="text-sm">
             <FaDotCircle />
@@ -97,7 +97,7 @@ export default function FirstPage() {
         href={"about"}
       >
         About
-      </Link>
+      </Link></>}
       <div className="flex flex-col items-center justify-center">
         <video
           className="md:w-1/3 w-80 sm:w-96 transform rounded-full z-10 mt-12"
