@@ -271,15 +271,15 @@ export default function Profile() {
         <div className="rounded-tr-3xl rounded-tl-3xl pt-4 pb-8 px-8 border-2 border-solid border-[#CFFF5E] border-l-0 border-r-0 border-b-0 mt-8">
           <div className="my-8">
             <div className="flex flex-row justify-between">
-              <h3 className="text-2xl mb-4 font-archivo font-semibold">
+              {/* <h3 className="text-2xl mb-4 font-archivo font-semibold">
                 My Favorites
-              </h3>
-              <button
+              </h3> */}
+              {/* <button
                 onClick={() => router.push(`/choose-favorites`)}
                 className="h-8 w-16 rounded-full border-none bg-[#CFFF5E] text-black font-bold"
               >
                 Edit
-              </button>
+              </button> */}
             </div>
             <SlideMenu>
               {favorites.map((movie) => (

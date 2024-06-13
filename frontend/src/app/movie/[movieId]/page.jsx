@@ -78,6 +78,8 @@ export default function MoviePage() {
     "Amazon Video": "/PrimeVideo.svg",
     "Microsoft Store": "/Microsoft.svg",
     MUBI: "/Mubi.svg",
+    SkyShowtime: "/SkyShowtime.svg",
+    "Apple TV +": "/AppleTVPlus.svg",
   };
 
   function handleToggle() {
