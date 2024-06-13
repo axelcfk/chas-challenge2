@@ -36,7 +36,8 @@ export default function MovieCardWatchAndLike({
     setWatched(!watched);
   }
 
-  if (!id || !poster || !title || voteAverage == null) { // !voteAverage also applies to 0 voteaverage
+  if (!id || !poster || !title || voteAverage == null) {
+    // !voteAverage also applies to 0 voteaverage
     return <div className="w-40 inline-block rounded-2xl">Loading...</div>;
   }
 
@@ -114,9 +115,7 @@ export default function MovieCardWatchAndLike({
           {/* gap-4 */}
           <div className="w-full">
             <h2 className="w-[95%] px-2 pt-2 h-12 whitespace-normal break-words font-semibold">
-              {title.length > 36
-                    ? title.substring(0, 36) + "..."
-                    : title}
+              {title.length > 36 ? title.substring(0, 36) + "..." : title}
             </h2>
           </div>
           {showRating && (

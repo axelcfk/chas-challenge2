@@ -52,10 +52,10 @@ export default function Startpage() {
 
   /*  <ProtectedRoute> </ProtectedRoute> */
   return (
-    <div className="px-4 pt-14 bg-[#110A1A]">
+    <div className="pt-14 bg-[#110A1A] w-full ">
       <div className=" pb-8 h-full w-full ">
-        <main className="w-full flex flex-col text-slate-100 py-20 justify-center  md:items-start  md:px-24">
-          <div className="w-full md:w-2/4 ">
+        <main className="w-full flex flex-col text-slate-100 py-20 justify-center items-center md:items-start  ">
+          <div className="w-[90%] md:w-2/4 md:ml-12 ">
             {/* <h2 className="mb-10 md:text-left">AI-SEARCH</h2> */}
             <div
               className=" rounded-3xl p-8 h-72 flex flex-col justify-center items-start card-shadow"
@@ -65,7 +65,7 @@ export default function Startpage() {
               }}
               ref={parallaxRef}
             >
-              <h2 className=" text-5xl w-full font-archivo font-extrabold uppercase">
+              <h2 className=" text-5xl w-full font-archivo font-extrabold uppercase md:mt-20">
                 Use AI to find a movie!
               </h2>
               <div className=" h-full flex justify-center items-center">
@@ -78,11 +78,9 @@ export default function Startpage() {
             </div>
           </div>
         </main>
-        <div className="w-full md:pl-24 md:w-10/12">
-          {" "}
-          {/* mt-14 */}
+        <div className="w-full md:ml-12 md:w-11/12">
           <div className="flex gap-2 items-center mb-8 md:pl-0">
-            <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
+            <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 "></div>
             <h2
               className="md:pl-0 uppercase text-2xl font-archivo font-bold"
               tabIndex={0}
@@ -96,10 +94,10 @@ export default function Startpage() {
           </div>
         </div>
 
-        <div className="md:flex">
-          <div className="w-full md:px-24 mt-14 md:w-2/4">
+        <div className="md:ml-12 md:flex md:w-11/12 ">
+          <div className="md:w-2/4  mt-14 md:mr-14">
             <div className="flex gap-2 items-center mb-8 md:pl-0">
-              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
+              <div className="flex h-full  justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
               <h2
                 className="uppercase text-2xl font-archivo font-bold"
                 tabIndex={0}
@@ -109,77 +107,42 @@ export default function Startpage() {
             </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center md:pl-0 h-full bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64">
+              <div className="flex justify-center items-center md:pl-0 h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 md:w-full ml-4 md:ml-0 w-[80%]">
                 {" "}
-                {/* pl-4 tog bort? */}
-                <div className="text-slate-950 flex flex-col justify-center items-start">
-                  <h2 className="text-5xl font-archivo font-extrabold uppercase">
-                    Weekly
-                  </h2>
-                  <h2 className=" text-5xl font-archivo font-extrabold uppercase">
-                    AI{" "}
+                <div className="text-slate-950 flex flex-col justify-center items-start md:items-center  px-8">
+                  <h2 className="text-5xl md:text-6xl font-archivo font-extrabold uppercase">
+                    Weekly AI Mix
                   </h2>
 
-                  <h2 className="text-5xl font-archivo font-extrabold uppercase">
-                    Mix
-                  </h2>
-                  <p className="whitespace-nowrap font-archivo font-extrabold ">
+                  <p className="whitespace-nowrap font-archivo font-extrabold md:text-2xl">
                     Based on your liked{" "}
                     <FaHeart className="h-3 w-3 pt-6 mx-1 text-[#EA3546]"></FaHeart>{" "}
                     movies
                   </p>
                 </div>
-                <div className="ml-20 ">
+                <div className="md:hidden">
                   <FaArrowRight color="rgb(2 6 23)" size={"60px"} />
                 </div>
               </div>
             </Link>
           </div>
-          {/* <div className="w-full md:px24 bg-amber-500  "> */}
-          {/* <h2 className="text-xl px-8 uppercase"> Watchlist</h2>
-          <div className="pl-8">
-            <WatchListSlideMenu2></WatchListSlideMenu2>
-          </div> */}
 
-          {/* <div className="w-full  md:px-24 ">
-          <h2 className="mt-14 mb-8  pl-4 md:pl-0 uppercase" tabIndex={0}>
-            Search history
-          </h2>
-          <div className=" pl-4 md:pl-0">
-            <SlideMenuSearchHistoryCard
-              searchName="Search 1"
-              imgSrc={"/search-history-img.png"}
-            />
-          </div>
-        </div> */}
-
-          <div className="w-full md:px-24 mt-14 md:w-2/4 ">
+          <div className="w-full  mt-14 md:w-2/4 ">
             <div className="flex gap-2 items-center mb-8 md:pl-0">
-              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E]"></div>
+              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4"></div>
               <h2
-                className="uppercase text-2xl  font-archivo font-bold"
+                className="uppercase text-2xl  font-archivo font-bold "
                 tabIndex={0}
               >
                 Watchlist
-                {/* (isLiked=false, isInWatchList=false) */}
               </h2>
             </div>
 
-            <div className="md:pl-0">
+            <div className=" md:w-full mx-4 md:mx-0">
               <WatchListSlideMenu2 />
             </div>
           </div>
         </div>
-
-        {/* <div className="w-full md:px-24 ">
-            <h2 className="mb-8 md:pl-0 uppercase">
-              {" "}
-              LIKELIST (remove in final product)
-            </h2>
-            <div className="w-full md:pl-0 ">
-              <LikeListSlideMenu2 />
-            </div>
-          </div> */}
       </div>
     </div>
   );
