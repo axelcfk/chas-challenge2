@@ -194,7 +194,7 @@ function MovieSearch({ isSearchOpen, setIsSearchOpen }) {
               />
               <input
                 ref={inputRef}
-                className="border pl-24 h-12 text-white border-solid bg-deep-purple rounded-full shadow appearance-none pr-40 w-full box-border text-xl"
+                className="border pl-14 sm:pl-24 h-12 text-white border-solid bg-deep-purple rounded-full shadow appearance-none pr-40 w-full box-border text-base md:text-xl"
                 type="text"
                 value={inputValue}
                 onChange={handleChange}
