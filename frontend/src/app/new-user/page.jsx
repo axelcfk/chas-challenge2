@@ -113,7 +113,7 @@ function MovieSelection() {
         {movies.slice(currentStartIndex, currentStartIndex + 6).map((movie) => (
           <div
             key={movie.id}
-            className="rounded-lg h-40 shadow-lg overflow-hidden"
+            className="rounded-lg h-40 md:h-[100%] shadow-lg overflow-hidden"
             style={{ border: "1px solid grey" }}
           >
             {!selectedMovies.has(movie.id) ? (

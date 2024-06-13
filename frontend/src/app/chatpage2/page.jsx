@@ -206,10 +206,7 @@ export default function ChatPage2() {
   useEffect(() => {
     let timer;
 
-    const phrases = [
-      "I'm your personal movie matcher",
-      `What do you want to watch today?`,
-    ];
+    const phrases = ["Hello I'm LUDI!", `What do you want to watch today?`];
 
     if (animationPhase === "erasing") {
       if (currentText.length > 0) {
@@ -294,6 +291,9 @@ export default function ChatPage2() {
               autoPlay
               loop
               muted
+              playsInline
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
               style={{ pointerEvents: "none", userSelect: "none" }}
             >
               <source src="/ai-gif.mp4" type="video/mp4" />
@@ -302,8 +302,8 @@ export default function ChatPage2() {
             <div className="video-gradient-overlay"></div>
           </div>
           {!loading ? (
-            <p className="px-5 text-xl flex flex-col items-center h-24">
-              <span className="absolute top-50 bottom-50 mb-4 text-3xl font-archivo px-8 font-extrabold text-center uppercase">
+            <p className="px-5 text-xl flex flex-col items-center h-24 -mt-10">
+              <span className="absolute top-50 bottom-50 mb-4 md:text-4xl text-2xl font-archivo px-8 font-extrabold text-center uppercase -mt-12 z-20">
                 {currentText}
               </span>
             </p>

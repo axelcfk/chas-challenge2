@@ -136,7 +136,7 @@ export default function CreateAccount() {
             <button
               onClick={handleSubmit}
               style={{ border: "1px solid rgb(148, 163, 184, 0.5)" }}
-              className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-16"
+              className="text-xl h-14 w-full bg-[#CFFF5E] rounded-full font-archivo font-semibold mt-16 text-black"
             >
               Create account
             </button>{" "}
