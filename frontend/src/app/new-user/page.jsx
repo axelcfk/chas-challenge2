@@ -106,7 +106,7 @@ function MovieSelection() {
     <div className="flex flex-col justify-center items-center p-4 bg-black text-slate-50   ">
       <h1 className="text-2xl md:text-4xl md:mb-12 font-archivo font-extrabold text-center pb-8  pt-4 flex flex-col  ">
         <span className="">
-          Click to like movies for better recommendations!
+          Click to like movies for better AI recommendations!
         </span>
       </h1>
       <div className="grid grid-cols-3 gap-4 w-[90%] md:w-[90%] md:grid-cols-6 md:row-span-4">
