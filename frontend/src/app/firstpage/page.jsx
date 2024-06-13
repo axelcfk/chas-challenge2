@@ -94,7 +94,7 @@ export default function FirstPage() {
       >
         About
       </Link>
-      <div className="flex flex-col items-center justify-center md:mt-24">
+      <div className="flex flex-col items-center justify-center">
         <video
           className="md:w-1/3 w-80 sm:w-96 transform rounded-full z-10"
           ref={videoRef}
