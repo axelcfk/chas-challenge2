@@ -16,7 +16,7 @@ const About = () => {
       </div>
       <h2 className="text-2xl pb-5 sm:text-3xl lg:text-4xl font-extrabold mb-6 font-archivo flex">
         <span className="inline-block">
-          An unique
+          A unique
           <span className="inline-block font-archivo font-extrabold ml-2 mr-1 text-3xl text-[#CFFF5E]">
             AI-driven
           </span>{" "}

@@ -165,10 +165,10 @@ export default function CreateAccount() {
         )}
       </div>
       <div className="text-sm mt-6 absolute bottom-8 right-0 left-0">
-        <div className="flex justify-center items-center text-slate-100">
+        {/* <div className="flex justify-center items-center text-slate-100">
           <p className="mr-3 font-semibold text-slate-100">Terms of use</p>
           <p className="ml-3 font-semibold text-slate-100">Privacy Policy</p>
-        </div>
+        </div> */}
         <p className="text-center text-slate-100 mt-4">
           2024 All rights reserved
         </p>
