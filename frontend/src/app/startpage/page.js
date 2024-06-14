@@ -97,9 +97,9 @@ export default function Startpage() {
         </div>
 
         <div className="md:w-[90%] md:ml-12 lg:flex lg:gap-14">
-          <div className=" mt-14 ">
+          <div className="lg:w-full mt-14 ">
             <div className="flex gap-2 items-center mb-8 lg:pl-0 ">
-              <div className="flex justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
+              <div className="flex justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
               <h2
                 className="uppercase text-2xl font-archivo font-bold"
                 tabIndex={0}
@@ -109,7 +109,7 @@ export default function Startpage() {
             </div>
 
             <Link href={`/mymixes2/${"weekly"}`} className="no-underline">
-              <div className="flex justify-center items-center h-52 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 md:h-64 lg:w-[80%] ml-4 mr-4 lg:ml-0 ">
+              <div className="flex justify-center items-center h-80 bg-[#CFFF5E] rounded-3xl card-shadow2 p-8 lg:w-full box-border ml-4 mr-4 md:ml-0 md:mr-0">
                 {" "}
                 <div className="text-slate-950 flex flex-col justify-center items-start md:items-center lg:items-start gap-6">
                   <h2 className="text-6xl md:text-6xl font-archivo font-extrabold uppercase">
@@ -142,9 +142,9 @@ export default function Startpage() {
             </Link>
           </div>
 
-          <div className={`w-full lg:max-w-[60%] mt-14 ${isWatchlistEmpty ? "overflow-visible" : "overflow-hidden"}`}> {/* overflow-hidden fixar problemet på lite mindre desktop (precis ovanför lg) där slidemenyn fortsätter ut lite över dens div */}
+          <div className={`w-full mt-14 ${isWatchlistEmpty ? "overflow-visible" : "overflow-hidden"}`}> {/* overflow-hidden fixar problemet på lite mindre desktop (precis ovanför lg) där slidemenyn fortsätter ut lite över dens div */}
             <div className="lg:w-full flex gap-2 items-center mb-8 lg:pl-0">
-              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 lg:ml-0"></div>
+              <div className="flex h-full justify-center items-center sectionTitleUnderline bg-[#CFFF5E] ml-4 md:ml-0"></div>
               <h2
                 className="uppercase text-2xl  font-archivo font-bold "
                 tabIndex={0}
@@ -153,7 +153,7 @@ export default function Startpage() {
               </h2>
             </div>
 
-            <div className="lg:w-full lg:mx-0">
+            <div className="lg:w-full ">
               <WatchListSlideMenu2 setIsWatchlistEmpty={setIsWatchlistEmpty} />
             </div>
           </div>

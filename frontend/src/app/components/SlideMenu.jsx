@@ -99,11 +99,11 @@ export default function SlideMenu({ children, placeholder = false }) {
       ) : (
         <div className="w-full rounded-2xl relative bg-[#1D1631] card-shadow mx-4 lg:mx-0 ">
           <div className="h-80"></div>
-          <div className="w-full text-center absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col gap-8 justify-start items-start w-[80%] text-start">
+          <div className="w-full text-center absolute inset-0 flex items-start p-8 justify-center box-border">
+            <div className="flex flex-col gap-8 justify-start items-start text-start">
               <h2 className="flex justify-center items-center text-3xl uppercase">
                 <span className="font-archivo font-extrabold">
-                  Start adding to your Watchlist
+                  Start adding Movies to your Watchlist
                 </span>
               </h2>
               <Link className="no-underline text-black" href={"/chatpage2"}>
