@@ -248,13 +248,10 @@ export default function Mix() {
         <div className="bg-[#CFFF5E] box-border rounded-3xl p-8 w-full md:w-11/12 lg:w-3/5 md:h-64 flex justify-between items-center my-8 card-shadow2 ">
           <div className="w-full flex flex-col justify-center items-center h-full">
             <div className="flex flex-col items-start">
-
               <h1 className="text-slate-950 font-archivo font-extrabold mb-2 uppercase">
                 Your {mixTitle} <br />
                 mix by AI
               </h1>
-            
-            
 
               <p className="text-slate-950 whitespace-nowrap font-archivo font-extrabold">
                 Based on your
