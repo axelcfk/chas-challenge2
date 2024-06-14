@@ -281,7 +281,7 @@ export default function Profile() {
                 Edit
               </button> */}
             </div>
-            <SlideMenu>
+           {favorites.length > 0 && <SlideMenu>
               {favorites.map((movie) => (
                 <Link href={`/movie/${movie.movie_id}`} key={movie.movie_id}>
                   <SlideMenuMovieCard
@@ -292,14 +292,14 @@ export default function Profile() {
                   />
                 </Link>
               ))}
-            </SlideMenu>
+            </SlideMenu>}
           </div>
           <div className="mb-8">
             <h3 className="text-2xl mb-4 font-archivo font-semibold">
               Recently seen
             </h3>
             <p className="text-sm"></p>
-            <SlideMenu>
+            {seenMovies.length > 0 && <SlideMenu>
               {seenMovies.map((movie) => (
                 <SlideMenuMovieCard
                   key={movie.id}
@@ -309,7 +309,7 @@ export default function Profile() {
                   overview={movie.overview}
                 />
               ))}
-            </SlideMenu>
+            </SlideMenu>}
           </div>
         </div>
       )}
