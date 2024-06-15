@@ -21,13 +21,25 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchType, setSearchType] = useState("");
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn, user, logout, checkAuth } = useAuth();
+  const {  user, logout, checkAuth } = useAuth(); /* isLoggedIn */
   const { input, setInput } = useSearch();
   const { handleQuerySubmit: originalHandleQuerySubmit } =
     useHandleQuerySubmit();
   const router = useRouter();
   const pathname = usePathname();
   const { resetState } = useSearch();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  
+  /* let isLoggedInLocalStorage;
+
+  useEffect(() => {
+    isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+  }, []); */
+
+  
+
 
   useEffect(() => {
     if (isOpen || isSearchOpen) {
@@ -37,9 +49,31 @@ export default function Navbar() {
     }
   }, [isOpen, isSearchOpen]);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, [checkAuth]); */
+
+  useEffect(() => {
+    const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+    console.log("isLoggedInLocalStorage", isLoggedInLocalStorage );
+    if (isLoggedInLocalStorage !== null) {
+      setIsLoggedIn(isLoggedInLocalStorage === "true");
+    } else {
+      console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+    console.log("isLoggedInLocalStorage", isLoggedInLocalStorage );
+    if (isLoggedInLocalStorage !== null) {
+      setIsLoggedIn(isLoggedInLocalStorage === "true");
+    } else {
+      console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
+      setIsLoggedIn(false);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     console.log("User object:", user);
@@ -47,9 +81,15 @@ export default function Navbar() {
   }, [user, isLoggedIn]);
 
   const handleLogout = async () => {
-    await logout();
+    /* await logout(); */
+    if (typeof window !== "undefined") {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    localStorage.removeItem("userId")
+    localStorage.removeItem("isLoggedIn")
     setIsOpen(false);
     router.push("/");
+    }
   };
 
   const handleSearchTypeSelect = (type) => {

@@ -17,8 +17,21 @@ export default function FirstPage() {
   const [animationPhase, setAnimationPhase] = useState("erasing");
   const [currentPhrase, setCurrentPhrase] = useState(0);
 
-  const { isLoggedIn, user, logout, checkAuth } = useAuth();
-  /* 
+  const { user, logout, checkAuth } = useAuth(); /* isLoggedIn */
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+    if (isLoggedInLocalStorage !== null) {
+      setIsLoggedIn(isLoggedInLocalStorage === "true");
+    } else {
+      console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+/* 
+  
   let isLoggedInLocalStorage;
 
   useEffect(() => {
@@ -75,6 +88,19 @@ export default function FirstPage() {
 
     return () => clearTimeout(timer);
   }, [currentText, animationPhase, currentPhrase]);
+
+
+  function handleLogout() {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("isLoggedIn");
+      
+    } else {
+      
+    }
+  }
 
   return (
     <div
@@ -152,7 +178,15 @@ export default function FirstPage() {
               </button>
             </Link>
             <button
-              onClick={logout}
+              onClick={() =>{ 
+                /* logout() */ 
+            /*     localStorage.removeItem("token")
+                localStorage.removeItem("user")
+                localStorage.removeItem("userId")
+                localStorage.removeItem("isLoggedIn") */
+                handleLogout();
+              }
+              }
               className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold border border-solid border-white hover:cursor-pointer"
             >
               Log Out

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { FaDotCircle } from "react-icons/fa";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const About = () => {
 
@@ -15,7 +16,44 @@ const About = () => {
     //router.push("/startpage");
   };
 
-  const { isLoggedIn } = useAuth();
+ /*  const { isLoggedIn } = useAuth(); */
+
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+ useEffect(() => {
+  const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+  if (isLoggedInLocalStorage !== null) {
+    setIsLoggedIn(isLoggedInLocalStorage === "true");
+  } else {
+    console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
+    setIsLoggedIn(false);
+  }
+}, []);
+
+
+  /* 
+  let isLoggedInLocalStorage;
+
+  useEffect(() => {
+    isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedInLocalStorage != null && isLoggedInLocalStorage === true) {
+      setIsLoggedIn(true);
+    } else if (
+      isLoggedInLocalStorage != null &&
+      isLoggedInLocalStorage === false
+    ) {
+      setIsLoggedIn(false);
+    } else {
+      console.log(
+        "isLoggedIn does not exist in localStorage, setting isLoggedIn in firstpage/page.jsx to false"
+      );
+      setIsLoggedIn(false);
+      //localStorage.setItem("isLoggedIn", false); // onödigt?
+    }
+  }, []); */
 
   return (
     <div className="py-8 font-archivo">
