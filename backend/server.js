@@ -514,13 +514,28 @@ async function addMovieToDatabase(movie, movieOrSeries) {
       return;
     }
 
+    /* update already fetched movies with new data?
+
+      const result = await query(
+        "INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)",
+        [
+          movie.id, // movie_id value
+          JSON.stringify(movie) // JSON string representation of the movie data
+        ]
+      );
+      */
+
     // Check if the movie or series already exists in the fetched_movies or fetched_series tables
     let idExistsInMovies;
     let idExistsInSeries;
 
     if (movieOrSeries === "movie") {
-      idExistsInMovies = await query(
+      /* idExistsInMovies = await query(
         "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      ); */
+      idExistsInMovies = await query(
+        "SELECT id FROM fetched_movies WHERE movie_id = ?",
         [movie.id]
       );
     } else if (movieOrSeries === "series") {
@@ -540,9 +555,13 @@ async function addMovieToDatabase(movie, movieOrSeries) {
 
     // Insert the movie or series into the appropriate table
     if (movieOrSeries === "movie") {
-      await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+     /*  await query("INSERT INTO fetched_movies (data) VALUES (?)", [
         JSON.stringify(movie),
+      ]); */
+      await query("INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?)", [
+        movie.id, JSON.stringify(movie),
       ]);
+      
       console.log("Added movie ID ", movie.id, " to fetched_movies");
     } else if (movieOrSeries === "series") {
       await query("INSERT INTO fetched_series (data) VALUES (?)", [
@@ -661,10 +680,15 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
   try {
     const movieId = movieProvidersObject.id;
     // Check if providers for this movie ID already exist in the database
-    const result = await query(
+    /* const result = await query(
       "SELECT id FROM fetched_movie_providers WHERE JSON_EXTRACT(data, '$.id') = ?",
       [movieId]
+    ); */
+    const result = await query(
+      "SELECT id FROM fetched_movie_providers WHERE movie_id = ?",
+      [movieId]
     );
+  
     if (result.length > 0) {
       console.log(
         "Providers of movie ID",
@@ -692,6 +716,7 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
       "INSERT INTO fetched_movie_providers (movie_id, data) VALUES (?, ?)",
       [movieId, movieProvidersData]
     );
+    
     console.log(
       "Added providers of movie ID",
       movieId,
@@ -978,8 +1003,12 @@ async function getMovieObjectOurDatabase(id, movieOrSeries) {
   let searchResult;
   try {
     if (movieOrSeries === "movie") {
-      searchResult = await query(
+      /* searchResult = await query(
         "SELECT data FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [id]
+      ); */
+      searchResult = await query(
+        "SELECT data FROM fetched_movies WHERE movie_id = ?",
         [id]
       );
     } else if (movieOrSeries === "series") {
@@ -1074,8 +1103,12 @@ app.post("/api/movieobject", async (req, res) => {
     let searchResult;
     try {
       if (movieOrSeries === "movie") {
-        searchResult = await query(
+       /*  searchResult = await query(
           "SELECT data FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+          [movieId]
+        ); */
+        searchResult = await query(
+          "SELECT data FROM fetched_movies WHERE movie_id = ?",
           [movieId]
         );
       } else if (movieOrSeries === "series") {
@@ -1166,8 +1199,12 @@ app.post("/api/addmovietodatabase", async (req, res) => {
     let idExistsInSeries;
 
     if (movieOrSeries === "movie") {
-      idExistsInMovies = await query(
+      /* idExistsInMovies = await query(
         "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+        [movie.id]
+      ); */
+      idExistsInMovies = await query(
+        "SELECT id FROM fetched_movies WHERE movie_id = ?",
         [movie.id]
       );
     } else if (movieOrSeries === "series") {
@@ -1190,8 +1227,11 @@ app.post("/api/addmovietodatabase", async (req, res) => {
 
     // Insert the movie or series into the appropriate table
     if (movieOrSeries === "movie") {
-      await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+      /* await query("INSERT INTO fetched_movies (data) VALUES (?)", [
         JSON.stringify(movie),
+      ]); */
+      await query("INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?)", [
+        movie.id, JSON.stringify(movie),
       ]);
       console.log("Added movie ID ", movie.id, " to fetched_movies");
     } else if (movieOrSeries === "series") {
