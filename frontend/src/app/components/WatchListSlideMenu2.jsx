@@ -73,7 +73,7 @@ export default function WatchListSlideMenu2({setIsWatchlistEmpty}) {
 
   async function fetchMovieProviders(id) {
     try {
-      const response = await fetch(`${host}/api/fetchmovieprovidersTMDB`, {
+      const response = await fetch(`${host}/api/fetchmovieprovidersTMDB`, { //  checks if we have it on our own database, if not it fetches from tmdb!
         // users sidan på backend! dvs inte riktiga sidan!
         method: "POST",
         headers: {
@@ -120,6 +120,7 @@ export default function WatchListSlideMenu2({setIsWatchlistEmpty}) {
         // now fetching movie object from our database
         const movieObject = await fetchMovieObject(watchListedMovie.movie_id);
 
+        // updated in server.js so it checks if we have it on our own database first!
         const movieProviders = await fetchMovieProviders(
           watchListedMovie.movie_id
         );

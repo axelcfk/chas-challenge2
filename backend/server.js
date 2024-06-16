@@ -438,7 +438,27 @@ app.post("/api/fetchmovieprovidersTMDB", async (req, res) => {
   try {
     const { id } = req.body;
 
-    const movieProvidersObject = await fetchMovieProvidersObjectTMDB(id);
+    let movieProvidersObject = await getProvidersOfMOvieObjectOurDatabase(
+          id
+        );
+
+        // if it doesnt exist we fetch providers from tmdb
+        if (movieProvidersObject == null) {
+          console.log(
+            "movie providers not in our database, fetching from TMDB"
+          );
+
+          // fetches movie's providers and adds to our database
+          movieProvidersObject = await fetchMovieProvidersObjectTMDB(id);
+        } else {
+          console.log(
+            "Providers of movie id ",
+            id,
+            " exists in our database, skipping fetch from TMDB."
+          );
+        }
+
+   /*  const movieProvidersObject = await fetchMovieProvidersObjectTMDB(id); */
 
     res.json({ movieProvidersObject, movieId: id });
   } catch (error) {
@@ -549,7 +569,7 @@ async function addMovieToDatabase(movie, movieOrSeries) {
       (idExistsInMovies && idExistsInMovies.length > 0) ||
       (idExistsInSeries && idExistsInSeries.length > 0)
     ) {
-      console.log("movie/series ID ", movie.id, " has already been fetched.");
+      console.log("movieobject of ID ", movie.id, " already in our database, will not add duplicate");
       return;
     }
 
@@ -918,7 +938,7 @@ app.post("/api/popularmovies", async (req, res) => {
         } else {
           console.log(
             "Providers of movie id ",
-            movieProvidersObject.id,
+           movie.id,
             " exists in our database, skipping fetch from TMDB."
           );
         }
@@ -1034,6 +1054,8 @@ async function getMovieObjectOurDatabase(id, movieOrSeries) {
     }
     //console.log(movieObject);
 
+    console.log("fetched movie id ", id, " from our own database" );
+
     return movieObject;
   } else {
     console.log("Movie not found");
@@ -1135,6 +1157,8 @@ app.post("/api/movieobject", async (req, res) => {
         movieObject = JSON.parse(movieObject);
       }
       // console.log(movieObject);
+
+      console.log("fetched movie id ", movieId, " from our own database" );
 
       return res
         .status(200)
