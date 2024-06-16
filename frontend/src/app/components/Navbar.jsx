@@ -21,7 +21,7 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchType, setSearchType] = useState("");
   const [loading, setLoading] = useState(false);
-  const {  user, logout, checkAuth } = useAuth(); /* isLoggedIn */
+  const {  user, logout, checkAuth, checkIfLoggedIn, logout2, isLoggedIn } = useAuth(); /* isLoggedIn */
   const { input, setInput } = useSearch();
   const { handleQuerySubmit: originalHandleQuerySubmit } =
     useHandleQuerySubmit();
@@ -29,8 +29,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const { resetState } = useSearch();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+ /*  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ */
   
   /* let isLoggedInLocalStorage;
 
@@ -49,11 +49,19 @@ export default function Navbar() {
     }
   }, [isOpen, isSearchOpen]);
 
+  useEffect(() => {
+    checkIfLoggedIn();
+  }, [])
+
+  useEffect(() => {
+    checkIfLoggedIn();
+  }, [pathname])
+
  /*  useEffect(() => {
     checkAuth();
   }, [checkAuth]); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
     console.log("isLoggedInLocalStorage", isLoggedInLocalStorage );
     if (isLoggedInLocalStorage !== null) {
@@ -73,7 +81,7 @@ export default function Navbar() {
       console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
       setIsLoggedIn(false);
     }
-  }, [pathname]);
+  }, [pathname]); */
 
   useEffect(() => {
     console.log("User object:", user);
@@ -83,10 +91,11 @@ export default function Navbar() {
   const handleLogout = async () => {
     /* await logout(); */
     if (typeof window !== "undefined") {
-    localStorage.removeItem("token")
+    /* localStorage.removeItem("token")
     localStorage.removeItem("user")
     localStorage.removeItem("userId")
-    localStorage.removeItem("isLoggedIn")
+    localStorage.removeItem("isLoggedIn") */
+    logout2();
     setIsOpen(false);
     router.push("/");
     }

@@ -17,10 +17,10 @@ export default function FirstPage() {
   const [animationPhase, setAnimationPhase] = useState("erasing");
   const [currentPhrase, setCurrentPhrase] = useState(0);
 
-  const { user, logout, checkAuth } = useAuth(); /* isLoggedIn */
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, user, logout, checkAuth, checkIfLoggedIn, logout2 } = useAuth(); /* isLoggedIn */
+  /* const [isLoggedIn, setIsLoggedIn] = useState(false); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
     if (isLoggedInLocalStorage !== null) {
       setIsLoggedIn(isLoggedInLocalStorage === "true");
@@ -28,7 +28,18 @@ export default function FirstPage() {
       console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
       setIsLoggedIn(false);
     }
-  }, []);
+  }, []); */
+
+  useEffect(() => {
+
+    checkIfLoggedIn();
+  }, [])
+
+  
+  useEffect(() => {
+
+    checkIfLoggedIn();
+  }, [isLoggedIn])
 
 /* 
   
@@ -90,7 +101,7 @@ export default function FirstPage() {
   }, [currentText, animationPhase, currentPhrase]);
 
 
-  function handleLogout() {
+  /* function handleLogout() {
     if (typeof window !== "undefined") {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
@@ -100,7 +111,7 @@ export default function FirstPage() {
     } else {
       
     }
-  }
+  } */
 
   return (
     <div
@@ -184,7 +195,8 @@ export default function FirstPage() {
                 localStorage.removeItem("user")
                 localStorage.removeItem("userId")
                 localStorage.removeItem("isLoggedIn") */
-                handleLogout();
+               // handleLogout();
+               logout2();
               }
               }
               className="text-xl text-slate-100 h-14 w-11/12 max-w-md bg-transparent rounded-full font-semibold border border-solid border-white hover:cursor-pointer"

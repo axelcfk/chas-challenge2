@@ -18,14 +18,36 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     if (typeof window !== "undefined") {
       const loggedIn = localStorage.getItem("isLoggedIn") === true;
       const storedUser = localStorage.getItem("user");
       setIsLoggedIn(loggedIn);
       setUser(storedUser ? JSON.parse(storedUser) : null);
     }
+  }, []); */
+
+  function checkIfLoggedIn() {
+    if (typeof window !== "undefined") {
+      const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+      if (isLoggedInLocalStorage !== null) {
+        setIsLoggedIn(isLoggedInLocalStorage === "true");
+        const storedUser = localStorage.getItem("user");
+        setUser(storedUser ? JSON.parse(storedUser) : null);
+      } else {
+        console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
+        setIsLoggedIn(false);
+      }
+      }
+  }
+
+  useEffect(() => {
+    checkIfLoggedIn();
   }, []);
+
+  useEffect(() => {
+    checkIfLoggedIn();
+  }, [isLoggedIn]);
 
   const login = async (username, password) => {
     try {
@@ -34,14 +56,15 @@ export const AuthProvider = ({ children }) => {
         { username, password },
         { withCredentials: true }
       );
-      setIsLoggedIn(true);
-      setUser(response.data.user);
       if (typeof window !== "undefined") {
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("userId", response.data.user.id);
       }
+      setIsLoggedIn(true);
+      setUser(response.data.user);
+      
       return { success: true };
     } catch (error) {
       return {
@@ -51,7 +74,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = async () => {
+  function logout2() {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      
+      setIsLoggedIn(false);
+    }
+  }
+
+  const logout = async () => { /* det blev token undefined i cookies på backend ibland? och då funkade inte logout? */
     try {
       await axios.post(
         `${host}/api/logout`,
@@ -109,13 +143,13 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
+  /* useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, [checkAuth]); */
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, user, login, logout, checkAuth }}
+      value={{ isLoggedIn, user, login, logout, checkAuth, logout2, checkIfLoggedIn }}
     >
       {children}
     </AuthContext.Provider>

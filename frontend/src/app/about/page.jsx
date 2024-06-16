@@ -10,15 +10,22 @@ import { useEffect, useState } from "react";
 
 const About = () => {
 
+  const { isLoggedIn, checkIfLoggedIn, logout2 } = useAuth(); /* isLoggedIn */
+
+
   const router = useRouter();
   const handleNavigation = () => {
     router.back();
     //router.push("/startpage");
   };
 
+  useEffect(() => {
+    checkIfLoggedIn();
+  }, [])
+
  /*  const { isLoggedIn } = useAuth(); */
 
- const [isLoggedIn, setIsLoggedIn] = useState(false);
+ /* const [isLoggedIn, setIsLoggedIn] = useState(false);
 
  useEffect(() => {
   const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
@@ -28,32 +35,7 @@ const About = () => {
     console.log("isLoggedIn does not exist in localStorage, setting isLoggedIn to false");
     setIsLoggedIn(false);
   }
-}, []);
-
-
-  /* 
-  let isLoggedInLocalStorage;
-
-  useEffect(() => {
-    isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
-  }, []);
-
-  useEffect(() => {
-    if (isLoggedInLocalStorage != null && isLoggedInLocalStorage === true) {
-      setIsLoggedIn(true);
-    } else if (
-      isLoggedInLocalStorage != null &&
-      isLoggedInLocalStorage === false
-    ) {
-      setIsLoggedIn(false);
-    } else {
-      console.log(
-        "isLoggedIn does not exist in localStorage, setting isLoggedIn in firstpage/page.jsx to false"
-      );
-      setIsLoggedIn(false);
-      //localStorage.setItem("isLoggedIn", false); // onödigt?
-    }
-  }, []); */
+}, []); */
 
   return (
     <div className="py-8 font-archivo">
@@ -159,8 +141,8 @@ const About = () => {
         </div>
       </div> */}
 
-        <div class="flex flex-col md:flex-row justify-center md:justify-evenly items-start mt-20 ">
-          <div class="text-center ">
+        <div className="flex flex-col md:flex-row justify-center md:justify-evenly items-start mt-20 ">
+          <div className="text-center ">
             <img
               src="/shanti1.png"
               className="md:w-52 md:h-52 w-full  rounded-full"
