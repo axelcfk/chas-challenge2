@@ -26,10 +26,20 @@ The Movie Recommendation Website leverages The Movie Database (TMDB) API and Ope
 - **Detailed Movie Page:** View detailed information about movies and manage personal lists.
 
 ### Database Movie Search
-- **Direct Search:** Search for specific movies using the Navbar for more detailed information.
+- **Direct Search:** Users can click on the search icon in the navigation bar to search for specific movie titles. A drop-down menu with matching titles will appear, allowing users to select a movie and be routed to its Detailed Movie Page.
 
 ### Profile Page (Work in Progress)
 - **User Profile:** Manage liked movies, watchlist, and seen movies.
 
 ## Deployment
 The website is deployed on AWS EC2 using Docker with a deploy.yml script for automated deployment.
+
+## Contributors
+
+We thank the following contributors for their efforts and contributions to this project:
+
+- [maek95](https://github.com/maek95)
+- [axelcfk](https://github.com/username)
+- [shantihedelin](https://github.com/shantihedelin)
+- [afzbehroz](https://github.com/afzbehroz)
+- [Mikael-Chasacademy](https://github.com/Mikael-Chasacademy)
