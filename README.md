@@ -1,5 +1,3 @@
-A README file should be informative yet concise. Here's a more streamlined version:
-
 # Movie Recommendation Website
 
 This repository contains a full-stack movie recommendation website built with React (frontend), Express.js/Node.js (backend), and MySQL, deployed on AWS EC2 using Docker.
