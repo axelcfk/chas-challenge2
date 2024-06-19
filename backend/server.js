@@ -534,26 +534,15 @@ async function addMovieToDatabase(movie, movieOrSeries) {
       return;
     }
 
-    /* update already fetched movies with new data?
-
-      const result = await query(
-        "INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)",
-        [
-          movie.id, // movie_id value
-          JSON.stringify(movie) // JSON string representation of the movie data
-        ]
-      );
-      */
-
     // Check if the movie or series already exists in the fetched_movies or fetched_series tables
-    let idExistsInMovies;
+   /*  let idExistsInMovies;
     let idExistsInSeries;
 
     if (movieOrSeries === "movie") {
-      /* idExistsInMovies = await query(
-        "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
-        [movie.id]
-      ); */
+      // idExistsInMovies = await query(
+      //  "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+      //  [movie.id]
+      //); 
       idExistsInMovies = await query(
         "SELECT id FROM fetched_movies WHERE movie_id = ?",
         [movie.id]
@@ -572,17 +561,36 @@ async function addMovieToDatabase(movie, movieOrSeries) {
       console.log("movieobject of ID ", movie.id, " already in our database, will not add duplicate");
       return;
     }
-
+ */
     // Insert the movie or series into the appropriate table
     if (movieOrSeries === "movie") {
-     /*  await query("INSERT INTO fetched_movies (data) VALUES (?)", [
-        JSON.stringify(movie),
-      ]); */
-      await query("INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?)", [
+     //  await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+     //   JSON.stringify(movie),
+      //]); 
+      /* await query("INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?)", [
         movie.id, JSON.stringify(movie),
-      ]);
+      ]); */
+
+      // updates data if duplicate
+      /* await query(
+        "INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)",
+        [
+          movie.id, // movie_id value
+          JSON.stringify(movie) // JSON string representation of the movie data
+        ]
+      ); */
+
+      // updates data if duplicate, on duplicate didnt work with updated_at for some reason
+      await query(
+        "INSERT INTO fetched_movies (movie_id, data, created_at, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+        "ON DUPLICATE KEY UPDATE data = VALUES(data), updated_at = CURRENT_TIMESTAMP",
+        [
+          movie.id, // movie_id value
+          JSON.stringify(movie) // JSON string representation of the movie data
+        ]
+      );
       
-      console.log("Added movie ID ", movie.id, " to fetched_movies");
+      console.log("Added/updated movie ID ", movie.id, " to fetched_movies");
     } else if (movieOrSeries === "series") {
       await query("INSERT INTO fetched_series (data) VALUES (?)", [
         JSON.stringify(movie),
@@ -1219,14 +1227,14 @@ app.post("/api/addmovietodatabase", async (req, res) => {
     }
 
     // Check if the movie or series already exists in the fetched_movies or fetched_series tables
-    let idExistsInMovies;
+   /*  let idExistsInMovies;
     let idExistsInSeries;
 
     if (movieOrSeries === "movie") {
-      /* idExistsInMovies = await query(
-        "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
-        [movie.id]
-      ); */
+      //idExistsInMovies = await query(
+       // "SELECT id FROM fetched_movies WHERE JSON_EXTRACT(data, '$.id') = ?",
+       // [movie.id]
+      //); 
       idExistsInMovies = await query(
         "SELECT id FROM fetched_movies WHERE movie_id = ?",
         [movie.id]
@@ -1248,15 +1256,34 @@ app.post("/api/addmovietodatabase", async (req, res) => {
         message: "Liked movie OR Liked series has already been fetched.",
       });
     }
-
+ */
     // Insert the movie or series into the appropriate table
     if (movieOrSeries === "movie") {
-      /* await query("INSERT INTO fetched_movies (data) VALUES (?)", [
-        JSON.stringify(movie),
-      ]); */
-      await query("INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?)", [
+      // await query("INSERT INTO fetched_movies (data) VALUES (?)", [
+      //  JSON.stringify(movie),
+      //]);
+      /* await query("INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?)", [
         movie.id, JSON.stringify(movie),
-      ]);
+      ]); */
+
+       // updates data if duplicate
+      /* await query(
+        "INSERT INTO fetched_movies (movie_id, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)",
+        [
+          movie.id, // movie_id value
+          JSON.stringify(movie) // JSON string representation of the movie data
+        ]
+      ); */
+
+      // updates data if duplicate, on duplicate didnt work with updated_at for some reason
+      await query(
+        "INSERT INTO fetched_movies (movie_id, data, created_at, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+        "ON DUPLICATE KEY UPDATE data = VALUES(data), updated_at = CURRENT_TIMESTAMP",
+        [
+          movie.id, // movie_id value
+          JSON.stringify(movie) // JSON string representation of the movie data
+        ]
+      );
       console.log("Added movie ID ", movie.id, " to fetched_movies");
     } else if (movieOrSeries === "series") {
       await query("INSERT INTO fetched_series (data) VALUES (?)", [
