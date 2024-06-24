@@ -279,10 +279,9 @@ export default function ChatPage2() {
       {/* <Navbar /> */}
       {errorMessage && !loading && (
         <div className="h-full flex flex-col justify-center items-center pt-40">
-           <div className="flex  justify-end items-end">
-            <div className="flex gap-4 pb-2">
-
-              <p className="text-xl font-semibold text-center">Start over: </p>  
+          <div className="flex  justify-end items-end">
+            <div className="flex gap-4 pb-2 justify-center items-center flex-row">
+              <p className="text-xl font-semibold text-center">Start over: </p>
               <button
                 onClick={handleReset}
                 className="bg-transparent border-none hover:cursor-pointer"
@@ -290,8 +289,10 @@ export default function ChatPage2() {
                 <TbEdit size={35} color="#CFFF5E" />
               </button>
             </div>
-            </div>
-          <p className="lg:max-w-[50%] text-xl font-semibold text-center">{errorMessage}</p>
+          </div>
+          <p className="lg:max-w-[50%] text-xl font-semibold text-center">
+            {errorMessage}
+          </p>
         </div>
       )}
       {showVideo && movies.length < 2 && (
