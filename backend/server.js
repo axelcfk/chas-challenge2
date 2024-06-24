@@ -79,17 +79,18 @@ const movieAPI_KEY = "4e3dec59ad00fa8b9d1f457e55f8d473";
 
 let poolConfig = {
   //host: "mysql",
+  //host: process.env.DB_HOST,
   host: process.env.DB_HOST,
   user: "root",
-  password: "root",
+  password: process.env.DB_PASSWORD,
   database: "movie-app-sql",
 };
 
-// if working locally we add the port. On AWS it should be an empty line
-if (process.env.ENVIRONMENT === "local") {
+// (WHEN HOSTING MYSQL WITH DOCKER ON AWS) if working locally we add the port. On AWS it should be an empty line
+/* if (process.env.ENVIRONMENT === "local") {
   poolConfig.port = process.env.DB_PORT;
 }
-
+ */
 const pool = mysql.createPool(poolConfig);
 
 // connect to DB
@@ -712,7 +713,9 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
       "SELECT id FROM fetched_movie_providers WHERE JSON_EXTRACT(data, '$.id') = ?",
       [movieId]
     ); */
-    const result = await query(
+
+
+    /* const result = await query(
       "SELECT id FROM fetched_movie_providers WHERE movie_id = ?",
       [movieId]
     );
@@ -724,7 +727,7 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
         "have already been fetched."
       );
       return { message: "Providers already exist." };
-    }
+    } */
     let movieProvidersData;
     if (!movieProvidersObject.results?.SE) {
       // No providers in Sweden
@@ -740,11 +743,22 @@ async function addProvidersOfMovieToDatabase(movieProvidersObject) {
       });
     }
     // Update the providers column for the specific movie ID
-    await query(
+    /* await query(
       "INSERT INTO fetched_movie_providers (movie_id, data) VALUES (?, ?)",
       [movieId, movieProvidersData]
     );
-    
+     */
+
+    await query(
+      "INSERT INTO fetched_movie_providers (movie_id, data, created_at, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+      "ON DUPLICATE KEY UPDATE data = VALUES(data), updated_at = CURRENT_TIMESTAMP",
+      [
+        movieId, // movie_id value
+        movieProvidersData // JSON string representation of the movie providers data
+      ]
+    );
+
+
     console.log(
       "Added providers of movie ID",
       movieId,
@@ -945,7 +959,7 @@ app.post("/api/popularmovies", async (req, res) => {
           movieProvidersObject = await fetchMovieProvidersObjectTMDB(movie.id);
         } else {
           console.log(
-            "Providers of movie id ",
+            "1.Providers of movie id ",
            movie.id,
             " exists in our database, skipping fetch from TMDB."
           );
@@ -972,7 +986,7 @@ app.post("/api/popularmovies", async (req, res) => {
           });
         } else {
           console.log(
-            "failed to read movieProvidersObject in /popularmovies endpoint, did not push values into array popularMoviesAndProviders"
+            "failed to read movieProvidersObject in /popularmovies endpoint"
           );
         }
       }
@@ -1298,7 +1312,7 @@ app.post("/api/addmovietodatabase", async (req, res) => {
     }
 
     res.status(201).json({
-      message: "Movie/Series saved to fetched_movies/fetched_series",
+      message: "Movie/Series added to fetched_movies/fetched_series",
     });
   } catch (error) {
     console.error(

@@ -39,11 +39,12 @@ export default function PopularSlideMenu2() {
       const data = await response.json();
 
 
-      const filteredData = data.filter(movieData => {
+     /*  const filteredData = data.filter(movieData => {
         return movieData.movie.vote_average > 0;
-      });
+      }); */
 
-      setPopularMoviesData(filteredData);
+      //setPopularMoviesData(filteredData);
+      setPopularMoviesData(data);
     } catch (error) {
       console.error("Error:", error);
     }
