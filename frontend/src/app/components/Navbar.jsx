@@ -21,7 +21,8 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchType, setSearchType] = useState("");
   const [loading, setLoading] = useState(false);
-  const {  user, logout, checkAuth, checkIfLoggedIn, logout2, isLoggedIn } = useAuth(); /* isLoggedIn */
+  const { user, logout, checkAuth, checkIfLoggedIn, logout2, isLoggedIn } =
+    useAuth(); /* isLoggedIn */
   const { input, setInput } = useSearch();
   const { handleQuerySubmit: originalHandleQuerySubmit } =
     useHandleQuerySubmit();
@@ -29,17 +30,14 @@ export default function Navbar() {
   const pathname = usePathname();
   const { resetState } = useSearch();
 
- /*  const [isLoggedIn, setIsLoggedIn] = useState(false);
- */
-  
+  /*  const [isLoggedIn, setIsLoggedIn] = useState(false);
+   */
+
   /* let isLoggedInLocalStorage;
 
   useEffect(() => {
     isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
   }, []); */
-
-  
-
 
   useEffect(() => {
     if (isOpen || isSearchOpen) {
@@ -51,13 +49,13 @@ export default function Navbar() {
 
   useEffect(() => {
     checkIfLoggedIn();
-  }, [])
+  }, []);
 
   useEffect(() => {
     checkIfLoggedIn();
-  }, [pathname])
+  }, [pathname]);
 
- /*  useEffect(() => {
+  /*  useEffect(() => {
     checkAuth();
   }, [checkAuth]); */
 
@@ -91,13 +89,13 @@ export default function Navbar() {
   const handleLogout = async () => {
     /* await logout(); */
     if (typeof window !== "undefined") {
-    /* localStorage.removeItem("token")
+      /* localStorage.removeItem("token")
     localStorage.removeItem("user")
     localStorage.removeItem("userId")
     localStorage.removeItem("isLoggedIn") */
-    logout2();
-    setIsOpen(false);
-    router.push("/");
+      logout2();
+      setIsOpen(false);
+      router.push("/");
     }
   };
 
@@ -350,7 +348,7 @@ export default function Navbar() {
             className={`menu-modal ${
               isOpen ? "open" : "close"
             } flex-col lg:hidden z-10 absolute w-full left-0 right-0`}
-           /*  style={{
+            /*  style={{
               WebkitBackdropFilter: "blur(30px)",
             }} */
           >
@@ -412,7 +410,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{ textDecoration: "none" }}
                   >
-                    <span className="px-3 mt-20 text-4xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
+                    <span className="px-3 mt-20 text-2xl rounded-md font-extrabold font-archivo cursor-pointer block text-center text-white">
                       Log Out
                     </span>
                   </Link>
